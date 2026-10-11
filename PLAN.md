@@ -53,13 +53,14 @@ Les durées sont indicatives pour un travail à temps partiel ; à adapter à la
 - [x] Boucle d'entraînement avec positions de départ aléatoires
 - [x] Apprentissage progressif (formes simples puis complexes)
 - [x] Sauvegarde des modèles et des courbes
+- [ ] Entrainement avec des formes complexes
 
 ### Étape 6 — Évaluation
-- [ ] Métriques calculées sur un jeu de test fixe
-- [ ] Test de pannes (5, 10, 20 % de robots retirés)
-- [ ] Test de passage à l'échelle (plus de robots qu'à l'entraînement)
-- [ ] Comparaison avec les références
-- [ ] Analyse des échecs
+- [x] Métriques calculées sur un jeu de test fixe
+- [x] Test de pannes (5, 10, 20 % de robots retirés)
+- [x] Test de passage à l'échelle (plus de robots qu'à l'entraînement)
+- [x] Comparaison avec les références
+- [x] Analyse des échecs
 
 ### Étape 7 — Rédaction
 - [ ] Modèle LaTeX configuré (12 pt, interligne scientifique)

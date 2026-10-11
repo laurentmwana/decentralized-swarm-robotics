@@ -53,6 +53,12 @@ Pour chaque type d'échec (forme déformée, robots bloqués, groupe fragmenté)
 ## Critères de réussite
 Chaque affirmation du mémoire est appuyée par un chiffre ou une figure reproductible ; les comparaisons sont équitables.
 
+## Évaluation pilote exécutée
+
+La configuration `configs/evaluation-pilot.yaml` fixe dix graines et évalue un cercle sur trois tailles d'essaim (20, 40 et 100 robots), quatre taux de pannes (0, 5, 10 et 20 %) et deux méthodes : GNN entraîné et règle locale de regroupement. Elle génère 240 épisodes, `episodes.csv`, `summary.csv` et deux figures dans `results/evaluation-pilot/`.
+
+Cette étude est explicitement **pilote** : elle emploie dix épisodes par condition, alors que le protocole final en demande au moins cinquante. La baseline de regroupement est un contrôle comportemental sans consigne explicite de cercle ; elle ne doit donc pas être présentée comme une comparaison informationnellement équivalente au GNN. La baseline apprise sans communication et les essais de bruit ou de portée réduite restent à exécuter.
+
 ## Pièges
 - Ne présenter que les meilleurs exemples.
 - Comparer à des références mal réglées.

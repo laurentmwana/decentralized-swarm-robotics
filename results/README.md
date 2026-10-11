@@ -13,3 +13,7 @@ La commande `python -m src.train.run`, avec `configs/training-circle.yaml`, entr
 ## Curriculum réduit
 
 La commande `python -m src.train.curriculum` entraîne successivement les niveaux géométrie, chiffres, lettres et nombres. Avec la configuration actuelle, les pertes finales par niveau sont respectivement 0,318, 0,248, 0,205 et 0,156. La planche `curriculum/numbers/contact-sheet.png` sert de contrôle visuel : elle atteste une couverture approximative des cibles, sans constituer une évaluation finale de lisibilité.
+
+## Évaluation pilote
+
+`python -m src.eval.run` exécute 240 épisodes fixes (10 graines par condition) et écrit les résultats bruts dans `evaluation-pilot/episodes.csv`, les agrégats dans `evaluation-pilot/summary.csv`, puis les figures de pannes et d'échelle. Pour 20 robots, la distance moyenne de Chamfer est 0,607 sans panne et 0,644 après 20 % de pannes pour le GNN, contre 3,956 et 4,162 pour la règle de regroupement. Il s'agit d'un résultat pilote, non du protocole final à 50 graines.
