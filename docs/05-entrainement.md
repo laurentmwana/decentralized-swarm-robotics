@@ -65,6 +65,12 @@ Sur le cercle, la forme est obtenue de façon visible à partir de départs alé
 
 La première exécution utilise l'apprentissage direct à travers le simulateur différentiable, une perte de Chamfer symétrique pour la forme, une pénalité de collision et une pénalité de mouvement. La configuration `configs/training-circle.yaml` entraîne 20 robots sur le cercle avec la graine 41. Les sorties reproductibles sont écrites dans `results/training-circle/` ; l'apprentissage progressif des autres formes reste à réaliser.
 
+## Curriculum exécuté
+
+Le programme `configs/curriculum.yaml` enchaîne quatre niveaux : géométries, chiffres, lettres, puis nombres. Chaque niveau réutilise les paramètres compatibles du niveau précédent et conserve les cibles antérieures afin de limiter l'oubli catastrophique. Les sorties, métriques par cible et courbes sont écrites dans `results/curriculum/`.
+
+Ce curriculum est une validation fonctionnelle à échelle réduite : trois géométries, trois chiffres, trois lettres et deux nombres, avec 30 itérations par niveau. La planche de validation montre une couverture approximative des contours, mais les lettres et nombres ne sont pas encore suffisamment lisibles pour une conclusion expérimentale ; ils devront être entraînés plus longtemps et avec davantage de points ou robots.
+
 ## Pièges
 - Régler les coefficients en regardant le jeu de test.
 - Lancer de longues sessions avant d'avoir validé une version réduite.
