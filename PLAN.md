@@ -1,0 +1,83 @@
+# PLAN.md — Feuille de route du projet
+
+Cocher chaque case au fil de l'avancement. Le détail de chaque étape est dans `docs/`.
+Les durées sont indicatives pour un travail à temps partiel ; à adapter à la date de dépôt réelle.
+
+| # | Étape | Document | Durée indicative | Livrable principal |
+|---|-------|----------|------------------|--------------------|
+| 0 | Cadrage et problématique | docs/00 | 1 semaine | Question de recherche validée par le professeur |
+| 1 | État de l'art | docs/01 | 2 semaines | Revue de littérature (fiches + synthèse) |
+| 2 | Simulateur d'essaim | docs/02 | 2 semaines | Simulation fonctionnelle et testée |
+| 3 | Jeu de formes cibles | docs/03 | 1 semaine | Images + nuages de points + archive zip |
+| 4 | Modèle GNN | docs/04 | 2 semaines | Réseau qui produit des mouvements |
+| 5 | Entraînement | docs/05 | 2 à 3 semaines | Modèle entraîné + courbes |
+| 6 | Évaluation et expériences | docs/06 | 2 à 3 semaines | Tableaux de résultats + figures |
+| 7 | Rédaction du mémoire | docs/07 | 4 semaines (en parallèle dès l'étape 2) | Mémoire complet en LaTeX |
+| 8 | Soutenance | docs/08 | 1 à 2 semaines | Diapositives + démonstration |
+
+## Cases à cocher
+
+### Étape 0 — Cadrage
+- [ ] Question de recherche rédigée en une phrase
+- [ ] Intitulé confirmé avec le professeur (version « cellulaire » ou « sur graphes »)
+- [ ] Hypothèses et périmètre écrits (ce qui est dans le mémoire, ce qui n'y est pas)
+
+### Étape 1 — État de l'art
+- [ ] 15 à 25 références lues et résumées (essaims, réseaux cellulaires, GNN, apprentissage multi-agents)
+- [ ] Tableau comparatif des approches existantes
+- [ ] Positionnement : ce que ton travail apporte de différent
+
+### Étape 2 — Simulateur
+- [ ] Dynamique des robots (position, vitesse, limites)
+- [ ] Voisinage par portée de communication
+- [ ] Gestion des pannes (retrait de robots)
+- [ ] Animation de contrôle (visualisation)
+- [ ] Tests unitaires
+
+### Étape 3 — Formes cibles
+- [ ] Formes géométriques (cercle, carré, triangle, etc.)
+- [ ] Alphabet A à Z
+- [ ] Chiffres 0 à 9
+- [ ] Nombres de 10 à 999 (assemblage de chiffres)
+- [ ] Conversion en nuages de points cibles
+- [ ] Archive zip des images et des points
+
+### Étape 4 — Modèle
+- [ ] Échange de messages entre voisins
+- [ ] Sortie : mouvement de chaque robot
+- [ ] Références simples pour comparer (règles écrites à la main, version sans échange)
+- [ ] Tests : le modèle accepte un nombre variable de robots et de voisins
+
+### Étape 5 — Entraînement
+- [ ] Fonction d'objectif (qualité de la forme, éviter les collisions, rester groupé)
+- [ ] Boucle d'entraînement avec positions de départ aléatoires
+- [ ] Apprentissage progressif (formes simples puis complexes)
+- [ ] Sauvegarde des modèles et des courbes
+
+### Étape 6 — Évaluation
+- [ ] Métriques calculées sur un jeu de test fixe
+- [ ] Test de pannes (5, 10, 20 % de robots retirés)
+- [ ] Test de passage à l'échelle (plus de robots qu'à l'entraînement)
+- [ ] Comparaison avec les références
+- [ ] Analyse des échecs
+
+### Étape 7 — Rédaction
+- [ ] Modèle LaTeX configuré (12 pt, interligne scientifique)
+- [ ] Introduction et problématique
+- [ ] État de l'art
+- [ ] Méthode
+- [ ] Expériences et résultats
+- [ ] Discussion et conclusion
+- [ ] Bibliographie, annexes, relecture
+
+### Étape 8 — Soutenance
+- [ ] Diapositives
+- [ ] Démonstration vidéo ou animation
+- [ ] Répétition et questions probables
+
+## Jalons de contrôle
+
+1. **Fin étape 2** : le simulateur fait bouger des robots avec une règle simple (rassemblement) et on voit le résultat.
+2. **Fin étape 4** : un réseau non entraîné produit des mouvements sans erreur, quel que soit le nombre de robots.
+3. **Fin étape 5** : au moins une forme simple (cercle) est atteinte de façon visible.
+4. **Fin étape 6** : tous les tableaux et figures du mémoire sont prêts.
