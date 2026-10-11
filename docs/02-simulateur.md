@@ -26,6 +26,12 @@ Construire le monde 2D dans lequel les robots bougent, se perçoivent et peuvent
 - **Arène** : bornée (murs) ou illimitée ?
 - **Dynamique** : déplacement direct (le robot va où on lui dit) ou avec inertie ? Commencer simple.
 
+## Décisions de la première implémentation
+
+- Repère commun 2D, conformément au cadrage.
+- Arène bornée : les positions sont limitées aux bords de l'arène.
+- Dynamique à vitesse directe : la commande est bornée par `max_speed`, puis intégrée avec `time_step`.
+
 ## Références de comportement à coder ici (utilisées en étape 6)
 - **Rassemblement par règles** : chaque robot se rapproche du centre de ses voisins.
 - **Répulsion** : s'éloigner des voisins trop proches.

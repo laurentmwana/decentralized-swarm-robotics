@@ -28,6 +28,13 @@ Ces règles sont difficiles à concevoir pour des tâches complexes. L'idée du 
 - La consigne de forme est connue du groupe d'une manière précisée à l'étape 3.
 - Le temps est découpé en pas réguliers.
 
+## Décisions validées pour la première version
+
+- L'intitulé déposé contenant « réseaux de neurones cellulaires » est conservé provisoirement. Un éventuel changement vers « réseaux de neurones sur graphes » requiert l'accord explicite du professeur.
+- Les robots utilisent un repère commun 2D et accèdent aux positions relatives de leurs voisins.
+- Chaque robot reçoit l'identifiant partagé de la forme cible (option A de l'étape 3).
+- Le périmètre reste une simulation 2D sans obstacles fixes ni robots physiques ; les décisions de mouvement reposent exclusivement sur les observations locales et la consigne commune.
+
 ## À faire
 - [ ] Rédiger la problématique en une phrase et les sous-questions
 - [ ] Présenter l'intitulé au professeur (version « cellulaire » ou « sur graphes ») et noter sa réponse dans `decisions.md`
