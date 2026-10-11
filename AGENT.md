@@ -51,7 +51,7 @@ swarm-gnn/
     viz/              # courbes, animations
   tests/
   results/            # sorties (ignorées par git, sauf résumés)
-  thesis/             # sources LaTeX du mémoire
+  latex/              # sources LaTeX du mémoire
 ```
 
 ## 6. Conventions de code
