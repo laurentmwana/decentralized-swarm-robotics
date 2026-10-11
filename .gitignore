@@ -12,5 +12,9 @@ thesis/*.log
 thesis/*.out
 thesis/*.pdf
 thesis/*.run.xml
+thesis/*.lof
+thesis/*.lot
+thesis/*.toc
+thesis/chapters/*.aux
 .venv
 venv
