@@ -5,5 +5,12 @@ results/*
 !results/README.md
 data/shapes/
 data/*.zip
+thesis/*.aux
+thesis/*.bcf
+thesis/*.blg
+thesis/*.log
+thesis/*.out
+thesis/*.pdf
+thesis/*.run.xml
 .venv
 venv
