@@ -3,5 +3,7 @@ __pycache__/
 *.pyc
 results/*
 !results/README.md
+data/shapes/
+data/*.zip
 .venv
 venv

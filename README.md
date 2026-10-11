@@ -14,3 +14,11 @@ python -m pytest tests -q -p no:cacheprovider
 ```
 
 L'animation produite est enregistrée dans `results/simulator-gathering.gif`.
+
+## Génération des formes cibles
+
+```powershell
+python -m src.shapes.build
+```
+
+Les images, nuages de points, index et planche-contact sont créés dans `data/shapes/`; l'archive est `data/shapes.zip`.

@@ -35,12 +35,12 @@ Les durées sont indicatives pour un travail à temps partiel ; à adapter à la
 - [x] Tests unitaires
 
 ### Étape 3 — Formes cibles
-- [ ] Formes géométriques (cercle, carré, triangle, etc.)
-- [ ] Alphabet A à Z
-- [ ] Chiffres 0 à 9
-- [ ] Nombres de 10 à 999 (assemblage de chiffres)
-- [ ] Conversion en nuages de points cibles
-- [ ] Archive zip des images et des points
+- [x] Formes géométriques (cercle, carré, triangle, etc.)
+- [x] Alphabet A à Z
+- [x] Chiffres 0 à 9
+- [x] Nombres de 10 à 999 (assemblage de chiffres)
+- [x] Conversion en nuages de points cibles
+- [x] Archive zip des images et des points
 
 ### Étape 4 — Modèle
 - [ ] Échange de messages entre voisins
