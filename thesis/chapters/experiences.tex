@@ -1,0 +1,17 @@
+\chapter{Expériences et résultats}
+\label{chap:experiences}
+
+\section{Protocole pilote}
+Un protocole pilote fixe dix graines par condition, soit 240 épisodes. Il évalue une cible circulaire avec 20, 40 et 100 robots, ainsi que des retraits de 5, 10 et 20\% des robots. Les métriques sont la distance de Chamfer, la régularité, les collisions et le taux de succès.
+
+\section{Résultats préliminaires}
+À 20 robots sans panne, le GNN atteint une distance de Chamfer moyenne de 0,607, contre 3,956 pour la règle de regroupement. Après retrait de 20\% des robots, les valeurs sont respectivement 0,644 et 4,162. Cette comparaison doit être interprétée avec prudence : la règle de regroupement n'utilise pas de consigne explicite de cercle et le protocole reste pilote.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.8\linewidth]{../results/evaluation-pilot/failures.png}
+  \caption{Distance moyenne de Chamfer en fonction du taux de pannes pour 20 robots dans le protocole pilote.}
+  \label{fig:pannes-pilote}
+\end{figure}
+
+La formation du cercle est visible après entraînement. Les formes symboliques sont couvertes de manière approximative dans le curriculum réduit, mais leur lisibilité n'est pas encore suffisante pour une conclusion définitive.

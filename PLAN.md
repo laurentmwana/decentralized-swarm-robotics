@@ -63,13 +63,14 @@ Les durées sont indicatives pour un travail à temps partiel ; à adapter à la
 - [x] Analyse des échecs
 
 ### Étape 7 — Rédaction
-- [ ] Modèle LaTeX configuré (12 pt, interligne scientifique)
+- [x] créer un dossier latex
+- [x] Modèle LaTeX configuré (12 pt, interligne scientifique)
 - [ ] Introduction et problématique
 - [ ] État de l'art
 - [ ] Méthode
 - [ ] Expériences et résultats
 - [ ] Discussion et conclusion
-- [ ] Bibliographie, annexes, relecture
+- [x] Bibliographie, annexes, relecture
 
 ### Étape 8 — Soutenance
 - [ ] Diapositives

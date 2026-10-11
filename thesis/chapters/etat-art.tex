@@ -1,0 +1,8 @@
+\chapter{État de l'art}
+\label{chap:etat-art}
+
+La robotique en essaim repose sur l'émergence d'un comportement collectif à partir d'interactions locales \cite{brambilla2013}. Les contrôleurs classiques de flocking combinent généralement cohésion, séparation et alignement \cite{reynolds1987,olfati2006}. Ils sont interprétables, mais leur adaptation à des formes variées requiert souvent des règles conçues manuellement.
+
+Les réseaux de neurones sur graphes généralisent le calcul neuronal à des structures relationnelles. Le passage de messages permet à chaque nœud d'agréger de manière symétrique l'information de son voisinage \cite{gilmer2017,battaglia2018}. Cette propriété est adaptée à un essaim dont le nombre de voisins varie au cours du temps.
+
+Des travaux récents emploient des GNN comme contrôleurs décentralisés pour le flocking \cite{tolstaya2020,gama2020} et la formation triangulaire \cite{jiang2023}. Des contrôleurs décentralisés ont également été proposés pour la génération de courbes planes \cite{hsieh2008} et la formation progressive de formes \cite{li2019}. Le présent travail étend ce cadre à un jeu de formes géométriques et symboliques, avec un protocole de pannes et de passage à l'échelle.
