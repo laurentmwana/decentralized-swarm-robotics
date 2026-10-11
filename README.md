@@ -42,3 +42,12 @@ Le modèle, la configuration, les pertes CSV et leur courbe sont enregistrés da
 ```powershell
 python -m src.train.visualize
 ```
+
+## Apprentissage progressif
+
+```powershell
+python -m src.train.curriculum
+python -m src.train.visualize_curriculum
+```
+
+Le curriculum réduit préserve les formes des niveaux précédents tandis qu'il ajoute chiffres, lettres et nombres. Les résultats sont des contrôles intermédiaires ; consulter la planche produite avant toute conclusion sur la lisibilité.

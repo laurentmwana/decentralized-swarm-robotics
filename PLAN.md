@@ -51,7 +51,7 @@ Les durées sont indicatives pour un travail à temps partiel ; à adapter à la
 ### Étape 5 — Entraînement
 - [x] Fonction d'objectif (qualité de la forme, éviter les collisions, rester groupé)
 - [x] Boucle d'entraînement avec positions de départ aléatoires
-- [ ] Apprentissage progressif (formes simples puis complexes)
+- [x] Apprentissage progressif (formes simples puis complexes)
 - [x] Sauvegarde des modèles et des courbes
 
 ### Étape 6 — Évaluation

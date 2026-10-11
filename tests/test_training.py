@@ -1,6 +1,8 @@
+import numpy as np
 import torch
+from pathlib import Path
 
-from src.train.training import TrainingConfig, adjacency_from_positions, chamfer_loss, collision_loss
+from src.train.training import TrainingConfig, adjacency_from_positions, chamfer_loss, collision_loss, train_targets
 
 
 def test_losses_are_zero_or_small_on_simple_expected_cases() -> None:
@@ -13,3 +15,12 @@ def test_adjacency_excludes_self_and_respects_radius() -> None:
     positions = torch.tensor([[[0.0, 0.0], [1.0, 0.0], [4.0, 0.0]]])
     adjacency = adjacency_from_positions(positions, radius=1.5)
     assert adjacency.tolist() == [[[False, True, False], [True, False, False], [False, False, False]]]
+
+
+def test_training_accepts_multiple_target_conditions() -> None:
+    config = TrainingConfig(2, 2, 1, 1, 0.001, 2, (2.0, 2.0), 2.0, 1.0, 0.1, 0.1, 0.5, 1.0, 1.0, 0.0, 8, 1)
+    targets = [np.array([[-1.0, 0.0], [1.0, 0.0]]), np.array([[0.0, -1.0], [0.0, 1.0]])]
+    model, losses, metrics = train_targets(config, targets, Path("results/test-target-conditions"))
+    assert len(losses) == 1
+    assert set(metrics) == {0, 1}
+    assert model.target_embedding.num_embeddings == 2

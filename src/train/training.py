@@ -82,22 +82,43 @@ def rollout(model: GNNController, positions: Tensor, target_ids: Tensor, config:
     return positions, torch.stack(all_commands, dim=1)
 
 
-def train_circle(config: TrainingConfig, target_points: np.ndarray, output_directory: str | Path) -> tuple[GNNController, list[float]]:
-    """Entraîne le contrôleur sur le cercle et sauvegarde modèle, courbe et config."""
+def _compatible_model(config: TrainingConfig, target_count: int, initial_state: dict[str, Tensor] | None = None) -> GNNController:
+    """Crée un modèle et recopie les paramètres compatibles d'un niveau précédent."""
+    model = GNNController(config.hidden_dim, config.message_passing_steps, target_count=target_count, max_speed=config.max_speed)
+    if initial_state is not None:
+        current = model.state_dict()
+        compatible = {name: value for name, value in initial_state.items() if name in current and current[name].shape == value.shape}
+        model.load_state_dict(compatible, strict=False)
+        if "target_embedding.weight" in initial_state:
+            previous = initial_state["target_embedding.weight"]
+            model.target_embedding.weight.data[: min(len(previous), target_count)] = previous[:target_count]
+    return model
+
+
+def train_targets(
+    config: TrainingConfig,
+    target_points: list[np.ndarray],
+    output_directory: str | Path,
+    initial_state: dict[str, Tensor] | None = None,
+) -> tuple[GNNController, list[float], dict[int, float]]:
+    """Entraîne un contrôleur conditionné sur plusieurs formes cibles."""
+    if not target_points or any(points.shape != (config.robot_count, 2) for points in target_points):
+        raise ValueError("Chaque forme cible doit contenir robot_count points 2D.")
     torch.manual_seed(config.seed)
     generator = torch.Generator().manual_seed(config.seed)
     device = torch.device("cpu")
-    target = torch.tensor(target_points, dtype=torch.float32, device=device) * config.target_radius
-    target = target + torch.tensor(config.arena_size, dtype=torch.float32, device=device) / 2
-    target = target.unsqueeze(0).expand(config.batch_size, -1, -1)
-    model = GNNController(config.hidden_dim, config.message_passing_steps, target_count=1, max_speed=config.max_speed).to(device)
+    targets = torch.tensor(np.stack(target_points), dtype=torch.float32, device=device) * config.target_radius
+    targets += torch.tensor(config.arena_size, dtype=torch.float32, device=device) / 2
+    model = _compatible_model(config, len(target_points), initial_state).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
     losses: list[float] = []
     for _ in range(config.iterations):
+        target_ids = torch.randint(len(target_points), (config.batch_size,), generator=generator, device=device)
         starts = torch.rand((config.batch_size, config.robot_count, 2), generator=generator, device=device)
         starts *= torch.tensor(config.arena_size, device=device)
-        final_positions, commands = rollout(model, starts, torch.zeros(config.batch_size, dtype=torch.long), config)
-        loss_shape = chamfer_loss(final_positions, target)
+        final_positions, commands = rollout(model, starts, target_ids, config)
+        selected_targets = targets[target_ids]
+        loss_shape = chamfer_loss(final_positions, selected_targets)
         loss_collision = collision_loss(final_positions, config.safety_distance)
         loss_motion = commands.square().mean()
         loss = config.shape_loss_weight * loss_shape + config.collision_loss_weight * loss_collision + config.motion_loss_weight * loss_motion
@@ -106,14 +127,29 @@ def train_circle(config: TrainingConfig, target_points: np.ndarray, output_direc
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         optimizer.step()
         losses.append(float(loss.detach()))
+    metrics: dict[int, float] = {}
+    with torch.no_grad():
+        for target_id in range(len(target_points)):
+            starts = torch.rand((config.batch_size, config.robot_count, 2), generator=generator, device=device)
+            starts *= torch.tensor(config.arena_size, device=device)
+            final_positions, _ = rollout(model, starts, torch.full((config.batch_size,), target_id, device=device), config)
+            metrics[target_id] = float(chamfer_loss(final_positions, targets[target_id].unsqueeze(0).expand(config.batch_size, -1, -1)))
     output = Path(output_directory)
     output.mkdir(parents=True, exist_ok=True)
-    torch.save(model.state_dict(), output / "circle-best.pt")
+    torch.save(model.state_dict(), output / "model.pt")
     (output / "config.yaml").write_text(yaml.safe_dump(asdict(config), sort_keys=False), encoding="utf-8")
+    (output / "metrics.yaml").write_text(yaml.safe_dump({"loss_by_target": metrics}, sort_keys=False), encoding="utf-8")
     np.savetxt(output / "loss.csv", np.asarray(losses), delimiter=",")
     figure, axis = plt.subplots()
     axis.plot(losses)
-    axis.set(xlabel="itération", ylabel="perte", title="Apprentissage du cercle")
+    axis.set(xlabel="itération", ylabel="perte", title="Apprentissage progressif")
     figure.savefig(output / "loss.png", dpi=150, bbox_inches="tight")
     plt.close(figure)
+    return model, losses, metrics
+
+
+def train_circle(config: TrainingConfig, target_points: np.ndarray, output_directory: str | Path) -> tuple[GNNController, list[float]]:
+    """Entraîne le contrôleur sur le cercle et sauvegarde modèle, courbe et config."""
+    model, losses, _ = train_targets(config, [target_points], output_directory)
+    torch.save(model.state_dict(), Path(output_directory) / "circle-best.pt")
     return model, losses
