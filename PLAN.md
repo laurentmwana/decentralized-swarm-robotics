@@ -18,9 +18,9 @@ Les durées sont indicatives pour un travail à temps partiel ; à adapter à la
 ## Cases à cocher
 
 ### Étape 0 — Cadrage
-- [ ] Question de recherche rédigée en une phrase
+- [x] Question de recherche rédigée en une phrase
 - [ ] Intitulé confirmé avec le professeur (version « cellulaire » ou « sur graphes »)
-- [ ] Hypothèses et périmètre écrits (ce qui est dans le mémoire, ce qui n'y est pas)
+- [x] Hypothèses et périmètre écrits (ce qui est dans le mémoire, ce qui n'y est pas)
 
 ### Étape 1 — État de l'art
 - [ ] 15 à 25 références lues et résumées (essaims, réseaux cellulaires, GNN, apprentissage multi-agents)
@@ -28,11 +28,11 @@ Les durées sont indicatives pour un travail à temps partiel ; à adapter à la
 - [ ] Positionnement : ce que ton travail apporte de différent
 
 ### Étape 2 — Simulateur
-- [ ] Dynamique des robots (position, vitesse, limites)
-- [ ] Voisinage par portée de communication
-- [ ] Gestion des pannes (retrait de robots)
-- [ ] Animation de contrôle (visualisation)
-- [ ] Tests unitaires
+- [x] Dynamique des robots (position, vitesse, limites)
+- [x] Voisinage par portée de communication
+- [x] Gestion des pannes (retrait de robots)
+- [x] Animation de contrôle (visualisation)
+- [x] Tests unitaires
 
 ### Étape 3 — Formes cibles
 - [ ] Formes géométriques (cercle, carré, triangle, etc.)

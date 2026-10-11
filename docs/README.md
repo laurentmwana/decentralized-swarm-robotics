@@ -3,7 +3,7 @@
 Un fichier par étape, à lire dans l'ordre. Chaque fichier contient : objectif, ce qu'il faut faire, décisions à prendre, critères de réussite, pièges.
 
 - `00-cadrage.md` : problématique, périmètre, hypothèses
-- `01-etat-de-l-art.md` : quoi lire et comment synthétiser
+- `01-etat-de-l-art.md` : quoi lire et comment synthétiser ; les fiches et bibliographies de travail sont rangées dans `01-etat-de-l-art/`
 - `02-simulateur.md` : le monde dans lequel vivent les robots
 - `03-formes-cibles.md` : le jeu de données (formes, lettres, chiffres, nombres)
 - `04-modele-gnn.md` : le réseau de neurones sur graphes
