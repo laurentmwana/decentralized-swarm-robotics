@@ -49,10 +49,10 @@ Les durées sont indicatives pour un travail à temps partiel ; à adapter à la
 - [x] Tests : le modèle accepte un nombre variable de robots et de voisins
 
 ### Étape 5 — Entraînement
-- [ ] Fonction d'objectif (qualité de la forme, éviter les collisions, rester groupé)
-- [ ] Boucle d'entraînement avec positions de départ aléatoires
+- [x] Fonction d'objectif (qualité de la forme, éviter les collisions, rester groupé)
+- [x] Boucle d'entraînement avec positions de départ aléatoires
 - [ ] Apprentissage progressif (formes simples puis complexes)
-- [ ] Sauvegarde des modèles et des courbes
+- [x] Sauvegarde des modèles et des courbes
 
 ### Étape 6 — Évaluation
 - [ ] Métriques calculées sur un jeu de test fixe

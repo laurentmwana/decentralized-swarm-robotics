@@ -61,6 +61,10 @@ Ne passer au niveau suivant que si le précédent est atteint de façon fiable.
 ## Critères de réussite
 Sur le cercle, la forme est obtenue de façon visible à partir de départs aléatoires ; la courbe de validation s'améliore puis se stabilise.
 
+## Première exécution validée
+
+La première exécution utilise l'apprentissage direct à travers le simulateur différentiable, une perte de Chamfer symétrique pour la forme, une pénalité de collision et une pénalité de mouvement. La configuration `configs/training-circle.yaml` entraîne 20 robots sur le cercle avec la graine 41. Les sorties reproductibles sont écrites dans `results/training-circle/` ; l'apprentissage progressif des autres formes reste à réaliser.
+
 ## Pièges
 - Régler les coefficients en regardant le jeu de test.
 - Lancer de longues sessions avant d'avoir validé une version réduite.

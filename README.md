@@ -30,3 +30,15 @@ python -m src.models.demo
 ```
 
 Cette commande exécute le contrôleur non entraîné dans le simulateur et vérifie que ses commandes respectent la vitesse maximale configurée.
+
+## Premier entraînement sur le cercle
+
+```powershell
+python -m src.train.run
+```
+
+Le modèle, la configuration, les pertes CSV et leur courbe sont enregistrés dans `results/training-circle/`. Pour exporter l'animation finale :
+
+```powershell
+python -m src.train.visualize
+```
