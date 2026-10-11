@@ -22,3 +22,11 @@ python -m src.shapes.build
 ```
 
 Les images, nuages de points, index et planche-contact sont créés dans `data/shapes/`; l'archive est `data/shapes.zip`.
+
+## Vérification du contrôleur GNN
+
+```powershell
+python -m src.models.demo
+```
+
+Cette commande exécute le contrôleur non entraîné dans le simulateur et vérifie que ses commandes respectent la vitesse maximale configurée.

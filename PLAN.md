@@ -43,10 +43,10 @@ Les durées sont indicatives pour un travail à temps partiel ; à adapter à la
 - [x] Archive zip des images et des points
 
 ### Étape 4 — Modèle
-- [ ] Échange de messages entre voisins
-- [ ] Sortie : mouvement de chaque robot
-- [ ] Références simples pour comparer (règles écrites à la main, version sans échange)
-- [ ] Tests : le modèle accepte un nombre variable de robots et de voisins
+- [x] Échange de messages entre voisins
+- [x] Sortie : mouvement de chaque robot
+- [x] Références simples pour comparer (règles écrites à la main, version sans échange)
+- [x] Tests : le modèle accepte un nombre variable de robots et de voisins
 
 ### Étape 5 — Entraînement
 - [ ] Fonction d'objectif (qualité de la forme, éviter les collisions, rester groupé)
