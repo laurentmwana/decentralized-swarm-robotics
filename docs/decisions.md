@@ -10,5 +10,6 @@
 | 2026-10-11 | Utiliser une dynamique 2D à vitesse directe et une arène bornée pour le premier simulateur | Base minimale testable pour valider voisinage, pannes et règles locales avant d'ajouter l'inertie ou des modèles robotiques réalistes. | Dynamique avec inertie ; arène illimitée. |
 | 2026-10-11 | Comparer d'abord le futur GNN à une règle locale de cohésion et répulsion | Cette règle est interprétable, ne dépend que du voisinage et valide le comportement minimal du simulateur. | Commencer directement par le GNN, sans référence comportementale. |
 | 2026-10-11 | Générer les formes à 128×128 pixels et échantillonner 20 points par farthest-point sampling | Le format est lisible, reproductible et produit des nuages de points régulièrement répartis pour les premiers essais à 20 robots. | Échantillonnage purement aléatoire ; images à résolution variable. |
+| 2026-10-11 | Utiliser un GNN à agrégation moyenne avec deux tours de messages et un état latent de 64 dimensions | La moyenne est insensible à l'ordre et au nombre de voisins ; deux tours permettent de propager une information au-delà du voisinage direct sans alourdir le premier modèle. | Attention, mémoire récurrente ou profondeur supérieure, réservées aux ablations ultérieures. |
 | | Méthode d'apprentissage (directe ou par renforcement) | | |
 | | Nombre de robots à l'entraînement | | |
