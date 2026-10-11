@@ -1,0 +1,14 @@
+\chapter{Méthode}
+\label{chap:methode}
+
+\section{Simulateur et hypothèses}
+Les robots évoluent dans une arène 2D bornée, selon une dynamique à vitesse directe. Leur voisinage est recalculé à chaque pas : deux robots communiquent si leur distance est inférieure à un rayon fixé. Un robot en panne cesse de bouger et de communiquer. Cette première version adopte un repère commun ; l'absence de repère propre constitue une limite discutée au chapitre~\ref{chap:discussion}.
+
+\section{Formes cibles}
+Le jeu de données contient des formes géométriques, l'alphabet, les chiffres et les nombres. Chaque image est convertie en un nuage de points normalisé. La consigne est fournie sous la forme d'un identifiant partagé et d'une position relative au centre commun de la cible.
+
+\section{Contrôleur GNN}
+Chaque robot encode sa vitesse, sa position relative au centre de la consigne et l'identifiant de forme. À chaque tour, il reçoit des messages calculés à partir de son état, de celui du voisin et de leur position relative. Une moyenne agrège les messages. Deux tours de messages sont utilisés dans l'architecture initiale, puis un décodeur partagé produit une commande de vitesse bornée.
+
+\section{Apprentissage}
+L'entraînement est direct à travers un simulateur différentiable. La fonction d'objectif combine une distance de Chamfer symétrique avec la forme cible, une pénalité de collision et une pénalité de mouvement. Un curriculum introduit successivement géométries, chiffres, lettres et nombres.
