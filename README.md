@@ -51,3 +51,11 @@ python -m src.train.visualize_curriculum
 ```
 
 Le curriculum réduit préserve les formes des niveaux précédents tandis qu'il ajoute chiffres, lettres et nombres. Les résultats sont des contrôles intermédiaires ; consulter la planche produite avant toute conclusion sur la lisibilité.
+
+## Évaluation pilote
+
+```powershell
+python -m src.eval.run
+```
+
+Cette commande produit les épisodes bruts, agrégats et figures du protocole pilote (pannes et passage à l'échelle) dans `results/evaluation-pilot/`.
