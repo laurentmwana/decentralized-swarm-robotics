@@ -1,10 +1,32 @@
 \chapter{Introduction}
 \label{chap:introduction}
 
-Les essaims de robots permettent de réaliser collectivement une tâche à partir de robots simples et sans chef unique. Cette organisation est attractive pour sa redondance et son potentiel de passage à l'échelle, mais elle rend la conception des règles de contrôle difficile lorsque la tâche dépasse le regroupement ou le déplacement collectif.
+\section{Contexte}
+Les essaims de robots cherchent à réaliser collectivement une tâche à partir d'agents simples, homogènes et dépourvus de chef unique. Cette organisation est attractive lorsque la mission doit rester opérationnelle malgré la perte de quelques unités, lorsque l'environnement est trop vaste pour être couvert par un seul robot, ou encore lorsque l'ajout d'agents doit être possible sans redéfinir tout le contrôleur. La contrepartie est que le comportement global ne peut pas être prescrit directement à chaque robot : il doit émerger de décisions locales et de communications limitées.
+
+La formation de forme est un exemple représentatif de cette difficulté. Produire un regroupement est déjà utile, mais former un cercle, une lettre ou un symbole suppose que l'essaim répartisse ses robots sur une structure spatiale précise. Une règle conçue manuellement peut être efficace pour une forme particulière, mais son extension à un ensemble varié de cibles conduit rapidement à multiplier les heuristiques. Ce mémoire étudie donc une approche apprise dans laquelle la règle locale commune est représentée par un réseau de neurones sur graphes (GNN).
+
+\section{Problématique}
+Dans un système centralisé, un planificateur connaît les positions de tous les robots et attribue éventuellement une destination à chacun d'eux. Une telle hypothèse devient fragile lorsque les communications sont locales, que le nombre de robots varie ou qu'un agent tombe en panne. Le problème considéré ici est au contraire décentralisé : un robot ne reçoit que les informations de ses voisins situés dans un rayon de communication fixé. Tous les robots valides exécutent néanmoins le même réseau de neurones et partagent une consigne de forme.
 
 Ce mémoire étudie la question suivante : \emph{un réseau de neurones sur graphes, n'utilisant que des informations locales, peut-il apprendre à faire former des formes à un essaim de robots et rester robuste aux pannes ainsi qu'au changement de taille du groupe ?}
 
-La contribution expérimentale consiste en un simulateur 2D reproductible, un jeu de formes cibles, un contrôleur GNN partagé et un protocole d'évaluation. L'intitulé déposé conserve l'expression « réseaux de neurones cellulaires » : l'analogie tient au fait que chaque robot applique la même règle locale. L'architecture employée est toutefois un GNN ; tout changement d'intitulé devra être validé par l'encadrement.
+Cette question se décline en trois sous-questions. Premièrement, le contrôleur peut-il réduire l'écart entre la configuration finale et une forme cible sans disposer d'une affectation robot--point cible ? Deuxièmement, l'utilisation de paramètres partagés permet-elle d'exécuter la même politique avec différentes tailles d'essaim ? Enfin, la dégradation introduite par le retrait d'une partie des robots reste-t-elle mesurable et limitée dans les scénarios examinés ?
 
-Le chapitre~\ref{chap:etat-art} situe le travail, le chapitre~\ref{chap:methode} présente la méthode, puis les chapitres~\ref{chap:experiences} et \ref{chap:discussion} rapportent et interprètent les expériences.
+\section{Objectifs et contributions}
+Le travail ne prétend pas valider un système embarqué complet. Il propose une première base expérimentale, explicitement simulée, dont les contributions sont les suivantes :
+\begin{itemize}
+  \item un simulateur 2D à dynamique de vitesse directe, avec voisinage local, limites d'arène et pannes d'agents ;
+  \item un jeu de formes transformées en nuages de points normalisés, couvrant des géométries, des chiffres, des lettres et des nombres ;
+  \item un contrôleur GNN à passage de messages, dont les paramètres sont communs à tous les robots ;
+  \item un apprentissage direct à travers le simulateur, complété par un curriculum de difficulté croissante ;
+  \item un protocole d'évaluation reproductible qui rapporte la qualité de forme, les collisions, les pannes et le passage à l'échelle.
+\end{itemize}
+
+L'intitulé déposé conserve l'expression « réseaux de neurones cellulaires ». L'analogie tient au fait que chaque robot applique la même règle locale et interagit avec un voisinage limité. L'architecture effectivement implémentée est cependant un GNN ; tout changement d'intitulé devra être validé par l'encadrement.
+
+\section{Périmètre du mémoire}
+Le repère de travail est bidimensionnel et commun à tous les robots. Les messages sont supposés exacts à ce stade, la communication est déterminée par la distance, et la commande de vitesse est bornée. Ces hypothèses simplifient l'étude de l'architecture de contrôle ; elles ne remplacent ni un modèle de capteurs, ni une estimation de pose distribuée, ni une validation sur matériel. Elles seront reprises de manière critique au chapitre~\ref{chap:discussion}.
+
+\section{Organisation du document}
+Le chapitre~\ref{chap:etat-art} situe le travail par rapport au contrôle en essaim et aux GNN décentralisés. Le chapitre~\ref{chap:methode} décrit le simulateur, les données, le contrôleur et l'apprentissage. Les résultats et leur protocole sont présentés au chapitre~\ref{chap:experiences}, puis discutés au chapitre~\ref{chap:discussion}. Le dernier chapitre synthétise les apports et les perspectives.

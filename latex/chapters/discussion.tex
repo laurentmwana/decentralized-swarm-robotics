@@ -1,6 +1,19 @@
 \chapter{Discussion}
 \label{chap:discussion}
 
-Le GNN partage les mêmes paramètres entre robots et reste exécutable avec des tailles d'essaim variables. Les résultats pilotes indiquent une meilleure adéquation au cercle que la règle de regroupement. Cependant, les résultats ne prouvent pas encore une généralisation complète aux lettres et nombres.
+\section{Interprétation des résultats}
+Le premier résultat utile est la faisabilité de la chaîne complète : le simulateur, le contrôleur à messages, la fonction de perte et l'optimisation convergent vers une formation circulaire plus proche de la cible que l'état initial. Les paramètres partagés permettent par construction d'appliquer le même réseau à chaque robot, tandis que l'agrégation locale permet de gérer un nombre variable de voisins. Le protocole pilote indique également une meilleure adéquation au cercle que la règle de regroupement implémentée.
 
-Les principales limites sont le faible nombre de graines du pilote, l'absence de baseline apprise sans communication, la dynamique simplifiée et l'hypothèse d'un repère commun. Les prochaines expériences doivent inclure au moins 50 départs par condition, du bruit, une portée de communication réduite et une comparaison équitable avec une politique sans échange de messages.
+Cette observation doit rester limitée à sa portée. La baseline de regroupement n'utilise pas la même information de consigne que le GNN ; elle n'est donc pas une baseline apprise ni une baseline classique ajustée à la tâche de cercle. L'écart de distance de Chamfer ne répond pas encore à la question « le GNN est-il meilleur à information égale ? ». Il répond seulement à une question plus modeste : dans la configuration pilotée, la politique entraînée pour le cercle se rapproche davantage du cercle qu'une règle qui vise le regroupement.
+
+La dégradation limitée de la distance moyenne après retrait de 20\% des robots constitue un signal à étudier, et non une preuve de robustesse générale. Le taux de succès, qui devient nul à ce niveau de pannes selon le seuil retenu, rappelle que la moyenne de Chamfer seule ne caractérise pas toute la performance.
+
+\section{Menaces à la validité}
+Les principales limites expérimentales sont le faible nombre de graines du pilote, l'absence de baseline apprise sans communication, la durée courte des épisodes et l'évaluation principalement concentrée sur le cercle. Le changement d'échelle à 40 et 100 robots est inclus dans les sorties du pilote, mais il n'est pas encore accompagné d'une analyse statistique détaillée. De même, la couverture approximative de lettres et de nombres n'établit pas une généralisation aux formes non vues.
+
+Les hypothèses de simulation limitent aussi la validité externe. Les robots disposent d'un repère commun, de positions exactes et de messages sans délai. Les collisions sont pénalisées par une fonction continue plutôt que résolues par une dynamique de contact réaliste. Enfin, le retrait d'un robot est modélisé comme une disparition propre de la communication, alors qu'une panne réelle peut produire des informations incohérentes ou des obstacles immobiles.
+
+\section{Suite expérimentale}
+Les prochaines expériences doivent inclure au moins 50 départs par condition, des intervalles de confiance, du bruit de position et de communication, ainsi qu'une réduction systématique de la portée radio. Une politique apprise sans passage de messages, recevant exactement la même consigne de forme, constitue la baseline prioritaire. Des contrôleurs classiques équipés de la même consigne peuvent compléter cette comparaison. Il faudra également séparer les mesures de couverture de forme, de régularité de répartition et de sécurité, puis définir des critères de lisibilité adaptés aux symboles.
+
+À plus long terme, le repère commun devrait être remplacé par des observations relatives, une localisation distribuée ou une balise mesurable. Le passage d'une dynamique à vitesse directe à un modèle cinématique ou dynamique plus réaliste permettra ensuite d'évaluer la transférabilité vers des robots physiques.

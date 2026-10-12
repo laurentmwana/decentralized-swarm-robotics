@@ -6,4 +6,4 @@ La compilation nécessite LaTeX et Biber. Les figures du protocole pilote sont r
 
 ## État actuel
 
-Le document contient un squelette compilable, une bibliographie initiale et une rédaction de travail fondée sur les résultats pilotes. Les chiffres pilotes sont clairement signalés comme tels ; ils devront être actualisés après l'étude complète à 50 graines.
+Le document contient une première rédaction complète des chapitres principaux et une bibliographie initiale. Les chiffres pilotes sont clairement signalés comme tels ; ils devront être actualisés après l'étude complète à 50 graines. La compilation reste à effectuer par l'auteur.
