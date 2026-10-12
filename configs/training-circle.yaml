@@ -13,5 +13,6 @@ target_radius: 2.0
 shape_loss_weight: 1.0
 collision_loss_weight: 1.0
 motion_loss_weight: 0.01
+coverage_loss_weight: 0.20
 hidden_dim: 32
 message_passing_steps: 2

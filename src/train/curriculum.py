@@ -26,7 +26,7 @@ def main() -> None:
     base = dict(curriculum["base"])
     base["arena_size"] = tuple(base["arena_size"])
     config = TrainingConfig(iterations=1, **base)
-    state = torch.load(arguments.initial_model, map_location="cpu", weights_only=True)
+    state = None if arguments.initial_model.lower() == "none" else torch.load(arguments.initial_model, map_location="cpu", weights_only=True)
     output = Path(arguments.output)
     for stage_index, stage in enumerate(curriculum["stages"]):
         if arguments.stage is not None and stage["name"] != arguments.stage:

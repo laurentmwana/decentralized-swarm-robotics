@@ -14,7 +14,7 @@ import yaml
 
 from src.models import GNNController
 from src.sim.rules import local_gathering_and_repulsion
-from src.train.training import adjacency_from_positions
+from src.train.training import adjacency_from_positions, local_target_features
 
 from .metrics import collision_count, nearest_neighbor_std, symmetric_chamfer_distance
 
@@ -36,6 +36,7 @@ class EvaluationConfig:
     success_threshold: float
     model_path: str
     target_path: str
+    use_target_geometry: bool = False
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> "EvaluationConfig":
@@ -52,12 +53,21 @@ def _load_model(config: EvaluationConfig) -> GNNController:
     return model.eval()
 
 
-def _commands_gnn(model: GNNController, positions: np.ndarray, velocities: np.ndarray, active: np.ndarray, config: EvaluationConfig) -> np.ndarray:
+def _commands_gnn(
+    model: GNNController,
+    positions: np.ndarray,
+    velocities: np.ndarray,
+    active: np.ndarray,
+    target: np.ndarray,
+    config: EvaluationConfig,
+) -> np.ndarray:
     pos = torch.tensor(positions, dtype=torch.float32).unsqueeze(0)
     vel = torch.tensor(velocities, dtype=torch.float32).unsqueeze(0)
     adjacency = adjacency_from_positions(pos, config.communication_radius) & torch.tensor(active).view(1, -1, 1) & torch.tensor(active).view(1, 1, -1)
+    target_tensor = torch.tensor(target, dtype=torch.float32).unsqueeze(0)
     with torch.no_grad():
-        result = model(pos, vel, adjacency, torch.tensor([0]), pos - torch.tensor(config.arena_size, dtype=torch.float32).view(1, 1, 2) / 2)
+        geometry = local_target_features(pos, target_tensor, config.target_radius) if config.use_target_geometry else None
+        result = model(pos, vel, adjacency, torch.tensor([0]), pos - torch.tensor(config.arena_size, dtype=torch.float32).view(1, 1, 2) / 2, geometry)
     return result[0].numpy()
 
 
@@ -85,7 +95,7 @@ def simulate_episode(model: GNNController, method: str, target: np.ndarray, robo
         if step == config.episode_steps // 2 and failure_fraction:
             count = max(1, round(robot_count * failure_fraction))
             active[rng.choice(np.flatnonzero(active), size=count, replace=False)] = False
-        commands = _commands_gnn(model, positions, velocities, active, config) if method == "gnn" else _commands_gathering(positions, active, config)
+        commands = _commands_gnn(model, positions, velocities, active, target, config) if method == "gnn" else _commands_gathering(positions, active, config)
         commands[~active] = 0
         velocities = commands
         positions = np.clip(positions + velocities * config.time_step, (0, 0), config.arena_size)

@@ -1,0 +1,6 @@
+seed: 53
+image_size: 192
+point_count: 50
+font_path: C:/Windows/Fonts/arialbd.ttf
+number_start: 10
+number_end: 999

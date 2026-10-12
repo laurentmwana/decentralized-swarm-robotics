@@ -4,6 +4,7 @@ __pycache__/
 results/*
 !results/README.md
 data/shapes/
+data/shapes-complex/
 data/*.zip
 latex/*.aux
 latex/*.bcf

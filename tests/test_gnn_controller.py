@@ -42,6 +42,13 @@ def test_goal_relative_position_can_condition_the_controller() -> None:
     assert model(positions, velocities, adjacency, target, positions - 0.5).shape == (1, 4, 2)
 
 
+def test_target_geometry_features_can_condition_the_controller() -> None:
+    model = GNNController(hidden_dim=16, message_passing_steps=1, target_count=4)
+    positions, velocities, adjacency, target = sample_inputs(4)
+    geometry = torch.rand(1, 4, 3)
+    assert model(positions, velocities, adjacency, target, positions - 0.5, geometry).shape == (1, 4, 2)
+
+
 def test_isolated_robots_and_no_communication_baseline_are_valid() -> None:
     model = GNNController(hidden_dim=16, message_passing_steps=1, target_count=4)
     positions, velocities, adjacency, target = sample_inputs(4)
