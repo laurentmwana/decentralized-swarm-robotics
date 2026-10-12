@@ -9,7 +9,7 @@ On considère $N$ robots évoluant dans une arène carrée bidimensionnelle. L'�
 \end{equation}
 La configuration utilisée pour les premiers entraînements comporte 20 robots dans une arène de $10\times10$, un pas de temps de $0{,}3$ et une vitesse maximale de $1$. Ces valeurs servent à stabiliser l'expérimentation ; elles ne sont pas interprétées comme les paramètres d'une plateforme physique particulière.
 
-Le graphe de communication $\mathcal{G}^t=(\mathcal{V},\mathcal{E}^t)$ est recalculé à chaque pas. Une arête est présente entre $i$ et $j$ lorsque $\lVert p_i^t-p_j^t\rVert\leq r_c$, avec $r_c=2{,}5$ dans la configuration de référence. Ainsi, la topologie évolue avec les déplacements. Un robot en panne cesse de se déplacer et n'émet plus de messages ; il est retiré des calculs de la politique des robots actifs. Cette première version adopte un repère commun et des mesures parfaites. L'absence de repère propre, de délai ou de bruit constitue une limite discutée au chapitre~\ref{chap:discussion}.
+Le graphe de communication $\mathcal{G}^t=(\mathcal{V},\mathcal{E}^t)$ est recalculé à chaque pas. Une arête est présente entre $i$ et $j$ lorsque $\lVert p_i^t-p_j^t\rVert\leq r_c$, avec $r_c=2{,}5$ dans la configuration de référence. Ainsi, la topologie évolue avec les déplacements. Un robot en panne cesse de se déplacer et n'émet plus de messages ; il est retiré des calculs de la politique des robots actifs. Cette première version adopte un repère commun et des mesures parfaites. L'absence de repère propre, de délai ou de bruit constitue une limite discutée au chapitre~\ref{chap:experiences}.
 
 \begin{figure}[htbp]
   \centering
@@ -53,3 +53,69 @@ Un curriculum réduit introduit successivement les géométries, les chiffres, q
 
 \section{Reproductibilité et baselines}
 Les paramètres des simulations, de l'entraînement et de l'évaluation sont conservés dans des fichiers de configuration versionnés, avec une graine explicite. Les modèles et tableaux produits sont séparés du code source. La première baseline est une règle locale de cohésion--répulsion : elle fournit un point de comparaison interprétable pour le regroupement, mais ne reçoit pas la consigne circulaire. Elle est donc utile comme contrôle de base, et non comme comparaison informationnellement équivalente avec le GNN.
+
+\section{Organisation de l'implémentation}
+
+La mise en oeuvre sépare volontairement les composants qui relèvent de la simulation de ceux qui relèvent de l'apprentissage. Le module de simulation met à jour les positions, applique les limites de l'arène, construit le voisinage et gère les pannes. Le module de génération de formes produit les images et les nuages de points. Le module de modèle contient le contrôleur GNN, tandis que les modules d'entraînement et d'évaluation exécutent les épisodes, calculent les pertes et enregistrent les résultats.
+
+Cette séparation a un intérêt pratique. Une même condition initiale peut être évaluée avec la règle de regroupement ou avec le GNN sans modifier la dynamique de base. Elle permet également de tester séparément le calcul du voisinage, le respect de la vitesse maximale, le traitement d'un robot isolé et l'invariance au réordonnancement des robots. Les figures ne pilotent pas la simulation : elles sont construites après l'exécution à partir des positions enregistrées.
+
+Les paramètres numériques sont regroupés dans des fichiers de configuration. Ils comprennent notamment la graine aléatoire, le nombre de robots, le rayon de communication, la durée d'un épisode, la vitesse maximale et les poids de chaque terme de la perte. Après un entraînement, le projet sauvegarde le modèle, la configuration utilisée, la liste des pertes et les métriques disponibles. Cette traçabilité ne transforme pas une seule graine en résultat général, mais elle permet de rejouer une expérience, de comparer deux réglages et de repérer l'origine d'une différence.
+
+\section{Restitution des trajectoires}
+
+Une petite API locale complète le prototype pour la démonstration. Elle charge le modèle du curriculum, exécute un épisode pour une forme connue et retourne les positions successives des robots au format JSON. Une page Web peut alors dessiner les points de la cible et animer ces positions. L'interface n'exécute pas les règles de contrôle elle-même : le calcul est réalisé par le modèle PyTorch, puis seul le résultat est affiché dans le navigateur.
+
+Ce choix évite de présenter comme résultat du GNN une animation construite avec des règles manuelles en JavaScript. Il ne s'agit pas d'un système de contrôle temps réel ni d'une communication par WebSocket. L'API est un outil de visualisation local, utile pour expliquer le modèle et rejouer un scénario déterminé par une graine.
+
+\section{Informations locales et information de mission}
+
+Le terme local peut recouvrir plusieurs réalités. Dans le contrôleur proposé, les informations provenant d'autres robots sont locales au sens strict : elles sont limitées aux voisins reliés dans le graphe de communication. Pour chaque arête, le message dépend des états des deux robots, de leur décalage relatif et de leur distance. Aucun message n'est envoyé directement par un robot situé hors de portée.
+
+La consigne de forme est d'une autre nature. Elle est définie avant l'exécution de la mission et est partagée par l'essaim. Dans le curriculum réduit, un identifiant de forme est converti en représentation interne par le réseau. Dans la configuration complexe, le contrôleur reçoit en plus un vecteur local vers le point de contour le plus proche. Cet ajout facilite le suivi de formes détaillées, mais donne aussi une information géométrique plus riche. Les deux configurations ne doivent donc pas être confondues lors de l'analyse des résultats.
+
+Cette séparation permet de répondre à une objection fréquente. Le système n'est pas centralisé parce qu'une forme est connue de tous : une carte de mission ou une balise peut être fournie avant le déploiement sans transmettre à chaque pas l'état complet de tous les robots. En revanche, le système ne serait plus strictement local si un serveur recalculait à chaque instant une affectation globale et la distribuait robot par robot. Cette seconde hypothèse n'est pas utilisée dans le simulateur.
+
+\section{Configurations d'entraînement}
+
+La première configuration entraîne vingt robots sur un cercle. Elle emploie une dimension cachée de 32, deux tours de passage de messages, une taille de lot de huit épisodes et 80 itérations. Un épisode comporte vingt pas de simulation. Ce réglage court a été choisi pour valider la cohérence du pipeline avant de lancer des campagnes plus coûteuses. Le modèle obtenu est conservé avec la courbe de perte et la configuration correspondante.
+
+Le curriculum réduit reprend ensuite un modèle compatible et introduit progressivement trois géométries, trois chiffres, trois lettres et deux nombres. Chaque niveau conserve les cibles précédentes afin de réduire le risque qu'un nouvel apprentissage efface complètement les comportements acquis. Cette stratégie n'élimine pas le problème de l'oubli catastrophique, mais elle évite d'entraîner chaque niveau uniquement sur la dernière forme ajoutée.
+
+Une campagne complexe est également définie. Elle utilise cinquante robots, cinquante points de contour, une dimension cachée de 64, trois tours de messages et des épisodes de soixante pas. Elle est plus proche du niveau de détail requis pour les symboles, mais son coût sur processeur est plus élevé. Au moment de la rédaction, le niveau géométrique de cette campagne a été exécuté ; les niveaux suivants doivent encore être entraînés avant de pouvoir être analysés comme résultats complets.
+
+\section{Mesures utilisées pendant et après l'apprentissage}
+
+La distance de Chamfer est utilisée parce qu'elle compare deux ensembles de points sans imposer d'ordre ou d'affectation fixe. Le premier terme vérifie qu'aucun robot ne s'éloigne fortement de la cible ; le second vérifie qu'aucune partie de la cible ne reste trop loin de tous les robots. Elle n'est pas suffisante à elle seule. Deux configurations visuellement différentes peuvent avoir une distance voisine, notamment lorsqu'une zone fine est mal couverte.
+
+Le projet complète donc cette distance par une pénalité de collision et par une mesure de régularité des distances au plus proche voisin. Le taux de collision décrit le nombre de paires qui deviennent trop proches au cours de l'épisode. La régularité renseigne sur la répartition de l'essaim : une valeur faible indique que les espacements sont plus homogènes, mais ne garantit pas que la forme soit correcte. Enfin, un taux de succès est calculé à partir d'un seuil explicite de distance. Ce seuil doit être affiché avec le résultat, car son choix influence directement l'interprétation du pourcentage de succès.
+
+Pour les lettres et les nombres, une évaluation visuelle reste nécessaire dans cette première version. Le mémoire ne déclare pas qu'un caractère est lisible sur la seule base d'une faible distance de Chamfer. Une suite logique du travail serait de définir un protocole de lisibilité, par exemple avec des évaluateurs humains ou un classifieur séparé entraîné sur des rendus d'essaims.
+
+\section{Déroulement détaillé d'un épisode}
+
+Un épisode commence par le choix d'une cible et le tirage des positions initiales dans l'arène. Les vitesses sont initialisées à zéro. À chaque pas, le simulateur calcule toutes les distances inter-robots puis construit le graphe de communication en conservant uniquement les paires séparées par une distance inférieure au rayon fixé. Cette opération est répétée à chaque instant : un voisin au début de l'épisode peut ne plus être voisin après quelques déplacements.
+
+Le contrôleur traite ensuite l'état de chaque robot. Il encode la vitesse, la consigne disponible et l'identifiant de la cible. Pour chaque arête du graphe, il construit un message à partir des états latents des deux extrémités et de leur position relative. Les messages reçus sont moyennés, l'état latent est mis à jour, puis le même mécanisme est répété selon le nombre de tours configuré. Un décodeur transforme enfin l'état final en une commande de vitesse à deux dimensions. La norme de cette commande est limitée avant la mise à jour de la position.
+
+Pendant l'entraînement, la simulation est différentiable. Les opérations décrites ci-dessus sont réalisées avec des tenseurs PyTorch, ce qui permet de calculer la dérivée de la perte par rapport aux poids du GNN. Après la rétropropagation, l'optimiseur Adam modifie les paramètres. Pendant l'évaluation, les poids sont gelés et le même épisode fournit uniquement des mesures. Cette différence est importante : l'évaluation ne doit pas modifier le modèle après avoir vu les scénarios testés.
+
+Le simulateur limite les positions aux frontières de l'arène. Ce choix empêche des valeurs non physiques de se propager dans la simulation, mais il peut créer un effet de bord : un robot qui atteint une limite ne se comporte pas comme dans un environnement ouvert. Les résultats sont donc interprétés dans une arène carrée finie, non comme une preuve de comportement dans tout plan euclidien.
+
+\section{Choix des hyperparamètres}
+
+Les hyperparamètres ne sont pas présentés comme des constantes universelles. Le rayon de communication définit le compromis entre localité et connectivité. S'il est trop faible, le graphe se fragmente et les robots isolés ne reçoivent plus de messages. S'il est trop élevé, tous les robots deviennent voisins et l'hypothèse de communication locale perd son intérêt. La valeur de 2,5 utilisée dans les premières expériences est un choix de simulation à documenter, pas une distance radio correspondant à une plateforme précise.
+
+La profondeur du GNN règle le nombre de tours de messages disponibles au sein d'un pas de simulation. Deux tours sont employés dans le curriculum réduit. Cette valeur permet à un robot d'intégrer indirectement des informations provenant de voisins de voisins, tout en gardant un modèle léger. La campagne complexe utilise trois tours, car les contours demandent une coordination plus fine. Une profondeur supérieure pourrait étendre l'information disponible, mais son effet doit être mesuré : elle augmente le nombre de calculs et peut réduire la stabilité de l'apprentissage.
+
+La dimension cachée contrôle la capacité du modèle à représenter les états locaux et les messages. La première campagne utilise 32 composantes latentes, ce qui limite le nombre de paramètres et facilite les essais rapides. La campagne complexe passe à 64 composantes. Cette augmentation ne constitue pas une preuve qu'un modèle plus grand est meilleur ; elle répond au besoin de représenter des formes avec davantage de points et des épisodes plus longs. Une étude complète devrait comparer plusieurs dimensions à budget d'entraînement identique.
+
+La vitesse maximale et le pas de temps sont liés. Une vitesse élevée ou un pas trop grand permet aux robots de rejoindre rapidement la cible, mais peut provoquer des dépassements et des collisions. À l'inverse, un pas trop petit rend l'épisode long et peut empêcher la forme de se construire dans la durée choisie. Les pénalités de mouvement et de collision servent à régulariser ce compromis. Les valeurs retenues sont conservées dans les fichiers de configuration afin que chaque résultat puisse être interprété avec son contexte numérique.
+
+\section{Gestion des formes et du curriculum}
+
+Le jeu de données de formes est séparé du modèle. Il contient des images et les nuages de points associés. Cette séparation a deux avantages. D'une part, la génération ou la correction d'une cible n'oblige pas à modifier l'architecture du GNN. D'autre part, elle permet de définir explicitement quels fichiers appartiennent à l'entraînement, à la validation ou au test. Cette discipline devient indispensable dès que l'on veut déclarer qu'un modèle généralise à des formes non vues.
+
+Le curriculum utilisé dans le projet commence par les géométries simples. Le modèle voit ensuite les chiffres, puis quelques lettres et nombres. Le principe n'est pas que les premières formes soient intrinsèquement plus importantes ; elles fournissent un problème initial plus stable. Un cercle, un carré et un triangle permettent notamment de vérifier que la perte de forme et la pénalité de collision entraînent les mouvements dans une direction utile avant d'ajouter des contours plus irréguliers.
+
+Chaque nouveau niveau conserve les cibles des niveaux précédents. Sans cette précaution, le modèle pourrait optimiser fortement les nouvelles formes et perdre la capacité acquise sur le cercle ou le triangle. Cette conservation réduit le risque d'oubli, mais elle ne le supprime pas. Elle augmente également la diversité des épisodes et peut ralentir l'amélioration sur une cible particulière. Ces compromis sont normaux dans un apprentissage progressif et doivent être visibles dans les courbes et les métriques par forme.

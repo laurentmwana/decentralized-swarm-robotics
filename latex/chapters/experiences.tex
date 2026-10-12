@@ -6,6 +6,10 @@ Les expériences sont organisées en deux phases. La première contrôle que le 
 
 Les métriques rapportées sont la distance de Chamfer, le nombre ou le taux de collisions, la régularité des distances entre voisins et un taux de succès associé à un seuil de distance de Chamfer de $0{,}5$. La distance de Chamfer mesure l'adéquation spatiale à la forme, mais elle ne garantit ni une couverture uniforme ni la lisibilité d'un symbole. Les métriques sont donc complémentaires et doivent être interprétées avec les visualisations finales.
 
+Le protocole distingue deux types de comparaison. La comparaison entre le GNN et la règle de regroupement vérifie que le contrôleur entraîné atteint mieux la cible circulaire dans le cadre retenu. Les variations de taille et de pannes évaluent ensuite le même GNN dans des conditions différentes de celles de l'entraînement. Le protocole ne permet pas encore de séparer l'effet de tous les choix de conception : il manque en particulier une baseline apprise sans communication et une règle manuelle recevant la même consigne de forme.
+
+Avant toute agrégation, chaque épisode est reproductible à partir d'une graine. Les positions initiales sont tirées aléatoirement dans l'arène, puis la même dynamique est appliquée pendant vingt pas. Pour un scénario de panne, le retrait se produit à mi-épisode. Les fichiers bruts conservent une ligne par épisode ; le tableau de synthèse rapporte ensuite la moyenne et l'écart-type de la distance de forme. Cette organisation permet de retrouver les cas individuels qui expliquent une moyenne inhabituelle.
+
 \section{Résultats préliminaires}
 Pour l'entraînement initial sur un cercle, la perte observée avec la graine 41 passe de 9,84 à 0,28 en 80 itérations. Cette diminution indique que l'optimisation est fonctionnelle dans le simulateur ; elle ne constitue pas une mesure de généralisation, car elle concerne une configuration et une graine particulières.
 
@@ -14,6 +18,13 @@ Pour l'entraînement initial sur un cercle, la perte observée avec la graine 41
   \includegraphics[width=.72\linewidth]{figures/circle-training-loss.png}
   \caption{Évolution de la perte pendant l'entraînement initial du cercle, pour la graine 41. Cette courbe sert de diagnostic d'optimisation et non d'intervalle de confiance.}
   \label{fig:circle-loss}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{figures/pilot-summary-grid.png}
+  \caption{Synthèse du protocole pilote calculée à partir de 240 épisodes. À gauche, l'effet de la taille de l'essaim sans panne ; à droite, l'effet des pannes avec 20 robots. Une valeur plus faible de distance de Chamfer indique une meilleure adéquation à la cible circulaire.}
+  \label{fig:pilot-summary-grid}
 \end{figure}
 
 \begin{figure}[htbp]
@@ -43,6 +54,32 @@ Le tableau~\ref{tab:pilote-20} présente les résultats du pilote pour 20 robots
 
 Cette comparaison doit être interprétée avec prudence. La règle de regroupement ne reçoit pas de consigne explicite de cercle : elle répond donc à un problème d'information différent. Le tableau montre que le contrôleur entraîné est plus proche de la forme circulaire dans ce protocole, mais ne démontre pas qu'il est supérieur à toute règle décentralisée disposant de la même consigne.
 
+\section{Effet du nombre de robots}
+
+Le même modèle est exécuté avec 20, 40 et 100 robots, alors que son entraînement de référence a été réalisé avec 20 robots. Cette expérience vérifie d'abord une propriété pratique : la politique peut être évaluée avec une taille différente sans modifier le nombre de paramètres. Elle vérifie ensuite une propriété empirique : la qualité obtenue reste-t-elle acceptable lorsque le graphe de communication devient plus dense et que la cible doit être couverte par davantage de robots ?
+
+Dans le pilote sans panne, la distance moyenne du GNN est de 0,607 avec 20 robots, de 0,525 avec 40 robots et de 0,467 avec 100 robots. La règle de regroupement reste nettement plus éloignée de la cible, avec des distances respectives de 3,956, 3,799 et 3,507. La diminution observée pour le GNN peut venir d'une meilleure couverture de l'échantillonnage circulaire lorsque davantage de points sont disponibles. Elle ne signifie pas nécessairement que la politique est meilleure dans tous les régimes de densité : les cibles sont redimensionnées pour conserver le même nombre de points que les robots, et le protocole reste limité à dix épisodes par condition.
+
+Le tableau~\ref{tab:pilote-echelle} récapitule ces résultats. Il doit être lu comme un contrôle de bon fonctionnement à taille variable. Une validation plus ambitieuse demanderait de répéter l'entraînement avec plusieurs graines, d'étudier plusieurs rayons de communication et de vérifier la conservation de la connectivité pendant toute la trajectoire.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Passage à l'échelle sans panne dans le protocole pilote, avec dix épisodes par condition.}
+  \label{tab:pilote-echelle}
+  \begin{tabular}{lrrr}
+    \toprule
+    Contrôleur & Robots & Chamfer moyen & Taux de succès \\
+    \midrule
+    GNN & 20 & 0,607 & 0,20 \\
+    GNN & 40 & 0,525 & 0,60 \\
+    GNN & 100 & 0,467 & 1,00 \\
+    Regroupement & 20 & 3,956 & 0,00 \\
+    Regroupement & 40 & 3,799 & 0,00 \\
+    Regroupement & 100 & 3,507 & 0,00 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=.8\linewidth]{../results/evaluation-pilot/failures.png}
@@ -51,6 +88,12 @@ Cette comparaison doit être interprétée avec prudence. La règle de regroupem
 \end{figure}
 
 La figure~\ref{fig:pannes-pilote} illustre l'évolution de la distance avec le taux de pannes. Le faible écart observé entre 0\% et 20\% de pannes pour le GNN est une indication encourageante dans ce cadre précis, mais la taille de l'échantillon ne permet pas d'en déduire un intervalle de confiance robuste. Une campagne finale devra employer au moins 50 répétitions par condition et rapporter la variabilité entre graines.
+
+\section{Lecture des scénarios de panne}
+
+Dans le simulateur, une panne est introduite à mi-parcours : une fraction des robots actifs est retirée aléatoirement. Les robots retirés ne contribuent plus aux messages et ne sont plus pris en compte dans la mesure finale de la forme. Cette définition correspond à une disparition propre d'agents du réseau. Elle permet d'étudier comment le reste de l'essaim se réorganise, mais elle est moins sévère qu'une panne matérielle réelle, où un robot peut rester immobile, produire des mesures incohérentes ou gêner physiquement ses voisins.
+
+Le résultat doit donc être formulé avec précision. Le GNN conserve, dans le pilote, une distance de Chamfer plus faible que la baseline après le retrait de 5, 10 ou 20\% des robots. Cela montre que la politique n'est pas limitée à une composition rigide de vingt agents. Il ne s'agit pas encore d'une démonstration d'auto-réparation générale. Le protocole n'observe ni le temps nécessaire au retour vers la forme, ni la connectivité du graphe, ni le comportement d'un robot défaillant qui resterait dans l'arène.
 
 \begin{figure}[htbp]
   \centering
@@ -70,3 +113,63 @@ Les visualisations montrent une couverture approximative des cibles symboliques.
   \caption{Planche de visualisation issue de la dernière étape du curriculum réduit. Elle illustre des formations approximatives et ne constitue pas encore une validation de lisibilité des symboles.}
   \label{fig:curriculum-contact-sheet}
 \end{figure}
+
+\section{Exemples, résultats négatifs et limites de lecture}
+
+Les exemples visuels ont une place importante dans ce projet parce que les métriques globales ne montrent pas tous les défauts d'une formation. Une configuration peut avoir une distance moyenne faible alors qu'un angle de lettre est mal dessiné ou que plusieurs robots forment un petit amas. C'est pourquoi les planches de visualisation présentent à la fois les points de la cible et la position finale des robots. Elles permettent de repérer rapidement les zones non couvertes, les espacements irréguliers et les formes qui restent ambiguës.
+
+Ces images ne doivent pas être sélectionnées uniquement parmi les meilleurs épisodes. Pour chaque campagne finale, il faudra conserver un ensemble fixe de graines, afficher au moins un exemple favorable et un exemple défavorable, puis relier ces cas aux statistiques. Cette procédure est particulièrement importante pour les symboles : une valeur moyenne ne peut pas établir à elle seule qu'une lettre est lisible par une personne.
+
+Le curriculum réduit donne donc un résultat de faisabilité. Il montre que l'entraînement peut être poursuivi lorsqu'on ajoute de nouvelles cibles. Il ne suffit pas à dire que le modèle a appris un alphabet ou qu'il généralise à toutes les combinaisons de chiffres. Les lettres A, B et C ainsi que les nombres 010 et 123 sont les seules cibles symboliques de cette campagne. Les autres formes générées par le projet font partie du jeu de données, mais ne sont pas automatiquement des formes connues du modèle final.
+
+\section{Discussion des résultats}
+
+Le premier résultat est la validation de la chaîne expérimentale : le simulateur, le contrôleur à messages, la fonction de perte et l'optimisation permettent d'obtenir une formation circulaire plus proche de la cible que l'état initial. Le partage des paramètres permet d'appliquer la même politique à chaque robot, tandis que l'agrégation locale accepte un nombre variable de voisins. Le protocole pilote indique aussi que le GNN est plus proche du cercle que la règle de regroupement utilisée comme contrôle.
+
+Cette observation doit rester limitée à son cadre. La règle de regroupement ne reçoit pas la même consigne de forme que le GNN. Elle répond donc à un problème différent et ne peut pas servir de preuve qu'un GNN est meilleur que toute règle décentralisée. Une comparaison plus juste devra inclure une règle classique ayant accès à la même cible, ainsi qu'une version apprise sans échange de messages.
+
+Les résultats sur les pannes sont également préliminaires. La distance moyenne de Chamfer augmente peu entre les scénarios sans panne et les scénarios avec retrait de robots, mais le taux de réussite dépend du seuil choisi et tombe à zéro dans certaines conditions. Il serait donc imprudent de conclure à une robustesse générale. Pour répondre correctement à cette question, il faut multiplier les graines, calculer des intervalles de confiance et étudier les cas où l'essaim se fragmente ou couvre mal une partie de la cible.
+
+Les limites de simulation doivent aussi être rappelées. Les robots possèdent un repère commun, les positions sont exactes et les messages ne subissent ni délai ni perte. La collision est pénalisée par une fonction continue plutôt que par un modèle de contact. Enfin, les lettres et les nombres issus du curriculum réduit restent des formations approximatives : leur présence dans une planche ne démontre ni une reconnaissance fiable ni une généralisation à des symboles non vus.
+
+La suite expérimentale doit donc consolider le protocole plutôt que l'élargir trop vite. Les priorités sont cinquante répétitions ou plus par condition, une baseline sans communication, des contrôleurs classiques recevant une consigne équivalente, du bruit de mesure et une réduction progressive de la portée de communication. Ces expériences permettront de distinguer ce qui relève réellement de l'échange de messages appris de ce qui provient de la consigne géométrique fournie au système.
+
+\section{Lien entre agrégation et résultats observés}
+
+L'agrégation moyenne rend le contrôleur compatible avec des voisinages de taille variable. Cette propriété est particulièrement pertinente dans les expériences de passage à l'échelle : lorsque le nombre de robots augmente, les robots situés au centre de l'arène peuvent recevoir plus de messages que ceux situés près du bord. Une somme brute de messages ferait augmenter la norme de l'entrée agrégée avec cette densité. La moyenne évite ce changement d'échelle immédiat, mais elle ne garantit pas à elle seule la qualité de formation.
+
+Les résultats à 40 et 100 robots montrent que l'architecture ne s'effondre pas lorsque le nombre de nœuds change. Cette observation est cohérente avec le partage des paramètres et la moyenne des messages. Elle doit néanmoins être interprétée avec prudence : le succès accru à 100 robots peut aussi s'expliquer par la densité plus importante de points disponibles sur un même contour. Une ablation comparant moyenne, somme normalisée et absence de messages serait nécessaire pour attribuer précisément l'amélioration à la stratégie d'agrégation.
+
+Le rapport avec le flocking est également limité mais instructif. La règle manuelle de regroupement utilise une interaction locale simple et produit une cohésion sans représenter explicitement le cercle. Le GNN reçoit une consigne supplémentaire et apprend ses réponses à partir d'exemples simulés. La comparaison actuelle montre donc la différence entre un comportement de rassemblement et un comportement conditionné par une cible, pas une opposition définitive entre méthodes manuelles et méthodes apprises.
+
+\section{Analyse des métriques}
+
+La distance de Chamfer est la métrique principale car elle répond directement à la question de la proximité entre la formation et la cible. Une valeur faible signifie que, en moyenne, les robots sont proches d'un point du contour et que les points du contour sont proches d'un robot. Elle ne décrit cependant pas la dynamique. Deux épisodes peuvent produire la même distance finale alors que l'un atteint la cible rapidement et que l'autre oscille jusqu'au dernier pas. Le temps de convergence est donc une mesure complémentaire prévue pour les expériences finales.
+
+Le taux de collision doit également être interprété avec soin. Dans cette étude, il est calculé à partir d'un seuil de sécurité et des positions simulées. Il ne mesure pas une collision mécanique avec contact, car le simulateur ne comporte pas de modèle de masse, de friction ou de rebond. Son rôle est de signaler les trajectoires qui placent trop souvent deux robots à une distance incompatible avec une marge de sécurité définie. Une baisse du taux de collision est favorable, mais elle ne compense pas une formation qui manquerait largement la cible.
+
+La régularité des distances au plus proche voisin complète les deux mesures précédentes. Une formation peut être proche de la cible tout en laissant une partie du contour très dense et une autre presque vide. Cette métrique détecte une partie de ce phénomène, sans fournir une mesure parfaite de couverture. Dans la campagne finale, il serait utile de présenter les métriques ensemble dans un tableau par condition, plutôt que de sélectionner celle qui donne le résultat le plus favorable.
+
+\section{Menaces à la validité}
+
+La première menace concerne le nombre limité de répétitions. Dix épisodes par condition permettent de vérifier que les scripts fonctionnent et de détecter un écart important entre deux méthodes. Ils ne suffisent pas pour estimer précisément une moyenne, comparer des distributions ou établir un intervalle de confiance robuste. La cible de cinquante répétitions par condition est retenue pour la suite parce qu'elle rendra les agrégats plus informatifs, même si elle ne remplace pas une analyse statistique complète.
+
+La deuxième menace est l'écart entre le simulateur et un système réel. Les robots du projet connaissent un repère commun, échangent des messages exacts et sont modélisés par une vitesse directement appliquée. Dans un robot physique, les estimations de position sont bruitées, les roues ont une inertie et les communications peuvent être retardées. Ces hypothèses rendent l'étude actuelle plus contrôlable, mais limitent la portée des conclusions.
+
+La troisième menace concerne les formes elles-mêmes. Les nombres et lettres du curriculum réduit sont peu nombreux, et ils sont utilisés pendant l'entraînement. La capacité à former A, B ou C ne prouve pas une généralisation à toutes les lettres. Une expérience de généralisation devra réserver des formes complètes avant l'entraînement, puis mesurer la performance sur ces cibles non vues sans modifier les poids du modèle.
+
+\section{Plan d'expériences pour la campagne finale}
+
+La campagne finale doit être organisée autour de questions simples et mesurables. La première question concerne la qualité de formation : pour chaque catégorie de formes, quelle est la distance à la cible, quelle est la régularité de la répartition et quelle proportion d'épisodes franchit le seuil de succès ? La deuxième question concerne l'apport de la communication : que se passe-t-il lorsqu'on retire les messages de voisins en conservant la même consigne de forme ? La troisième question concerne la robustesse : comment évoluent les mesures lorsque des robots disparaissent, lorsque le rayon de communication diminue ou lorsque les positions sont bruitées ?
+
+Chaque condition doit être fixée avant de consulter les résultats. Par exemple, une expérience de panne peut combiner trois tailles d'essaim, quatre fractions de retrait et cinquante graines. Les mêmes positions initiales peuvent être réutilisées pour comparer deux contrôleurs, afin que l'écart observé ne soit pas causé par une série de départs plus faciles pour l'une des méthodes. Les données brutes doivent ensuite être conservées pour permettre le recalcul des moyennes, écarts-types et graphiques.
+
+Une présentation complète devra associer un tableau numérique à une figure. Le tableau donne les valeurs précises et leur dispersion. La figure montre la tendance quand un facteur varie, par exemple le pourcentage de pannes. Les images finales et les animations jouent un troisième rôle : elles permettent de comprendre la nature spatiale d'un échec. Cette complémentarité évite de réduire un comportement collectif à un seul nombre.
+
+\section{Interprétation prudente des résultats pilotes}
+
+Le pilote est utile parce qu'il valide l'enchaînement complet des scripts. Il produit des épisodes, agrège les résultats et génère des graphiques sans intervention manuelle. Il met aussi en évidence un écart important entre le GNN conditionné par la cible et la règle de regroupement. Cet écart justifie de poursuivre les expériences, mais il ne suffit pas pour une conclusion forte sur la supériorité d'une méthode.
+
+La première raison est l'asymétrie d'information déjà discutée. La seconde est le nombre de répétitions. La troisième est que les résultats concernent principalement une cible circulaire. Une méthode peut être très performante pour un contour régulier et moins convaincante pour une lettre présentant des angles ou des traits éloignés. L'objectif de la campagne finale est donc de remplacer une affirmation générale par un ensemble de résultats précis, chacun associé à une forme, une taille d'essaim et une perturbation donnée.
+
+Cette prudence améliore la valeur du mémoire. Un résultat négatif, comme une lettre difficile à couvrir ou un effondrement lorsque la portée devient trop faible, n'est pas un échec de rédaction. Il renseigne sur les limites de la politique et aide à déterminer quelles observations ou quels mécanismes doivent être ajoutés. Dans un travail sur les systèmes distribués, expliquer pourquoi une méthode cesse de fonctionner est souvent aussi utile que montrer ses meilleurs exemples.
