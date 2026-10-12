@@ -11,6 +11,13 @@ La configuration utilisée pour les premiers entraînements comporte 20 robots d
 
 Le graphe de communication $\mathcal{G}^t=(\mathcal{V},\mathcal{E}^t)$ est recalculé à chaque pas. Une arête est présente entre $i$ et $j$ lorsque $\lVert p_i^t-p_j^t\rVert\leq r_c$, avec $r_c=2{,}5$ dans la configuration de référence. Ainsi, la topologie évolue avec les déplacements. Un robot en panne cesse de se déplacer et n'émet plus de messages ; il est retiré des calculs de la politique des robots actifs. Cette première version adopte un repère commun et des mesures parfaites. L'absence de repère propre, de délai ou de bruit constitue une limite discutée au chapitre~\ref{chap:discussion}.
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.82\linewidth]{figures/swarm-local-communication.png}
+  \caption{Schéma d'un essaim. Le robot orange ne peut échanger qu'avec les robots situés dans sa portée de communication ; les robots distants ne sont pas accessibles directement.}
+  \label{fig:local-communication}
+\end{figure}
+
 \section{Formes cibles}
 Le jeu de données contient sept formes géométriques, les 26 lettres de l'alphabet, les dix chiffres et un ensemble de nombres à trois caractères. Chaque image est convertie en un nuage de points puis normalisée dans un cadre commun. Pour une exécution donnée, un sous-ensemble de points de la cible est sélectionné afin de constituer la référence de formation. Cette représentation évite d'imposer une correspondance fixe entre l'indice d'un robot et l'indice d'un point cible.
 
@@ -26,6 +33,13 @@ Chaque robot encode sa vitesse, sa position relative au centre de la consigne et
 Lorsque le voisinage est vide, l'agrégat est remplacé par le vecteur nul. Une fonction de mise à jour $\psi_{\ell}$ produit ensuite $h_i^{\ell+1}=\psi_{\ell}(h_i^{\ell},\bar m_i^{\ell})$. Deux tours de passage de messages et une dimension cachée de 32 sont employés dans les expériences initiales. Un décodeur partagé transforme l'état final en commande de vitesse, puis une non-linéarité borne cette commande.
 
 Le partage des paramètres garantit que la politique ne dépend pas de l'identité d'un robot. L'agrégation par moyenne la rend également insensible à l'ordre des voisins. En revanche, la portée effective de l'information reste limitée : avec deux tours, un robot ne résume directement que son voisinage à deux sauts pour la topologie considérée à cet instant.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{figures/gnn-message-passing.png}
+  \caption{Calcul local réalisé pour un robot lors d'un tour de passage de messages. Les mêmes blocs de calcul et les mêmes paramètres sont partagés dans l'essaim.}
+  \label{fig:gnn-message-passing}
+\end{figure}
 
 \section{Apprentissage}
 L'entraînement est direct à travers le simulateur différentiable. Si $P$ désigne l'ensemble des positions finales des robots actifs et $Q$ le nuage de points cible, la qualité de forme est mesurée par une distance de Chamfer symétrique :
