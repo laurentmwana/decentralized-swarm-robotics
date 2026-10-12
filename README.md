@@ -4,6 +4,16 @@ Contrôle décentralisé d'un essaim de robots par réseaux de neurones sur grap
 
 Commencer par `AGENT.md`, puis `PLAN.md`, puis le dossier `docs/` (un fichier par étape).
 
+## Commandes rapides
+
+Le `Makefile` centralise les commandes du projet. Après installation de GNU Make, afficher la liste avec :
+
+```powershell
+make help
+```
+
+Les cibles les plus utiles sont `make test`, `make circle`, `make curriculum`, `make complex-smoke`, `make complex` et `make evaluation`. La cible `make complex` est plus longue : elle entraîne 50 robots et peut prendre plusieurs dizaines de minutes sur CPU.
+
 ## Démonstration du simulateur
 
 Après installation de Python et des dépendances listées dans `AGENT.md`, lancer :
