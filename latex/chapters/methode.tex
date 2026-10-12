@@ -2,13 +2,40 @@
 \label{chap:methode}
 
 \section{Simulateur et hypothèses}
-Les robots évoluent dans une arène 2D bornée, selon une dynamique à vitesse directe. Leur voisinage est recalculé à chaque pas : deux robots communiquent si leur distance est inférieure à un rayon fixé. Un robot en panne cesse de bouger et de communiquer. Cette première version adopte un repère commun ; l'absence de repère propre constitue une limite discutée au chapitre~\ref{chap:discussion}.
+On considère $N$ robots évoluant dans une arène carrée bidimensionnelle. L'état du robot $i$ au pas $t$ comprend sa position $p_i^t\in\mathbb{R}^2$ et sa vitesse $v_i^t\in\mathbb{R}^2$. Le contrôleur produit une commande bornée $u_i^t$, puis le simulateur applique une dynamique à vitesse directe :
+\begin{equation}
+  p_i^{t+1}=p_i^t+\Delta t\,u_i^t,
+  \qquad \lVert u_i^t\rVert\leq v_{\max}.
+\end{equation}
+La configuration utilisée pour les premiers entraînements comporte 20 robots dans une arène de $10\times10$, un pas de temps de $0{,}3$ et une vitesse maximale de $1$. Ces valeurs servent à stabiliser l'expérimentation ; elles ne sont pas interprétées comme les paramètres d'une plateforme physique particulière.
+
+Le graphe de communication $\mathcal{G}^t=(\mathcal{V},\mathcal{E}^t)$ est recalculé à chaque pas. Une arête est présente entre $i$ et $j$ lorsque $\lVert p_i^t-p_j^t\rVert\leq r_c$, avec $r_c=2{,}5$ dans la configuration de référence. Ainsi, la topologie évolue avec les déplacements. Un robot en panne cesse de se déplacer et n'émet plus de messages ; il est retiré des calculs de la politique des robots actifs. Cette première version adopte un repère commun et des mesures parfaites. L'absence de repère propre, de délai ou de bruit constitue une limite discutée au chapitre~\ref{chap:discussion}.
 
 \section{Formes cibles}
-Le jeu de données contient des formes géométriques, l'alphabet, les chiffres et les nombres. Chaque image est convertie en un nuage de points normalisé. La consigne est fournie sous la forme d'un identifiant partagé et d'une position relative au centre commun de la cible.
+Le jeu de données contient sept formes géométriques, les 26 lettres de l'alphabet, les dix chiffres et un ensemble de nombres à trois caractères. Chaque image est convertie en un nuage de points puis normalisée dans un cadre commun. Pour une exécution donnée, un sous-ensemble de points de la cible est sélectionné afin de constituer la référence de formation. Cette représentation évite d'imposer une correspondance fixe entre l'indice d'un robot et l'indice d'un point cible.
+
+La consigne disponible à tous les robots comporte un identifiant de forme et la position relative au centre commun de la cible. L'identifiant n'est pas un message provenant d'un superviseur au cours de l'exécution : il représente une mission définie avant le déploiement. Le choix d'un centre partagé facilite l'étude de la formation, mais il introduit une information globale minimale qu'il faudra remplacer à terme par une estimation distribuée ou une balise localement observable.
 
 \section{Contrôleur GNN}
-Chaque robot encode sa vitesse, sa position relative au centre de la consigne et l'identifiant de forme. À chaque tour, il reçoit des messages calculés à partir de son état, de celui du voisin et de leur position relative. Une moyenne agrège les messages. Deux tours de messages sont utilisés dans l'architecture initiale, puis un décodeur partagé produit une commande de vitesse bornée.
+Chaque robot encode sa vitesse, sa position relative au centre de la consigne et l'identifiant de forme. Son état latent initial est noté $h_i^0$. À la couche $\ell$, le message de $j$ vers $i$ dépend des deux états et de la position relative :
+\begin{equation}
+  m_{ij}^{\ell}=\phi_{\ell}\left(h_i^{\ell},h_j^{\ell},p_j-p_i\right),
+  \qquad
+  \bar m_i^{\ell}=\frac{1}{|\mathcal{N}(i)|}\sum_{j\in\mathcal{N}(i)}m_{ij}^{\ell}.
+\end{equation}
+Lorsque le voisinage est vide, l'agrégat est remplacé par le vecteur nul. Une fonction de mise à jour $\psi_{\ell}$ produit ensuite $h_i^{\ell+1}=\psi_{\ell}(h_i^{\ell},\bar m_i^{\ell})$. Deux tours de passage de messages et une dimension cachée de 32 sont employés dans les expériences initiales. Un décodeur partagé transforme l'état final en commande de vitesse, puis une non-linéarité borne cette commande.
+
+Le partage des paramètres garantit que la politique ne dépend pas de l'identité d'un robot. L'agrégation par moyenne la rend également insensible à l'ordre des voisins. En revanche, la portée effective de l'information reste limitée : avec deux tours, un robot ne résume directement que son voisinage à deux sauts pour la topologie considérée à cet instant.
 
 \section{Apprentissage}
-L'entraînement est direct à travers un simulateur différentiable. La fonction d'objectif combine une distance de Chamfer symétrique avec la forme cible, une pénalité de collision et une pénalité de mouvement. Un curriculum introduit successivement géométries, chiffres, lettres et nombres.
+L'entraînement est direct à travers le simulateur différentiable. Si $P$ désigne l'ensemble des positions finales des robots actifs et $Q$ le nuage de points cible, la qualité de forme est mesurée par une distance de Chamfer symétrique :
+\begin{equation}
+  d_C(P,Q)=\frac{1}{|P|}\sum_{p\in P}\min_{q\in Q}\lVert p-q\rVert^2+
+  \frac{1}{|Q|}\sum_{q\in Q}\min_{p\in P}\lVert q-p\rVert^2.
+\end{equation}
+La fonction optimisée ajoute à ce terme une pénalité lorsque deux robots franchissent une distance de sécurité de $0{,}3$, ainsi qu'une faible pénalité sur l'amplitude des commandes. Les poids respectifs utilisés dans la configuration initiale sont $1$, $1$ et $0{,}01$. L'optimisation emploie des épisodes de 20 pas et un taux d'apprentissage de $0{,}003$ pour l'entraînement du cercle.
+
+Un curriculum réduit introduit successivement les géométries, les chiffres, quelques lettres, puis deux nombres. Chaque niveau comporte 30 itérations et conserve les formes des niveaux précédents. Ce procédé vise à limiter la difficulté initiale de l'apprentissage, non à établir que le modèle comprend la structure linguistique des symboles.
+
+\section{Reproductibilité et baselines}
+Les paramètres des simulations, de l'entraînement et de l'évaluation sont conservés dans des fichiers de configuration versionnés, avec une graine explicite. Les modèles et tableaux produits sont séparés du code source. La première baseline est une règle locale de cohésion--répulsion : elle fournit un point de comparaison interprétable pour le regroupement, mais ne reçoit pas la consigne circulaire. Elle est donc utile comme contrôle de base, et non comme comparaison informationnellement équivalente avec le GNN.

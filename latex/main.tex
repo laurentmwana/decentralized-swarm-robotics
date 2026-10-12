@@ -14,13 +14,11 @@
 \addbibresource{references.bib}
 
 \title{Contrôle décentralisé d'un essaim de robots par réseaux de neurones cellulaires\\\large CeNN-Inspired Swarm Robotics}
-\author{À compléter}
-\date{\today}
 
 \begin{document}
 \maketitle
 \begin{abstract}
-Ce mémoire étudie le contrôle décentralisé d'un essaim de robots simulés par un réseau de neurones sur graphes partagé. Chaque robot échange uniquement avec ses voisins proches et doit contribuer à la formation d'une forme cible. Le travail évalue la qualité des formes, la robustesse aux pannes et le passage à l'échelle. Les résultats préliminaires indiquent qu'un contrôleur GNN appris forme un cercle et surpasse une règle locale de regroupement dans le protocole pilote.
+Ce mémoire étudie le contrôle décentralisé d'un essaim de robots simulés par un réseau de neurones sur graphes partagé. Chaque robot ne traite que son état local, les messages de ses voisins proches et une consigne commune de forme. L'objectif est de former des nuages de points représentant des formes géométriques et symboliques, tout en examinant le comportement face aux pannes et aux changements de taille de l'essaim. La contribution principale est une chaîne expérimentale reproductible : simulateur 2D, jeu de formes, contrôleur GNN, entraînement différentiable et protocole d'évaluation. Un premier protocole pilote montre que le contrôleur appris obtient une meilleure adéquation à une cible circulaire qu'une règle locale de regroupement. Cette observation reste exploratoire : la baseline ne reçoit pas la même information de consigne et l'étude finale devra augmenter le nombre de répétitions et inclure des comparaisons plus équitables.
 \end{abstract}
 
 \tableofcontents

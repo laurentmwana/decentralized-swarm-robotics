@@ -1,4 +1,8 @@
 \chapter{Conclusion et perspectives}
 \label{chap:conclusion}
 
-Ce travail a établi une chaîne expérimentale reproductible pour apprendre un contrôle décentralisé d'essaim par GNN. Le cercle constitue une première validation visuelle et quantitative. Les perspectives prioritaires sont l'extension du protocole d'évaluation, l'amélioration de la lisibilité des formes complexes et l'étude de modèles robotiques plus réalistes.
+Ce travail a établi une chaîne expérimentale reproductible pour étudier la formation de formes par un essaim contrôlé par GNN. Le système associe un simulateur 2D, des formes représentées par nuages de points, une politique locale à paramètres partagés et un apprentissage différentiable. Le cercle constitue une première validation visuelle et quantitative du fonctionnement de cette chaîne.
+
+Le protocole pilote suggère que le contrôleur appris atteint une meilleure adéquation à une cible circulaire qu'une règle locale de regroupement, y compris dans les scénarios de retrait étudiés. Cette conclusion est volontairement restreinte : le pilote ne comporte que dix graines par condition et la baseline ne dispose pas de la même consigne. Les formes symboliques sont, elles aussi, encore au stade de couverture approximative.
+
+La suite du mémoire devra donc consolider plutôt qu'élargir prématurément les affirmations. Les priorités sont une évaluation statistique à plus grande échelle, des baselines informationnellement équivalentes, des perturbations réalistes et des métriques adaptées à la lisibilité des formes. Ces étapes permettront de déterminer dans quelle mesure le passage de messages appris apporte un bénéfice propre au contrôle décentralisé d'essaims.

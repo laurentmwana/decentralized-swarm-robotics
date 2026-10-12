@@ -2,10 +2,32 @@
 \label{chap:experiences}
 
 \section{Protocole pilote}
-Un protocole pilote fixe dix graines par condition, soit 240 épisodes. Il évalue une cible circulaire avec 20, 40 et 100 robots, ainsi que des retraits de 5, 10 et 20\% des robots. Les métriques sont la distance de Chamfer, la régularité, les collisions et le taux de succès.
+Les expériences sont organisées en deux phases. La première contrôle que le GNN peut être entraîné sur un cercle et qu'il produit visuellement une distribution autour de la cible. La seconde est un protocole pilote d'évaluation, conçu pour vérifier la chaîne de mesure avant une campagne plus large. Ce pilote fixe dix graines par condition, soit 240 épisodes. Il évalue une cible circulaire avec 20, 40 et 100 robots, ainsi que des retraits de 5, 10 et 20\% des robots. Chaque épisode dure 20 pas.
+
+Les métriques rapportées sont la distance de Chamfer, le nombre ou le taux de collisions, la régularité des distances entre voisins et un taux de succès associé à un seuil de distance de Chamfer de $0{,}5$. La distance de Chamfer mesure l'adéquation spatiale à la forme, mais elle ne garantit ni une couverture uniforme ni la lisibilité d'un symbole. Les métriques sont donc complémentaires et doivent être interprétées avec les visualisations finales.
 
 \section{Résultats préliminaires}
-À 20 robots sans panne, le GNN atteint une distance de Chamfer moyenne de 0,607, contre 3,956 pour la règle de regroupement. Après retrait de 20\% des robots, les valeurs sont respectivement 0,644 et 4,162. Cette comparaison doit être interprétée avec prudence : la règle de regroupement n'utilise pas de consigne explicite de cercle et le protocole reste pilote.
+Pour l'entraînement initial sur un cercle, la perte observée avec la graine 41 passe de 9,84 à 0,28 en 80 itérations. Cette diminution indique que l'optimisation est fonctionnelle dans le simulateur ; elle ne constitue pas une mesure de généralisation, car elle concerne une configuration et une graine particulières.
+
+Le tableau~\ref{tab:pilote-20} présente les résultats du pilote pour 20 robots. Sans panne, le GNN atteint une distance de Chamfer moyenne de 0,607, contre 3,956 pour la règle de regroupement. Après retrait de 20\% des robots, les valeurs sont respectivement 0,644 et 4,162. Dans les mêmes conditions, le taux de collisions mesuré est de 0,031 pour le GNN sans panne et de 0,018 après retrait de 20\% des robots ; la règle de regroupement présente des valeurs de 0,187 et 0,129.
+
+\begin{table}[htbp]
+  \centering
+  \caption{Résultats du protocole pilote à 20 robots (10 graines par condition).}
+  \label{tab:pilote-20}
+  \begin{tabular}{llrrr}
+    \toprule
+    Contrôleur & Pannes & Chamfer moyen & Taux de collisions & Succès \\
+    \midrule
+    GNN & 0\% & 0,607 & 0,031 & 0,20 \\
+    GNN & 20\% & 0,644 & 0,018 & 0,00 \\
+    Regroupement & 0\% & 3,956 & 0,187 & 0,00 \\
+    Regroupement & 20\% & 4,162 & 0,129 & 0,00 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Cette comparaison doit être interprétée avec prudence. La règle de regroupement ne reçoit pas de consigne explicite de cercle : elle répond donc à un problème d'information différent. Le tableau montre que le contrôleur entraîné est plus proche de la forme circulaire dans ce protocole, mais ne démontre pas qu'il est supérieur à toute règle décentralisée disposant de la même consigne.
 
 \begin{figure}[htbp]
   \centering
@@ -14,4 +36,9 @@ Un protocole pilote fixe dix graines par condition, soit 240 épisodes. Il éval
   \label{fig:pannes-pilote}
 \end{figure}
 
-La formation du cercle est visible après entraînement. Les formes symboliques sont couvertes de manière approximative dans le curriculum réduit, mais leur lisibilité n'est pas encore suffisante pour une conclusion définitive.
+La figure~\ref{fig:pannes-pilote} illustre l'évolution de la distance avec le taux de pannes. Le faible écart observé entre 0\% et 20\% de pannes pour le GNN est une indication encourageante dans ce cadre précis, mais la taille de l'échantillon ne permet pas d'en déduire un intervalle de confiance robuste. Une campagne finale devra employer au moins 50 répétitions par condition et rapporter la variabilité entre graines.
+
+\section{Curriculum de formes}
+Le curriculum réduit entraîne successivement les niveaux géométrie, chiffres, symboles et nombres. Les pertes finales enregistrées sont respectivement 0,318, 0,248, 0,205 et 0,156. Cette baisse ne doit pas être comparée directement entre niveaux, car les ensembles de cibles et l'état initial du modèle évoluent. Elle confirme surtout que la chaîne d'entraînement peut poursuivre l'optimisation lorsque de nouvelles formes sont ajoutées.
+
+Les visualisations montrent une couverture approximative des cibles symboliques. En l'état, les lettres et les nombres ne sont pas suffisamment lisibles pour soutenir une affirmation de reconnaissance ou de formation précise. L'amélioration de cette lisibilité exigera un protocole visuel et quantitatif dédié, davantage d'itérations, ainsi qu'une étude de l'effet du nombre de robots et de la densité de points de la forme.
