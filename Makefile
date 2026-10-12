@@ -3,7 +3,7 @@
 
 PYTHON ?= python
 
-.PHONY: help test shapes shapes-complex simulator model circle circle-viz curriculum curriculum-viz complex-smoke complex complex-viz evaluation clean-results
+.PHONY: help test shapes shapes-complex simulator model circle circle-viz curriculum curriculum-viz complex-smoke complex complex-viz evaluation serve clean-results
 
 help:
 	@echo Commandes disponibles :
@@ -20,6 +20,7 @@ help:
 	@echo   make complex          - lance la campagne complexe longue (CPU : plusieurs dizaines de minutes)
 	@echo   make complex-viz      - exporte la planche de la campagne complexe
 	@echo   make evaluation       - lance pannes et passage a l-echelle du pilote
+	@echo   make serve            - demarre l-API locale de visualisation Web (http://127.0.0.1:8000)
 
 test:
 	$(PYTHON) -m pytest tests -q -p no:cacheprovider
@@ -59,3 +60,6 @@ complex-viz:
 
 evaluation: shapes
 	$(PYTHON) -m src.eval.run --config configs/evaluation-pilot.yaml --output results/evaluation-pilot
+
+serve:
+	$(PYTHON) -m src.web.server

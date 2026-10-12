@@ -81,3 +81,21 @@ python -m src.eval.run
 ```
 
 Cette commande produit les épisodes bruts, agrégats et figures du protocole pilote (pannes et passage à l'échelle) dans `results/evaluation-pilot/`.
+
+## API locale pour une démonstration Web
+
+Pour afficher une trajectoire réellement calculée par le GNN dans une page Web, démarrer l'API locale :
+
+```powershell
+python -m src.web.server
+```
+
+Elle n'emploie ni Internet ni WebSocket. La page Web peut lire les routes suivantes :
+
+- `GET /api/health` : vérifie que le modèle est disponible ;
+- `GET /api/targets` : liste les formes que connaît le modèle final du curriculum ;
+- `GET /api/simulate?target=alphabet_A&seed=142` : produit, en JSON, la cible et toutes les positions des robots à chaque pas.
+
+Les identifiants de cibles disponibles comprennent notamment `alphabet_A`, `digit_2` et `number_123`. L'animation Web doit dessiner les valeurs de `frames` retournées par cette dernière route ; elles sont calculées par `results/curriculum/numbers/model.pt`, pas par une règle codée dans le navigateur.
+
+Le contrat détaillé des réponses JSON est dans [`docs/10-api-visualisation.md`](docs/10-api-visualisation.md).
