@@ -12,7 +12,7 @@ import yaml
 
 from src.models import GNNController
 
-from .training import TrainingConfig, adjacency_from_positions
+from .training import TrainingConfig, adjacency_from_positions, local_target_features
 
 
 def main() -> None:
@@ -38,13 +38,15 @@ def main() -> None:
     columns = 4
     figure, axes = plt.subplots((len(targets) + columns - 1) // columns, columns, figsize=(12, 9))
     for target_id, (axis, target) in enumerate(zip(axes.flat, targets)):
+        target_tensor = torch.tensor(target, dtype=torch.float32).unsqueeze(0)
         positions = torch.rand((1, config.robot_count, 2), generator=generator) * torch.tensor(config.arena_size)
         velocities = torch.zeros_like(positions)
         center = torch.tensor(config.arena_size) / 2
         with torch.no_grad():
             for _ in range(config.episode_steps):
                 adjacency = adjacency_from_positions(positions, config.communication_radius)
-                velocities = model(positions, velocities, adjacency, torch.tensor([target_id]), positions - center)
+                geometry = local_target_features(positions, target_tensor, config.target_radius) if config.use_target_geometry else None
+                velocities = model(positions, velocities, adjacency, torch.tensor([target_id]), positions - center, geometry)
                 positions = torch.minimum(torch.maximum(positions + velocities * config.time_step, torch.zeros_like(center)), center * 2)
         axis.scatter(target[:, 0], target[:, 1], color="black", marker="x", s=25)
         axis.scatter(positions[0, :, 0], positions[0, :, 1], color="tab:blue", s=25)

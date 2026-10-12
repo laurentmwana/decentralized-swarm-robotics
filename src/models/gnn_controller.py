@@ -43,19 +43,29 @@ class GNNController(nn.Module):
         self.decoder = nn.Sequential(nn.Linear(hidden_dim, hidden_dim), nn.ReLU(), nn.Linear(hidden_dim, 2))
 
     def forward(
-        self, positions: Tensor, velocities: Tensor, adjacency: Tensor, target_ids: Tensor, goal_relative_positions: Tensor | None = None
+        self,
+        positions: Tensor,
+        velocities: Tensor,
+        adjacency: Tensor,
+        target_ids: Tensor,
+        goal_relative_positions: Tensor | None = None,
+        target_geometry_features: Tensor | None = None,
     ) -> Tensor:
         """Retourne une commande bornée `[batch, robots, 2]`.
 
-        Les positions ne sont utilisées qu'en différences relatives le long des
-        arêtes, ce qui rend la politique invariante par translation globale.
+        La géométrie de la cible est une consigne partagée : chaque robot peut
+        l'interroger à sa propre position, sans consulter des robots distants.
         """
         self._validate_inputs(positions, velocities, adjacency, target_ids)
         target = self.target_embedding(target_ids).unsqueeze(1).expand(-1, positions.shape[1], -1)
         relative_goal = torch.zeros_like(positions) if goal_relative_positions is None else goal_relative_positions
         if relative_goal.shape != positions.shape:
             raise ValueError("goal_relative_positions doit être [batch, robots, 2].")
-        states = self.encoder(torch.cat((velocities, relative_goal, target), dim=-1))
+        geometry = None if target_geometry_features is None else target_geometry_features
+        if geometry is not None and geometry.shape != positions.shape[:2] + (3,):
+            raise ValueError("target_geometry_features doit être [batch, robots, 3].")
+        target_vector = relative_goal if geometry is None else geometry[..., :2]
+        states = self.encoder(torch.cat((velocities, target_vector, target), dim=-1))
         for layer in self.layers:
             states = layer(states, positions, adjacency)
         return _limit_speed(self.decoder(states), self.max_speed)
@@ -79,7 +89,13 @@ class NoCommunicationController(nn.Module):
         self.embedding = nn.Embedding(target_count, hidden_dim)
         self.network = nn.Sequential(nn.Linear(hidden_dim + 4, hidden_dim), nn.ReLU(), nn.Linear(hidden_dim, 2))
 
-    def forward(self, velocities: Tensor, target_ids: Tensor, goal_relative_positions: Tensor | None = None) -> Tensor:
+    def forward(
+        self,
+        velocities: Tensor,
+        target_ids: Tensor,
+        goal_relative_positions: Tensor | None = None,
+        target_geometry_features: Tensor | None = None,
+    ) -> Tensor:
         """Retourne une commande bornée sans consultation du voisinage."""
         if velocities.ndim != 3 or velocities.shape[-1] != 2 or target_ids.shape != (velocities.shape[0],):
             raise ValueError("Entrées invalides pour la baseline sans communication.")
@@ -87,7 +103,11 @@ class NoCommunicationController(nn.Module):
         relative_goal = torch.zeros_like(velocities) if goal_relative_positions is None else goal_relative_positions
         if relative_goal.shape != velocities.shape:
             raise ValueError("goal_relative_positions doit être [batch, robots, 2].")
-        return _limit_speed(self.network(torch.cat((velocities, relative_goal, target), dim=-1)), self.max_speed)
+        geometry = None if target_geometry_features is None else target_geometry_features
+        if geometry is not None and geometry.shape != velocities.shape[:2] + (3,):
+            raise ValueError("target_geometry_features doit être [batch, robots, 3].")
+        target_vector = relative_goal if geometry is None else geometry[..., :2]
+        return _limit_speed(self.network(torch.cat((velocities, target_vector, target), dim=-1)), self.max_speed)
 
 
 def _limit_speed(commands: Tensor, max_speed: float) -> Tensor:

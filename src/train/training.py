@@ -35,6 +35,8 @@ class TrainingConfig:
     motion_loss_weight: float
     hidden_dim: int = 32
     message_passing_steps: int = 2
+    coverage_loss_weight: float = 0.0
+    use_target_geometry: bool = False
 
     @classmethod
     def from_yaml(cls, path: str | Path) -> "TrainingConfig":
@@ -67,7 +69,40 @@ def collision_loss(positions: Tensor, safety_distance: float) -> Tensor:
     return penalties.masked_select(mask.expand_as(penalties)).mean()
 
 
-def rollout(model: GNNController, positions: Tensor, target_ids: Tensor, config: TrainingConfig) -> tuple[Tensor, Tensor]:
+def local_target_features(positions: Tensor, target_points: Tensor, scale: float) -> Tensor:
+    """Retourne vecteur et distance au point de la consigne le plus proche."""
+    if target_points.ndim == 2:
+        target_points = target_points.unsqueeze(0).expand(positions.shape[0], -1, -1)
+    if target_points.shape[0] != positions.shape[0] or target_points.shape[-1] != 2:
+        raise ValueError("target_points doit être [points, 2] ou [batch, points, 2].")
+    distances = torch.cdist(positions, target_points)
+    indices = distances.argmin(dim=2)
+    nearest = torch.gather(target_points, 1, indices.unsqueeze(-1).expand(-1, -1, 2))
+    relative = (nearest - positions) / scale
+    return torch.cat((relative, torch.linalg.vector_norm(relative, dim=-1, keepdim=True)), dim=-1)
+
+
+def coverage_loss(positions: Tensor, target: Tensor) -> Tensor:
+    """Aligne les statistiques de voisinage des robots sur celles de la cible."""
+    def nearest_distances(points: Tensor) -> Tensor:
+        distances = torch.cdist(points, points)
+        diagonal = torch.eye(points.shape[1], device=points.device, dtype=torch.bool).unsqueeze(0)
+        return distances.masked_fill(diagonal, torch.inf).min(dim=2).values
+
+    robot_nearest = nearest_distances(positions)
+    target_nearest = nearest_distances(target)
+    mean_error = (robot_nearest.mean(dim=1) - target_nearest.mean(dim=1)).square()
+    std_error = (robot_nearest.std(dim=1, correction=0) - target_nearest.std(dim=1, correction=0)).square()
+    return (mean_error + std_error).mean()
+
+
+def rollout(
+    model: GNNController,
+    positions: Tensor,
+    target_ids: Tensor,
+    config: TrainingConfig,
+    target_points: Tensor | None = None,
+) -> tuple[Tensor, Tensor]:
     """Déroule le simulateur différentiable et retourne positions et commandes."""
     velocities = torch.zeros_like(positions)
     arena = torch.tensor(config.arena_size, dtype=positions.dtype, device=positions.device)
@@ -75,7 +110,8 @@ def rollout(model: GNNController, positions: Tensor, target_ids: Tensor, config:
     all_commands: list[Tensor] = []
     for _ in range(config.episode_steps):
         adjacency = adjacency_from_positions(positions, config.communication_radius)
-        commands = model(positions, velocities, adjacency, target_ids, positions - center)
+        geometry = local_target_features(positions, target_points, config.target_radius) if config.use_target_geometry and target_points is not None else None
+        commands = model(positions, velocities, adjacency, target_ids, positions - center, geometry)
         velocities = commands
         positions = torch.minimum(torch.maximum(positions + velocities * config.time_step, torch.zeros_like(arena)), arena)
         all_commands.append(commands)
@@ -89,7 +125,7 @@ def _compatible_model(config: TrainingConfig, target_count: int, initial_state: 
         current = model.state_dict()
         compatible = {name: value for name, value in initial_state.items() if name in current and current[name].shape == value.shape}
         model.load_state_dict(compatible, strict=False)
-        if "target_embedding.weight" in initial_state:
+        if "target_embedding.weight" in initial_state and initial_state["target_embedding.weight"].shape[1] == model.target_embedding.weight.shape[1]:
             previous = initial_state["target_embedding.weight"]
             model.target_embedding.weight.data[: min(len(previous), target_count)] = previous[:target_count]
     return model
@@ -112,31 +148,46 @@ def train_targets(
     model = _compatible_model(config, len(target_points), initial_state).to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
     losses: list[float] = []
+    best_loss = float("inf")
+    best_state: dict[str, Tensor] | None = None
     for _ in range(config.iterations):
         target_ids = torch.randint(len(target_points), (config.batch_size,), generator=generator, device=device)
         starts = torch.rand((config.batch_size, config.robot_count, 2), generator=generator, device=device)
         starts *= torch.tensor(config.arena_size, device=device)
-        final_positions, commands = rollout(model, starts, target_ids, config)
         selected_targets = targets[target_ids]
+        final_positions, commands = rollout(model, starts, target_ids, config, selected_targets)
         loss_shape = chamfer_loss(final_positions, selected_targets)
         loss_collision = collision_loss(final_positions, config.safety_distance)
         loss_motion = commands.square().mean()
-        loss = config.shape_loss_weight * loss_shape + config.collision_loss_weight * loss_collision + config.motion_loss_weight * loss_motion
+        loss_coverage = coverage_loss(final_positions, selected_targets)
+        loss = (
+            config.shape_loss_weight * loss_shape
+            + config.collision_loss_weight * loss_collision
+            + config.motion_loss_weight * loss_motion
+            + config.coverage_loss_weight * loss_coverage
+        )
         optimizer.zero_grad()
         loss.backward()
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         optimizer.step()
         losses.append(float(loss.detach()))
+        if losses[-1] < best_loss:
+            best_loss = losses[-1]
+            best_state = {name: value.detach().clone() for name, value in model.state_dict().items()}
     metrics: dict[int, float] = {}
     with torch.no_grad():
         for target_id in range(len(target_points)):
             starts = torch.rand((config.batch_size, config.robot_count, 2), generator=generator, device=device)
             starts *= torch.tensor(config.arena_size, device=device)
-            final_positions, _ = rollout(model, starts, torch.full((config.batch_size,), target_id, device=device), config)
+            selected = targets[target_id].unsqueeze(0).expand(config.batch_size, -1, -1)
+            final_positions, _ = rollout(model, starts, torch.full((config.batch_size,), target_id, device=device), config, selected)
             metrics[target_id] = float(chamfer_loss(final_positions, targets[target_id].unsqueeze(0).expand(config.batch_size, -1, -1)))
     output = Path(output_directory)
     output.mkdir(parents=True, exist_ok=True)
+    if best_state is not None:
+        model.load_state_dict(best_state)
     torch.save(model.state_dict(), output / "model.pt")
+    torch.save({"model_state": model.state_dict(), "best_loss": best_loss}, output / "best.pt")
     (output / "config.yaml").write_text(yaml.safe_dump(asdict(config), sort_keys=False), encoding="utf-8")
     (output / "metrics.yaml").write_text(yaml.safe_dump({"loss_by_target": metrics}, sort_keys=False), encoding="utf-8")
     np.savetxt(output / "loss.csv", np.asarray(losses), delimiter=",")

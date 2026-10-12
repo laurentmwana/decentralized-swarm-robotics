@@ -12,7 +12,7 @@ from matplotlib.animation import FuncAnimation
 
 from src.models import GNNController
 
-from .training import TrainingConfig, adjacency_from_positions
+from .training import TrainingConfig, adjacency_from_positions, local_target_features
 
 
 def main() -> None:
@@ -24,6 +24,8 @@ def main() -> None:
     parser.add_argument("--output", default="results/training-circle")
     arguments = parser.parse_args()
     config = TrainingConfig.from_yaml(arguments.config)
+    target = np.load(arguments.target) * config.target_radius + np.asarray(config.arena_size) / 2
+    target_tensor = torch.tensor(target, dtype=torch.float32).unsqueeze(0)
     torch.manual_seed(config.seed)
     model = GNNController(config.hidden_dim, config.message_passing_steps, 1, config.max_speed)
     model.load_state_dict(torch.load(arguments.model, map_location="cpu", weights_only=True))
@@ -36,10 +38,10 @@ def main() -> None:
     with torch.no_grad():
         for _ in range(config.episode_steps):
             adjacency = adjacency_from_positions(positions, config.communication_radius)
-            velocities = model(positions, velocities, adjacency, torch.tensor([0]), positions - center)
+            geometry = local_target_features(positions, target_tensor, config.target_radius) if config.use_target_geometry else None
+            velocities = model(positions, velocities, adjacency, torch.tensor([0]), positions - center, geometry)
             positions = torch.minimum(torch.maximum(positions + velocities * config.time_step, torch.zeros_like(center)), center * 2)
             history.append(positions[0].numpy().copy())
-    target = np.load(arguments.target) * config.target_radius + np.asarray(config.arena_size) / 2
     output = Path(arguments.output)
     output.mkdir(parents=True, exist_ok=True)
     figure, axis = plt.subplots()

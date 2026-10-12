@@ -52,6 +52,18 @@ python -m src.train.visualize_curriculum
 
 Le curriculum réduit préserve les formes des niveaux précédents tandis qu'il ajoute chiffres, lettres et nombres. Les résultats sont des contrôles intermédiaires ; consulter la planche produite avant toute conclusion sur la lisibilité.
 
+## Apprentissage des formes complexes
+
+La configuration `configs/curriculum-complex.yaml` entraîne un modèle distinct avec 50 robots, 50 points de contour, 60 pas de simulation et une géométrie locale de cible. Générer d'abord le jeu de données correspondant :
+
+```powershell
+python -m src.shapes.build --config configs/shapes-complex.yaml --output data/shapes-complex
+python -m src.train.curriculum --config configs/curriculum-complex.yaml --initial-model none --output results/curriculum-complex
+python -m src.train.visualize_curriculum --config configs/curriculum-complex.yaml --model results/curriculum-complex/numbers/model.pt --output results/curriculum-complex/numbers/contact-sheet.png
+```
+
+Cette campagne est volontairement plus coûteuse que le curriculum réduit et peut prendre plusieurs dizaines de minutes sur CPU. Le profil `configs/curriculum-complex-smoke.yaml` sert uniquement à vérifier le pipeline, pas à conclure sur la qualité des formes.
+
 ## Évaluation pilote
 
 ```powershell
