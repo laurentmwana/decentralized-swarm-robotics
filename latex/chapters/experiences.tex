@@ -9,6 +9,20 @@ Les métriques rapportées sont la distance de Chamfer, le nombre ou le taux de 
 \section{Résultats préliminaires}
 Pour l'entraînement initial sur un cercle, la perte observée avec la graine 41 passe de 9,84 à 0,28 en 80 itérations. Cette diminution indique que l'optimisation est fonctionnelle dans le simulateur ; elle ne constitue pas une mesure de généralisation, car elle concerne une configuration et une graine particulières.
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.72\linewidth]{figures/circle-training-loss.png}
+  \caption{Évolution de la perte pendant l'entraînement initial du cercle, pour la graine 41. Cette courbe sert de diagnostic d'optimisation et non d'intervalle de confiance.}
+  \label{fig:circle-loss}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.72\linewidth]{figures/circle-final.png}
+  \caption{Configuration finale obtenue pour l'entraînement du cercle. Les robots représentent l'approximation discrète de la cible par l'essaim.}
+  \label{fig:circle-final}
+\end{figure}
+
 Le tableau~\ref{tab:pilote-20} présente les résultats du pilote pour 20 robots. Sans panne, le GNN atteint une distance de Chamfer moyenne de 0,607, contre 3,956 pour la règle de regroupement. Après retrait de 20\% des robots, les valeurs sont respectivement 0,644 et 4,162. Dans les mêmes conditions, le taux de collisions mesuré est de 0,031 pour le GNN sans panne et de 0,018 après retrait de 20\% des robots ; la règle de regroupement présente des valeurs de 0,187 et 0,129.
 
 \begin{table}[htbp]
@@ -38,7 +52,21 @@ Cette comparaison doit être interprétée avec prudence. La règle de regroupem
 
 La figure~\ref{fig:pannes-pilote} illustre l'évolution de la distance avec le taux de pannes. Le faible écart observé entre 0\% et 20\% de pannes pour le GNN est une indication encourageante dans ce cadre précis, mais la taille de l'échantillon ne permet pas d'en déduire un intervalle de confiance robuste. Une campagne finale devra employer au moins 50 répétitions par condition et rapporter la variabilité entre graines.
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.8\linewidth]{figures/pilot-scale.png}
+  \caption{Distance moyenne de Chamfer lors du passage à l'échelle dans le protocole pilote. Cette figure doit être complétée par les valeurs numériques et leur dispersion dans la campagne finale.}
+  \label{fig:scale-pilote}
+\end{figure}
+
 \section{Curriculum de formes}
 Le curriculum réduit entraîne successivement les niveaux géométrie, chiffres, symboles et nombres. Les pertes finales enregistrées sont respectivement 0,318, 0,248, 0,205 et 0,156. Cette baisse ne doit pas être comparée directement entre niveaux, car les ensembles de cibles et l'état initial du modèle évoluent. Elle confirme surtout que la chaîne d'entraînement peut poursuivre l'optimisation lorsque de nouvelles formes sont ajoutées.
 
 Les visualisations montrent une couverture approximative des cibles symboliques. En l'état, les lettres et les nombres ne sont pas suffisamment lisibles pour soutenir une affirmation de reconnaissance ou de formation précise. L'amélioration de cette lisibilité exigera un protocole visuel et quantitatif dédié, davantage d'itérations, ainsi qu'une étude de l'effet du nombre de robots et de la densité de points de la forme.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.92\linewidth]{figures/curriculum-contact-sheet.png}
+  \caption{Planche de visualisation issue de la dernière étape du curriculum réduit. Elle illustre des formations approximatives et ne constitue pas encore une validation de lisibilité des symboles.}
+  \label{fig:curriculum-contact-sheet}
+\end{figure}
