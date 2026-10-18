@@ -1,19 +1,61 @@
-\chapter{Méthode}
+\chapter{Méthode et architecture logicielle}
 \label{chap:methode}
 
-\section{Simulateur et hypothèses}
-On considère $N$ robots évoluant dans une arène carrée bidimensionnelle. L'état du robot $i$ au pas $t$ comprend sa position $p_i^t\in\mathbb{R}^2$ et sa vitesse $v_i^t\in\mathbb{R}^2$. Le contrôleur produit une commande bornée $u_i^t$, puis le simulateur applique une dynamique à vitesse directe :
+\section{Formulation du problème}
+
+Le problème traité peut être posé sans référence à une architecture particulière. Soit un ensemble de $N$ robots actifs évoluant dans une arène bornée. Chaque robot observe son propre état, l'état de ses voisins à portée et une consigne de mission partagée ; il produit une commande de mouvement, sans accéder à l'état complet du groupe. Le tableau~\ref{tab:notation} réunit les symboles employés dans l'ensemble du mémoire.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Principaux symboles utilisés pour décrire l'essaim, la politique et l'évaluation.}
+  \label{tab:notation}
+  \begin{tabular}{cl}
+    \toprule
+    Symbole & Signification \\
+    \midrule
+    $N$ & nombre de robots actifs de l'épisode \\
+    $T$ & nombre de pas de simulation d'un épisode \\
+    $\Delta t$ & pas de temps numérique \\
+    $p_i^t,\,v_i^t$ & position et vitesse du robot $i$ au pas $t$ \\
+    $u_i^t$ & commande de vitesse produite par le contrôleur \\
+    $r_c$ & rayon de communication \\
+    $\mathcal{N}(i)$ & voisins du robot $i$ dans le graphe courant \\
+    $\mathcal{G}^t$ & graphe de communication au pas $t$ \\
+    $h_i^{\ell},\,m_{ij}^{\ell}$ & état latent et message au tour $\ell$ \\
+    $g_i$ & vecteur vers le point de contour cible le plus proche \\
+    $P,\,Q$ & positions finales des robots et nuage de points cible \\
+    $\theta$ & paramètres partagés de la politique \\
+    $\lambda_f,\lambda_c,\lambda_u,\lambda_r$ & poids des quatre termes de la perte \\
+    $\tau$ & seuil de distance associé au taux de succès \\    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+
+
+Un épisode est défini par un triplet (cible $Q$, positions initiales $p^0$, graine aléatoire). La politique $\pi_\theta$ est appliquée de façon indépendante et simultanée à chaque robot actif pendant $T$ pas. L'objectif d'apprentissage s'écrit alors :
 \begin{equation}
-  p_i^{t+1}=p_i^t+\Delta t\,u_i^t,
-  \qquad \lVert u_i^t\rVert\leq v_{\max}.
+  \theta^{\star}=\arg\min_{\theta}\;\mathbb{E}_{(Q,\,p^{0})\sim\mathcal{D}}\Big[\mathcal{L}\big(\pi_\theta;\,Q,\,p^{0}\big)\Big],
+  \label{eq:objectif-general}
 \end{equation}
-La configuration utilisée pour les premiers entraînements comporte 20 robots dans une arène de $10\times10$, un pas de temps de $0{,}3$ et une vitesse maximale de $1$. Ces valeurs servent à stabiliser l'expérimentation ; elles ne sont pas interprétées comme les paramètres d'une plateforme physique particulière.
+où $\mathcal{D}$ désigne la distribution des cibles et des départs utilisés pendant l'entraînement. La perte agrège quatre termes aux rôles distincts :
+\begin{equation}
+  \mathcal{L}=\lambda_f\,d_C(P,Q)+\lambda_c\,\mathcal{L}_{col}+\lambda_u\,\mathcal{L}_{move}+\lambda_r\,\mathcal{L}_{cov}.
+  \label{eq:perte-totale}
+\end{equation}
+Le premier terme mesure l'adéquation à la cible, le second pénalise les rapprochements dangereux, le troisième décourage les commandes saturées et le quatrième rapproche la répartition de celle de la cible. Les poids numériques sont fixés dans les fichiers de configuration et sont identiques pour tous les robots ; ils sont rappelés dans le tableau~\ref{tab:hyperparametres}.
+
+Deux contraintes accompagnent la minimisation. La première est bornée : la norme de chaque commande reste inférieure ou égale à $v_{\max}$. La seconde est structurelle : aucun terme de l'équation~\eqref{eq:objectif-general} ne requiert l'état d'un robot hors voisinage. Cette contrainte est celle de l'exécution, mais elle guide aussi l'entraînement, car la perte est évaluée sur des épisodes où chaque robot ne reçoit effectivement que les messages du graphe courant.
+
+\section{Simulateur et hypothèses}
+On considère $N$ robots évoluant dans une arène carrée bidimensionnelle. L'état du robot $i$ au pas $t$ comprend sa position $p_i^t\in\mathbb{R}^2$ et sa vitesse $v_i^t\in\mathbb{R}^2$. Le contrôleur produit une commande bornée $u_i^t$, puis le simulateur applique une dynamique à vitesse directe : la position est mise à jour par $p_i^{t+1}=p_i^t+\Delta t\,u_i^t$, la commande restant bornée par $\lVert u_i^t\rVert\leq v_{\max}$. La configuration utilisée pour les premiers entraînements comporte 20 robots dans une arène de $10\times10$, un pas de temps de $0{,}3$ et une vitesse maximale de $1$. Ces valeurs servent à stabiliser l'expérimentation ; elles ne sont pas interprétées comme les paramètres d'une plateforme physique particulière.
 
 Le graphe de communication $\mathcal{G}^t=(\mathcal{V},\mathcal{E}^t)$ est recalculé à chaque pas. Une arête est présente entre $i$ et $j$ lorsque $\lVert p_i^t-p_j^t\rVert\leq r_c$, avec $r_c=2{,}5$ dans la configuration de référence. Ainsi, la topologie évolue avec les déplacements. Un robot en panne cesse de se déplacer et n'émet plus de messages ; il est retiré des calculs de la politique des robots actifs. Cette première version adopte un repère commun et des mesures parfaites. L'absence de repère propre, de délai ou de bruit constitue une limite discutée au chapitre~\ref{chap:experiences}.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=.82\linewidth]{figures/swarm-local-communication.png}
+  \includegraphics[width=.82\linewidth]{images/fig_3_1_essaim_communication.png}
   \caption{Schéma d'un essaim. Le robot orange ne peut échanger qu'avec les robots situés dans sa portée de communication ; les robots distants ne sont pas accessibles directement.}
   \label{fig:local-communication}
 \end{figure}
@@ -22,6 +64,23 @@ Le graphe de communication $\mathcal{G}^t=(\mathcal{V},\mathcal{E}^t)$ est recal
 Le jeu de données contient sept formes géométriques, les 26 lettres de l'alphabet, les dix chiffres et un ensemble de nombres à trois caractères. Chaque image est convertie en un nuage de points puis normalisée dans un cadre commun. Pour une exécution donnée, un sous-ensemble de points de la cible est sélectionné afin de constituer la référence de formation. Cette représentation évite d'imposer une correspondance fixe entre l'indice d'un robot et l'indice d'un point cible.
 
 La consigne disponible à tous les robots comporte un identifiant de forme et le nuage de points associé. À partir de sa propre position, un robot interroge ce nuage et obtient le vecteur vers le point de contour le plus proche. Cette information locale de géométrie est plus riche qu'un identifiant seul : elle indique dans quelle direction se trouve le trait à couvrir, sans fournir la position des autres robots. L'identifiant et le nuage de points ne sont pas des messages provenant d'un superviseur au cours de l'exécution : ils représentent une mission définie avant le déploiement. Le choix d'une consigne géométrique partagée facilite l'étude de la formation, mais il introduit une hypothèse qui devra être remplacée à terme par une perception, une carte ou une balise localement observable.
+
+\section{Génération des nuages de points cibles}
+
+Les formes sont produites par une chaîne déterministe, séparée de l'entraînement. Chaque cible est d'abord rendue comme une image bitmap de $128\times128$ pixels à partir d'une police de caractères ou d'une routine de tracé géométrique. Le seuillage utilise la valeur médiane de la plage de gris, ce qui évite d'avoir à régler un seuil par forme. Les pixels retenus constituent une première discrétisation du trait, redondante et irrégulière puisque la grille de l'image impose son propre maillage.
+
+Un sous-ensemble régulier est ensuite extrait par échantillonnage par point le plus éloigné \emph{(farthest-point sampling)}. La première graine de l'échantillonnage est tirée à partir de la graine de configuration ; les points suivants sont choisis, à chaque itération, comme le point du masque le plus éloigné des points déjà retenus. Contrairement à un tirage uniforme, cette procédure évite les grappes et les zones vides : elle répartit les points sur l'ensemble du contour. Deux résolutions sont employées : 20 points pour le jeu standard et 50 points pour la campagne dédiée aux formes complexes.
+
+Les points sont enfin ramenés dans un cadre commun centré sur l'arène et compressés à l'échelle du rayon de cible configuré. Cette normalisation garantit qu'une lettre étroite et un cercle large présentent la même amplitude pour le contrôleur, et que la perte de forme reste comparable d'une cible à l'autre. Chaque forme est sauvegardée sous forme de tableau numérique, accompagnée de son image d'origine et d'une ligne d'index ; une planche de contrôle réunit toutes les formes du jeu pour permettre une inspection visuelle avant tout entraînement.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{images/fig_3_2_chaine_preparation_cible.png}
+  \caption{Chaîne de préparation d'une cible : image rendue, masque binarisé, puis nuage de points échantillonné et normalisé. L'exemple provient du jeu de formes standard.}
+  \label{fig:shape-pipeline}
+\end{figure}
+
+Cette chaîne comporte deux conséquences qu'il faut garder à l'esprit lors de l'analyse. D'une part, la résolution du trait et le nombre de robots sont liés : si une forme présente davantage de détails que l'essaim ne dispose de points, certains détails ne peuvent être représentés. D'autre part, l'échantillonnage étant fixé avant l'épisode, la même cible fournit la même configuration de référence pour tous les robots ; la consigne est donc bien identique pour tout l'essaim.
 
 \section{Contrôleur GNN}
 Chaque robot encode sa vitesse, le vecteur $g_i$ vers le contour cible le plus proche et l'identifiant de forme. Son état latent initial est noté $h_i^0$. À la couche $\ell$, le message de $j$ vers $i$ dépend des deux états et de la position relative :
@@ -36,7 +95,7 @@ Le partage des paramètres garantit que la politique ne dépend pas de l'identit
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{figures/gnn-message-passing.png}
+  \includegraphics[width=\linewidth]{images/fig_3_3_controleur_local.png}
   \caption{Calcul local réalisé pour un robot lors d'un tour de passage de messages. Les mêmes blocs de calcul et les mêmes paramètres sont partagés dans l'essaim.}
   \label{fig:gnn-message-passing}
 \end{figure}
@@ -46,17 +105,83 @@ L'entraînement est direct à travers le simulateur différentiable. Si $P$ dés
 \begin{equation}
   d_C(P,Q)=\frac{1}{|P|}\sum_{p\in P}\min_{q\in Q}\lVert p-q\rVert^2+
   \frac{1}{|Q|}\sum_{q\in Q}\min_{p\in P}\lVert q-p\rVert^2.
+  \label{eq:chamfer}
 \end{equation}
 La fonction optimisée ajoute à ce terme une pénalité lorsque deux robots franchissent une distance de sécurité, une faible pénalité sur l'amplitude des commandes et une régularisation de couverture. Cette dernière compare les statistiques de distances au plus proche voisin de l'essaim à celles de la cible : elle réduit le risque qu'une distance de Chamfer faible soit obtenue par un amas de robots sur une fraction seulement de la forme. Les poids utilisés sont explicitement versionnés dans chaque configuration.
 
-Un curriculum réduit introduit successivement les géométries, les chiffres, quelques lettres, puis deux nombres. Une seconde configuration, dédiée aux formes complexes, porte l'essaim et le nuage cible à 50 points, augmente la durée des épisodes, la profondeur du GNN et le nombre d'itérations. Ce procédé vise à limiter la difficulté initiale de l'apprentissage, non à établir que le modèle comprend la structure linguistique des symboles. Le meilleur état observé au cours de chaque niveau est sauvegardé pour limiter la dégradation en fin d'entraînement.
+La figure~\ref{fig:chamfer-geometry} donne une lecture géométrique de l'équation~\eqref{eq:chamfer}. Chaque robot (orange) est relié au point cible (bleu) le plus proche, et inversement. La pénalité de couverture intervient précisément sur le cas que ce schéma masque : si tous les robots convergeaient vers un seul arc du contour, chaque robot trouverait bien un point cible proche — le premier terme de l'équation resterait faible — mais la moitié des points cibles ne serait reliée à aucun robot, et le second terme exploserait.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.88\linewidth]{images/fig_3_4_distance_chamfer.png}
+  \caption{Lecture géométrique de la distance de Chamfer symétrique : en pointillés, les appariements vers le voisin le plus proche, pris dans les deux sens entre les robots $P$ et les points cibles $Q$.}
+  \label{fig:chamfer-geometry}
+\end{figure}
+
+La figure~\ref{fig:loss-terms} réunit les quatre termes optimisés. Ils répondent à des échecs distincts : sans terme de forme, l'essaim n'a aucune raison de se déplacer ; sans pénalité de collisions, il pourrait se comprimer sur le contour ; sans pénalité de mouvement, les commandes pourraient osciller ; sans régularisation de couverture, une partie du contour resterait vide.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.92\linewidth]{images/fig_3_5_composition_perte.png}
+  \caption{Composition de la fonction de perte. Les quatre termes, pondérés par les coefficients $\lambda$ versionnés dans les configurations, sont sommés en une seule perte d'épisode rétropropagée vers les paramètres partagés.}
+  \label{fig:loss-terms}
+\end{figure}
+
+Un curriculum réduit introduit successivement les géométries, les chiffres, quelques lettres, puis deux nombres. La figure~\ref{fig:curriculum-stages} montre un exemple de cible pour chacune des quatre étapes : le nombre de cibles vues par le contrôleur croît de 3 à 11, et chaque étape conserve les cibles des étapes précédentes dans son lot. Une seconde configuration, dédiée aux formes complexes, porte l'essaim et le nuage cible à 50 points, augmente la durée des épisodes, la profondeur du GNN et le nombre d'itérations. Ce procédé vise à limiter la difficulté initiale de l'apprentissage, non à établir que le modèle comprend la structure linguistique des symboles. Le meilleur état observé au cours de chaque niveau est sauvegardé pour limiter la dégradation en fin d'entraînement.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.95\linewidth]{images/fig_3_6_curriculum_reduit.png}
+  \caption{Les quatre étapes du curriculum réduit, avec un exemple de cible et le nombre de formes ajoutées à chaque étape. Les cibles des étapes antérieures sont conservées dans le lot d'entraînement.}
+  \label{fig:curriculum-stages}
+\end{figure}
+
+\section{Algorithme d'entraînement}
+
+L'algorithme~\ref{algo:entrainement} résume la boucle réellement implémentée. Elle diffère d'une boucle de renforcement multi-agents en ce qu'aucune récompense individuelle n'est attribuée : une seule perte par épisode, calculée sur l'ensemble de l'essaim, est rétropropagée vers les paramètres partagés. La figure~\ref{fig:differentiable-rollout} montre pourquoi cette rétropropagation est possible : les $T$ pas de simulation forment un graphe de calcul enregistré par PyTorch, reliant les paramètres du GNN à la perte finale à travers chaque pas de mouvement. C'est aussi la source de la contrainte de mémoire principale du prototype, discutée dans la sous-section suivante.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.92\linewidth]{images/fig_3_7_retropropagation.png}
+  \caption{Rétropropagation à travers les pas de simulation. Les $T$ pas forment un graphe de calcul enregistré ; le gradient de la perte finale remonte jusqu'aux paramètres partagés du contrôleur à travers toute la trajectoire.}
+  \label{fig:differentiable-rollout}
+\end{figure}
+
+\begin{algorithm}[htbp]
+  \caption{Entraînement de la politique partagée}
+  \label{algo:entrainement}
+  \begin{algorithmic}[1]
+    \Require configuration $\mathcal{C}$, graine $s$, jeu de cibles $\mathcal{D}$
+    \Ensure $\theta^{\star}$, courbe des pertes, configuration effective
+    \State initialiser $\theta$, l'optimiseur Adam et le meilleur score $b\gets+\infty$
+    \For{itération $=1 \to I$}
+      \State tirer un lot de $B$ cibles et départs aléatoires
+      \For{chaque épisode du lot}
+        \State $t\gets 0$
+        \While{$t<T$}
+          \State construire $\mathcal{G}^t$ à partir des positions courantes
+          \State $u_{1..N}\gets\pi_\theta(o^t_{1..N},\,\mathcal{G}^t,\,Q)$ \Comment{politique partagée}
+          \State $p^{t+1}\gets p^{t}+\Delta t\,u$, $\lVert u_i^t\rVert\le v_{\max}$
+          \State appliquer les pannes éventuelles et $t\gets t+1$
+        \EndWhile
+        \State calculer $\mathcal{L}$ du lot (forme, collisions, mouvement, couverture)
+      \EndFor
+      \State $\theta\gets\mathrm{Adam}(\theta,\nabla_\theta\mathcal{L})$
+      \If{meilleure perte de la campagne}
+        \State sauvegarder $\theta^{\star}$ et la configuration utilisée
+      \EndIf
+    \EndFor
+  \end{algorithmic}
+\end{algorithm}
+
+La sauvegarde du meilleur état, et non du dernier, répond à une observation pratique : les dernières itérations d'un niveau de curriculum ne sont pas nécessairement les meilleures pour l'ensemble des cibles, car les paramètres continuent d'évoluer vers la nouvelle combinaison de formes. La sauvegarde du meilleur état réduit cette dérive sans constituer une protection contre l'oubli catastrophique, qui reste un phénomène possible \cite{goodfellow2013,kirkpatrick2017}.
 
 \section{Reproductibilité et baselines}
 Les paramètres des simulations, de l'entraînement et de l'évaluation sont conservés dans des fichiers de configuration versionnés, avec une graine explicite. Les modèles et tableaux produits sont séparés du code source. La première baseline est une règle locale de cohésion--répulsion : elle fournit un point de comparaison interprétable pour le regroupement, mais ne reçoit pas la consigne circulaire. Elle est donc utile comme contrôle de base, et non comme comparaison informationnellement équivalente avec le GNN.
 
 \section{Organisation de l'implémentation}
 
-La mise en oeuvre sépare volontairement les composants qui relèvent de la simulation de ceux qui relèvent de l'apprentissage. Le module de simulation met à jour les positions, applique les limites de l'arène, construit le voisinage et gère les pannes. Le module de génération de formes produit les images et les nuages de points. Le module de modèle contient le contrôleur GNN, tandis que les modules d'entraînement et d'évaluation exécutent les épisodes, calculent les pertes et enregistrent les résultats.
+La mise en œuvre sépare volontairement les composants qui relèvent de la simulation de ceux qui relèvent de l'apprentissage. Le module de simulation met à jour les positions, applique les limites de l'arène, construit le voisinage et gère les pannes. Le module de génération de formes produit les images et les nuages de points. Le module de modèle contient le contrôleur GNN, tandis que les modules d'entraînement et d'évaluation exécutent les épisodes, calculent les pertes et enregistrent les résultats.
 
 Cette séparation a un intérêt pratique. Une même condition initiale peut être évaluée avec la règle de regroupement ou avec le GNN sans modifier la dynamique de base. Elle permet également de tester séparément le calcul du voisinage, le respect de la vitesse maximale, le traitement d'un robot isolé et l'invariance au réordonnancement des robots. Les figures ne pilotent pas la simulation : elles sont construites après l'exécution à partir des positions enregistrées.
 
@@ -92,6 +217,23 @@ Le projet complète donc cette distance par une pénalité de collision et par u
 
 Pour les lettres et les nombres, une évaluation visuelle reste nécessaire dans cette première version. Le mémoire ne déclare pas qu'un caractère est lisible sur la seule base d'une faible distance de Chamfer. Une suite logique du travail serait de définir un protocole de lisibilité, par exemple avec des évaluateurs humains ou un classifieur séparé entraîné sur des rendus d'essaims.
 
+\section{Définition opérationnelle des mesures}
+
+Les quatre mesures rapportées pendant et après l'entraînement sont définies ici de manière explicite, afin que chaque valeur du chapitre~\ref{chap:experiences} puisse être recalculée à partir des positions enregistrées.
+
+La distance de forme est la distance de Chamfer symétrique de l'équation~\eqref{eq:chamfer}, évaluée sur la configuration finale. La valeur rapportée dans les tableaux du chapitre~\ref{chap:experiences} emploie les distances non carrées, tandis que l'équation~\eqref{eq:chamfer}, utilisée comme terme d'entraînement, emploie les distances carrées pour lisser le gradient ; les deux versions ne diffèrent que par l'échelle des valeurs, pas par l'ordre des configurations. Le taux de collisions normalise, à chaque pas, le nombre de paires de robots plus proches que la distance de sécurité $d_s$ par le nombre de paires possibles $N(N-1)/2$, puis moyenne cette proportion sur les $T$ pas de l'épisode. Ce taux ne représente pas une collision mécanique : le simulateur ne modélise ni masse, ni contact, ni rebond. Il signale la fréquence des configurations incompatibles avec la marge de sécurité.
+
+La régularité de répartition compare les statistiques --- moyenne et écart-type --- des distances au plus proche voisin dans l'essaim et dans la cible : leur écart quadratique, noté $\mathcal{E}_{cov}$, forme le terme de régularisation de couverture de l'équation~\eqref{eq:perte-totale}. Une valeur faible indique que les robots sont espacés de façon plus homogène ; une valeur élevée signale des zones denses et des zones presque vides, fréquentes lorsque l'essaim se replie sur une fraction du contour.
+
+Enfin, le taux de succès et le pas de convergence sont définis à partir d'un seuil unique $\tau$ appliqué à la distance de forme :
+\begin{equation}
+  \text{succès}=\mathbb{1}\big[t_{conv}\le T-1\big],
+  \qquad
+  t_{conv}=\min\big\{t\,:\,d_C(P^t,Q)\le\tau\big\}.
+  \label{eq:succes}
+\end{equation}
+Le succès est donc compté uniquement lorsque le seuil est franchi au moins un pas avant la fin de l'épisode : un franchissement n'intervenant qu'au dernier pas est ignoré, convention héritée du calcul du pas de convergence et illustrée par la graine 103 du tableau~\ref{tab:dispersion}. Le pilote utilise $\tau=0{,}5$. Ce seuil est volontairement explicite : il est simple à changer, et toute variation du seuil se répercute directement sur les pourcentages de réussite. Les tableaux du chapitre~\ref{chap:experiences} rappellent donc les valeurs avec lesquelles ils ont été produits.
+
 \section{Déroulement détaillé d'un épisode}
 
 Un épisode commence par le choix d'une cible et le tirage des positions initiales dans l'arène. Les vitesses sont initialisées à zéro. À chaque pas, le simulateur calcule toutes les distances inter-robots puis construit le graphe de communication en conservant uniquement les paires séparées par une distance inférieure au rayon fixé. Cette opération est répétée à chaque instant : un voisin au début de l'épisode peut ne plus être voisin après quelques déplacements.
@@ -112,6 +254,45 @@ La dimension cachée contrôle la capacité du modèle à représenter les état
 
 La vitesse maximale et le pas de temps sont liés. Une vitesse élevée ou un pas trop grand permet aux robots de rejoindre rapidement la cible, mais peut provoquer des dépassements et des collisions. À l'inverse, un pas trop petit rend l'épisode long et peut empêcher la forme de se construire dans la durée choisie. Les pénalités de mouvement et de collision servent à régulariser ce compromis. Les valeurs retenues sont conservées dans les fichiers de configuration afin que chaque résultat puisse être interprété avec son contexte numérique.
 
+\section{Valeurs numériques retenues}
+
+Le tableau~\ref{tab:hyperparametres} rassemble les valeurs effectives des trois campagnes. Ces valeurs ne sont pas interprétées comme optimales : elles ont été choisies pour rendre chaque campagne exécutable sur un poste de travail standard et pour stabiliser l'expérimentation.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Hyperparamètres des trois campagnes d'entraînement, repris des fichiers de configuration versionnés.}
+  \label{tab:hyperparametres}
+  \begin{tabular}{lrrr}
+    \toprule
+    Paramètre & Cercle & Curriculum réduit & Formes complexes \\
+    \midrule
+    Graine & 41 & 43 & 59 \\
+    Nombre de robots & 20 & 20 & 50 \\
+    Points de la cible & 20 & 20 & 50 \\
+    Pas de simulation $T$ & 20 & 20 & 60 \\
+    Pas de temps $\Delta t$ & 0,3 & 0,3 & 0,2 \\
+    Itérations & 80 & $4\times30$ & 120 à 200 \\
+    Taille de lot & 8 & 8 & 4 \\
+    Taux d'apprentissage & 0,003 & 0,002 & 0,001 \\
+    Dimension cachée & 32 & 32 & 64 \\
+    Tours de messages & 2 & 2 & 3 \\
+    Rayon de communication & 2,5 & 2,5 & 2,5 \\
+    Vitesse maximale & 1,0 & 1,0 & 1,0 \\
+    Distance de sécurité & 0,3 & 0,3 & 0,22 \\
+    Rayon de cible & 2,0 & 2,0 & 2,8 \\
+    $\lambda_f$ (forme) & 1,0 & 1,0 & 1,0 \\
+    $\lambda_c$ (collisions) & 1,0 & 1,0 & 0,5 \\
+    $\lambda_u$ (mouvement) & 0,01 & 0,01 & 0,005 \\
+    $\lambda_r$ (couverture) & 0,20 & 0,20 & 0,15 \\    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+
+
+Trois différences entre le curriculum réduit et la campagne complexe méritent d'être soulignées. Le nombre de robots et de points est doublé, ce qui multiplie par environ quatre le nombre de paires à considérer pour le voisinage et les collisions. Les épisodes sont trois fois plus longs, ce qui augmente la mémoire nécessaire à la rétropropagation à travers la simulation. Enfin, le contrôleur reçoit en plus le vecteur vers le contour cible le plus proche, une information géométrique qui n'est pas disponible dans les deux premières campagnes. Les résultats de ces campagnes ne sont donc pas comparables entre eux sans cette précision.
+
 \section{Gestion des formes et du curriculum}
 
 Le jeu de données de formes est séparé du modèle. Il contient des images et les nuages de points associés. Cette séparation a deux avantages. D'une part, la génération ou la correction d'une cible n'oblige pas à modifier l'architecture du GNN. D'autre part, elle permet de définir explicitement quels fichiers appartiennent à l'entraînement, à la validation ou au test. Cette discipline devient indispensable dès que l'on veut déclarer qu'un modèle généralise à des formes non vues.
@@ -119,3 +300,161 @@ Le jeu de données de formes est séparé du modèle. Il contient des images et 
 Le curriculum utilisé dans le projet commence par les géométries simples. Le modèle voit ensuite les chiffres, puis quelques lettres et nombres. Le principe n'est pas que les premières formes soient intrinsèquement plus importantes ; elles fournissent un problème initial plus stable. Un cercle, un carré et un triangle permettent notamment de vérifier que la perte de forme et la pénalité de collision entraînent les mouvements dans une direction utile avant d'ajouter des contours plus irréguliers.
 
 Chaque nouveau niveau conserve les cibles des niveaux précédents. Sans cette précaution, le modèle pourrait optimiser fortement les nouvelles formes et perdre la capacité acquise sur le cercle ou le triangle. Cette conservation réduit le risque d'oubli, mais elle ne le supprime pas. Elle augmente également la diversité des épisodes et peut ralentir l'amélioration sur une cible particulière. Ces compromis sont normaux dans un apprentissage progressif et doivent être visibles dans les courbes et les métriques par forme.
+
+\section{Architecture logicielle et reproductibilité}
+
+Ce chapitre décrit l'organisation du prototype afin de distinguer les choix scientifiques des détails nécessaires à leur reproduction. Le dépôt associe le code source, les configurations et la documentation. Les résultats lourds, tels que les modèles entraînés, les animations et les tableaux bruts, sont produits séparément à partir de ces éléments versionnés.
+
+L'architecture répond à une contrainte principale : une même condition initiale doit pouvoir être rejouée avec un contrôleur différent, sans que la dynamique de simulation soit modifiée par cette substitution. Une seconde contrainte complète la première : aucun résultat présenté dans le mémoire ne doit dépendre d'un réglage caché dans le code. Tous les paramètres numériques sont donc portés par des fichiers de configuration versionnés.
+
+\subsection{Vue d'ensemble des modules}
+
+Le prototype est découpé en modules indépendants qui se limitent à des échanges de données explicites. Le simulateur ne connaît pas la politique qu'on lui fournit ; le modèle ne connaît pas la mécanique de l'arène ; les scripts d'évaluation consomment des fichiers produits par l'entraînement plutôt que des objets Python en mémoire. La figure~\ref{fig:module-architecture} résume ces responsabilités et les flux entre elles.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.95\linewidth]{images/fig_3_8_modules_prototype.png}
+  \caption{Organisation en modules du prototype. Chaque module consomme et produit des artefacts explicites ; la séparation entre simulation, modèle et mesure permet d'évaluer plusieurs contrôleurs sur les mêmes conditions initiales.}
+  \label{fig:module-architecture}
+\end{figure}
+
+Le tableau~\ref{tab:modules} détaille le rôle de chaque module et les artefacts qu'il produit. Cette séparation a trois effets pratiques. Elle permet de tester le voisinage, le respect de la vitesse maximale ou le traitement d'un robot isolé sans exécuter d'entraînement. Elle empêche une fonction de visualisation d'influencer la dynamique simulée. Elle rend enfin possible la comparaison directe d'une règle écrite à la main et du contrôleur appris, puisque les deux sont appelés à travers la même interface d'épisode.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Modules du prototype, responsabilités et artefacts produits.}
+  \label{tab:modules}
+  \begin{tabular}{lp{6.6cm}p{4.4cm}}
+    \toprule
+    Module & Responsabilité & Artefacts principaux \\
+    \midrule
+    Simulation & dynamique, voisinage, arène, pannes, animation & positions, graphe, animation \\
+    Formes cibles & rendu et échantillonnage des formes & images, tableaux de points, index \\
+    Contrôleurs & contrôleur GNN et contrôleurs de référence & commandes, vérification de vitesse \\
+    Entraînement & boucle d'entraînement, pertes, curriculum & modèles, courbes, métriques \\
+    Évaluation & scénarios de pannes et de passage à l'échelle & CSV bruts, agrégats, figures \\
+    Démonstration Web & API locale de visualisation & réponses JSON de trajectoires \\
+    Génération des figures & figures du mémoire & PNG des schémas \\    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+
+
+\subsection{Structure du dépôt}
+
+Le projet regroupe les sources, les configurations, les données de formes, la documentation, les tests et les sorties d'expériences dans des répertoires distincts, dont les responsabilités sont celles du tableau~\ref{tab:modules}. Les entrées de données générées ne sont pas versionnées ; seuls les résumés et la documentation le sont, ce qui évite de conserver des binaires tout en gardant la possibilité de les régénérer à partir des configurations.
+
+Chaque campagne d'entraînement écrit ses sorties dans un répertoire qui porte le nom de l'expérience et le niveau du curriculum concerné. Ainsi, les niveaux \emph{geometry}, \emph{digits}, \emph{symbols} et \emph{numbers} du curriculum réduit coexistent sans se remplacer mutuellement, ce qui permet de comparer les pertes d'un niveau à l'autre après coup.
+
+\subsection{Cycle d'exécution d'un épisode}
+
+Un épisode commence par le tirage de positions initiales et par le choix d'une forme cible. À chaque pas, le simulateur construit le graphe de communication à partir des positions courantes. Chaque robot actif encode alors son observation locale, agrège les messages de ses voisins et produit une vitesse bornée. Le simulateur applique simultanément les commandes, puis la boucle recommence. Après le dernier pas, la configuration finale est comparée au nuage de points de la cible. La figure~\ref{fig:episode-cycle} résume ce cycle, identique pendant l'entraînement et l'évaluation.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.95\linewidth]{images/fig_3_9_cycle_episode.png}
+  \caption{Cycle de vie d'un épisode. La boucle centrale est répétée $T$ fois ; la mesure finale ne porte que sur les robots actifs et alimente la perte (entraînement) ou les métriques (évaluation).}
+  \label{fig:episode-cycle}
+\end{figure}
+
+Pendant l'entraînement, cette boucle est différentiable et la perte remonte jusqu'aux paramètres du GNN. Pendant l'évaluation, les paramètres sont gelés et le même mécanisme ne produit que les métriques. Cette séparation réduit le risque d'évaluer un modèle dans un mode différent de celui utilisé pour son entraînement.
+
+Un point d'implémentation mérite d'être précisé. Le calcul du voisinage est reconstruit à chaque pas, et non mis à jour de façon incrémentale. Cette approche est plus coûteuse, mais elle supprime une classe entière d'erreurs : aucune arête périmée ne peut survivre à un déplacement, et la matrice d'adjacence utilisée par le contrôleur est toujours cohérente avec les positions. Les tests unitaires portent d'ailleurs sur cette cohérence, et non sur un détail de représentation.
+
+\subsection{Configuration et traçabilité}
+
+Les paramètres numériques ne sont pas dispersés dans le code : ils sont regroupés dans des fichiers de configuration. Le tableau~\ref{tab:configurations} liste les configurations du projet et leur objet.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Fichiers de configuration du projet et objet de chacun.}
+  \label{tab:configurations}
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{lp{7.4cm}p{3.4cm}}
+    \toprule
+    Fichier & Objet & Valeurs notables \\
+    \midrule
+    \texttt{shapes.yaml} & jeu de formes standard & image $128\times128$, 20 points \\
+    \texttt{shapes-complex.yaml} & jeu de formes complexes & 50 points par forme \\
+    \texttt{simulator.yaml} & démonstration de la règle locale & portée, vitesse maximale \\
+    \texttt{training-circle.yaml} & entraînement sur le cercle & 20 robots, 80 itérations, graine 41 \\
+    \texttt{curriculum.yaml} & curriculum réduit & 4 niveaux de 30 itérations \\
+    \texttt{curriculum-complex.yaml} & campagne complexe & 50 robots, 60 pas, 3 tours \\
+    \texttt{curriculum-complex-smoke.yaml} & vérification rapide & pipeline uniquement \\
+    \texttt{evaluation-pilot.yaml} & protocole pilote & 10 épisodes, 4 retraits, 3 tailles \\    \bottomrule
+  \end{tabular}}
+\end{table}
+
+
+
+
+Chaque exécution sauvegarde, à côté des résultats, la configuration réellement utilisée. Un répertoire de campagne contient typiquement le modèle final, le meilleur modèle observé, la configuration effective, la liste des pertes itération par itération, la courbe correspondante, les métriques par cible et la liste des cibles vues. Cette traçabilité ne transforme pas une seule graine en résultat général ; elle permet en revanche de rejouer un épisode, de comparer deux réglages et d'identifier l'origine d'une différence lorsque le code évolue.
+
+La graine aléatoire est le pivot de cette reproductibilité. Elle conditionne le tirage des positions initiales, l'ordre des cibles présentées au contrôleur et les scénarios de retrait. Une même graine produit donc le même épisode tant que l'implémentation ne change pas ; une graine différente produit un scénario indépendant. Le passage d'une reproductibilité individuelle à une conclusion statistique suppose de cumuler plusieurs graines, ce qui fait l'objet du protocole d'évaluation du chapitre~\ref{chap:experiences}.
+
+\subsection{Tests et contrôles de non-régression}
+
+La confiance dans les résultats numériques repose sur une suite de tests unitaires qui vérifie des propriétés, et non des valeurs obtenues après coup. Le tableau~\ref{tab:tests} résume les propriétés contrôlées par module.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Propriétés vérifiées par la suite de tests unitaires, par composant.}
+  \label{tab:tests}
+  \begin{tabular}{lp{9.6cm}}
+    \toprule
+    Composant testé & Propriétés vérifiées \\
+    \midrule
+    Simulation & respect du rayon de communication et de l'état actif, bornure de la vitesse, robot en panne immobile et non compté en collision, reproductibilité d'une graine, validité d'une règle locale pour un robot isolé \\
+    Contrôleur GNN & tailles d'essaim et voisinages variables, invariance par permutation des robots, invariance par translation globale, conditionnement par la consigne, traitement des robots isolés et communication désactivée \\
+    Métriques & valeurs exactes sur des cas simples, détection d'une paire en collision \\
+    Entraînement & pertes proches de zéro sur des cas attendus, absence d'auto-boucle dans l'adjacence, cohérence de la cible, entrée de plusieurs conditions de cible \\
+    Génération des formes & normalisation et reproductibilité des points, présence de l'index et de l'archive \\    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+
+
+Deux de ces propriétés méritent d'être commentées. L'invariance par permutation garantit que le réordonnancement des robots dans une liste, simple artefact d'implémentation, ne change pas les commandes produites : c'est la contrepartie testée de la moyenne des messages. L'invariance par translation vérifie que le contrôleur ne dépend pas du repère absolu, mais des relations entre robots et de la consigne. Ces deux propriétés sont des conditions nécessaires de la décentralisation revendiquée ; elles ne garantissent pas la qualité de la formation, mais elles éliminent les échecs qui proviendraient de la représentation des données plutôt que du contrôle lui-même.
+
+\subsection{Exposition locale de la démonstration}
+
+Une petite API locale complète le prototype pour la démonstration. Elle charge le modèle du dernier niveau du curriculum, exécute un épisode pour une forme connue et retourne les positions successives des robots au format JSON. Une page Web peut alors dessiner les points de la cible et animer ces positions. Le tableau~\ref{tab:api} décrit les routes.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Routes de l'API locale de visualisation.}
+  \label{tab:api}
+  \begin{tabular}{llp{6.8cm}}
+    \toprule
+    Route & Objet & Réponse \\
+    \midrule
+    \texttt{GET /api/health} & disponibilité du modèle & statut et chemin du modèle chargé \\
+    \texttt{GET /api/targets} & cibles connues & identifiants et fichiers sources \\
+    \texttt{GET /api/simulate} & exécution d'un épisode & cible, modèle employé, positions par pas \\    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+
+
+L'interface n'exécute pas les règles de contrôle elle-même : le calcul est réalisé par le modèle PyTorch côté serveur, puis seul le résultat est affiché dans le navigateur. Ce choix évite de présenter comme résultat du GNN une animation construite avec des règles manuelles côté client. Le serveur n'emploie ni accès à Internet, ni WebSocket, ni base de données, et n'écoute que sur la boucle locale ; il s'agit d'un outil d'inspection et d'explication, non d'un système de contrôle temps réel.
+
+Le contrat détaillé des réponses JSON est documenté dans la documentation du projet, ce qui permet de réécrire l'interface d'affichage sans toucher au modèle. La reproductibilité d'une démonstration repose alors sur le couple (forme, graine) : deux personnes lançant la même requête obtiennent exactement les mêmes positions.
+
+\subsection{Coût de calcul et choix de mise en œuvre}
+
+Le prototype utilise PyTorch pour le contrôleur et pour la rétropropagation à travers la simulation, sans dépendance à une bibliothèque de réseaux de graphes : l'échange de messages est implémenté directement, ce qui rend les équations du chapitre~\ref{chap:methode} lisibles dans le code et évite une couche d'abstraction qui masquerait l'agrégation.
+
+Les épisodes d'un lot sont traités ensemble sous forme de tenseurs, et la rétropropagation conserve l'historique des $T$ pas de simulation. La consommation de mémoire croît donc avec la longueur des épisodes, avec le nombre de robots et avec le nombre de paires de voisins. C'est cette croissance qui motive le profil de vérification rapide de la campagne complexe : il sert à contrôler le pipeline en quelques minutes, sans permettre aucune conclusion sur la qualité des formes. Les campagnes complètes s'exécutent sur processeur en plusieurs dizaines de minutes, ce qui rend la sauvegarde du meilleur état et la reproductibilité par graine d'autant plus nécessaires.
+
+\subsection{Visualisation et inspection}
+
+Les figures de formation ne sont pas seulement des éléments de présentation. Elles servent à détecter des comportements qui peuvent échapper à une moyenne numérique : amas local, points de cible non couverts, trajectoires instables ou collisions récurrentes. Les images de fin d'épisode et les animations sont donc générées à partir du même simulateur que celui utilisé pour les métriques.
+
+L'approche conserve toutefois une frontière nette entre illustration et preuve. Une animation convaincante pour une graine ne remplace pas une évaluation multi-graines ; inversement, une moyenne faible doit être confrontée à la distribution spatiale réellement obtenue. Le chapitre~\ref{chap:experiences} applique ce principe aux résultats disponibles.

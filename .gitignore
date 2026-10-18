@@ -11,7 +11,7 @@ latex/*.bcf
 latex/*.blg
 latex/*.log
 latex/*.out
-latex/*.pdf
+latex/*.bbl
 latex/*.run.xml
 latex/*.lof
 latex/*.lot
