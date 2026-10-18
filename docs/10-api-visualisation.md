@@ -86,11 +86,15 @@ Exécute une simulation complète avec le GNN et renvoie la cible et les positio
 |---|---|---|---|
 | `target` | Oui | texte | Identifiant retourné par `/api/targets`, par exemple `alphabet_A`. |
 | `seed` | Non | entier | Graine du tirage des positions initiales. Valeur par défaut : `142`. Même graine = même trajectoire. |
+| `method` | Non | texte | `gnn` (défaut) ou `gathering` : contrôleur appris ou règle de regroupement du protocole pilote. |
+| `failure` | Non | décimal | Fraction de robots retirés à mi-épisode : `0` (défaut), `0.05`, `0.10` ou `0.20`. |
+| `robots` | Non | entier | Taille d'essaim : `20` (défaut), `40` ou `100` — la cible est dupliquée comme dans le protocole pilote. |
 
-Exemple :
+Exemples :
 
 ```text
 GET /api/simulate?target=alphabet_A&seed=142
+GET /api/simulate?target=geometry_circle&method=gathering&failure=0.2&robots=40
 ```
 
 ### Réponse réussie — `200`
@@ -109,11 +113,26 @@ GET /api/simulate?target=alphabet_A&seed=142
   },
   "simulation": {
     "seed": 142,
+    "method": "gnn",
     "robot_count": 20,
+    "failure_fraction": 0.0,
+    "failure_step": null,
+    "retired": [],
     "episode_steps": 20,
     "arena_size": [10.0, 10.0],
     "communication_radius": 2.5,
-    "time_step": 0.3
+    "time_step": 0.3,
+    "max_speed": 1.0,
+    "safety_distance": 0.3,
+    "success_threshold": 0.5
+  },
+  "metrics": {
+    "shape_distance": 0.59,
+    "regularity_std": 0.24,
+    "collisions": 8,
+    "collision_rate": 0.021,
+    "convergence_step": 20,
+    "success": 0
   },
   "frames": [
     [[1.20, 7.81], [8.41, 2.34]],
@@ -133,8 +152,10 @@ Les tableaux de l'exemple sont volontairement raccourcis. Dans une réponse rée
 | Champ | Signification |
 |---|---|
 | `model` | Identification du contrôleur ayant produit la trajectoire. |
-| `target.points` | Nuage de points de la forme à afficher en arrière-plan. |
-| `simulation` | Paramètres nécessaires pour mettre le canvas à l'échelle et expliquer le scénario. |
+| `target.points` | Nuage de points de la forme à afficher en arrière-plan (déjà dupliqué si `robots > 20`). |
+| `simulation` | Paramètres du protocole : échelle du canvas, méthode, panne, seuil de succès. |
+| `simulation.retired` | Identifiants des robots retirés à mi-épisode (figés ensuite, à afficher en gris). |
+| `metrics` | Mesures du chapitre 3 calculées à la fin de l'épisode sur les robots actifs. |
 | `frames[0]` | Positions initiales aléatoires des robots. |
 | `frames[i]` | Positions après `i` pas de simulation. |
 | `frames[20]` | État final à montrer pour le résultat de la formation. |
@@ -153,15 +174,29 @@ Avec une forme qui n'appartient pas au curriculum :
 {
   "error": "Forme inconnue : alphabet_Z. Choix possibles : alphabet_A, alphabet_B, alphabet_C, digit_0, digit_1, digit_2, geometry_circle, geometry_square, geometry_triangle, number_010, number_123"
 }
-```
-
-Avec une graine non entière :
+```Avec une graine non entière :
 
 ```json
-{
-  "error": "invalid literal for int() with base 10: 'bonjour'"
-}
+{"error": "invalid literal for int() with base 10: 'bonjour'"}
 ```
+
+Avec une méthode, une fraction de panne ou une taille hors protocole :
+
+```json
+{"error": "Méthode inconnue : oracle. Choix possibles : gnn, gathering."}
+{"error": "Fraction de panne invalide : 0.15. Choix possibles : 0.0, 0.05, 0.1, 0.2."}
+{"error": "Nombre de robots invalide : 30. Choix possibles : 20, 40, 100 (protocole pilote)."}
+```
+
+## Protocole reproduit
+
+Les trajectoires et les mesures ne sont pas codées dans le serveur : elles sont calculées par les mêmes fonctions que celles qui ont produit les tableaux et les figures du chapitre 4 du mémoire (`src.eval.run` et `src.eval.metrics`). En conséquence :
+
+- le graphe de communication est recalculé à chaque pas, un robot retiré est figé et exclu du graphe, des collisions et de la mesure finale ;
+- la distance de forme est la distance de Chamfer symétrique **non carrée** sur les positions finales des robots actifs ;
+- le taux de collisions est normalisé par le nombre de paires possibles et par les `episode_steps` pas ;
+- le succès vaut 1 si le seuil `success_threshold = 0,5` est franchi au plus tard au pas `T-1` (convention du tableau 4.3) ;
+- en passage à l'échelle, les points de la cible sont dupliqués avec `np.resize`, exactement comme dans le protocole pilote.
 
 ## Exemple minimal côté navigateur
 

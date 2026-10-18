@@ -60,6 +60,7 @@ def _commands_gnn(
     active: np.ndarray,
     target: np.ndarray,
     config: EvaluationConfig,
+    target_id: int = 0,
 ) -> np.ndarray:
     pos = torch.tensor(positions, dtype=torch.float32).unsqueeze(0)
     vel = torch.tensor(velocities, dtype=torch.float32).unsqueeze(0)
@@ -67,7 +68,7 @@ def _commands_gnn(
     target_tensor = torch.tensor(target, dtype=torch.float32).unsqueeze(0)
     with torch.no_grad():
         geometry = local_target_features(pos, target_tensor, config.target_radius) if config.use_target_geometry else None
-        result = model(pos, vel, adjacency, torch.tensor([0]), pos - torch.tensor(config.arena_size, dtype=torch.float32).view(1, 1, 2) / 2, geometry)
+        result = model(pos, vel, adjacency, torch.tensor([target_id]), pos - torch.tensor(config.arena_size, dtype=torch.float32).view(1, 1, 2) / 2, geometry)
     return result[0].numpy()
 
 
@@ -83,7 +84,7 @@ def _commands_gathering(positions: np.ndarray, active: np.ndarray, config: Evalu
     return commands * np.minimum(1.0, config.max_speed / np.maximum(norms, 1e-12))
 
 
-def simulate_episode(model: GNNController, method: str, target: np.ndarray, robot_count: int, failure_fraction: float, seed: int, config: EvaluationConfig) -> dict[str, float | int | str]:
+def simulate_episode(model: GNNController, method: str, target: np.ndarray, robot_count: int, failure_fraction: float, seed: int, config: EvaluationConfig, target_id: int = 0) -> dict[str, float | int | str]:
     """Exécute un épisode fixe, avec retrait de robots à mi-parcours."""
     rng = np.random.default_rng(seed)
     positions = rng.uniform((0, 0), config.arena_size, size=(robot_count, 2))
@@ -95,7 +96,7 @@ def simulate_episode(model: GNNController, method: str, target: np.ndarray, robo
         if step == config.episode_steps // 2 and failure_fraction:
             count = max(1, round(robot_count * failure_fraction))
             active[rng.choice(np.flatnonzero(active), size=count, replace=False)] = False
-        commands = _commands_gnn(model, positions, velocities, active, target, config) if method == "gnn" else _commands_gathering(positions, active, config)
+        commands = _commands_gnn(model, positions, velocities, active, target, config, target_id) if method == "gnn" else _commands_gathering(positions, active, config)
         commands[~active] = 0
         velocities = commands
         positions = np.clip(positions + velocities * config.time_step, (0, 0), config.arena_size)

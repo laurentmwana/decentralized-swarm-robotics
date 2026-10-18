@@ -94,7 +94,7 @@ Elle n'emploie ni Internet ni WebSocket. La page Web peut lire les routes suivan
 
 - `GET /api/health` : vérifie que le modèle est disponible ;
 - `GET /api/targets` : liste les formes que connaît le modèle final du curriculum ;
-- `GET /api/simulate?target=alphabet_A&seed=142` : produit, en JSON, la cible et toutes les positions des robots à chaque pas.
+- `GET /api/simulate?target=alphabet_A&seed=142` : produit, en JSON, la cible, toutes les positions des robots à chaque pas et les mesures du protocole du mémoire. Paramètres optionnels : `method=gnn|gathering` (contrôleur appris ou règle de regroupement), `failure=0|0.05|0.10|0.20` (retrait à mi-épisode), `robots=20|40|100` (passage à l'échelle, cible dupliquée).
 
 Les identifiants de cibles disponibles comprennent notamment `alphabet_A`, `digit_2` et `number_123`. L'animation Web doit dessiner les valeurs de `frames` retournées par cette dernière route ; elles sont calculées par `results/curriculum/numbers/model.pt`, pas par une règle codée dans le navigateur.
 
