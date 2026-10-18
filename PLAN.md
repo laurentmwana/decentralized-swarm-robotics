@@ -23,9 +23,9 @@ Les durées sont indicatives pour un travail à temps partiel ; à adapter à la
 - [x] Hypothèses et périmètre écrits (ce qui est dans le mémoire, ce qui n'y est pas)
 
 ### Étape 1 — État de l'art
-- [ ] 15 à 25 références lues et résumées (essaims, réseaux cellulaires, GNN, apprentissage multi-agents)
-- [ ] Tableau comparatif des approches existantes
-- [ ] Positionnement : ce que ton travail apporte de différent
+- [x] 15 à 25 références lues et résumées (essaims, réseaux cellulaires, GNN, apprentissage multi-agents) — 67 entrées dans references.bib
+- [x] Tableau comparatif des approches existantes
+- [x] Positionnement : ce que ton travail apporte de différent
 
 ### Étape 2 — Simulateur
 - [x] Dynamique des robots (position, vitesse, limites)
@@ -65,12 +65,16 @@ Les durées sont indicatives pour un travail à temps partiel ; à adapter à la
 ### Étape 7 — Rédaction
 - [x] créer un dossier latex
 - [x] Modèle LaTeX configuré (12 pt, interligne scientifique)
-- [ ] Introduction et problématique
-- [ ] État de l'art
-- [ ] Méthode
-- [ ] Expériences et résultats
-- [ ] Discussion et conclusion
+- [x] Introduction et problématique
+- [x] État de l'art
+- [x] Méthode
+- [x] Architecture logicielle et reproductibilité
+- [x] Expériences et résultats
+- [x] Discussion et conclusion
 - [x] Bibliographie, annexes, relecture
+- [x] Structure à 5 chapitres (architecture fusionnée dans la méthode, conclusion fusionnée dans la discussion)
+- [x] Illustrations détaillées à chaque concept clé (23 figures, schémas déterministes)
+- [x] Compilation (75 pages au 17/10/2026, 0 erreur, 67 références, 23 figures, 12 tableaux)
 
 ### Étape 8 — Soutenance
 - [ ] Diapositives

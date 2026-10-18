@@ -54,7 +54,14 @@ Ces choix permettent d'isoler l'effet de l'architecture de contrôle et de l'app
 
 \section{Choix du problème étudié}
 
-Le choix de la formation de formes répond à une raison méthodologique. Il est suffisamment simple pour être représenté dans un simulateur 2D et visualisé directement, mais il reste plus exigeant qu'un simple rassemblement. Dans un rassemblement, plusieurs robots peuvent finir dans une même zone tout en donnant l'impression que la tâche est accomplie. Dans une formation, ce comportement est insuffisant : les robots doivent aussi se répartir sur les différentes parties de la cible. Cette exigence rend visibles plusieurs difficultés de contrôle distribué, notamment la couverture, les collisions et les ruptures de connectivité.
+Le choix de la formation de formes répond à une raison méthodologique. Il est suffisamment simple pour être représenté dans un simulateur 2D et visualisé directement, mais il reste plus exigeant qu'un simple rassemblement. Dans un rassemblement, plusieurs robots peuvent finir dans une même zone tout en donnant l'impression que la tâche est accomplie. Dans une formation, ce comportement est insuffisant : les robots doivent aussi se répartir sur les différentes parties de la cible. Cette exigence rend visibles plusieurs difficultés de contrôle distribué, notamment la couverture, les collisions et les ruptures de connectivité. La figure~\ref{fig:schema-formation} illustre cette progression, du départ aléatoire à la formation approchée du contour.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.92\linewidth]{images/fig_extra_schema_formation.png}
+  \caption{Illustration conceptuelle d'une formation de forme : à gauche, des départs aléatoires ; au centre, une étape intermédiaire ; à droite, une formation approchée du contour cible. L'affectation représentée illustre le scénario général et ne constitue pas un résultat du contrôleur appris.}
+  \label{fig:schema-formation}
+\end{figure}
 
 Le cercle sert de premier cas de validation. Sa géométrie est régulière et son contour peut être échantillonné facilement. Les chiffres, les lettres et les nombres permettent ensuite de vérifier que le pipeline ne dépend pas exclusivement d'une forme convexe et symétrique. Leur intérêt n'est pas de faire de la reconnaissance de caractères. Ils fournissent plutôt des contours présentant des segments, des angles, des régions moins régulières et parfois plusieurs parties visuellement distinctes. Une lettre formée de manière approximative reste donc un résultat de contrôle spatial, non la preuve qu'un système comprend un symbole.
 
@@ -78,11 +85,11 @@ Enfin, les résultats sont analysés à plusieurs niveaux. Une courbe de perte r
 
 \section{Organisation du mémoire}
 
-Le chapitre~\ref{chap:etat-art} situe la formation décentralisée dans la robotique en essaim et présente le rôle des GNN dans le contrôle distribué. Le chapitre~\ref{chap:methode} décrit le simulateur, les formes cibles, l'architecture du contrôleur, l'apprentissage et les choix de reproductibilité. Le chapitre~\ref{chap:experiences} présente les expériences, les résultats disponibles et leur discussion. Enfin, le chapitre~\ref{chap:conclusion} synthétise les apports et les perspectives.
+Le mémoire s'organise en cinq chapitres. Le chapitre~\ref{chap:etat-art} situe la formation décentralisée dans la robotique en essaim et présente le rôle des GNN dans le contrôle distribué. Le chapitre~\ref{chap:methode} décrit le simulateur, les formes cibles, le contrôleur, l'apprentissage, ainsi que l'architecture logicielle et les choix de reproductibilité. Le chapitre~\ref{chap:experiences} présente les expériences et les résultats disponibles. Enfin, le chapitre~\ref{chap:discussion} discute ces résultats, en synthétise les apports et ouvre sur les perspectives.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{figures/experimental-pipeline.png}
+  \includegraphics[width=\linewidth]{images/fig_1_1_chaine_experimentale.png}
   \caption{Vue d'ensemble de la chaîne expérimentale. Une perte globale est utilisée pendant l'apprentissage ; lors de l'exécution, chaque robot applique une politique partagée à partir de son observation locale, de ses voisins et de la consigne de mission.}
   \label{fig:experimental-pipeline}
 \end{figure}
