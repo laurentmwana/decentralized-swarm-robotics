@@ -120,3 +120,31 @@ class SwarmSimulator:
             self.config.arena_size,
         )
         self.step_count += 1
+
+    def apply_random_failures_at_midpoint(self, failure_fraction: float) -> None:
+        """
+        Applique des pannes aléatoires à mi-épisode selon la fraction spécifiée.
+
+        Args:
+            failure_fraction: Fraction de robots actifs à mettre en panne (0.0 à 1.0)
+        """
+        if not 0.0 <= failure_fraction <= 1.0:
+            raise ValueError("failure_fraction doit être entre 0.0 et 1.0")
+
+        # Compter les robots actifs actuellement
+        active_count = np.sum(self.active)
+        if active_count == 0:
+            return
+
+        # Calculer le nombre de robots à mettre en panne
+        n_to_fail = max(1, int(active_count * failure_fraction))
+
+        # Sélectionner aléatoirement parmi les robots actifs
+        active_indices = np.where(self.active)[0]
+        if len(active_indices) > 0:
+            fail_indices = self.rng.choice(
+                active_indices,
+                size=min(n_to_fail, len(active_indices)),
+                replace=False
+            )
+            self.fail(fail_indices)
