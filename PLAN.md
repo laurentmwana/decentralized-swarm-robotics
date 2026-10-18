@@ -26,14 +26,14 @@ Le mémoire initial sert de **référence de spécification** (valeurs de dépar
 **Critère** : les décisions ci-dessus sont écrites ; un test vide passe ; une configuration se charge et se réécrit à l'identique.
 
 ## Phase 1 — Simulateur 2D
-- [ ] Arène carrée, état par robot (position, vitesse), vitesse directement commandée.
-- [ ] Commande bornée par la vitesse max, appliquée avant la mise à jour de position.
-- [ ] Limites d'arène.
-- [ ] Graphe de communication par portée, **recalculé à chaque pas**, sans auto-boucle.
-- [ ] Pannes : sélection aléatoire à mi-épisode, selon la règle décidée.
-- [ ] Interface d'épisode unique (cible, positions initiales, graine, contrôleur) utilisable par tous les contrôleurs.
-- [ ] Enregistrement des positions par pas.
-- [ ] Tests : portée respectée, vitesse bornée, robot isolé valide, robot en panne immobile et hors collisions, même graine = même épisode.
+- [x] Arène carrée, état par robot (position, vitesse), vitesse directement commandée.
+- [x] Commande bornée par la vitesse max, appliquée avant la mise à jour de position.
+- [x] Limites d'arène.
+- [x] Graphe de communication par portée, **recalculé à chaque pas**, sans auto-boucle.
+- [x] Pannes : sélection aléatoire à mi-épisode, selon la règle décidée.
+- [x] Interface d'épisode unique (cible, positions initiales, graine, contrôleur) utilisable par tous les contrôleurs.
+- [x] Enregistrement des positions par pas.
+- [x] Tests : portée respectée, vitesse bornée, robot isolé valide, robot en panne immobile et hors collisions, même graine = même épisode.
 **Critère** : un contrôleur trivial tourne sur 20, 40 et 100 robots, reproductible.
 
 ## Phase 2 — Formes cibles
