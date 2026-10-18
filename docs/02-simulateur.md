@@ -1,60 +1,19 @@
-# Étape 2 — Simulateur d'essaim
+# 02 — Simulateur
 
-## Objectif
-Construire le monde 2D dans lequel les robots bougent, se perçoivent et peuvent tomber en panne. Tout le reste en dépend.
+## Modèle
+- Arène carrée 2D, dimension 10 × 10 dans la configuration de référence.
+- Chaque robot : position et vitesse 2D. Dynamique à **vitesse directement commandée** : la nouvelle position est l'ancienne plus pas de temps × commande ; la norme de la commande est bornée par la vitesse max.
+- Valeurs de référence (campagnes simples) : 20 robots, pas de temps 0,3, vitesse max 1, portée de communication 2,5.
+- Positions limitées aux frontières de l'arène (effet de bord possible : un robot en bord ne se comporte pas comme en espace ouvert).
 
-## Ce que le simulateur doit faire
-1. **Représenter les robots** : chaque robot a une position, une vitesse, un identifiant, un état (actif ou en panne).
-2. **Faire avancer le temps** : à chaque pas, chaque robot reçoit une commande de mouvement (direction et vitesse), limitée par une vitesse maximale, puis sa position est mise à jour.
-3. **Calculer le voisinage** : deux robots sont voisins si leur distance est inférieure au **rayon de communication**. Ce voisinage forme le graphe, recalculé à chaque pas.
-4. **Gérer les pannes** : possibilité de retirer des robots à un moment donné (au hasard ou dans une zone).
-5. **Détecter les collisions** : compter les paires de robots trop proches.
-6. **Visualiser** : image par pas de temps et animation.
+## Graphe de communication
+Recalculé à **chaque pas** : une arête existe si la distance est inférieure ou égale à la portée. La topologie évolue avec les déplacements. Le graphe n'a pas d'auto-boucle.
 
-## Paramètres (tous dans la configuration)
-- nombre de robots
-- taille de l'arène
-- rayon de communication
-- vitesse maximale
-- pas de temps
-- nombre de pas par épisode
-- distance de sécurité pour les collisions
-- bruit éventuel sur les mesures (pour tester la robustesse)
+## Hypothèses (simplifications assumées)
+Repère commun, positions et messages exacts, instantanés et sans perte ; pas d'obstacle ; pas de masse, contact ni rebond (la « collision » est un seuil de sécurité, pas un choc). Ces limites sont à lever progressivement (voir PLAN, étape 10).
 
-## Décisions à prendre et noter dans `decisions.md`
-- **Référentiel** : les robots partagent-ils un repère commun (même axe nord pour tous), ou chacun mesure ses voisins dans son propre repère ? Le repère commun est plus simple ; le repère propre est plus réaliste. Commencer par le repère commun, noter l'hypothèse.
-- **Arène** : bornée (murs) ou illimitée ?
-- **Dynamique** : déplacement direct (le robot va où on lui dit) ou avec inertie ? Commencer simple.
+## Pannes
+Un robot déclaré en panne est supprimé de la simulation : il cesse de se déplacer, n'émet plus de messages et n'est plus pris en compte dans le voisinage des autres robots. Retrait à mi-épisode, fraction tirée aléatoirement parmi les robots actifs ; la mesure finale ne porte que sur les robots actifs.
 
-## Décisions de la première implémentation
-
-- Repère commun 2D, conformément au cadrage.
-- Arène bornée : les positions sont limitées aux bords de l'arène.
-- Dynamique à vitesse directe : la commande est bornée par `max_speed`, puis intégrée avec `time_step`.
-
-## Références de comportement à coder ici (utilisées en étape 6)
-- **Rassemblement par règles** : chaque robot se rapproche du centre de ses voisins.
-- **Répulsion** : s'éloigner des voisins trop proches.
-Ces deux règles servent de premier test du simulateur et de comparaison plus tard.
-
-## Tests à écrire
-- Deux robots éloignés ne sont pas voisins, deux robots proches le sont.
-- Un robot ne dépasse jamais la vitesse maximale.
-- Un robot en panne ne bouge plus et ne communique plus.
-- Même graine aléatoire = même résultat.
-
-## À faire
-- [ ] Module de dynamique
-- [ ] Module de voisinage
-- [ ] Module de pannes
-- [ ] Module de collisions
-- [ ] Visualisation animée
-- [ ] Règles simples de rassemblement et de répulsion
-- [ ] Tests
-
-## Critères de réussite
-Avec les règles simples, on voit des robots dispersés se regrouper sans se superposer, et l'animation le montre clairement.
-
-## Pièges
-- Recalculer les voisins de façon lente (utiliser une structure de recherche spatiale dès que le nombre de robots grandit).
-- Mélanger dans le même code la simulation et le modèle : garder les deux séparés.
+## Reproductibilité
+La graine commande les positions initiales, l'ordre des cibles et les scénarios de retrait.
