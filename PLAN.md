@@ -37,15 +37,15 @@ Le mémoire initial sert de **référence de spécification** (valeurs de dépar
 **Critère** : un contrôleur trivial tourne sur 20, 40 et 100 robots, reproductible.
 
 ## Phase 2 — Formes cibles
-- [ ] Rendu 128×128 (géométries tracées, caractères par police).
-- [ ] Binarisation au milieu de la plage de gris.
-- [ ] Échantillonnage par point le plus éloigné, graine contrôlée.
-- [ ] Normalisation dans un cadre commun, à l'échelle du rayon de cible.
-- [ ] Jeu : 7 géométries, 26 lettres, 10 chiffres, nombres à trois caractères (puis 9 à 999).
-- [ ] Deux résolutions (20 et 50 points) ; envisager 80 à 100 pour les nombres.
-- [ ] Index + image d'origine + planche de contrôle.
-- [ ] Découpage entraînement / validation / test **déclaré dès maintenant** (formes réservées pour la généralisation).
-- [ ] Tests : normalisation, reproductibilité, présence de l'index.
+- [x] Rendu 128×128 (géométries tracées, caractères par police).
+- [x] Binarisation au milieu de la plage de gris.
+- [x] Échantillonnage par point le plus éloigné, graine contrôlée.
+- [x] Normalisation dans un cadre commun, à l'échelle du rayon de cible.
+- [x] Jeu : 7 géométries, 26 lettres, 10 chiffres, nombres à trois caractères (puis 9 à 999).
+- [x] Deux résolutions (20 et 50 points) ; envisager 80 à 100 pour les nombres.
+- [x] Index + image d'origine + planche de contrôle.
+- [x] Découpage entraînement / validation / test **déclaré dès maintenant** (formes réservées pour la généralisation).
+- [x] Tests : normalisation, reproductibilité, présence de l'index.
 **Critère** : planche inspectée visuellement ; régénération identique avec la même graine.
 
 ## Phase 3 — Métriques
