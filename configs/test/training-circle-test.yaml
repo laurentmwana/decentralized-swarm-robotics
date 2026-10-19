@@ -1,0 +1,18 @@
+seed: 41
+batch_size: 2
+iterations: 2
+episode_steps: 5
+learning_rate: 0.003
+robot_count: 4
+arena_size: [5.0, 5.0]
+communication_radius: 1.5
+max_speed: 0.5
+time_step: 0.1
+safety_distance: 0.2
+target_radius: 1.0
+shape_loss_weight: 1.0
+collision_loss_weight: 1.0
+motion_loss_weight: 0.01
+coverage_loss_weight: 0.20
+hidden_dim: 8
+message_passing_steps: 1

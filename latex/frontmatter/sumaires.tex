@@ -1,0 +1,15 @@
+\chapter*{Résumé}
+\addcontentsline{toc}{chapter}{Résumé}
+Ce mémoire étudie le contrôle décentralisé d'un essaim de robots simulés par un réseau de neurones sur graphes partagé. Chaque robot ne traite que son état local, les messages de ses voisins proches et une consigne commune de forme. L'objectif est de former des nuages de points représentant des formes géométriques et symboliques, tout en examinant le comportement face aux pannes et aux changements de taille de l'essaim. La contribution principale est une chaîne expérimentale reproductible : simulateur 2D, jeu de formes, contrôleur GNN, entraînement différentiable et protocole d'évaluation. Un premier protocole pilote montre que le contrôleur appris obtient une meilleure adéquation à une cible circulaire qu'une règle locale de regroupement. Cette observation reste exploratoire : la baseline ne reçoit pas la même information de consigne et l'étude finale devra augmenter le nombre de répétitions et inclure des comparaisons plus équitables.
+
+\noindent\textbf{Mots-clés :} robotique en essaim, contrôle décentralisé, réseaux de neurones sur graphes, formation de formes, apprentissage différentiable.
+
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+This thesis studies decentralized control of a simulated robot swarm with a shared graph neural network. Each robot only processes its local state, messages from nearby neighbours, and a common shape instruction. The main contribution is a reproducible experimental pipeline combining a two-dimensional simulator, a shape dataset, a local GNN controller, differentiable training, and an evaluation protocol. Preliminary experiments show that the learned controller is closer to a circular target than a local gathering rule. This observation remains exploratory because the baseline does not receive the same target instruction and the final study must use more repetitions and information-equivalent comparisons.
+
+\noindent\textbf{Keywords:} swarm robotics, decentralized control, graph neural networks, shape formation, differentiable learning.
+
+\tableofcontents
+\listoffigures
+\listoftables

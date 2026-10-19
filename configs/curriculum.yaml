@@ -2,7 +2,7 @@ base:
   seed: 43
   batch_size: 8
   episode_steps: 20
-  learning_rate: 0.002
+  learning_rate: 0.001  # Réduit pour plus de stabilité
   robot_count: 20
   arena_size: [10.0, 10.0]
   communication_radius: 2.5
@@ -12,19 +12,19 @@ base:
   target_radius: 2.0
   shape_loss_weight: 1.0
   collision_loss_weight: 1.0
-  motion_loss_weight: 0.01
+  motion_loss_weight: 0.05  # Augmenté pour stabiliser les commandes
   coverage_loss_weight: 0.20
-  hidden_dim: 32
-  message_passing_steps: 2
+  hidden_dim: 64  # Augmenté pour meilleure capacité de représentation
+  message_passing_steps: 3  # Augmenté pour rayon d'interaction plus large
 stages:
   - name: geometry
-    iterations: 30
+    iterations: 50  # Augmenté pour meilleure convergence
     targets:
       - data/shapes/geometry/geometry_circle.npy
       - data/shapes/geometry/geometry_square.npy
       - data/shapes/geometry/geometry_triangle.npy
   - name: digits
-    iterations: 30
+    iterations: 50  # Augmenté pour meilleure convergence
     targets:
       - data/shapes/geometry/geometry_circle.npy
       - data/shapes/geometry/geometry_square.npy
@@ -33,7 +33,7 @@ stages:
       - data/shapes/digits/digit_1.npy
       - data/shapes/digits/digit_2.npy
   - name: symbols
-    iterations: 30
+    iterations: 50  # Augmenté pour meilleure convergence
     targets:
       - data/shapes/geometry/geometry_circle.npy
       - data/shapes/geometry/geometry_square.npy
@@ -45,7 +45,7 @@ stages:
       - data/shapes/alphabet/alphabet_B.npy
       - data/shapes/alphabet/alphabet_C.npy
   - name: numbers
-    iterations: 30
+    iterations: 60  # Légèrement augmenté pour les formes plus complexes
     targets:
       - data/shapes/geometry/geometry_circle.npy
       - data/shapes/geometry/geometry_square.npy

@@ -34,8 +34,14 @@ def main() -> None:
         targets = [np.load(path) for path in stage["targets"]]
         stage_config = replace(config, iterations=stage["iterations"], seed=config.seed + stage_index)
         stage_output = output / stage["name"]
-        model, losses, metrics = train_targets(stage_config, targets, stage_output, state)
+        model, losses, metrics, per_target_losses = train_targets(stage_config, targets, stage_output, state)
         (stage_output / "targets.yaml").write_text(yaml.safe_dump({"targets": stage["targets"]}, sort_keys=False), encoding="utf-8")
+
+        # Save per-target loss history
+        for target_id, loss_history in per_target_losses.items():
+            if loss_history:  # Only save if we have data
+                np.savetxt(stage_output / f"loss_target_{target_id}.csv", np.asarray(loss_history), delimiter=",")
+
         state = model.state_dict()
         print(f"stage={stage['name']}; targets={len(targets)}; initial_loss={losses[0]:.4f}; final_loss={losses[-1]:.4f}; metrics={metrics}")
 

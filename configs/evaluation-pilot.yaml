@@ -1,5 +1,5 @@
 seed: 101
-episodes: 10
+episodes: 50
 episode_steps: 20
 robot_count: 20
 arena_size: [10.0, 10.0]
