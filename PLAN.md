@@ -49,53 +49,53 @@ Le mémoire initial sert de **référence de spécification** (valeurs de dépar
 **Critère** : planche inspectée visuellement ; régénération identique avec la même graine.
 
 ## Phase 3 — Métriques
-- [ ] Distance de Chamfer symétrique (préciser si au carré) ; indépendante de la taille selon la décision de phase 0.
-- [ ] Taux de collisions (normalisé par paires et durée) ; mesure sur robots actifs.
-- [ ] Régularité de répartition (valeur absolue).
-- [ ] Succès et pas de convergence selon la définition unique.
-- [ ] Connectivité du graphe pendant l'épisode (nombre de composantes).
-- [ ] Courbe de distance au cours du temps.
-- [ ] Tests : valeurs exactes sur cas simples, paire en collision, cas limites autour du seuil.
+- [x] Distance de Chamfer symétrique (préciser si au carré) ; indépendante de la taille selon la décision de phase 0.
+- [x] Taux de collisions (normalisé par paires et durée) ; mesure sur robots actifs.
+- [x] Régularité de répartition (valeur absolue).
+- [x] Succès et pas de convergence selon la définition unique.
+- [x] Connectivité du graphe pendant l'épisode (nombre de composantes).
+- [x] Courbe de distance au cours du temps.
+- [x] Tests : valeurs exactes sur cas simples, paire en collision, cas limites autour du seuil.
 **Critère** : toutes les mesures recalculables depuis les positions enregistrées.
 
 ## Phase 4 — Contrôleurs de référence (avant le GNN)
-- [ ] Règle de regroupement (cohésion–répulsion), sans consigne.
-- [ ] **Règle manuelle avec consigne de forme** (attraction vers le contour + répulsion).
-- [ ] Même interface que le GNN ; mêmes tests d'interface.
+- [x] Règle de regroupement (cohésion–répulsion), sans consigne.
+- [x] **Règle manuelle avec consigne de forme** (attraction vers le contour + répulsion).
+- [x] Même interface que le GNN ; mêmes tests d'interface.
 **Critère** : les deux règles forment un cercle ou échouent de façon documentée ; leurs mesures servent de plancher.
 
 ## Phase 5 — Contrôleur GNN
-- [ ] Encodeur de l'observation (vitesse, identifiant de forme).
-- [ ] Messages par arête (états des deux robots + position relative), agrégation par moyenne, voisinage vide = agrégat nul.
-- [ ] Mise à jour, tours configurables (1, 2, 3), décodeur borné.
-- [ ] Variante **sans communication** (mêmes entrées, pas de messages, taille comparable).
+- [x] Encodeur de l'observation (vitesse, identifiant de forme).
+- [x] Messages par arête (états des deux robots + position relative), agrégation par moyenne, voisinage vide = agrégat nul.
+- [x] Mise à jour, tours configurables (1, 2, 3), décodeur borné.
+- [x] Variante **sans communication** (mêmes entrées, pas de messages, taille comparable).
 - [ ] Option : agrégation par somme normalisée ; attention (plus tard).
-- [ ] Écrire les messages à la main (pas de bibliothèque de GNN).
-- [ ] Tests : invariance par permutation et par translation, tailles variables, robot isolé, communication désactivée, conditionnement par la consigne.
+- [x] Écrire les messages à la main (pas de bibliothèque de GNN).
+- [x] Tests : invariance par permutation et par translation, tailles variables, robot isolé, communication désactivée, conditionnement par la consigne.
 **Critère** : tous les tests passent ; nombre de paramètres indépendant du nombre de robots.
 
 ## Phase 6 — Entraînement (cercle)
-- [ ] Simulateur différentiable (tout en tenseurs).
-- [ ] Perte à quatre termes : forme, collisions, mouvement, couverture ; poids en configuration.
-- [ ] Boucle Adam, lots d'épisodes, sauvegarde du meilleur état et du dernier.
-- [ ] Journal des pertes par itération, configuration effective sauvegardée.
-- [ ] Tests : pertes proches de zéro sur cas attendus, pas d'auto-boucle, cohérence de la cible.
-- [ ] Profil de vérification rapide (smoke) du pipeline.
-- [ ] Entraîner sur le cercle avec **au moins 5 graines**.
+- [x] Simulateur différentiable (tout en tenseurs).
+- [x] Perte à quatre termes : forme, collisions, mouvement, couverture ; poids en configuration.
+- [x] Boucle Adam, lots d'épisodes, sauvegarde du meilleur état et du dernier.
+- [x] Journal des pertes par itération, configuration effective sauvegardée.
+- [x] Tests : pertes proches de zéro sur cas attendus, pas d'auto-boucle, cohérence de la cible.
+- [x] Profil de vérification rapide (smoke) du pipeline.
+- [x] Entraîner sur le cercle avec **au moins 5 graines**.
 **Critère** : la perte décroît sur toutes les graines ; le cercle formé est visuellement correct et la couverture est acceptable.
 
 ## Phase 7 — Harnais d'évaluation
-- [ ] Scénarios : taille d'essaim (20, 40, 100), retraits (5, 10, 20 %), durée d'épisode ≥ temps de convergence observé.
-- [ ] Mêmes positions initiales réutilisées entre contrôleurs.
-- [ ] Sortie brute : une ligne par épisode ; agrégats moyenne, écart-type, intervalle de confiance.
-- [ ] **50 répétitions** par condition.
-- [ ] Générateur de tableaux et de figures depuis les fichiers bruts.
+- [x] Scénarios : taille d'essaim (20, 40, 100), retraits (5, 10, 20 %), durée d'épisode ≥ temps de convergence observé.
+- [x] Mêmes positions initiales réutilisées entre contrôleurs.
+- [x] Sortie brute : une ligne par épisode ; agrégats moyenne, écart-type, intervalle de confiance.
+- [x] **50 répétitions** par condition.
+- [x] Générateur de tableaux et de figures depuis les fichiers bruts.
 **Critère** : une commande exécute toute la campagne sur un contrôleur et produit tableaux et figures.
 
 ## Phase 8 — Comparaisons à information équivalente
-- [ ] Évaluer : regroupement, règle manuelle + consigne, GNN sans communication, GNN 1/2/3 tours.
-- [ ] Budget d'entraînement identique pour les contrôleurs appris.
-- [ ] Un tableau unique par condition, avec l'information reçue par chaque contrôleur.
+- [x] Évaluer : regroupement, règle manuelle + consigne, GNN sans communication, GNN 1/2/3 tours.
+- [x] Budget d'entraînement identique pour les contrôleurs appris.
+- [x] Un tableau unique par condition, avec l'information reçue par chaque contrôleur.
 - [ ] Option : somme normalisée / attention / agrégation tronquée.
 **Critère** : on peut répondre « la communication apporte-t-elle quelque chose à consigne égale ? ».
 
@@ -107,9 +107,9 @@ Le mémoire initial sert de **référence de spécification** (valeurs de dépar
 **Critère** : pas de dégradation des cibles anciennes ; résultats par forme.
 
 ## Phase 10 — Formes complexes (50 robots)
-- [ ] Configuration dédiée (50 robots, ≥ 50 points, 64 composantes, 3 tours, épisodes longs).
-- [ ] Variante avec vecteur vers le contour, **séparée** des autres résultats.
-- [ ] Entraîner tous les niveaux (coût processeur : planifier).
+- [x] Configuration dédiée (50 robots, ≥ 50 points, 64 composantes, 3 tours, épisodes longs).
+- [x] Variante avec vecteur vers le contour, **séparée** des autres résultats.
+- [x] Entraîner tous les niveaux (coût processeur : planifier).
 **Critère** : lettres et nombres évalués visuellement et quantitativement.
 
 ## Phase 11 — Généralisation et lisibilité
@@ -137,16 +137,3 @@ Le mémoire initial sert de **référence de spécification** (valeurs de dépar
 - [ ] Regrouper les limites (une seule section), déplacer l'architecture logicielle en annexe.
 - [ ] Page de titre complète, relecture orthographique.
 **Critère** : chaque chiffre du texte est traçable jusqu'à un fichier brut.
-
----
-
-## Ordre recommandé
-0 → 1 → 2 → 3 → **4** → 5 → 6 → 7 → **8** → 9 → 10 → 11 → 12 → 13 → 14.
-Les phases 4 et 8 viennent tôt exprès : sans baselines équitables, aucun résultat n'est défendable.
-
-## Jalons
-- **J1** (phases 0–3) : simulateur, formes et métriques testés.
-- **J2** (phases 4–6) : règles de référence + GNN entraîné sur le cercle.
-- **J3** (phases 7–8) : première comparaison équitable avec 50 répétitions.
-- **J4** (phases 9–11) : formes symboliques et généralisation.
-- **J5** (phases 12–14) : robustesse, démo, rédaction.
