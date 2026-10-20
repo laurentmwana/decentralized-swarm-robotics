@@ -31,6 +31,7 @@ import numpy as np
 import torch
 import yaml
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -183,6 +184,12 @@ def available_targets(
     """Retourne les identifiants des formes que le modèle de ce niveau connaît."""
     _, _, paths, _, _ = _load_experiment(config_path, model_path, stage_name)
     return [{"id": Path(path).stem, "source": path} for path in paths]
+
+
+@app.get("/", include_in_schema=False, summary="Redirection vers la documentation")
+def root() -> RedirectResponse:
+    """Redirige la racine vers la documentation Swagger UI."""
+    return RedirectResponse(url="/docs")
 
 
 def _validate(method: str, failure: float, robots: int) -> None:
