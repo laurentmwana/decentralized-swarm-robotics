@@ -2,7 +2,7 @@ seed: 41
 batch_size: 8
 iterations: 100
 episode_steps: 20
-learning_rate: 0.003
+learning_rate: 0.001
 robot_count: 20
 arena_size: [10.0, 10.0]
 communication_radius: 2.5
@@ -16,3 +16,4 @@ motion_loss_weight: 0.01
 coverage_loss_weight: 0.0
 hidden_dim: 32
 message_passing_steps: 2
+use_target_geometry: false
