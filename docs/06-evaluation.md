@@ -1,59 +1,38 @@
-# Étape 6 — Évaluation et expériences
+# 06 — Évaluation
 
-## Objectif
-Mesurer honnêtement ce que le modèle sait faire, le comparer à des références, et tester sa robustesse. C'est le cœur des résultats du mémoire.
+## Mesures (définitions en mots)
+- **Distance de forme** : distance de Chamfer symétrique en fin d'épisode. Moyenne des écarts « robot → point cible le plus proche » plus « point cible → robot le plus proche ». Sans affectation fixe. Préciser dans le texte si les distances sont au carré.
+- **Taux de collisions** : proportion de paires plus proches que la distance de sécurité, moyennée sur la durée et normalisée par le nombre de paires. Pas une collision mécanique.
+- **Régularité de répartition** : écart entre la dispersion des distances au plus proche voisin dans l'essaim et dans la cible (utiliser une valeur absolue pour éviter les signes ambigus). Détecte les amas, pas la couverture complète.
+- **Succès** : distance de forme finale sous le seuil τ. Pilote : τ = 0,5. Toujours afficher τ avec le pourcentage.
+- **Comparabilité entre tailles** : distance de Chamfer symétrique normalisée par la racine carrée du nombre de points cible, afin que le seuil τ ait le même sens indépendamment du nombre de robots et de la résolution de la cible.
+- Lettres et nombres : évaluation visuelle ; lisibilité non validée.
 
-## Métriques (en mots)
-- **Qualité de la forme** : distance moyenne entre les robots et la forme cible, et inversement (aucun trou, aucun robot hors forme).
-- **Régularité** : écart entre les distances aux plus proches voisins (une forme nette a des robots bien répartis).
-- **Collisions** : nombre de paires de robots trop proches pendant l'épisode.
-- **Temps de convergence** : nombre de pas pour atteindre une qualité donnée.
-- **Taux de réussite** : proportion d'épisodes où la qualité dépasse un seuil fixé à l'avance.
-- **Lisibilité** (pour lettres et chiffres) : un petit classifieur d'images, ou une évaluation visuelle, reconnaît-il la forme obtenue ?
+Les mesures sont rapportées **ensemble**, jamais la plus flatteuse seule.
 
-Toujours rapporter la moyenne **et** la dispersion sur de nombreux départs aléatoires (au moins 50 par condition).
+## Protocole pilote
+- 240 épisodes, cible circulaire, 10 graines par condition, 20 pas.
+- Tailles : 20, 40, 100 robots (modèle entraîné à 20). Retraits : 5, 10, 20 % à mi-épisode (20 robots).
+- Contrôleurs : GNN (modèle du curriculum) et règle de regroupement (cohésion–répulsion, **sans** consigne de forme).
+- Un fichier brut avec une ligne par épisode ; agrégats moyenne et écart-type.
 
-## Expériences à réaliser
-1. **Formes de base** : performance par catégorie (géométrique, lettres, chiffres, nombres).
-2. **Généralisation aux formes inédites** : formes gardées pour le test.
-3. **Pannes** : retirer 5 %, 10 %, 20 % des robots en cours d'épisode ; mesurer la dégradation et la capacité à se réparer.
-4. **Passage à l'échelle** : entraîné avec N robots, testé avec 2N, 5N, 10N.
-5. **Portée de communication** : réduire le rayon pour voir quand le groupe se fragmente.
-6. **Bruit** : ajouter du bruit aux mesures de position.
-7. **Ablations** (retirer un élément pour mesurer son utilité) : sans échange de messages, avec 1, 2, 3 tours d'échange, avec ou sans attention.
-8. **Comparaison aux références** : règles écrites à la main, réseau sans échange.
+## Résultats du premier prototype (référence historique, à refaire — implémentation reprise à zéro)
+| Contrôleur | Retrait | Chamfer moyen | Collisions | Succès |
+|---|---|---|---|---|
+| GNN | 0 % | 0,592 | 0,021 | 0,10 |
+| GNN | 20 % | 0,638 | 0,013 | 0,00 |
+| Regroupement | 0 % | 3,956 | 0,187 | 0,00 |
+| Regroupement | 20 % | 4,162 | 0,129 | 0,00 |
 
-## Protocole
-- Jeu de test fixé avant de regarder les résultats.
-- Graines multiples pour l'entraînement (au moins 3) et pour les départs.
-- Toutes les expériences décrites par un fichier de configuration dans `configs/`.
-- Résultats sauvegardés en tableau (CSV) puis transformés en figures par un script.
+Échelle (sans panne) : GNN 0,592 / 0,522 / 0,428 pour 20 / 40 / 100 robots ; regroupement 3,956 / 3,799 / 3,507 ; succès GNN 0,10 / 0,30 / 1,00.
+Pannes (écart-type) : GNN 0,592 (0,086), 0,612 (0,085), 0,626 (0,095), 0,638 (0,079) pour 0 / 5 / 10 / 20 % ; regroupement 3,956 (1,027), 3,966 (1,043), 3,971 (1,014), 4,162 (1,321).
 
-## Tableaux et figures à produire pour le mémoire
-- Tableau principal : métriques par catégorie de formes, modèle contre références.
-- Courbe : qualité en fonction du pourcentage de pannes.
-- Courbe : qualité en fonction du nombre de robots.
-- Planche d'images : formes obtenues, réussies et ratées.
-- Animation ou séquence d'images : formation d'une forme et auto-réparation.
+## Lecture prudente
+- Asymétrie d'information : l'écart GNN vs regroupement montre surtout l'effet de la consigne.
+- Dix épisodes : validation de chaîne de mesure, pas d'intervalle de confiance.
+- Le taux de collisions baisse mécaniquement quand des robots sont retirés (moins de paires) : pas un signe de sécurité accrue.
+- Le succès est très sensible au seuil (10 % → 0 % pour un faible décalage).
+- Densité des points et nombre de robots sont liés : la baisse de distance à 100 robots peut venir de l'échantillonnage du cercle.
 
-## Analyse des échecs
-Pour chaque type d'échec (forme déformée, robots bloqués, groupe fragmenté), montrer un exemple, proposer une explication, et dire si c'est une limite du modèle, de l'entraînement ou du simulateur.
-
-## Tests logiciels de comportement
-- Le simulateur et le modèle donnent le même résultat pour une même graine.
-- Les métriques valent la valeur attendue sur des cas simples (forme parfaite, forme vide).
-
-## À faire
-- [ ] Module de métriques
-- [ ] Scénarios de test (pannes, échelle, bruit, portée)
-- [ ] Scripts d'exécution de toutes les expériences
-- [ ] Tableaux et figures automatiques
-- [ ] Analyse des échecs
-
-## Critères de réussite
-Chaque affirmation du mémoire est appuyée par un chiffre ou une figure reproductible ; les comparaisons sont équitables.
-
-## Pièges
-- Ne présenter que les meilleurs exemples.
-- Comparer à des références mal réglées.
-- Conclure sur une seule graine.
+## Campagne finale (à faire)
+50 répétitions ou plus ; mêmes positions initiales entre contrôleurs ; conditions fixées avant de consulter les résultats ; un tableau + une figure par facteur ; exemples favorables **et** défavorables à graines fixes.

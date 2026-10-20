@@ -1,15 +1,20 @@
-# Documentation détaillée
+# Documentation du projet
 
-Un fichier par étape, à lire dans l'ordre. Chaque fichier contient : objectif, ce qu'il faut faire, décisions à prendre, critères de réussite, pièges.
+| Fichier | Contenu |
+|---|---|
+| 01-architecture.md | modules, flux, structure du dépôt |
+| 02-simulateur.md | dynamique, graphe, pannes, hypothèses |
+| 03-formes-cibles.md | génération des nuages de points, jeu de formes |
+| 04-controleur-gnn.md | observation, messages, agrégation, décodeur |
+| 05-entrainement.md | perte, curriculum, optimisation, campagnes |
+| 06-evaluation.md | mesures, protocole pilote, résultats préliminaires |
+| 07-baselines-ablations.md | comparaisons à information équivalente |
+| 08-configurations.md | fichiers de configuration, hyperparamètres |
+| 09-tests.md | propriétés vérifiées |
+| 10-api-demo.md | API locale de visualisation |
+| 11-reproductibilite.md | graines, sorties, traçabilité |
+| 12-decisions-et-risques.md | décisions ouvertes, incohérences, menaces à la validité |
+| 13-figures.md | correspondance figures ↔ sources, règles de mise en forme |
+| 14-glossaire.md | termes et symboles |
 
-- `00-cadrage.md` : problématique, périmètre, hypothèses
-- `01-etat-de-l-art.md` : quoi lire et comment synthétiser
-- `02-simulateur.md` : le monde dans lequel vivent les robots
-- `03-formes-cibles.md` : le jeu de données (formes, lettres, chiffres, nombres)
-- `04-modele-gnn.md` : le réseau de neurones sur graphes
-- `05-entrainement.md` : comment le réseau apprend
-- `06-evaluation.md` : mesurer, comparer, tester la robustesse
-- `07-redaction.md` : écrire le mémoire en LaTeX
-- `08-soutenance.md` : présenter le travail
-- `decisions.md` : journal des décisions (à remplir au fil du projet)
-- `glossaire.md` : vocabulaire
+Les noms de fichiers de code sont **à aligner avec le dépôt réel** ; les valeurs numériques viennent du mémoire.

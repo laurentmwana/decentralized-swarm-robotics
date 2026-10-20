@@ -1,79 +1,74 @@
-# AGENT.md — Guide pour l'assistant de code
+# AGENT.md — Consignes pour l'agent de développement
 
-Ce fichier explique à un agent (ou à un humain qui reprend le projet) **quoi construire, comment, et selon quelles règles**.
-Lis-le en entier avant toute modification, puis lis `PLAN.md` et le fichier de `docs/` de l'étape en cours.
+Projet : **contrôle décentralisé d'un essaim de robots simulés par un réseau de neurones sur graphes (GNN)**, pour la formation de formes (cercle, lettres, chiffres, nombres). Contexte : mémoire de master IA et data science. Le code est un banc d'essai de recherche : la **reproductibilité et l'honnêteté des mesures** comptent plus que les performances brutes.
 
-## 1. Projet en une phrase
+**Implémentation reprise à zéro** : tout est à construire, dans l'ordre de `PLAN.md` (liste de tâches par phase). Lire d'abord : `PLAN.md`, puis `docs/` (détails). Index : `docs/README.md`.
 
-Un mémoire de master (IA et data science) sur le **contrôle décentralisé d'un essaim de robots par réseaux de neurones sur graphes (GNN)**.
-Chaque robot ne perçoit que ses voisins proches ; un même réseau de neurones, copié dans chaque robot, décide de son mouvement ;
-le groupe doit former une **forme cible** (cercle, lettres, chiffres, nombres) et rester robuste aux pannes et au changement de taille.
+## 1. Règles d'or (non négociables)
 
-> Intitulé déposé : « Contrôle décentralisé d'un essaim de robots par réseaux de neurones cellulaires (CeNN-Inspired Swarm Robotics) ».
-> Intitulé envisagé : « ... par réseaux de neurones sur graphes ». Le changement est **à valider avec le professeur** : ne pas renommer
-> le mémoire de façon définitive sans cet accord. L'inspiration « cellulaire » (chaque robot agit comme une cellule qui ne voit que ses voisins) reste un principe à expliquer dans le texte.
+1. **Décentralisation à l'exécution.** Un robot ne voit que : son état, ses voisins à portée `r_c`, la consigne de mission partagée. Aucune position de robot hors portée, aucune affectation globale robot→point calculée pendant l'exécution.
+2. **Paramètres partagés.** Un seul jeu de poids pour tous les robots ; aucun identifiant de robot en entrée.
+3. **Entraînement centralisé autorisé** (perte globale, simulateur différentiable), exécution locale uniquement.
+4. **Aucun paramètre caché.** Tout nombre qui influence un résultat vit dans un fichier de configuration versionné (graine, nombre de robots, portée, pas de temps, vitesse max, poids de perte, seuil de succès…).
+5. **Reproductibilité par graine.** Même configuration + même graine = même épisode. Toute source d'aléa passe par la graine de configuration.
+6. **Séparer illustration et preuve.** Une animation n'est pas un résultat. Tout résultat chiffré vient de plusieurs épisodes/graines et est accompagné de sa dispersion.
+7. **Comparaisons à information équivalente.** Ne jamais présenter un écart GNN vs baseline comme un apport du GNN si la baseline ne reçoit pas la même consigne (voir `docs/07-baselines-ablations.md`).
+8. **L'interface web n'exécute aucune règle de contrôle** : elle affiche des trajectoires calculées par le modèle côté serveur.
 
-## 2. Question de recherche
+## 2. Architecture en un coup d'œil
 
-Un réseau de neurones peut-il apprendre, à partir d'informations **uniquement locales**, un comportement collectif efficace
-(former des formes), et ce comportement résiste-t-il (a) aux pannes de robots, (b) à un nombre de robots différent de celui de l'entraînement ?
+Modules indépendants, échangeant des artefacts explicites (détail : `docs/01-architecture.md`) :
 
-## 3. Principes non négociables
+| Module | Rôle |
+|---|---|
+| Simulation | dynamique, voisinage, arène, pannes, animation |
+| Formes cibles | rendu, binarisation, échantillonnage en nuages de points |
+| Contrôleurs | GNN et règle locale de référence, même interface d'épisode |
+| Entraînement | boucle différentiable, pertes, curriculum, sauvegardes |
+| Évaluation | scénarios (taille, pannes), CSV bruts, agrégats |
+| Démonstration Web | API locale de visualisation (lecture seule) |
+| Génération des figures | figures construites après coup à partir des sorties |
 
-1. **Décentralisé** : aucune décision ne doit dépendre d'un chef ou d'une information globale non justifiée. Tout ce qu'un robot reçoit doit venir de ses voisins dans sa portée de communication, ou de la consigne de forme (documentée dans `docs/03`).
-2. **Un seul réseau partagé** : les paramètres sont identiques pour tous les robots. Le nombre de voisins peut varier.
-3. **Reproductibilité** : toute expérience est pilotée par un fichier de configuration et une graine aléatoire. Pas de résultat sans config sauvegardée.
-4. **Séparation propre** : simulateur, génération de données, modèle, entraînement, évaluation sont des modules distincts.
-5. **Honnêteté scientifique** : toujours comparer à des références simples (voir `docs/06`). Les échecs et limites sont à documenter, pas à cacher.
+Principe : le simulateur ne connaît pas la politique ; le modèle ne connaît pas la mécanique de l'arène ; les scripts d'évaluation lisent des fichiers, pas des objets en mémoire.
 
-## 4. Stack technique recommandée
+## 3. Conventions de code
 
-- Python 3.10 ou plus
-- PyTorch pour le modèle ; PyTorch Geometric (optionnel) ou une implémentation maison de l'échange de messages entre voisins
-- NumPy, SciPy (voisinage), Pillow (images des formes), matplotlib (courbes et animations)
-- PyYAML pour les configurations ; pytest pour les tests
-- LaTeX pour le mémoire (voir `docs/07`)
+- Python 3 + **PyTorch**. Pas de bibliothèque de GNN : l'échange de messages est écrit à la main pour garder l'agrégation lisible.
+- Le graphe de voisinage est **reconstruit à chaque pas** (pas de mise à jour incrémentale) ; pas d'auto-boucle dans l'adjacence.
+- Agrégation des messages par **moyenne** ; voisinage vide → agrégat nul ; la commande doit rester valide pour un robot isolé.
+- Commande de vitesse **bornée** (norme ≤ vitesse max) avant la mise à jour de position.
+- Les figures ne pilotent jamais la simulation ; elles lisent les positions enregistrées.
+- Sorties d'une campagne : un dossier nommé `<expérience>/<niveau>` contenant modèle final, meilleur modèle, configuration effective, pertes par itération, métriques par cible, liste des cibles vues. Les binaires lourds ne sont pas versionnés.
 
-## 5. Structure de dépôt cible
+## 4. Commandes attendues (à aligner avec le dépôt réel)
 
 ```
-swarm-gnn/
-  AGENT.md  PLAN.md  README.md
-  configs/            # un fichier YAML par expérience
-  data/shapes/        # images générées + nuages de points cibles
-  docs/               # documentation détaillée par étape
-  src/
-    sim/              # simulateur (dynamique, voisinage, pannes)
-    shapes/           # génération et chargement des formes cibles
-    models/           # GNN, références (baselines)
-    train/            # boucle d'entraînement, pertes
-    eval/             # métriques, scénarios de test
-    viz/              # courbes, animations
-  tests/
-  results/            # sorties (ignorées par git, sauf résumés)
-  thesis/             # sources LaTeX du mémoire
+# générer les formes           -> configs/shapes.yaml
+# entraîner (cercle)           -> configs/training-circle.yaml
+# entraîner (curriculum)       -> configs/curriculum.yaml
+# campagne complexe            -> configs/curriculum-complex.yaml
+# vérification rapide          -> configs/curriculum-complex-smoke.yaml  (pipeline seulement)
+# évaluer (pilote)             -> configs/evaluation-pilot.yaml
+# tests                        -> pytest
+# démo locale                  -> serveur sur la boucle locale uniquement
 ```
 
-## 6. Conventions de code
+## 5. Définition de « terminé » pour une tâche
 
-- Fonctions courtes, noms explicites en anglais pour le code, commentaires et docs en français.
-- Typage (`typing`) et docstrings courtes sur toute fonction publique.
-- Pas de nombre magique : tout paramètre (rayon de communication, vitesse max, pas de temps...) vient de la config.
-- Un test au minimum par module de `src/` (voir `docs/06` pour les tests de comportement).
-- Commits petits, messages au format : `etape-N: description courte`.
+- Tests unitaires à jour et verts (propriétés, pas valeurs figées : voir `docs/09-tests.md`).
+- Configuration versionnée et sauvegardée à côté des résultats.
+- Au moins 10 graines (pilote) ou **50** (campagne finale) ; moyenne ± écart-type, intervalles de confiance en campagne finale.
+- Seuil de succès affiché avec chaque pourcentage de réussite.
+- Limites et hypothèses mentionnées dans la doc concernée.
 
-## 7. Règles de travail pour l'agent
+## 6. À ne pas faire
 
-- Travaille **une étape à la fois**, dans l'ordre de `PLAN.md`. Ne saute pas d'étape sans le dire.
-- Avant de coder, relis la section « Critères de réussite » du fichier de l'étape.
-- Après chaque étape : lance les tests, mets à jour la case correspondante dans `PLAN.md`, note les décisions dans `docs/decisions.md`.
-- Si une consigne est ambigüe (ex. la forme à atteindre est-elle connue de tous les robots ?), **pose la question** au lieu de choisir en silence.
-- Ne modifie pas les données de test après avoir vu les résultats d'un modèle dessus.
-- Ne lance pas d'entraînements très longs sans prévenir : propose d'abord une version réduite (peu de robots, peu d'itérations).
+- Changer un hyperparamètre dans le code au lieu de la config.
+- Évaluer un modèle avec des poids qui bougent, ou ajuster sur les scénarios de test.
+- Déclarer une lettre « lisible » sur la seule distance de Chamfer.
+- Mélanger les résultats des campagnes de configurations différentes sans le préciser (information de consigne différente : identifiant de forme seul vs vecteur vers le contour).
+- Ajouter bruit, délais, obstacles ou dynamique réaliste **avant** que les baselines équitables existent (voir PLAN, étape 6).
 
-## 8. Définition de « terminé » pour une étape
+## 7. Points ouverts à connaître
 
-- Code propre, testé, configuré.
-- Résultat visuel ou chiffré sauvegardé dans `results/`.
-- Courte note dans `docs/decisions.md` (ce qui a été choisi et pourquoi).
-- Case cochée dans `PLAN.md`.
+Voir `docs/12-decisions-et-risques.md` : intitulé (« cellulaires » vs « sur graphes »), traitement des robots retirés, définition exacte du succès, comparabilité des mesures entre tailles d'essaim.

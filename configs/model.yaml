@@ -1,0 +1,5 @@
+seed: 31
+hidden_dim: 32
+message_passing_steps: 2
+target_count: 4
+max_speed: 1.0

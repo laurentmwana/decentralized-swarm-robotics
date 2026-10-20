@@ -1,0 +1,62 @@
+# Expérience dédiée aux formes détaillées. Les sorties vont dans results/curriculum-complex/.
+base:
+  seed: 59
+  batch_size: 4
+  episode_steps: 60
+  learning_rate: 0.001
+  robot_count: 50
+  arena_size: [10.0, 10.0]
+  communication_radius: 2.5
+  max_speed: 1.0
+  time_step: 0.2
+  safety_distance: 0.22
+  target_radius: 2.8
+  shape_loss_weight: 1.0
+  collision_loss_weight: 0.5
+  motion_loss_weight: 0.005
+  coverage_loss_weight: 0.15
+  hidden_dim: 64
+  message_passing_steps: 3
+  use_target_geometry: true
+stages:
+  - name: geometry
+    iterations: 120
+    targets:
+      - data/shapes-complex/geometry/geometry_circle.npy
+      - data/shapes-complex/geometry/geometry_square.npy
+      - data/shapes-complex/geometry/geometry_triangle.npy
+  - name: digits
+    iterations: 160
+    targets:
+      - data/shapes-complex/geometry/geometry_circle.npy
+      - data/shapes-complex/geometry/geometry_square.npy
+      - data/shapes-complex/geometry/geometry_triangle.npy
+      - data/shapes-complex/digits/digit_0.npy
+      - data/shapes-complex/digits/digit_1.npy
+      - data/shapes-complex/digits/digit_2.npy
+  - name: symbols
+    iterations: 200
+    targets:
+      - data/shapes-complex/geometry/geometry_circle.npy
+      - data/shapes-complex/geometry/geometry_square.npy
+      - data/shapes-complex/geometry/geometry_triangle.npy
+      - data/shapes-complex/digits/digit_0.npy
+      - data/shapes-complex/digits/digit_1.npy
+      - data/shapes-complex/digits/digit_2.npy
+      - data/shapes-complex/alphabet/alphabet_A.npy
+      - data/shapes-complex/alphabet/alphabet_B.npy
+      - data/shapes-complex/alphabet/alphabet_C.npy
+  - name: numbers
+    iterations: 240
+    targets:
+      - data/shapes-complex/geometry/geometry_circle.npy
+      - data/shapes-complex/geometry/geometry_square.npy
+      - data/shapes-complex/geometry/geometry_triangle.npy
+      - data/shapes-complex/digits/digit_0.npy
+      - data/shapes-complex/digits/digit_1.npy
+      - data/shapes-complex/digits/digit_2.npy
+      - data/shapes-complex/alphabet/alphabet_A.npy
+      - data/shapes-complex/alphabet/alphabet_B.npy
+      - data/shapes-complex/alphabet/alphabet_C.npy
+      - data/shapes-complex/numbers/number_010.npy
+      - data/shapes-complex/numbers/number_123.npy

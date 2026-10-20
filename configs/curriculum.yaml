@@ -1,0 +1,61 @@
+base:
+  seed: 43
+  batch_size: 8
+  episode_steps: 20
+  learning_rate: 0.003  # Augmenté pour converger plus vite (validé sur validation-circle)
+  robot_count: 20
+  arena_size: [10.0, 10.0]
+  communication_radius: 2.5
+  max_speed: 1.0
+  time_step: 0.3
+  safety_distance: 0.3
+  target_radius: 2.0
+  shape_loss_weight: 1.0
+  collision_loss_weight: 1.0
+  motion_loss_weight: 0.01  # Réduit : moins de pénalité sur le mouvement
+  coverage_loss_weight: 0.0  # Désactivé : terme de perte qui compétitionnait avec shape_loss
+  hidden_dim: 32  # Réduit : modèle plus petit = convergence plus rapide (validé)
+  message_passing_steps: 2  # Réduit : 2 hops suffisent pour rayon 2.5
+
+stages:
+  - name: geometry
+    iterations: 100  # Augmenté : 3 formes, besoin de convergence solide
+    targets:
+      - data/shapes/geometry/geometry_circle.npy
+      - data/shapes/geometry/geometry_square.npy
+      - data/shapes/geometry/geometry_triangle.npy
+  - name: digits
+    iterations: 120  # Augmenté : 6 formes (3 geometry + 3 digits)
+    targets:
+      - data/shapes/geometry/geometry_circle.npy
+      - data/shapes/geometry/geometry_square.npy
+      - data/shapes/geometry/geometry_triangle.npy
+      - data/shapes/digits/digit_0.npy
+      - data/shapes/digits/digit_1.npy
+      - data/shapes/digits/digit_2.npy
+  - name: symbols
+    iterations: 150  # Augmenté : 9 formes (6 précédentes + 3 lettres)
+    targets:
+      - data/shapes/geometry/geometry_circle.npy
+      - data/shapes/geometry/geometry_square.npy
+      - data/shapes/geometry/geometry_triangle.npy
+      - data/shapes/digits/digit_0.npy
+      - data/shapes/digits/digit_1.npy
+      - data/shapes/digits/digit_2.npy
+      - data/shapes/alphabet/alphabet_A.npy
+      - data/shapes/alphabet/alphabet_B.npy
+      - data/shapes/alphabet/alphabet_C.npy
+  - name: numbers
+    iterations: 200  # Augmenté : 11 formes (9 précédentes + 2 nombres)
+    targets:
+      - data/shapes/geometry/geometry_circle.npy
+      - data/shapes/geometry/geometry_square.npy
+      - data/shapes/geometry/geometry_triangle.npy
+      - data/shapes/digits/digit_0.npy
+      - data/shapes/digits/digit_1.npy
+      - data/shapes/digits/digit_2.npy
+      - data/shapes/alphabet/alphabet_A.npy
+      - data/shapes/alphabet/alphabet_B.npy
+      - data/shapes/alphabet/alphabet_C.npy
+      - data/shapes/numbers/number_010.npy
+      - data/shapes/numbers/number_123.npy
