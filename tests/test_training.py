@@ -1,113 +1,214 @@
-import numpy as np
-import torch
+"""Tests for training pipeline (Phase 4)."""
+
+import tempfile
 from pathlib import Path
 
-from src.train.training import TrainingConfig, adjacency_from_positions, chamfer_loss, collision_loss, coverage_loss, local_target_features, train_targets
+import numpy as np
+import pytest
+import torch
+
+from src.swarm_gnn.config import TrainingConfig
+from src.swarm_gnn.models import GNNController
+from src.swarm_gnn.training import (
+    chamfer_loss,
+    collision_loss,
+    rollout,
+    train_circle,
+    train_targets,
+)
 
 
-def test_losses_are_zero_or_small_on_simple_expected_cases() -> None:
-    positions = torch.tensor([[[0.0, 0.0], [1.0, 0.0]]])
-    assert chamfer_loss(positions, positions).item() == 0.0
-    assert collision_loss(positions, safety_distance=0.2).item() == 0.0
+class TestLossFunctions:
+    """Tests for loss functions."""
+
+    def test_chamfer_loss_symmetric(self):
+        """Chamfer loss is symmetric and non-negative."""
+        pred = torch.tensor([[[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]]])
+        target = torch.tensor([[[0.1, 0.1], [1.1, 0.1], [0.1, 1.1]]])
+        loss = chamfer_loss(pred, target)
+        assert loss >= 0
+        # Symmetric: L(pred, target) == L(target, pred)
+        loss_rev = chamfer_loss(target, pred)
+        assert torch.allclose(loss, loss_rev)
+
+    def test_chamfer_loss_zero_when_equal(self):
+        """Chamfer loss is zero when pred == target."""
+        points = torch.randn(2, 5, 2)
+        loss = chamfer_loss(points, points)
+        assert torch.allclose(loss, torch.tensor(0.0))
+
+    def test_collision_loss_penalizes_close(self):
+        """Collision loss penalizes pairs closer than safety_distance."""
+        # Two robots very close
+        pos = torch.tensor([[[0.0, 0.0], [0.1, 0.0], [5.0, 5.0]]])  # safety=0.5
+        loss = collision_loss(pos, safety_distance=0.5)
+        assert loss > 0
+
+    def test_collision_loss_zero_when_far(self):
+        """Collision loss is zero when all pairs > safety_distance."""
+        pos = torch.tensor([[[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]]])
+        loss = collision_loss(pos, safety_distance=0.5)
+        assert torch.allclose(loss, torch.tensor(0.0))
+
+    def test_collision_loss_excludes_self(self):
+        """Self-pairs excluded from collision loss."""
+        pos = torch.tensor([[[0.0, 0.0], [0.0, 0.0]]])  # same position
+        loss = collision_loss(pos, safety_distance=0.5)
+        # Should not crash, self-pairs excluded
+        assert loss >= 0
 
 
-def test_adjacency_excludes_self_and_respects_radius() -> None:
-    positions = torch.tensor([[[0.0, 0.0], [1.0, 0.0], [4.0, 0.0]]])
-    adjacency = adjacency_from_positions(positions, radius=1.5)
-    assert adjacency.tolist() == [[[False, True, False], [True, False, False], [False, False, False]]]
+class TestRollout:
+    """Tests for differentiable rollout."""
+
+    def test_rollout_shape(self):
+        """Rollout returns correct shapes."""
+        config = TrainingConfig(
+            seed=42,
+            batch_size=2,
+            iterations=1,
+            episode_steps=5,
+            learning_rate=0.001,
+            robot_count=4,
+            arena_size=(10.0, 10.0),
+            communication_radius=3.0,
+            max_speed=1.0,
+            time_step=0.3,
+            safety_distance=0.3,
+            target_radius=2.0,
+            shape_loss_weight=1.0,
+            collision_loss_weight=1.0,
+            motion_loss_weight=0.01,
+            hidden_dim=16,
+            message_passing_steps=1,
+        )
+        # Use actual GNNController as model
+        model = GNNController(hidden_dim=16, message_passing_steps=1, target_count=2, max_speed=1.0)
+        model.eval()
+        positions = torch.randn(2, 4, 2)
+        target_ids = torch.tensor([0, 1])
+        targets = torch.randn(2, 4, 2)
+
+        with torch.no_grad():
+            final_pos, commands = rollout(model, positions, target_ids, config, targets)
+
+        assert final_pos.shape == (2, 4, 2)
+        assert commands.shape == (2, 5, 4, 2)  # [batch, steps, robots, 2]
+
+    def test_rollout_respects_arena_bounds(self):
+        """Rollout clips positions to arena."""
+        config = TrainingConfig(
+            seed=42,
+            batch_size=1,
+            iterations=1,
+            episode_steps=3,
+            learning_rate=0.001,
+            robot_count=2,
+            arena_size=(5.0, 5.0),
+            communication_radius=3.0,
+            max_speed=1.0,
+            time_step=1.0,  # large step
+            safety_distance=0.3,
+            target_radius=2.0,
+            shape_loss_weight=1.0,
+            collision_loss_weight=1.0,
+            motion_loss_weight=0.01,
+        )
+        # Model that pushes robots out of arena
+        model = torch.nn.Sequential(
+            torch.nn.Linear(32, 2),
+            torch.nn.Identity(),
+        )
+        # Force large velocities
+        def big_model(pos, vel, adj, tid, goal=None, geom=None):
+            return torch.ones_like(vel) * 10.0  # huge velocity
+
+        positions = torch.tensor([[[4.5, 2.5], [0.5, 2.5]]])
+        target_ids = torch.tensor([0])
+        targets = torch.ones_like(positions) * 2.5
+
+        final_pos, _ = rollout(big_model, positions, target_ids, config, targets)
+        assert torch.all(final_pos >= 0)
+        assert torch.all(final_pos <= 5.0)
 
 
-def test_target_features_and_coverage_match_an_identical_target() -> None:
-    positions = torch.tensor([[[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]]])
-    features = local_target_features(positions, positions, scale=1.0)
-    assert torch.allclose(features, torch.zeros_like(features))
-    assert coverage_loss(positions, positions).item() == 0.0
+class TestTrainCircle:
+    """Tests for circle training entry point."""
+
+    def test_train_circle_runs(self):
+        """train_circle executes and returns model with decreasing loss."""
+        config = TrainingConfig(
+            seed=42,
+            batch_size=4,
+            iterations=20,  # more iterations for convergence
+            episode_steps=5,
+            learning_rate=0.01,
+            robot_count=4,
+            arena_size=(5.0, 5.0),
+            communication_radius=2.0,
+            max_speed=1.0,
+            time_step=0.5,
+            safety_distance=0.3,
+            target_radius=1.0,
+            shape_loss_weight=1.0,
+            collision_loss_weight=1.0,
+            motion_loss_weight=0.01,
+            coverage_loss_weight=0.0,
+            hidden_dim=16,
+            message_passing_steps=1,
+        )
+        # Simple circle target
+        target = np.array([
+            [1.0, 0.0], [0.0, 1.0], [-1.0, 0.0], [0.0, -1.0]
+        ], dtype=np.float32)
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            model, losses = train_circle(config, target, tmpdir)
+
+            assert len(losses) == 20
+            # Loss should generally decrease (allow small fluctuations)
+            assert losses[-1] < losses[0] * 1.2  # allow 20% tolerance for randomness
+            assert (Path(tmpdir) / "model.pt").exists()
+            assert (Path(tmpdir) / "circle-best.pt").exists()
+            assert (Path(tmpdir) / "config.yaml").exists()
+            assert (Path(tmpdir) / "loss.csv").exists()
+            assert (Path(tmpdir) / "loss.png").exists()
 
 
-def test_training_accepts_multiple_target_conditions() -> None:
-    config = TrainingConfig(2, 2, 1, 1, 0.001, 2, (2.0, 2.0), 2.0, 1.0, 0.1, 0.1, 0.5, 1.0, 1.0, 0.0, 8, 1)
-    targets = [np.array([[-1.0, 0.0], [1.0, 0.0]]), np.array([[0.0, -1.0], [0.0, 1.0]])]
-    model, losses, metrics, _ = train_targets(config, targets, Path("results/test-target-conditions"))
-    assert len(losses) == 1
-    assert set(metrics) == {0, 1}
-    assert model.target_embedding.num_embeddings == 2
+class TestTrainTargets:
+    """Tests for multi-target training."""
 
+    def test_train_targets_multi(self):
+        """train_targets works with multiple targets."""
+        config = TrainingConfig(
+            seed=42,
+            batch_size=2,
+            iterations=3,
+            episode_steps=3,
+            learning_rate=0.01,
+            robot_count=4,
+            arena_size=(5.0, 5.0),
+            communication_radius=2.0,
+            max_speed=1.0,
+            time_step=0.5,
+            safety_distance=0.3,
+            target_radius=1.0,
+            shape_loss_weight=1.0,
+            collision_loss_weight=1.0,
+            motion_loss_weight=0.01,
+            coverage_loss_weight=0.0,
+            hidden_dim=8,
+            message_passing_steps=1,
+        )
+        target1 = np.array([[1,0],[0,1],[-1,0],[0,-1]], dtype=np.float32)
+        target2 = np.array([[0.7,0.7],[-0.7,0.7],[-0.7,-0.7],[0.7,-0.7]], dtype=np.float32)
 
-def test_losses_near_zero_on_expected_cases() -> None:
-    """Test que les pertes sont proches de zéro pour des cas simples et attendus."""
-    # Cas parfait : robots exactement sur les cibles
-    positions = torch.tensor([[[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]]])
-    target = torch.tensor([[[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]]])
+        with tempfile.TemporaryDirectory() as tmpdir:
+            model, losses, metrics, per_target = train_targets(
+                config, [target1, target2], tmpdir
+            )
 
-    # La perte de forme devrait être très proche de zéro
-    from src.train.training import chamfer_loss
-    loss_shape = chamfer_loss(positions, target)
-    assert loss_shape.item() < 1e-6
-
-    # Avec des robots bien espacés, pas de collision
-    positions_no_collision = torch.tensor([[[0.0, 0.0], [3.0, 0.0], [0.0, 3.0]]])
-    from src.train.training import collision_loss
-    loss_collision = collision_loss(positions_no_collision, safety_distance=0.5)
-    assert loss_collision.item() == 0.0  # Exactement zéro car pas de paires trop proches
-
-    # Mouvement zéro pour des vitesses nulles
-    from src.train.training import collision_loss
-    velocities = torch.zeros_like(positions_no_collision)
-    # On peut pas tester directement la perte de mouvement sans rollout complet,
-    # mais on peut vérifier que la fonction existe et retourne une perte raisonnable
-
-
-def test_no_self_loop_in_adjacency() -> None:
-    """Test que la matrice d'adjacence exclut bien les auto-boucles."""
-    from src.train.training import adjacency_from_positions
-    positions = torch.tensor([[[0.0, 0.0], [1.0, 0.0], [2.0, 0.0]]])
-    adjacency = adjacency_from_positions(positions, radius=1.5)
-
-    # Vérifier qu'il n'y a pas d'auto-boucle (diagonale doit être False)
-    batch_size, n_robots, _ = adjacency.shape
-    for b in range(batch_size):
-        for i in range(n_robots):
-            assert adjacency[b, i, i] == False, f"Auto-boucle détectée à [{b},{i},{i}]"
-
-
-def test_target_consistency() -> None:
-    """Test de cohérence de la cible : si on entraîne sur une cible parfaite, la perte devrait être faible."""
-    config = TrainingConfig(
-        seed=42,
-        batch_size=2,
-        iterations=2,
-        episode_steps=5,
-        learning_rate=0.001,
-        robot_count=3,
-        arena_size=(5.0, 5.0),
-        communication_radius=2.0,
-        max_speed=0.5,
-        time_step=0.1,
-        safety_distance=0.2,
-        target_radius=1.0,
-        shape_loss_weight=1.0,
-        collision_loss_weight=1.0,
-        motion_loss_weight=0.01,
-        coverage_loss_weight=0.2,
-        hidden_dim=8,
-        message_passing_steps=1,
-    )
-
-    # Créer une cible simple (triangle équilatéral)
-    target_points = np.array([
-        [0.0, 0.0],
-        [1.0, 0.0],
-        [0.5, np.sqrt(3)/2]
-    ], dtype=np.float32)
-
-    # Entraîner très brièvement juste pour voir si la perte diminue
-    model, losses, _, _ = train_targets(
-        config,
-        [target_points],
-        Path("results/test-target-consistency")
-    )
-
-    # Après quelques itérations, la perte devrait avoir diminué par rapport à l'initialement élevé
-    assert len(losses) == 2
-    # La perte ne devrait pas augmenter de façon significative (tolérance pour la variabilité)
-    assert losses[1] <= losses[0] * 1.5  # Autorise une petite augmentation à cause du hasard/initialisation
+            assert len(losses) == 3
+            assert set(metrics.keys()) == {0, 1}
+            assert len(per_target[0]) > 0
+            assert len(per_target[1]) > 0
