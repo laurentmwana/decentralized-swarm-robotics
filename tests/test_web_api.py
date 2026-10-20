@@ -78,11 +78,23 @@ def test_echelle_duplique_la_cible_comme_le_protocole() -> None:
 
 
 def test_parametres_invalides_rejetes() -> None:
-    with pytest.raises(ValueError, match="Méthode inconnue"):
+    from fastapi import HTTPException
+    with pytest.raises(HTTPException) as exc:
         server.simulate_target("geometry_circle", method="oracle")
-    with pytest.raises(ValueError, match="Fraction de panne invalide"):
+    assert exc.value.status_code == 400
+    assert "Méthode inconnue" in str(exc.value.detail)
+
+    with pytest.raises(HTTPException) as exc:
         server.simulate_target("geometry_circle", failure=0.15)
-    with pytest.raises(ValueError, match="Nombre de robots invalide"):
+    assert exc.value.status_code == 400
+    assert "Fraction de panne invalide" in str(exc.value.detail)
+
+    with pytest.raises(HTTPException) as exc:
         server.simulate_target("geometry_circle", robots=30)
-    with pytest.raises(ValueError, match="Forme inconnue"):
+    assert exc.value.status_code == 400
+    assert "Nombre de robots invalide" in str(exc.value.detail)
+
+    with pytest.raises(HTTPException) as exc:
         server.simulate_target("alphabet_Z")
+    assert exc.value.status_code == 400
+    assert "Forme inconnue" in str(exc.value.detail)
