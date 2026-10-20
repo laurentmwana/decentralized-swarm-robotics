@@ -11,5 +11,5 @@ target_radius: 2.0
 failure_fractions: [0.0, 0.05, 0.10, 0.20]
 scale_factors: [1, 2, 5]
 success_threshold: 0.5
-model_path: results/curriculum/numbers/model.pt
+model_path: results/curriculum-v2/numbers/model.pt
 target_path: data/shapes/geometry/geometry_circle.npy
