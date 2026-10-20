@@ -82,20 +82,87 @@ python -m src.eval.run
 
 Cette commande produit les épisodes bruts, agrégats et figures du protocole pilote (pannes et passage à l'échelle) dans `results/evaluation-pilot/`.
 
-## API locale pour une démonstration Web
+## API locale pour une démonstration Web (Flask + Swagger)
 
-Pour afficher une trajectoire réellement calculée par le GNN dans une page Web, démarrer l'API locale :
+L'API est maintenant construite avec **Flask** et documentée via **Swagger UI (OpenAPI 3.0)**.
+
+### Démarrage
 
 ```powershell
 python -m src.web.server
+# Options: --host 127.0.0.1 --port 8000 --debug
 ```
 
-Elle n'emploie ni Internet ni WebSocket. La page Web peut lire les routes suivantes :
+### Interfaces disponibles
 
-- `GET /api/health` : vérifie que le modèle est disponible ;
-- `GET /api/targets` : liste les formes que connaît le modèle final du curriculum ;
-- `GET /api/simulate?target=alphabet_A&seed=142` : produit, en JSON, la cible, toutes les positions des robots à chaque pas et les mesures du protocole du mémoire. Paramètres optionnels : `method=gnn|gathering` (contrôleur appris ou règle de regroupement), `failure=0|0.05|0.10|0.20` (retrait à mi-épisode), `robots=20|40|100` (passage à l'échelle, cible dupliquée).
+| Interface | URL | Description |
+|-----------|-----|-------------|
+| **Swagger UI** | http://127.0.0.1:8000/docs | Documentation interactive, test des endpoints |
+| **Health check** | http://127.0.0.1:8000/api/health | Vérification modèle chargé |
+| **Targets** | http://127.0.0.1:8000/api/targets | Liste des 11 formes du curriculum |
+| **Simulate** | http://127.0.0.1:8000/api/simulate | Lance une simulation complète |
+| **OpenAPI Spec** | http://127.0.0.1:8000/static/swagger.json | Spécification JSON brute |
 
-Les identifiants de cibles disponibles comprennent notamment `alphabet_A`, `digit_2` et `number_123`. L'animation Web doit dessiner les valeurs de `frames` retournées par cette dernière route ; elles sont calculées par `results/curriculum/numbers/model.pt`, pas par une règle codée dans le navigateur.
+### Endpoint `/api/simulate` - Paramètres
+
+| Paramètre | Type | Requis | Défaut | Valeurs | Description |
+|-----------|------|--------|--------|---------|-------------|
+| `target` | string | Oui | - | `geometry_circle`, `alphabet_A`, `digit_0`, `number_123`, etc. | Identifiant de la forme cible |
+| `seed` | integer | Non | 142 | ≥ 0 | Graine aléatoire pour reproductibilité |
+| `method` | string | Non | `gnn` | `gnn`, `gathering`, `manual`, `gnn_no_comm` | Méthode de contrôle |
+| `failure` | number | Non | 0.0 | 0.0, 0.05, 0.10, 0.20 | Fraction de robots en panne à mi-épisode |
+| `robots` | integer | Non | 20 | 20, 40, 100 | Nombre de robots (passage à l'échelle) |
+
+### Exemples d'utilisation
+
+```powershell
+# Simulation GNN standard (20 robots, cercle)
+curl "http://127.0.0.1:8000/api/simulate?target=geometry_circle"
+
+# GNN avec 10% de pannes à mi-épisode
+curl "http://127.0.0.1:8000/api/simulate?target=alphabet_A&failure=0.10"
+
+# Baseline gathering (sans GNN)
+curl "http://127.0.0.1:8000/api/simulate?target=digit_2&method=gathering"
+
+# Passage à l'échelle : 100 robots
+curl "http://127.0.0.1:8000/api/simulate?target=number_123&robots=100"
+
+# Contrôle manuel avec consigne de forme
+curl "http://127.0.0.1:8000/api/simulate?target=geometry_square&method=manual"
+```
+
+### Réponse `/api/simulate` (extrait)
+
+```json
+{
+  "model": {"path": "...", "stage": "numbers", "type": "GNNController"},
+  "target": {"id": "alphabet_A", "source": "...", "points": [[x,y], ...]},
+  "simulation": {
+    "seed": 142,
+    "method": "gnn",
+    "robot_count": 20,
+    "failure_fraction": 0.1,
+    "failure_step": 10,
+    "retired": [3, 7, 14],
+    "episode_steps": 20,
+    "arena_size": [10.0, 10.0],
+    ...
+  },
+  "metrics": {
+    "shape_distance": 0.098,
+    "regularity_std": 0.12,
+    "collisions": 45,
+    "collision_rate": 0.023,
+    "convergence_step": 15,
+    "success": 1
+  },
+  "frames": [
+    [[x1,y1], [x2,y2], ...],  // t=0
+    [[x1,y1], [x2,y2], ...],  // t=1
+    ...
+  ]
+}
+```
 
 Le contrat détaillé des réponses JSON est dans [`docs/10-api-visualisation.md`](docs/10-api-visualisation.md).
