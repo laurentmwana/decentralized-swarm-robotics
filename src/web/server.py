@@ -37,13 +37,13 @@ from src.train.training import TrainingConfig
 
 
 DEFAULT_CONFIG = "configs/curriculum.yaml"
-DEFAULT_MODEL = "results/curriculum/numbers/model.pt"
+DEFAULT_MODEL = "results/curriculum-v2/numbers/model.pt"
 DEFAULT_STAGE = "numbers"
 
 SUCCESS_THRESHOLD = 0.5
 FAILURE_FRACTIONS = (0.0, 0.05, 0.10, 0.20)
 SCALE_ROBOT_COUNTS = (20, 40, 100)
-METHODS = ("gnn", "gathering")
+METHODS = ("gnn", "gathering", "manual", "gnn_no_comm")
 
 
 @lru_cache(maxsize=4)
