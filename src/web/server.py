@@ -1,10 +1,11 @@
-"""Flask API pour la visualisation et simulation du modèle GNN entraîné.
+"""FastAPI pour la visualisation et simulation du modèle GNN entraîné.
 
 Lancer avec ``python -m src.web.server`` puis accéder à :
-- Swagger UI : http://127.0.0.1:8000/docs
-- Health check : http://127.0.0.1:8000/api/health
+- Swagger UI (auto) : http://127.0.0.1:8000/docs
+- ReDoc (auto)     : http://127.0.0.1:8000/redoc
+- Health check     : http://127.0.0.1:8000/api/health
 - Liste des cibles : http://127.0.0.1:8000/api/targets
-- Simulation : http://127.0.0.1:8000/api/simulate
+- Simulation       : http://127.0.0.1:8000/api/simulate
 
 L'API reproduit exactement le protocole expérimental du mémoire :
 - Les commandes proviennent de ``src.eval.run`` (même graphe recalculé à
@@ -22,7 +23,6 @@ L'API reproduit exactement le protocole expérimental du mémoire :
 from __future__ import annotations
 
 import argparse
-import json
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple
@@ -30,8 +30,9 @@ from typing import Any, Dict, List, Optional, Tuple
 import numpy as np
 import torch
 import yaml
-from flask import Flask, jsonify, request
-from flask_swagger_ui import get_swaggerui_blueprint
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, Field
 
 from src.eval.metrics import collision_count, nearest_neighbor_std, symmetric_chamfer_distance
 from src.eval.run import EvaluationConfig, _commands_gathering, _commands_gnn
@@ -50,22 +51,89 @@ SCALE_ROBOT_COUNTS = (20, 40, 100)
 METHODS = ("gnn", "gathering", "manual", "gnn_no_comm")
 
 
-# Instance Flask
-app = Flask(__name__)
+# --- Modèles Pydantic pour la documentation OpenAPI ---
 
-# Configuration Swagger UI
-SWAGGER_URL = "/docs"
-API_URL = "/static/swagger.json"
-swaggerui_blueprint = get_swaggerui_blueprint(
-    SWAGGER_URL,
-    API_URL,
-    config={
-        "app_name": "Swarm GNN API",
-        "layout": "BaseLayout",
-        "doc_expansion": "list",
-    },
+class ModelInfo(BaseModel):
+    path: str
+    stage: str
+    type: str
+
+
+class TargetInfo(BaseModel):
+    id: str
+    source: str
+    points: List[List[float]]
+
+
+class SimulationInfo(BaseModel):
+    seed: int
+    method: str
+    robot_count: int
+    failure_fraction: float
+    failure_step: Optional[int]
+    retired: List[int]
+    episode_steps: int
+    arena_size: List[float]
+    communication_radius: float
+    time_step: float
+    max_speed: float
+    safety_distance: float
+    success_threshold: float
+
+
+class MetricsInfo(BaseModel):
+    shape_distance: float
+    regularity_std: float
+    collisions: int
+    collision_rate: float
+    convergence_step: int
+    success: int
+
+
+class SimulateResponse(BaseModel):
+    model: ModelInfo
+    target: TargetInfo
+    simulation: SimulationInfo
+    metrics: MetricsInfo
+    frames: List[List[List[float]]]
+
+
+class TargetsResponse(BaseModel):
+    targets: List[Dict[str, str]]
+
+
+class HealthResponse(BaseModel):
+    status: str
+    model: str
+
+
+class ErrorResponse(BaseModel):
+    error: str
+
+
+# --- Instance FastAPI ---
+
+app = FastAPI(
+    title="Swarm GNN API",
+    version="1.0.0",
+    description=(
+        "API pour la simulation et visualisation d'essaims de robots "
+        "contrôlés par un réseau de neurones graphiques (GNN). "
+        "L'API reproduit le protocole expérimental du mémoire."
+    ),
+    contact={"name": "Swarm GNN Project"},
+    docs_url="/docs",
+    redoc_url="/redoc",
 )
-app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
+
+# CORS pour permettre l'accès depuis un navigateur
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @lru_cache(maxsize=4)
@@ -119,13 +187,22 @@ def available_targets(
 
 def _validate(method: str, failure: float, robots: int) -> None:
     if method not in METHODS:
-        raise ValueError(f"Méthode inconnue : {method}. Choix possibles : {', '.join(METHODS)}.")
+        raise HTTPException(
+            status_code=400,
+            detail=f"Méthode inconnue : {method}. Choix possibles : {', '.join(METHODS)}."
+        )
     if failure not in FAILURE_FRACTIONS:
         choices = ", ".join(str(value) for value in FAILURE_FRACTIONS)
-        raise ValueError(f"Fraction de panne invalide : {failure}. Choix possibles : {choices}.")
+        raise HTTPException(
+            status_code=400,
+            detail=f"Fraction de panne invalide : {failure}. Choix possibles : {choices}."
+        )
     if robots not in SCALE_ROBOT_COUNTS:
         choices = ", ".join(str(count) for count in SCALE_ROBOT_COUNTS)
-        raise ValueError(f"Nombre de robots invalide : {robots}. Choix possibles : {choices} (protocole pilote).")
+        raise HTTPException(
+            status_code=400,
+            detail=f"Nombre de robots invalide : {robots}. Choix possibles : {choices} (protocole pilote)."
+        )
 
 
 def simulate_target(
@@ -144,7 +221,10 @@ def simulate_target(
     target_ids = {Path(path).stem: index for index, path in enumerate(paths)}
     if target_name not in target_ids:
         choices = ", ".join(sorted(target_ids))
-        raise ValueError(f"Forme inconnue : {target_name}. Choix possibles : {choices}")
+        raise HTTPException(
+            status_code=400,
+            detail=f"Forme inconnue : {target_name}. Choix possibles : {choices}"
+        )
     target_id = target_ids[target_name]
     base_target = targets[target_id]
     target = base_target if robots == config.robot_count else np.resize(base_target, (robots, 2))
@@ -237,265 +317,109 @@ def simulate_target(
 
 # --- Routes API ---
 
-@app.route("/api/health", methods=["GET"])
-def health():
-    """Vérifie l'état de l'API."""
-    return jsonify({"status": "ok", "model": DEFAULT_MODEL})
+@app.get(
+    "/api/health",
+    response_model=HealthResponse,
+    summary="Vérification de santé de l'API",
+    tags=["Monitoring"],
+)
+def health() -> HealthResponse:
+    """Vérifie que l'API est opérationnelle et le modèle chargé."""
+    return HealthResponse(status="ok", model=DEFAULT_MODEL)
 
 
-@app.route("/api/targets", methods=["GET"])
-def targets():
-    """Liste toutes les cibles disponibles pour le modèle courant."""
+@app.get(
+    "/api/targets",
+    response_model=TargetsResponse,
+    summary="Liste des formes cibles disponibles",
+    tags=["Targets"],
+)
+def targets() -> TargetsResponse:
+    """Retourne toutes les formes que le modèle GNN courant peut former."""
     try:
-        return jsonify({"targets": available_targets()})
+        return TargetsResponse(targets=available_targets())
     except (FileNotFoundError, ValueError, StopIteration) as error:
-        return jsonify({"error": str(error)}), 400
+        raise HTTPException(status_code=400, detail=str(error))
 
 
-@app.route("/api/simulate", methods=["GET"])
-def simulate():
+@app.get(
+    "/api/simulate",
+    response_model=SimulateResponse,
+    summary="Lance une simulation d'essaim",
+    tags=["Simulation"],
+    responses={
+        200: {"model": SimulateResponse, "description": "Résultat de la simulation"},
+        400: {"model": ErrorResponse, "description": "Paramètres invalides ou cible inconnue"},
+    },
+)
+def simulate(
+    target: str = Query(
+        ...,
+        description="Identifiant de la forme cible (ex: alphabet_A, geometry_circle, digit_0, number_123)",
+        example="alphabet_A",
+    ),
+    seed: int = Query(142, ge=0, description="Graine aléatoire pour la reproductibilité"),
+    method: str = Query(
+        "gnn",
+        description="Méthode de contrôle",
+        enum=list(METHODS),
+    ),
+    failure: float = Query(
+        0.0,
+        description="Fraction de robots mis en panne à mi-épisode",
+        enum=list(FAILURE_FRACTIONS),
+    ),
+    robots: int = Query(
+        20,
+        description="Nombre de robots (passage à l'échelle)",
+        enum=list(SCALE_ROBOT_COUNTS),
+    ),
+) -> SimulateResponse:
     """
-    Exécute une simulation pour une cible donnée.
+    Exécute un épisode complet du protocole pilote et retourne la trajectoire complète avec les métriques.
     
-    Paramètres de requête :
-    - target (requis) : identifiant de la cible (ex: alphabet_A)
-    - seed (optionnel, défaut: 142) : graine aléatoire
-    - method (optionnel, défaut: gnn) : méthode de contrôle (gnn, gathering, manual, gnn_no_comm)
-    - failure (optionnel, défaut: 0.0) : fraction de robots en panne (0.0, 0.05, 0.10, 0.20)
-    - robots (optionnel, défaut: 20) : nombre de robots (20, 40, 100)
+    **Paramètres :**
+    - **target** (requis) : identifiant de la cible (ex: `alphabet_A`)
+    - **seed** (optionnel, défaut: 142) : graine aléatoire
+    - **method** (optionnel, défaut: `gnn`) : méthode de contrôle (`gnn`, `gathering`, `manual`, `gnn_no_comm`)
+    - **failure** (optionnel, défaut: 0.0) : fraction de robots en panne (`0.0`, `0.05`, `0.10`, `0.20`)
+    - **robots** (optionnel, défaut: 20) : nombre de robots (`20`, `40`, `100`)
+    
+    **Exemples :**
+    - `GET /api/simulate?target=geometry_circle` — GNN standard, 20 robots
+    - `GET /api/simulate?target=alphabet_A&failure=0.10` — 10% de pannes
+    - `GET /api/simulate?target=digit_2&method=gathering` — Baseline gathering
+    - `GET /api/simulate?target=number_123&robots=100` — Passage à l'échelle 100 robots
+    - `GET /api/simulate?target=geometry_square&method=manual` — Contrôle manuel
     """
-    target = request.args.get("target", "")
-    if not target:
-        return jsonify({"error": "Le paramètre 'target' est obligatoire."}), 400
-
     try:
-        seed = int(request.args.get("seed", 142))
-        method = request.args.get("method", "gnn")
-        failure = float(request.args.get("failure", 0.0))
-        robots = int(request.args.get("robots", 20))
-
         result = simulate_target(target, seed, method, failure, robots)
-        return jsonify(result)
-
+        return SimulateResponse(**result)
+    except HTTPException:
+        raise
     except (FileNotFoundError, ValueError, StopIteration) as error:
-        return jsonify({"error": str(error)}), 400
-
-
-@app.route("/static/swagger.json")
-def swagger_spec():
-    """Spécification OpenAPI 3.0 pour Swagger UI."""
-    spec = {
-        "openapi": "3.0.3",
-        "info": {
-            "title": "Swarm GNN API",
-            "version": "1.0.0",
-            "description": (
-                "API pour la simulation et visualisation d'essaims de robots "
-                "contrôlés par un réseau de neurones graphiques (GNN). "
-                "L'API reproduit le protocole expérimental du mémoire."
-            ),
-            "contact": {
-                "name": "Swarm GNN Project",
-            },
-        },
-        "servers": [
-            {"url": "http://127.0.0.1:8000", "description": "Serveur de développement local"}
-        ],
-        "paths": {
-            "/api/health": {
-                "get": {
-                    "summary": "Vérification de santé de l'API",
-                    "responses": {
-                        "200": {
-                            "description": "API opérationnelle",
-                            "content": {
-                                "application/json": {
-                                    "schema": {
-                                        "type": "object",
-                                        "properties": {
-                                            "status": {"type": "string", "example": "ok"},
-                                            "model": {"type": "string", "example": "results/curriculum-v2/numbers/model.pt"}
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            "/api/targets": {
-                "get": {
-                    "summary": "Liste des formes cibles disponibles",
-                    "description": "Retourne toutes les formes que le modèle GNN courant peut former.",
-                    "responses": {
-                        "200": {
-                            "description": "Liste des cibles",
-                            "content": {
-                                "application/json": {
-                                    "schema": {
-                                        "type": "object",
-                                        "properties": {
-                                            "targets": {
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "id": {"type": "string", "example": "alphabet_A"},
-                                                        "source": {"type": "string", "example": "data/shapes/alphabet/alphabet_A.npy"}
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "400": {"description": "Erreur de configuration"}
-                    }
-                }
-            },
-            "/api/simulate": {
-                "get": {
-                    "summary": "Lance une simulation d'essaim",
-                    "description": "Exécute un épisode complet du protocole pilote et retourne la trajectoire complète avec les métriques.",
-                    "parameters": [
-                        {
-                            "name": "target",
-                            "in": "query",
-                            "required": True,
-                            "schema": {"type": "string"},
-                            "description": "Identifiant de la forme cible (ex: alphabet_A, geometry_circle, digit_0)",
-                            "example": "alphabet_A"
-                        },
-                        {
-                            "name": "seed",
-                            "in": "query",
-                            "required": False,
-                            "schema": {"type": "integer", "minimum": 0},
-                            "description": "Graine aléatoire pour la reproductibilité",
-                            "example": 142
-                        },
-                        {
-                            "name": "method",
-                            "in": "query",
-                            "required": False,
-                            "schema": {"type": "string", "enum": ["gnn", "gathering", "manual", "gnn_no_comm"]},
-                            "description": "Méthode de contrôle",
-                            "example": "gnn"
-                        },
-                        {
-                            "name": "failure",
-                            "in": "query",
-                            "required": False,
-                            "schema": {"type": "number", "enum": [0.0, 0.05, 0.10, 0.20]},
-                            "description": "Fraction de robots mis en panne à mi-épisode",
-                            "example": 0.1
-                        },
-                        {
-                            "name": "robots",
-                            "in": "query",
-                            "required": False,
-                            "schema": {"type": "integer", "enum": [20, 40, 100]},
-                            "description": "Nombre de robots (passage à l'échelle)",
-                            "example": 20
-                        }
-                    ],
-                    "responses": {
-                        "200": {
-                            "description": "Résultat de la simulation",
-                            "content": {
-                                "application/json": {
-                                    "schema": {
-                                        "type": "object",
-                                        "properties": {
-                                            "model": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "path": {"type": "string"},
-                                                    "stage": {"type": "string"},
-                                                    "type": {"type": "string"}
-                                                }
-                                            },
-                                            "target": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "id": {"type": "string"},
-                                                    "source": {"type": "string"},
-                                                    "points": {"type": "array", "items": {"type": "array", "items": {"type": "number"}}}
-                                                }
-                                            },
-                                            "simulation": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "seed": {"type": "integer"},
-                                                    "method": {"type": "string"},
-                                                    "robot_count": {"type": "integer"},
-                                                    "failure_fraction": {"type": "number"},
-                                                    "failure_step": {"type": ["integer", "null"]},
-                                                    "retired": {"type": "array", "items": {"type": "integer"}},
-                                                    "episode_steps": {"type": "integer"},
-                                                    "arena_size": {"type": "array", "items": {"type": "number"}},
-                                                    "communication_radius": {"type": "number"},
-                                                    "time_step": {"type": "number"},
-                                                    "max_speed": {"type": "number"},
-                                                    "safety_distance": {"type": "number"},
-                                                    "success_threshold": {"type": "number"}
-                                                }
-                                            },
-                                            "metrics": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "shape_distance": {"type": "number"},
-                                                    "regularity_std": {"type": "number"},
-                                                    "collisions": {"type": "integer"},
-                                                    "collision_rate": {"type": "number"},
-                                                    "convergence_step": {"type": "integer"},
-                                                    "success": {"type": "integer"}
-                                                }
-                                            },
-                                            "frames": {
-                                                "type": "array",
-                                                "items": {
-                                                    "type": "array",
-                                                    "items": {"type": "array", "items": {"type": "number"}}
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
-                        "400": {"description": "Paramètres invalides ou cible inconnue"}
-                    }
-                }
-            }
-        },
-        "components": {
-            "schemas": {
-                "Error": {
-                    "type": "object",
-                    "properties": {
-                        "error": {"type": "string"}
-                    }
-                }
-            }
-        }
-    }
-    return jsonify(spec)
+        raise HTTPException(status_code=400, detail=str(error))
 
 
 def main() -> None:
-    """Démarre le serveur Flask."""
-    parser = argparse.ArgumentParser(description="API Flask pour la démo GNN avec Swagger.")
+    """Démarre le serveur FastAPI avec Uvicorn."""
+    parser = argparse.ArgumentParser(description="API FastAPI pour la démo GNN avec Swagger/ReDoc.")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", default=8000, type=int)
-    parser.add_argument("--debug", action="store_true", help="Mode debug Flask")
+    parser.add_argument("--reload", action="store_true", help="Rechargement automatique en développement")
     arguments = parser.parse_args()
 
+    import uvicorn
     print(f"API Swarm GNN : http://{arguments.host}:{arguments.port}")
     print(f"Swagger UI    : http://{arguments.host}:{arguments.port}/docs")
+    print(f"ReDoc         : http://{arguments.host}:{arguments.port}/redoc")
     print(f"Health check  : http://{arguments.host}:{arguments.port}/api/health")
-    app.run(host=arguments.host, port=arguments.port, debug=arguments.debug, threaded=True)
+    uvicorn.run(
+        "src.web.server:app",
+        host=arguments.host,
+        port=arguments.port,
+        reload=arguments.reload,
+    )
 
 
 if __name__ == "__main__":

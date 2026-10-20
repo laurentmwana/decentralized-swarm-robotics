@@ -82,26 +82,27 @@ python -m src.eval.run
 
 Cette commande produit les épisodes bruts, agrégats et figures du protocole pilote (pannes et passage à l'échelle) dans `results/evaluation-pilot/`.
 
-## API locale pour une démonstration Web (Flask + Swagger)
+## API locale pour une démonstration Web (FastAPI + Swagger/ReDoc)
 
-L'API est maintenant construite avec **Flask** et documentée via **Swagger UI (OpenAPI 3.0)**.
+L'API est maintenant construite avec **FastAPI** et documentée automatiquement via **Swagger UI** et **ReDoc** (OpenAPI 3.0).
 
 ### Démarrage
 
 ```powershell
 python -m src.web.server
-# Options: --host 127.0.0.1 --port 8000 --debug
+# Options: --host 127.0.0.1 --port 8000 --reload
 ```
 
 ### Interfaces disponibles
 
 | Interface | URL | Description |
 |-----------|-----|-------------|
-| **Swagger UI** | http://127.0.0.1:8000/docs | Documentation interactive, test des endpoints |
+| **Swagger UI** | http://127.0.0.1:8000/docs | Documentation interactive, test des endpoints ("Try it out") |
+| **ReDoc** | http://127.0.0.1:8000/redoc | Documentation alternative, plus lisible |
 | **Health check** | http://127.0.0.1:8000/api/health | Vérification modèle chargé |
 | **Targets** | http://127.0.0.1:8000/api/targets | Liste des 11 formes du curriculum |
 | **Simulate** | http://127.0.0.1:8000/api/simulate | Lance une simulation complète |
-| **OpenAPI Spec** | http://127.0.0.1:8000/static/swagger.json | Spécification JSON brute |
+| **OpenAPI Spec** | http://127.0.0.1:8000/openapi.json | Spécification JSON brute |
 
 ### Endpoint `/api/simulate` - Paramètres
 
@@ -130,6 +131,9 @@ curl "http://127.0.0.1:8000/api/simulate?target=number_123&robots=100"
 
 # Contrôle manuel avec consigne de forme
 curl "http://127.0.0.1:8000/api/simulate?target=geometry_square&method=manual"
+
+# GNN sans communication (même modèle, pas de messages)
+curl "http://127.0.0.1:8000/api/simulate?target=geometry_triangle&method=gnn_no_comm"
 ```
 
 ### Réponse `/api/simulate` (extrait)
