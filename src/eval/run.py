@@ -49,6 +49,7 @@ class EvaluationConfig:
 
 
 def _load_model(config: EvaluationConfig) -> GNNController:
+    # Architecture must match the trained model (from curriculum config)
     model = GNNController(hidden_dim=32, message_passing_steps=2, target_count=11, max_speed=config.max_speed)
     model.load_state_dict(torch.load(config.model_path, map_location="cpu", weights_only=True))
     return model.eval()
@@ -97,6 +98,21 @@ def simulate_episode(model: GNNController, method: str, target: np.ndarray, robo
     active = np.ones(robot_count, dtype=bool)
     convergence_step = config.episode_steps
     total_collisions = 0
+    
+    # Create SimulationConfig for manual method (SwarmSimulator)
+    from src.sim.core import SimulationConfig
+    sim_config = SimulationConfig(
+        seed=config.seed,
+        robot_count=robot_count,
+        arena_size=config.arena_size,
+        communication_radius=config.communication_radius,
+        max_speed=config.max_speed,
+        time_step=config.time_step,
+        episode_steps=config.episode_steps,
+        safety_distance=config.safety_distance,
+        measurement_noise_std=0.0
+    )
+
     for step in range(config.episode_steps):
         if step == config.episode_steps // 2 and failure_fraction:
             count = max(1, round(robot_count * failure_fraction))
@@ -107,14 +123,13 @@ def simulate_episode(model: GNNController, method: str, target: np.ndarray, robo
             commands = _commands_gnn(model, positions, velocities, active, target, config, target_id)
         elif method == "gnn_no_comm":
             # GNN sans communication : même modèle mais adjacence nulle (pas de messages)
-            # Créer une matrice d'adjacence nulle de la même taille
-            null_adjacency = np.zeros_like(adjacency_from_positions(positions, config.communication_radius))
+            null_adjacency = torch.zeros((1, robot_count, robot_count), dtype=torch.bool)
             commands = _commands_gnn(model, positions, velocities, active, target, config, target_id, null_adjacency)
         elif method == "manual":
             # Utiliser la règle manuelle avec consigne de forme
             from src.sim import local_manual_with_shape_consensus
-            simulator = SwarmSimulator(config, positions=positions)
-            simulator.active = active  # Mettre à jour l'état actif
+            simulator = SwarmSimulator(sim_config, positions=positions)
+            simulator.active = active
             commands = local_manual_with_shape_consensus(simulator, target, attraction_gain=1.0, repulsion_gain=1.0)
         else:  # method == "gathering" ou tout autre valeur par défaut
             commands = _commands_gathering(positions, active, config)
@@ -142,12 +157,13 @@ def main() -> None:
     model = _load_model(config)
     base_target = np.load(config.target_path) * config.target_radius + np.asarray(config.arena_size) / 2
     rows: list[dict[str, float | int | str]] = []
+    methods = ("gnn", "gathering", "manual", "gnn_no_comm")
     for scale in config.scale_factors:
         count = config.robot_count * scale
         target = np.resize(base_target, (count, 2))
         for failure in config.failure_fractions:
             for episode in range(config.episodes):
-                for method in ("gnn", "gathering"):
+                for method in methods:
                     rows.append(simulate_episode(model, method, target, count, failure, config.seed + episode, config))
     output = Path(arguments.output)
     output.mkdir(parents=True, exist_ok=True)
