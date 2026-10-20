@@ -5,4 +5,8 @@ torch>=2.0
 matplotlib>=3.8
 Pillow>=10.0
 
+# Web API
+flask>=3.1
+flask-swagger-ui>=5.34
+
 pytest>=8.0
