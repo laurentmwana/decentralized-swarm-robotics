@@ -1,21 +1,69 @@
+# Python
 __pycache__/
 .pytest_cache/
 *.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+.venv
+venv/
+env/
+ENV/
+
+# IDE / Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Results & Data (generated)
 results/*
 !results/README.md
 data/shapes/
 data/shapes-complex/
 data/*.zip
-latex/*.aux
-latex/*.bcf
-latex/*.blg
-latex/*.log
-latex/*.out
-latex/*.bbl
-latex/*.run.xml
-latex/*.lof
-latex/*.lot
-latex/*.toc
-latex/chapters/*.aux
-.venv
-venv
+
+# LaTeX build artifacts
+*.aux
+*.bcf
+*.blg
+*.log
+*.out
+*.bbl
+*.run.xml
+*.lof
+*.lot
+*.toc
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.pdf
+*.nav
+*.snm
+*.vrb
+texput.log
+
+# LaTeX specific directories
+latex/frontmatter/
+latex/frontmatter/**
+latex/images/*.png
+latex/images/*.jpg
+latex/images/*.pdf
+latex/log.txt
+latex/part1.txt
+latex/page_de_garde.tex
+
+# Backup files
+*.bak
+*.backup
+
+# Notes / temporary
+remarques/
+*.tmp
+*.temp
+
+# OS
+.DS_Store
+Thumbs.db
