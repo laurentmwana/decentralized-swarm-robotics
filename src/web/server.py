@@ -25,7 +25,7 @@ from __future__ import annotations
 import argparse
 from functools import lru_cache
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Literal, Optional, Tuple
 
 import numpy as np
 import torch
@@ -342,6 +342,12 @@ def targets() -> TargetsResponse:
         raise HTTPException(status_code=400, detail=str(error))
 
 
+# Type aliases for Literal enums (query params come as strings)
+MethodType = Literal["gnn", "gathering", "manual", "gnn_no_comm"]
+FailureType = Literal["0", "0.0", "0.05", "0.1", "0.10", "0.2", "0.20"]
+RobotsType = Literal["20", "40", "100"]
+
+
 @app.get(
     "/api/simulate",
     response_model=SimulateResponse,
@@ -356,24 +362,12 @@ def simulate(
     target: str = Query(
         ...,
         description="Identifiant de la forme cible (ex: alphabet_A, geometry_circle, digit_0, number_123)",
-        example="alphabet_A",
+        examples=["alphabet_A", "geometry_circle", "digit_0", "number_123"],
     ),
     seed: int = Query(142, ge=0, description="Graine aléatoire pour la reproductibilité"),
-    method: str = Query(
-        "gnn",
-        description="Méthode de contrôle",
-        enum=list(METHODS),
-    ),
-    failure: float = Query(
-        0.0,
-        description="Fraction de robots mis en panne à mi-épisode",
-        enum=list(FAILURE_FRACTIONS),
-    ),
-    robots: int = Query(
-        20,
-        description="Nombre de robots (passage à l'échelle)",
-        enum=list(SCALE_ROBOT_COUNTS),
-    ),
+    method: MethodType = Query("gnn", description="Méthode de contrôle"),
+    failure: FailureType = Query(0.0, description="Fraction de robots mis en panne à mi-épisode"),
+    robots: RobotsType = Query(20, description="Nombre de robots (passage à l'échelle)"),
 ) -> SimulateResponse:
     """
     Exécute un épisode complet du protocole pilote et retourne la trajectoire complète avec les métriques.
@@ -393,7 +387,10 @@ def simulate(
     - `GET /api/simulate?target=geometry_square&method=manual` — Contrôle manuel
     """
     try:
-        result = simulate_target(target, seed, method, failure, robots)
+        # Convert string query params to numeric types
+        failure_num = float(failure)
+        robots_num = int(robots)
+        result = simulate_target(target, seed, method, failure_num, robots_num)
         return SimulateResponse(**result)
     except HTTPException:
         raise
