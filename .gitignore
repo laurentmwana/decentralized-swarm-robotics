@@ -39,31 +39,29 @@ data/*.zip
 *.fls
 *.fdb_latexmk
 *.synctex.gz
-*.pdf
 *.nav
 *.snm
 *.vrb
 texput.log
 
-# LaTeX specific directories
-latex/frontmatter/
-latex/frontmatter/**
-latex/images/*.png
-latex/images/*.jpg
-latex/images/*.pdf
+# Compiled PDF (but allow figure PDFs in images/)
+latex/*.pdf
+!latex/images/*.pdf
+
+# LaTeX temporary files
 latex/log.txt
 latex/part1.txt
-latex/page_de_garde.tex
 
 # Backup files
 *.bak
 *.backup
 
 # Notes / temporary
-remarques/
 *.tmp
 *.temp
 
 # OS
 .DS_Store
 Thumbs.db
+
+.freebuff
