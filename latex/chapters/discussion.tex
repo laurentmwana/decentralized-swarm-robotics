@@ -68,14 +68,29 @@ Enfin, une formation de forme par essaim est un dispositif visible dans l'espace
 
 \section*{Suite expérimentale}
 
-Les campagnes préparées prévoient au moins 50 départs par condition et cinq graines d'entraînement, en séparant les deux sources de variabilité. Elles incluent le bruit d'observation, la suppression aléatoire d'arêtes et la réduction de portée ; la suppression d'arêtes n'est pas un bruit sur le contenu des messages. La politique sans communication, recevant la même consigne que son équivalent avec messages, constitue la comparaison prioritaire. Les modules distinguent désormais proximité, couverture, régularité et sécurité, et un questionnaire aveugle prépare l'étude de lisibilité. Leur existence ne remplace ni l'exécution des campagnes ni la collecte de réponses humaines. La Figure~\ref{fig:matrice-comparaison} récapitule, contrôleur par contrôleur, l'information disponible et le statut de chaque comparaison.
+Les campagnes préparées prévoient au moins 50 départs par condition et cinq graines d'entraînement, en séparant les deux sources de variabilité. Elles incluent le bruit d'observation, la suppression aléatoire d'arêtes et la réduction de portée ; la suppression d'arêtes n'est pas un bruit sur le contenu des messages. La politique sans communication, recevant la même consigne que son équivalent avec messages, constitue la comparaison prioritaire. Les modules distinguent désormais proximité, couverture, régularité et sécurité, et un questionnaire aveugle prépare l'étude de lisibilité. Leur existence ne remplace ni l'exécution des campagnes ni la collecte de réponses humaines. Le Tableau~\ref{tab:controller-matrix} récapitule, contrôleur par contrôleur, l'information disponible et le statut de chaque comparaison.
 
-\begin{figure}[htbp]
+\begin{table}[htbp]
   \centering
-  \includegraphics[width=\linewidth,height=.65\textheight,keepaspectratio]{images/controller_information_matrix.png}
-  \caption[Information reçue par les contrôleurs actuels]{Information reçue par les contrôleurs actuels : voisinage, identifiant et géométrie. La règle manuelle conserve la longueur du déplacement cible, tandis que le GNN géométrique reçoit une direction unitaire. Les variantes neuronales doivent encore être entraînées et comparées ; la matrice ne représente pas des performances.}
-  \label{fig:matrice-comparaison}
-\end{figure}
+  \caption[Information reçue par les contrôleurs actuels]{Information reçue par les contrôleurs actuels : voisinage, identifiant et géométrie. Les variantes neuronales doivent encore être entraînées et comparées ; cette matrice ne représente pas des performances.}
+  \label{tab:controller-matrix}
+  \begin{tabular}{lcccl}
+    \toprule
+    \textbf{Contrôleur} & \textbf{Voisins} & \textbf{ID forme} & \textbf{Géométrie cible} & \textbf{Poids ajustables} \\
+    \midrule
+    Regroupement (flocking) & Oui & Non & Aucune & Non \\
+    Règle manuelle & Oui & Non & Déplacement au plus proche (direction + distance) & Non \\
+    GNN identifiant seul & Oui & Oui & Aucune & Oui \\
+    GNN avec géométrie & Oui & Oui & Direction unitaire vers le plus proche & Oui \\
+    GNN sans communication & Non & Oui & Direction unitaire vers le plus proche & Oui \\
+    \bottomrule
+  \end{tabular}
+  
+  \vspace{0.5em}
+  \footnotesize
+  Poids ajustables : paramètres à apprendre, sans entraînement actuel attesté.\\
+  \textbf{Pilote évalué : ancien GNN et regroupement uniquement.} Autres variantes : nouvellement préparées ; aucun entraînement actuel. GNN sans communication : 2 tours conservés, mais graphe et agrégats nuls.
+\end{table}
 
 Un axe complémentaire concerne le raffinement de l'agrégation : comparer la moyenne à une agrégation tronquée ou pondérée permettrait de mesurer la sensibilité du contrôleur à un voisin défaillant. Un axe symétrique concerne la profondeur : comparer un, deux et trois tours à budget d'entraînement identique évalue l'effet conjoint de la portée informationnelle, de la profondeur et de la capacité paramétrique ; leur séparation exige des contrôles supplémentaires.
 
