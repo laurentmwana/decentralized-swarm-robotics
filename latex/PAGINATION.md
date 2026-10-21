@@ -1,18 +1,20 @@
 # Cible de pagination du mémoire
 
-La version compilée du 18 octobre 2026 compte **78 pages** dans une structure à **cinq chapitres**, avec 27 figures et 12 tableaux.
+La version compilée du 21 octobre 2026 compte **84 pages** dans une structure à **cinq chapitres**, avec 27 figures et 12 tableaux.
 
 Décompte relevé dans `main.toc` :
 
 | Partie | Pages |
 |---|---:|
-| Pages préliminaires (titre, résumés, listes) | 1 à 9 |
-| 1. Introduction | 10 à 15 |
-| 2. État de l'art | 16 à 29 |
-| 3. Méthode et architecture logicielle | 30 à 50 |
-| 4. Expériences et résultats | 51 à 67 |
-| 5. Discussion et conclusion | 68 à 75 |
-| Bibliographie (35 entrées citées sur 37 dans `references.bib`) | 76 à 78 |
+| Pages préliminaires (titre, épigraphie, dédicace, remerciements, abréviations, listes, résumés) | 1 à 13 |
+| 1. Introduction | 14 à 19 |
+| 2. État de l'art | 20 à 33 |
+| 3. Méthode et architecture logicielle | 34 à 55 |
+| 4. Expériences et résultats | 56 à 73 |
+| 5. Discussion et conclusion | 74 à 79 |
+| Bibliographie (35 entrées citées sur 37 dans `references.bib`) | 80 à 84 |
+
+Structure conforme aux consignes : chaque chapitre s'ouvre sur une section *Introduction* et se clôt par une *Conclusion partielle* résumant le chapitre en un paragraphe et annonçant le suivant (le chapitre 5 se termine par sa *Conclusion et perspectives*). Les pages liminaires suivent l'ordre imposé : Épigraphe, Dédicace, Remerciements (signés du nom complet de l'auteur), Liste des abréviations, Liste des figures, Liste des tableaux, Résumé (6 mots clés), Abstract (6 keywords).
 
 ## Organisation à cinq chapitres
 

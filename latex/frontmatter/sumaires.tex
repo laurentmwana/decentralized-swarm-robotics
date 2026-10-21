@@ -1,15 +1,31 @@
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Liste des figures}
+\listoffigures
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Liste des tableaux}
+\listoftables
+
 \chapter*{Résumé}
 \addcontentsline{toc}{chapter}{Résumé}
-Ce mémoire étudie le contrôle décentralisé d'un essaim de robots simulés par un réseau de neurones sur graphes partagé. Chaque robot ne traite que son état local, les messages de ses voisins proches et une consigne commune de forme. L'objectif est de former des nuages de points représentant des formes géométriques et symboliques, tout en examinant le comportement face aux pannes et aux changements de taille de l'essaim. La contribution principale est une chaîne expérimentale reproductible : simulateur 2D, jeu de formes, contrôleur GNN, entraînement différentiable et protocole d'évaluation. Un premier protocole pilote montre que le contrôleur appris obtient une meilleure adéquation à une cible circulaire qu'une règle locale de regroupement. Cette observation reste exploratoire : la baseline ne reçoit pas la même information de consigne et l'étude finale devra augmenter le nombre de répétitions et inclure des comparaisons plus équitables.
+La robotique en essaim vise à obtenir des comportements collectifs à partir de règles locales appliquées par de nombreux robots simples. La formation de formes en est un cas d'étude particulièrement exigeant : le résultat recherché est global, alors que chaque robot ne dispose que d'une information locale et de messages limités à son voisinage. Les travaux sur le contrôle décentralisé d'essaims proposent des règles locales et des contrôleurs appris ; cependant, leurs hypothèses de consigne, leurs tâches et leurs protocoles diffèrent, ce qui complique les comparaisons à information équivalente et l'évaluation de formes symboliques variées.
 
-\noindent\textbf{Mots-clés :} robotique en essaim, contrôle décentralisé, réseaux de neurones sur graphes, formation de formes, apprentissage différentiable.
+Dans ce mémoire, nous proposons un contrôleur décentralisé fondé sur un réseau de neurones sur graphes (GNN) partagé par tous les robots. Chaque robot ne traite que son état local, les messages de ses voisins proches et une consigne commune de forme ; il doit former des nuages de points représentant des formes géométriques et symboliques, tout en conservant un comportement utile face aux pannes et aux changements de taille de l'essaim. La chaîne expérimentale associe un simulateur bidimensionnel, un jeu de formes, un contrôleur GNN, un entraînement différentiable et un protocole d'évaluation.
+
+Les résultats préliminaires du pilote historique du prototype indiquent une meilleure adéquation à une cible circulaire que celle d'une règle locale de regroupement, dans les scénarios de taille et de retrait étudiés. Ces observations restent exploratoires : les méthodes ne reçoivent pas la même information de consigne et le nombre de répétitions est limité. Elles ne valident pas l'implémentation réécrite, dont les entraînements et les campagnes comparatives restent à réaliser.
+
+Ce travail fournit un banc d'essai reproductible pour étudier l'apport des réseaux de neurones sur graphes dans le contrôle décentralisé d'essaims, ainsi qu'un protocole d'évaluation explicite et rejouable, dont les hypothèses sont rendues visibles pour chaque campagne.
+
+\noindent\textbf{Mots-clés :} robotique en essaim, contrôle décentralisé, réseaux de neurones sur graphes, formation de formes, apprentissage différentiable, simulation de robots.
 
 \chapter*{Abstract}
 \addcontentsline{toc}{chapter}{Abstract}
-This thesis studies decentralized control of a simulated robot swarm with a shared graph neural network. Each robot only processes its local state, messages from nearby neighbours, and a common shape instruction. The main contribution is a reproducible experimental pipeline combining a two-dimensional simulator, a shape dataset, a local GNN controller, differentiable training, and an evaluation protocol. Preliminary experiments show that the learned controller is closer to a circular target than a local gathering rule. This observation remains exploratory because the baseline does not receive the same target instruction and the final study must use more repetitions and information-equivalent comparisons.
+This thesis studies the decentralized control of a simulated robot swarm driven by a shared graph neural network. Each robot only processes its local state, messages from its nearby neighbours, and a common shape instruction. Research on decentralized swarm control has proposed both local rules and learned controllers; however, differences in target information, tasks, and evaluation protocols complicate information-equivalent comparisons and the assessment of varied symbolic shapes. In this thesis, we propose a reproducible experimental pipeline combining a two-dimensional simulator, a shape dataset, a local GNN controller, differentiable training, and an evaluation protocol that includes failures and changes in swarm size.
 
-\noindent\textbf{Keywords:} swarm robotics, decentralized control, graph neural networks, shape formation, differentiable learning.
+Preliminary results from the historical prototype pilot indicate a closer match to a circular target than that obtained by a local gathering rule in the tested swarm-size and removal scenarios. These observations remain exploratory because the methods do not receive the same target information and the number of repetitions is limited. They do not validate the rewritten implementation, whose training runs and comparative campaigns have yet to be carried out. This work provides a reproducible testbed for studying the contribution of graph neural networks to decentralized swarm control, together with an explicit and replayable evaluation protocol whose assumptions are made visible for every campaign.
 
+\noindent\textbf{Keywords:} swarm robotics, decentralized control, graph neural networks, shape formation, differentiable learning, robot simulation.
+
+\cleardoublepage
 \tableofcontents
-\listoffigures
-\listoftables

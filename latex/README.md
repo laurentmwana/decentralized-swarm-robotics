@@ -27,6 +27,6 @@ pdflatex -interaction=nonstopmode main.tex
 
 ## État actuel
 
-Le document compile sans erreur à **78 pages** (18 octobre 2026) : 5 chapitres, 27 figures, 12 tableaux, 35 références citées sur 37 (`references.bib`), aucune figure manquante ni référence indéfinie. La page de titre reste à compléter (nom de l'auteur, directeur de mémoire, établissement) : le LaTeX signale « No \author given ».
+Le document compile sans erreur à **84 pages** (21 octobre 2026) : 5 chapitres, 27 figures, 12 tableaux, 35 références citées sur 37 (`references.bib`), aucune figure manquante ni référence indéfinie. Les consignes de rédaction du directeur sont appliquées : page de garde avec les mentions exactes (faculté, section Mathématiques, grade, filière, directeur), pages liminaires dans l'ordre imposé (Épigraphe, Dédicace, Remerciements, abréviations, listes, résumés), signatures de l'auteur sous la Dédicace et les Remerciements, résumé structuré avec 6 mots clés, chaque chapitre ouvert par une section *Introduction* et fermé par une *Conclusion partielle*, figures et tableaux annoncés avant insertion et renvois en majuscule (Figure, Tableau, Équation, Algorithme).
 
 Les chiffres pilote sont clairement signalés comme tels ; ils devront être actualisés après l'étude complète à 50 graines.
