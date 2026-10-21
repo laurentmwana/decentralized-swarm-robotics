@@ -1,83 +1,137 @@
-# Raccourcis d'exécution du projet. Sous Windows, installer GNU Make puis lancer
-# `make help` depuis PowerShell à la racine du dépôt.
-
+# Les commandes d'entraînement sont explicites et ne font pas partie des tests.
 PYTHON ?= python
+PROFILE ?= standard
+VARIANT ?= gnn_2_rounds
+SEED ?= 11
+TRAINING_OUTPUT ?= outputs/training
+EVALUATION_OUTPUT ?= outputs/evaluation
+CURRICULUM_VARIANT ?= gnn_3_rounds_geometry
+CURRICULUM_CONFIG ?= curriculum
 
-.PHONY: help test shapes shapes-complex simulator model circle circle-viz curriculum curriculum-viz complex-smoke complex complex-viz evaluation serve clean-results thesis thesis-figures clean-thesis
+ifeq ($(OS),Windows_NT)
+SHELL := powershell.exe
+.SHELLFLAGS := -NoProfile -Command
+endif
+
+.PHONY: help install install-dev test test-all test-training shapes demo tuning baselines metrics train train-all train-smoke training-plan training-summary train-size-20 train-size-40 train-size-100 train-sizes campaign comparison size-transfer curriculum-plan train-curriculum train-curriculum-all curriculum-summary complex-shapes curriculum-comparison shape-transfer readability readability-score robustness web clean
+.DEFAULT_GOAL := help
 
 help:
-	@echo Commandes disponibles :
-	@echo   make test             - execute tous les tests unitaires
-	@echo   make shapes           - genere le jeu de formes standard (20 points)
-	@echo   make shapes-complex   - genere le jeu de formes complexe (50 points)
-	@echo   make simulator        - exporte l'animation de la regle de regroupement
-	@echo   make model            - verifie le GNN non entraine dans le simulateur
-	@echo   make circle           - entraine le GNN sur le cercle
-	@echo   make circle-viz       - exporte le GIF et l'image du cercle
-	@echo   make curriculum       - execute le curriculum reduit
-	@echo   make curriculum-viz   - exporte sa planche de visualisation
-	@echo   make complex-smoke    - verifie rapidement le pipeline complexe
-	@echo   make complex          - lance la campagne complexe longue (CPU : plusieurs dizaines de minutes)
-	@echo   make complex-viz      - exporte la planche de la campagne complexe
-	@echo   make evaluation       - lance pannes et passage a l-echelle du pilote
-	@echo   make serve            - demarre l-API locale de visualisation Web (http://127.0.0.1:8000)
-	@echo   make thesis           - compile le memoire LaTeX (main.pdf)
-	@echo   make thesis-figures   - genere les figures pour le memoire LaTeX
-	@echo   make clean-thesis     - nettoie les fichiers generes par LaTeX
+	@echo "=== swarm-gnn : commandes ==="
+	@echo "make install / test / shapes : dependances, tests sans entrainement, cibles"
+	@echo "make train VARIANT=gnn_2_rounds SEED=11 PROFILE=standard : un entrainement"
+	@echo "make train-all : toutes les variantes et les cinq graines du profil"
+	@echo "make train-smoke : optimisation courte REELLE, a lancer vous-meme"
+	@echo "make training-plan / curriculum-plan : budgets sans optimisation"
+	@echo "make training-summary : courbes et synthese des entrainements complets"
+	@echo "make train-sizes / size-transfer : entrainer par taille, puis evaluer"
+	@echo "make campaign / comparison : evaluer les checkpoints, puis comparer"
+	@echo "make train-curriculum / train-curriculum-all : un curriculum ou toute la campagne"
+	@echo "make curriculum-summary / complex-shapes / curriculum-comparison / shape-transfer : rapports et etudes"
+	@echo "make readability / readability-score : questionnaire aveugle, puis reponses humaines"
+	@echo "make robustness / web : perturbations, demonstration locale"
+	@echo "PYTHON=python est surchargeable ; aucun dossier de run existant n'est ecrase"
+
+install:
+	$(PYTHON) -m pip install -r requirements.txt
+
+install-dev: install
+	$(PYTHON) -m pip install pytest-cov ruff httpx
 
 test:
-	$(PYTHON) -m pytest tests -q -p no:cacheprovider
+	$(PYTHON) -m pytest tests/ --tb=short -q
+
+test-all:
+	$(PYTHON) -m pytest tests/ -v
+
+test-training:
+	$(PYTHON) -m pytest tests/ -m training -v
 
 shapes:
-	$(PYTHON) -m src.shapes.build --config configs/shapes.yaml --output data/shapes
+	$(PYTHON) -m src.shapes.generation
 
-shapes-complex:
-	$(PYTHON) -m src.shapes.build --config configs/shapes-complex.yaml --output data/shapes-complex
+demo:
+	$(PYTHON) -m src.reports.demo_phase1
 
-simulator:
-	$(PYTHON) -m src.sim.demo --config configs/simulator.yaml --output results/simulator-gathering.gif
+tuning:
+	$(PYTHON) -m src.reports.tune_baselines
 
-model:
-	$(PYTHON) -m src.models.demo --config configs/simulator.yaml
+baselines:
+	$(PYTHON) -m src.reports.baselines_demo
 
-circle: shapes
-	$(PYTHON) -m src.train.run --config configs/training-circle.yaml --output results/training-circle
+metrics:
+	$(PYTHON) -m src.reports.metrics_demo
 
-circle-viz: circle
-	$(PYTHON) -m src.train.visualize --config configs/training-circle.yaml --model results/training-circle/circle-best.pt --target data/shapes/geometry/geometry_circle.npy --output results/training-circle
+train:
+	$(PYTHON) -m src.training.train --variant $(VARIANT) --seed $(SEED) --profile $(PROFILE) --output "$(TRAINING_OUTPUT)"
 
-curriculum: shapes circle
-	$(PYTHON) -m src.train.curriculum --config configs/curriculum.yaml --initial-model results/training-circle/circle-best.pt --output results/curriculum
+train-all:
+	$(PYTHON) -m src.training.train --all-variants --all-seeds --profile $(PROFILE) --output "$(TRAINING_OUTPUT)"
 
-curriculum-viz: curriculum
-	$(PYTHON) -m src.train.visualize_curriculum --config configs/curriculum.yaml --model results/curriculum/numbers/model.pt --output results/curriculum/numbers/contact-sheet.png
+train-smoke:
+	$(PYTHON) -m src.training.train --variant $(VARIANT) --seed 1 --profile smoke --output outputs/training_smoke
 
-complex-smoke: shapes-complex
-	$(PYTHON) -m src.train.curriculum --config configs/curriculum-complex-smoke.yaml --initial-model none --output results/curriculum-complex-smoke
+training-plan:
+	$(PYTHON) -m src.training.train --all-variants --all-seeds --profile $(PROFILE) --output "$(TRAINING_OUTPUT)" --dry-run
 
-complex: shapes-complex
-	$(PYTHON) -m src.train.curriculum --config configs/curriculum-complex.yaml --initial-model none --output results/curriculum-complex
+training-summary:
+	$(PYTHON) -m src.reports.training_summary --input "$(TRAINING_OUTPUT)"
 
-complex-viz:
-	$(PYTHON) -m src.train.visualize_curriculum --config configs/curriculum-complex.yaml --model results/curriculum-complex/numbers/model.pt --output results/curriculum-complex/numbers/contact-sheet.png
+train-size-20:
+	$(PYTHON) -m src.training.train --variant gnn_2_rounds --all-seeds --profile size_20 --output outputs/training/size_20
 
-evaluation: shapes
-	$(PYTHON) -m src.eval.run --config configs/evaluation-pilot.yaml --output results/evaluation-pilot
+train-size-40:
+	$(PYTHON) -m src.training.train --variant gnn_2_rounds --all-seeds --profile size_40 --output outputs/training/size_40
 
-serve:
-	$(PYTHON) -m src.web.server
+train-size-100:
+	$(PYTHON) -m src.training.train --variant gnn_2_rounds --all-seeds --profile size_100 --output outputs/training/size_100
 
-# Thesis management targets
-thesis-figures:
-	$(PYTHON) scripts/generate_thesis_figures.py
+train-sizes:
+	$(PYTHON) -m src.training.train --variant gnn_2_rounds --all-seeds --profile size_20 --output outputs/training/size_20
+	$(PYTHON) -m src.training.train --variant gnn_2_rounds --all-seeds --profile size_40 --output outputs/training/size_40
+	$(PYTHON) -m src.training.train --variant gnn_2_rounds --all-seeds --profile size_100 --output outputs/training/size_100
 
-thesis: thesis-figures
-	cd latex && $(PYTHON) -m pdflatex main.tex
-	cd latex && $(PYTHON) -m biber main
-	cd latex && $(PYTHON) -m pdflatex main.tex
-	cd latex && $(PYTHON) -m pdflatex main.tex
+campaign:
+	$(PYTHON) -m src.evaluation.campaign --output "$(EVALUATION_OUTPUT)"
 
-clean-thesis:
-	cd latex && rm -f main.aux main.bbl main.bcf main.blg main.log main.lot main.out main.run.xml main.toc
-	cd latex && rm -f chapters/*.aux
-	cd latex && rm -rf latex/figures/
+comparison:
+	$(PYTHON) -m src.reports.communication --config comparison
+
+size-transfer:
+	$(PYTHON) -m src.evaluation.size_transfer --config size-transfer
+
+curriculum-plan:
+	$(PYTHON) -m src.training.curriculum --config $(CURRICULUM_CONFIG) --all --profile $(PROFILE) --dry-run
+
+train-curriculum:
+	$(PYTHON) -m src.training.curriculum --config $(CURRICULUM_CONFIG) --variant $(CURRICULUM_VARIANT) --seed $(SEED) --profile $(PROFILE)
+
+train-curriculum-all:
+	$(PYTHON) -m src.training.curriculum --config $(CURRICULUM_CONFIG) --all --profile $(PROFILE)
+
+curriculum-summary:
+	$(PYTHON) -m src.reports.curriculum --config $(CURRICULUM_CONFIG) --profile $(PROFILE)
+
+complex-shapes:
+	$(PYTHON) -m src.evaluation.shape_studies --config complex-shapes --mode complex
+
+curriculum-comparison:
+	$(PYTHON) -m src.evaluation.shape_studies --config complex-shapes --mode compare
+
+shape-transfer:
+	$(PYTHON) -m src.evaluation.shape_studies --config shape-transfer --mode heldout
+
+readability:
+	$(PYTHON) -m src.reports.readability --config readability --mode prepare
+
+readability-score:
+	$(PYTHON) -m src.reports.readability --config readability --mode score
+
+robustness:
+	$(PYTHON) -m src.evaluation.robustness --config robustness
+
+web:
+	$(PYTHON) -m demo.server --config web-demo
+
+clean:
+	$(PYTHON) -c "import pathlib, shutil; [shutil.rmtree(path) for path in pathlib.Path('.').rglob('__pycache__') if '.venv' not in path.parts]; shutil.rmtree('.pytest_cache', ignore_errors=True)"

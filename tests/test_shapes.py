@@ -1,120 +1,100 @@
-"""Tests for target shape generation (Phase 2)."""
+"""Tests obligatoires de la phase 1 — formes (PLAN, section Tests), dont le test anti-doublon."""
 
-import tempfile
-from pathlib import Path
+from __future__ import annotations
 
 import numpy as np
 import pytest
 
-from src.swarm_gnn.shapes import (
-    circle_points,
-    square_points,
-    triangle_points,
-    line_points,
-    cross_points,
-    star_points,
-    ring_points,
-    generate_geometry,
-    save_shape,
-    load_shape,
-)
+from src.common.config import ConfigLoader
+from src.common.seeds import SeedManager
+from src.shapes import ShapeSampler, generate_index
+from src.shapes.index import build_sources, build_split
 
 
-class TestGeometryShapes:
-    """Tests for basic geometric shapes."""
-
-    def test_circle_points(self):
-        """Circle points are on unit circle."""
-        pts = circle_points(20)
-        assert pts.shape == (20, 2)
-        radii = np.linalg.norm(pts, axis=1)
-        assert np.allclose(radii, 1.0, atol=1e-6)
-
-    def test_square_points(self):
-        """Square points form a square perimeter."""
-        pts = square_points(20)
-        assert pts.shape == (20, 2)
-        # Points should be on perimeter of unit square [-1, 1] x [-1, 1]
-        assert np.all(np.abs(pts) <= 1.0 + 1e-6)
-        # At least some points on each edge
-        assert np.any(np.abs(pts[:, 0]) > 0.99)  # left/right edges
-        assert np.any(np.abs(pts[:, 1]) > 0.99)  # top/bottom edges
-
-    def test_triangle_points(self):
-        """Triangle points form equilateral triangle."""
-        pts = triangle_points(21)
-        assert pts.shape == (21, 2)
-        # All points within bounding box
-        assert np.all(np.abs(pts) <= 1.0 + 1e-6)
-
-    def test_line_points(self):
-        """Line points on horizontal segment."""
-        pts = line_points(10)
-        assert pts.shape == (10, 2)
-        assert np.allclose(pts[:, 1], 0.0)  # y = 0
-        assert np.all(np.abs(pts[:, 0]) <= 1.0)
-
-    def test_cross_points(self):
-        """Cross points form horizontal + vertical lines."""
-        pts = cross_points(20)
-        assert pts.shape == (20, 2)
-        # Points on x=0 or y=0
-        on_horizontal = np.abs(pts[:, 1]) < 1e-6
-        on_vertical = np.abs(pts[:, 0]) < 1e-6
-        assert np.all(on_horizontal | on_vertical)
-
-    def test_star_points(self):
-        """Star points form 5-pointed star."""
-        pts = star_points(20)
-        assert pts.shape == (20, 2)
-        assert np.all(np.abs(pts) <= 1.0 + 1e-6)
-
-    def test_ring_points(self):
-        """Ring points form annulus."""
-        pts = ring_points(20)
-        assert pts.shape == (20, 2)
-        radii = np.linalg.norm(pts, axis=1)
-        # Should be between inner (0.5) and outer (1.0) radius
-        assert np.all(radii >= 0.5)
-        assert np.all(radii <= 1.0)
+@pytest.fixture(scope="module")
+def cfg_shapes():
+    return ConfigLoader().load_shapes()
 
 
-class TestGenerateGeometry:
-    """Tests for generate_geometry function."""
-
-    def test_all_geometries(self):
-        """generate_geometry works for all shape names."""
-        for name in ["circle", "square", "triangle", "line", "cross", "star", "ring"]:
-            pts = generate_geometry(name, 20)
-            assert pts.shape == (20, 2)
-
-    def test_unknown_geometry_raises(self):
-        """Unknown geometry name raises ValueError."""
-        with pytest.raises(ValueError, match="Forme géométrique inconnue"):
-            generate_geometry("unknown", 10)
+@pytest.fixture(scope="module")
+def index_and_split(cfg_shapes, tmp_path_factory):
+    output = tmp_path_factory.mktemp("shapes")
+    return generate_index(cfg_shapes, output)
 
 
-class TestShapeIO:
-    """Tests for save/load shape points."""
+class TestNoDuplicates:
+    def test_distinct_points_match_resolution(self, cfg_shapes, index_and_split):
+        index, _ = index_and_split
+        for row in index.rows:
+            point_cloud = index.point_cloud_by_key(f"{row['type']}_{row['name']}@{row['resolution']}")
+            distinct = np.unique(np.round(point_cloud, 12), axis=0)
+            assert len(distinct) == row["resolution"], (
+                f"doublons sur {row['type']}_{row['name']} : {len(distinct)} != {row['resolution']}"
+            )
 
-    def test_save_load_roundtrip(self):
-        """save_shape + load_shape preserves points."""
-        pts = circle_points(15)
-        with tempfile.TemporaryDirectory() as tmpdir:
-            path = Path(tmpdir) / "test_shape.npy"
-            save_shape(pts, path)
-            loaded = load_shape(path)
-            assert np.allclose(pts, loaded)
+    def test_reject_coarse_render(self):
+        mask = np.zeros((8, 8), dtype=bool)
+        mask[2, 3] = True
+        mask[5, 6] = True
+        sampler = ShapeSampler(SeedManager(1))
+        with pytest.raises(ValueError):
+            sampler.sample(mask, 20)
 
-    def test_load_nonexistent_raises(self):
-        """Loading nonexistent file raises FileNotFoundError."""
-        with pytest.raises(FileNotFoundError):
-            load_shape(Path("nonexistent.npy"))
+    def test_sampling_reproducibility(self, cfg_shapes):
+        sources = build_sources(cfg_shapes)
+        circle = next(s for s in sources if s.name == "circle")
+        mask = circle.binarize(circle.render(cfg_shapes.render_size))
+        a = ShapeSampler(SeedManager(cfg_shapes.sampler_seed)).sample(mask, 50)
+        b = ShapeSampler(SeedManager(cfg_shapes.sampler_seed)).sample(mask, 50)
+        assert np.array_equal(a, b)
 
-    def test_save_creates_parent_dirs(self):
-        """save_shape creates parent directories."""
-        pts = circle_points(10)
-        with tempfile.TemporaryDirectory() as tmpdir:
-            path = Path(tmpdir) / "subdir" / "shape.npy"
-            save_shape(pts, path)
-            assert path.exists()
+
+class TestNormalization:
+    def test_all_shapes_in_common_frame(self, cfg_shapes, index_and_split):
+        index, _ = index_and_split
+        for row in index.rows:
+            point_cloud = index.point_cloud_by_key(f"{row['type']}_{row['name']}@{row['resolution']}")
+            assert np.abs(point_cloud).max() <= 1.0 + 1e-9
+            radius = np.linalg.norm(point_cloud, axis=1).max()
+            assert radius == pytest.approx(cfg_shapes.target_radius, abs=1e-9)
+
+    def test_centered_centroid(self, index_and_split):
+        index, _ = index_and_split
+        point_cloud = index.point_cloud_by_key("geometries_circle@50")
+        assert np.linalg.norm(point_cloud.mean(axis=0)) < 1e-9
+
+
+class TestIndex:
+    def test_every_shape_present(self, cfg_shapes, index_and_split):
+        index, _ = index_and_split
+        seen = {(l["type"], str(l["name"])) for l in index.rows}
+        expected = (
+            {("geometries", g) for g in cfg_shapes.geometries}
+            | {("digits", str(d)) for d in cfg_shapes.digits}
+            | {("letters", l) for l in cfg_shapes.letters}
+            | {("numbers", str(n)) for n in cfg_shapes.numbers}
+        )
+        assert expected <= seen
+
+    def test_every_shape_has_split(self, cfg_shapes, index_and_split):
+        _, split = index_and_split
+        counts = split.count()
+        assert all(counts[s] > 0 for s in ("train", "val", "test"))
+
+    def test_reject_access_outside_requested_split(self, cfg_shapes):
+        split = build_split(cfg_shapes)
+        sources = {s.identifier: s for s in build_sources(cfg_shapes)}
+        star = sources["geometries_star"]  # réservée au test
+        assert split.split_of(star) == "test"
+        with pytest.raises(ValueError):
+            split.validate_request(star, "train")
+
+
+class TestBinarization:
+    def test_ink_present_background_absent(self, cfg_shapes):
+        sources = build_sources(cfg_shapes)
+        for source in sources:
+            image = source.render(cfg_shapes.render_size)
+            mask = source.binarize(image)
+            assert mask.any(), f"aucune encre pour {source.identifier}"
+            assert (~mask).any(), f"image entièrement pleine pour {source.identifier}"

@@ -1,0 +1,38 @@
+# Phase 12 : préparation uniquement ; aucun entraînement, aucune étude lancée ici.
+# Même horizon et mêmes graines d'épisode pour chaque niveau et contrôleur.
+output: outputs/robustness
+training_root: outputs/training
+training_seeds: [11, 12, 13, 14, 15]
+evaluation_seed: 555
+seed_stride: 1000
+repetitions: 50
+evaluation_horizon: 120
+swarm_sizes: [20, 40, 100]
+failure_fractions: [0.0, 0.1]
+shapes: [geometries_circle@50, geometries_star@50]
+# Doit être égal au seuil figé de config/metrics.yaml.
+success_threshold: 0.15
+# Réussite stable sur cette fenêtre avant panne, puis suffixe stable après panne.
+stability_steps: 3
+
+controllers:
+  manual: {type: baseline}
+  gnn_2_rounds: {type: trained, variant: gnn_2_rounds}
+  no_comm: {type: trained, variant: no_comm}
+  # Chaque contrôleur peut aussi définir training_root, sans changer Factory.
+
+perturbations:
+  position_noise:
+    # Écart-type par coordonnée observée ; jamais appliqué aux positions physiques.
+    strengths: [0.0, 0.01, 0.05, 0.1, 0.2]
+  communication_noise:
+    # Probabilité de suppression d'une arête non orientée, pas de bruit de vecteur.
+    strengths: [0.0, 0.1, 0.25, 0.5, 0.75, 1.0]
+  range_reduction:
+    # Fraction de réduction : scale = 1-strength, portée effective = r_c*scale.
+    strengths: [0.0, 0.25, 0.5, 0.75, 1.0]
+  faulty_robot:
+    # Fraction de l'essaim retirée à mi-épisode, tirage indépendant des pannes
+    # ordinaires, union sans double comptage. Tous restent immobiles et exclus.
+    # La fraction active finale réelle est rapportée, sans transmission aberrante.
+    strengths: [0.0, 0.05, 0.1, 0.2, 0.5, 1.0]

@@ -1,124 +1,217 @@
-"""Tests for evaluation pipeline (Phase 6)."""
+"""Tests de la phase 6 — harnais d'évaluation.
+
+Grille de scénarios complète et déterministe, mêmes positions initiales pour tous les
+contrôleurs, agrégats exacts sur cas synthétique, comparaisons appariées et
+reproductibilité de bout en bout (deux campagnes identiques -> fichiers identiques).
+"""
+
+from __future__ import annotations
 
 import numpy as np
 import pytest
-import torch
 
-from src.swarm_gnn.config import EvaluationConfig
-from src.swarm_gnn.evaluation import (
-    simulate_episode,
-    collision_count,
-    nearest_neighbor_std,
-    symmetric_chamfer_distance,
-    graph_connectivity,
-)
-from src.swarm_gnn.models import GNNController
-
-
-class TestMetrics:
-    """Tests for evaluation metrics."""
-
-    def test_collision_count(self):
-        """Count pairs closer than safety_distance."""
-        pos = np.array([[0.0, 0.0], [0.3, 0.0], [5.0, 5.0]])
-        count = collision_count(pos, 0.5)
-        assert count == 1
-
-    def test_collision_count_zero(self):
-        """No collisions when all far apart."""
-        pos = np.array([[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]])
-        assert collision_count(pos, 0.5) == 0
-
-    def test_symmetric_chamfer_distance(self):
-        """Symmetric Chamfer distance."""
-        pred = np.array([[0.0, 0.0], [1.0, 0.0]])
-        target = np.array([[0.1, 0.1], [1.1, 0.1]])
-        dist = symmetric_chamfer_distance(pred, target)
-        assert dist > 0
-        # Symmetric
-        assert np.isclose(dist, symmetric_chamfer_distance(target, pred))
-
-    def test_symmetric_chamfer_zero(self):
-        """Zero when identical."""
-        pts = np.array([[0.0, 0.0], [1.0, 0.0]])
-        assert np.isclose(symmetric_chamfer_distance(pts, pts), 0.0)
-
-    def test_nearest_neighbor_std(self):
-        """Std of nearest neighbor distances."""
-        # Regular grid -> low std
-        pos = np.array([[0, 0], [1, 0], [0, 1], [1, 1]])
-        std = nearest_neighbor_std(pos)
-        assert std >= 0
-
-    def test_graph_connectivity(self):
-        """Graph connectivity ratio."""
-        pos = np.array([[0.0, 0.0], [1.0, 0.0], [10.0, 10.0]])
-        conn = graph_connectivity(pos, radius=2.0)
-        assert 0 <= conn <= 1
+from src.common.config import ConfigLoader
+from src.common.mission import Mission
+from src.controllers.base import Controller
+from src.controllers.flocking import FlockingController
+from src.controllers.manual_shape import ManualShapeController
+from src.evaluation.campaign import expected_row_count, run
+from src.evaluation.evaluator import Evaluator
+from src.evaluation.results import PairedComparison, ResultsTable
+from src.evaluation.scenario import ScenarioGrid
+from src.simulator.episode import Episode
 
 
-class TestSimulateEpisode:
-    """Tests for episode simulation."""
+class _Stationary(Controller):
+    def command(self, state, adjacency, mission):
+        return np.zeros((state.n_robots, 2))
 
-    @pytest.fixture
-    def eval_config(self):
-        return EvaluationConfig(
-            seed=42,
-            episodes=1,
-            episode_steps=5,
-            robot_count=4,
-            arena_size=(10.0, 10.0),
-            communication_radius=3.0,
-            max_speed=1.0,
-            time_step=0.3,
-            safety_distance=0.3,
-            target_radius=2.0,
-            failure_fractions=(0.0, 0.1),
-            scale_factors=(1, 2),
-            success_threshold=0.5,
-            model_path="dummy.pt",
-            target_path="dummy.npy",
-        )
 
-    @pytest.fixture
-    def model(self):
-        # Use actual GNNController
-        return GNNController(hidden_dim=32, message_passing_steps=1, target_count=4, max_speed=1.0)
+@pytest.fixture(scope="module")
+def cfg_eval():
+    return ConfigLoader("config").load_raw("evaluation")
 
-    def test_simulate_episode_basic(self, eval_config, model):
-        """Episode runs and returns metrics."""
-        target = np.random.randn(4, 2).astype(np.float32)
-        result = simulate_episode(
-            model, "gnn", target, 4, 0.0, 42, eval_config, target_id=0
-        )
 
-        assert result["method"] == "gnn"
-        assert result["robots"] == 4
-        assert result["failure_fraction"] == 0.0
-        assert "shape_distance" in result
-        assert "collisions" in result
-        assert "convergence_step" in result
-        assert "success" in result
-        assert "final_connectivity" in result
+class TestGrid:
+    def test_scenario_count(self, cfg_eval):
+        grid = ScenarioGrid.from_config(cfg_eval)
+        expected = len(cfg_eval["swarm_sizes"]) * len(cfg_eval["failure_fractions"]) * len(cfg_eval["shapes"]) * cfg_eval["repetitions"]
+        assert len(grid.scenarios()) == expected
+        assert expected == 3 * 4 * 2 * 50
+        # avec une graine par variante apprise : une serie de lignes par controleur logique
+        assert expected_row_count(cfg_eval, trained_seed_count=1) == expected * len(cfg_eval["controllers"])
 
-    def test_simulate_episode_with_failure(self, eval_config, model):
-        """Episode with robot failures."""
-        target = np.random.randn(4, 2).astype(np.float32)
-        result = simulate_episode(
-            model, "gnn", target, 4, 0.5, 42, eval_config, target_id=0
-        )
+    def test_episode_seeds_disjoint_from_training_seeds(self, cfg_eval):
+        grid = ScenarioGrid.from_config(cfg_eval)
+        seeds = {s.episode_seed for s in grid.scenarios()}
+        assert len(seeds) == cfg_eval["repetitions"]
+        training_seeds = set(ConfigLoader("config").load_raw("training")["profiles"]["standard"]["seeds"])
+        assert seeds.isdisjoint(training_seeds)
+        assert min(seeds) == cfg_eval["evaluation_seed"] * 1000
 
-        assert result["failure_fraction"] == 0.5
-        assert "failure_step" in result or "failure_step" not in result  # key may or may not be present
-        assert "retired" in result
-        assert len(result["retired"]) > 0
 
-    def test_methods_enum(self, eval_config, model):
-        """All methods produce valid results."""
-        target = np.random.randn(4, 2).astype(np.float32)
-        for method in ["gnn", "gathering", "manual", "gnn_no_comm"]:
-            result = simulate_episode(
-                model, method, target, 4, 0.0, 42, eval_config, target_id=0
+class TestSharedInitialPositions:
+    def test_same_seed_same_start_for_two_controllers(self, cfg_eval):
+        loader = ConfigLoader("config")
+        cfg_sim = loader.load_simulator()
+        grid = ScenarioGrid.from_config(cfg_eval)
+        cfg = grid.simulator_config(cfg_sim)
+        target = np.stack([np.cos(np.linspace(0, 2 * np.pi, 20, endpoint=False)), np.sin(np.linspace(0, 2 * np.pi, 20, endpoint=False))], axis=1)
+        mission = Mission(shape_id=0, target=target)
+        settings = loader.load_raw("baselines")["rules"]
+        a = Episode(cfg).execute(mission, FlockingController(**settings["flocking"]), 20, 555000)
+        b = Episode(cfg).execute(mission, ManualShapeController(**settings["manual"]), 20, 555000)
+        assert np.array_equal(a.positions[0], b.positions[0])
+
+    def test_failure_fraction_applied(self, cfg_eval):
+        loader = ConfigLoader("config")
+        cfg_sim = loader.load_simulator()
+        grid = ScenarioGrid.from_config(cfg_eval)
+        import dataclasses
+
+        cfg = dataclasses.replace(grid.simulator_config(cfg_sim), failure_fraction=0.2)
+        target = np.zeros((50, 2))
+        target[:, 0] = np.linspace(-1, 1, 50)
+        result = Episode(cfg).execute(Mission(shape_id=0, target=target), _Stationary(), 50, 555000)
+        final_active_count = int(result.active[-1].sum())
+        assert final_active_count == 40  # 20 % de 50
+
+
+class TestAggregates:
+    def _rows(self):
+        rows = []
+        for i, d in enumerate([0.1, 0.2, 0.3, 0.4]):
+            rows.append(
+                {"controller": "x", "training_seed": None, "episode_seed": i, "n_robots": 20,
+                 "failure_fraction": 0.0, "shape": "f", "final_distance": d, "success": d <= 0.15,
+                 "collision_rate": 0.0, "normalized_regularity": 0.0, "final_components": 1,
+                 "convergence_step": None, "step": 60, "shape_id": 0}
             )
-            assert result["method"] == method
-            assert "shape_distance" in result
+        return rows
+
+    def test_mean_std_ci(self):
+        table = ResultsTable(rows=self._rows())
+        agg = table.aggregates("final_distance")[("x", None, 20, 0.0, "f")]
+        assert agg["mean"] == pytest.approx(0.25)
+        assert agg["std"] == pytest.approx(float(np.std([0.1, 0.2, 0.3, 0.4], ddof=1)))
+        assert agg["ci95"] == pytest.approx(1.96 * agg["std"] / 2.0)
+        assert agg["n"] == 4
+
+    def test_baseline_vs_trained_pairing(self):
+        rows = self._rows()
+        for row in rows.copy():
+            rows.append(dict(row, controller="y", training_seed=11, final_distance=0.0, success=True))
+        comp = PairedComparison.build(rows, "y", "x")
+        summary = comp.summary()["final_distance"]
+        assert summary["paired_count"] == 4  # baseline sans graine : apparie avec tous les appris
+        assert summary["mean_gain"] == pytest.approx(-0.25)  # y - x = -d en moyenne
+
+    def test_two_trained_controllers_require_same_seed(self):
+        rows = []
+        for g in (11, 12):
+            for i in range(1):
+                rows.append({"controller": "a", "training_seed": g, "episode_seed": i, "n_robots": 20,
+                               "failure_fraction": 0.0, "shape": "f", "final_distance": 0.1 * g, "success": False,
+                               "collision_rate": 0.0, "normalized_regularity": 0.0, "final_components": 1,
+                               "convergence_step": None, "step": 60, "shape_id": 0})
+                rows.append({"controller": "b", "training_seed": g, "episode_seed": i, "n_robots": 20,
+                               "failure_fraction": 0.0, "shape": "f", "final_distance": 0.05, "success": False,
+                               "collision_rate": 0.0, "normalized_regularity": 0.0, "final_components": 1,
+                               "convergence_step": None, "step": 60, "shape_id": 0})
+        summary = PairedComparison.build(rows, "a", "b").summary()["final_distance"]
+        assert summary["paired_count"] == 2  # pas de croisement 11x12
+        assert summary["mean_gain"] == pytest.approx(1.1)  # (1.1-0.05 + 1.2-0.05)/2
+
+
+class TestCampaignReproducibility:
+    def test_two_runs_same_file(self, tmp_path, monkeypatch, cfg_eval):
+        import json
+
+        from src.shapes.index import ShapeIndex
+
+        config = dict(cfg_eval, swarm_sizes=[4], failure_fractions=[0.0], shapes=["geometries_circle@50"], evaluation_horizon=4)
+        target = np.stack([np.cos(np.linspace(0, 2 * np.pi, 50, endpoint=False)), np.sin(np.linspace(0, 2 * np.pi, 50, endpoint=False))], axis=1)
+        index = ShapeIndex([], {"geometries_circle@50": target}, ["geometries_circle"])
+        original_load = ConfigLoader.load_raw
+        monkeypatch.setattr(ConfigLoader, "load_raw", lambda self, name: config if name == "evaluation" else original_load(self, name))
+        monkeypatch.setattr(ShapeIndex, "load", lambda directory: index)
+        output_dir_a = tmp_path / "a"
+        output_dir_b = tmp_path / "b"
+        summary = run(controllers=["flocking", "manual"], repetitions=2, output=output_dir_a)
+        run(controllers=["flocking", "manual"], repetitions=2, output=output_dir_b)
+        content_a = (output_dir_a / "episodes.csv").read_text(encoding="utf-8")
+        content_b = (output_dir_b / "episodes.csv").read_text(encoding="utf-8")
+        assert content_a == content_b
+        assert len(content_a.strip().splitlines()) == 5
+        assert summary["rows"] == summary["expected_rows"] == 4
+        for artifact in ("effective_config.yaml", "seeds.json", "version.txt", "summary.json", "aggregates.csv"):
+            assert (output_dir_a / artifact).is_file()
+        assert json.loads((output_dir_a / "summary.json").read_text())["status"] == "complete"
+        with pytest.raises(FileExistsError):
+            run(controllers=["flocking"], repetitions=2, output=output_dir_a)
+
+    def test_variation_between_seeds_preserves_conditions(self):
+        rows = TestAggregates()._rows()
+        records = [dict(row, training_seed=seed, n_robots=size, final_distance=distance)
+                   for row in rows for seed in (11, 12) for size, distance in ((20, 0.2), (100, 0.8))]
+        variations = ResultsTable(records).variation_between_seeds()
+        assert variations[("x", 20, 0.0, "f")]["mean"] == pytest.approx(0.2)
+        assert variations[("x", 100, 0.0, "f")]["mean"] == pytest.approx(0.8)
+        assert variations[("x", 20, 0.0, "f")]["n"] == 2
+
+    def test_multiple_training_seeds_are_not_independent_episodes(self):
+        rows = TestAggregates()._rows()
+        records = rows + [dict(row, controller="y", training_seed=seed, final_distance=0.0)
+                          for seed in (11, 12) for row in rows]
+        comparison = PairedComparison.build(records, "y", "x")
+        assert comparison.summary()["final_distance"]["paired_count"] == 8
+        assert comparison.seed_summary()["final_distance"]["n"] == 2
+        assert comparison.seed_summary()["final_distance"]["mean"] == pytest.approx(-0.25)
+
+    def test_duplicate_pair_rejected(self):
+        rows = TestAggregates()._rows()
+        with pytest.raises(ValueError, match="même épisode"):
+            PairedComparison.build(rows + [rows[0]], "x", "y")
+
+    def test_partial_checkpoints_rejected(self, tmp_path, cfg_eval):
+        from src.evaluation.factory import ControllerFactory
+
+        directory = tmp_path / "gnn_2_rounds" / "seed_11"
+        directory.mkdir(parents=True)
+        (directory / "best.pt").write_bytes(b"partial")
+        factory = ControllerFactory(evaluation_config=cfg_eval, training_dir=tmp_path)
+        with pytest.raises(FileNotFoundError, match="run incomplet"):
+            factory.versions("gnn_2_rounds")
+
+    def test_checkpoint_uses_saved_configuration_and_frozen_weights(self, tmp_path, monkeypatch, cfg_eval):
+        import json
+        from dataclasses import asdict, replace
+
+        import yaml
+
+        from src.evaluation.factory import ControllerFactory
+        from src.models.gnn import SwarmGNN
+        from src.training.checkpoint import CheckpointManager
+
+        loader = ConfigLoader()
+        config = dict(cfg_eval, training_seeds=[11])
+        cfg_model = replace(loader.load_model(), init_seed=11)
+        directory = tmp_path / "gnn_2_rounds" / "seed_11"
+        directory.mkdir(parents=True)
+        snapshot = {"model": asdict(cfg_model), "simulator": asdict(loader.load_simulator()),
+                    "shapes": asdict(loader.load_shapes()), "communication": True}
+        (directory / "effective_config.yaml").write_text(yaml.safe_dump(snapshot), encoding="utf-8")
+        (directory / "summary.json").write_text(json.dumps({"seed": 11}), encoding="utf-8")
+        (directory / "status.json").write_text(json.dumps({"status": "completed"}), encoding="utf-8")
+        (directory / "targets.json").write_text("{}", encoding="utf-8")
+        model = SwarmGNN(cfg_model, loader.load_simulator().v_max)
+        CheckpointManager(directory).save(model, "best", {"seed": 11, "communication": True})
+        monkeypatch.setattr(loader, "load_model", lambda: pytest.fail("configuration courante utilisée"))
+        factory = ControllerFactory(loader, config, tmp_path)
+        assert factory.versions("gnn_2_rounds") == [11]
+        controller = factory.build("gnn_2_rounds", 11)
+        assert controller.cfg == cfg_model
+        assert all(not parameter.requires_grad for parameter in controller.model.parameters())
+        (directory / "status.json").write_text(json.dumps({"status": "failed"}), encoding="utf-8")
+        with pytest.raises(ValueError, match="non terminé"):
+            factory.versions("gnn_2_rounds")

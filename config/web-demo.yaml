@@ -1,0 +1,18 @@
+# Démonstration locale, illustrative et en lecture seule : aucun entraînement.
+host: 127.0.0.1
+port: 8000
+shapes_root: outputs/shapes
+training_root: outputs/training
+horizon: 120
+swarm_sizes: [20, 40, 100]
+seed_max: 2147483647
+default_seed: 142
+default_target: geometries_circle@50
+default_swarm_size: 40
+default_controller: manual
+# Une seule version existante est utilisée ; aucun choix de checkpoint par l'API.
+training_seeds: [11]
+controllers:
+  manual: {type: baseline}
+  flocking: {type: baseline}
+  gnn_2_rounds: {type: trained, variant: gnn_2_rounds}

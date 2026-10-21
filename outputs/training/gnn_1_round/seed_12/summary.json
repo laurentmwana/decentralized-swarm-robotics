@@ -1,0 +1,16 @@
+{
+  "seed": 12,
+  "iterations": 1200,
+  "best_iteration": 850,
+  "best_validation_score": 0.39491439859072364,
+  "final_loss": {
+    "iteration": 1200,
+    "total": 0.8931922912597656,
+    "shape": 0.26141853630542755,
+    "coverage": 0.14883090555667877,
+    "collisions": 0.9656544029712677,
+    "motion": 0.005784699926152825
+  },
+  "duration_seconds": 478.8,
+  "parameter_count": 31618
+}

@@ -1,0 +1,6 @@
+{
+  "reproductible": true,
+  "pas": 60,
+  "n_robots": 20,
+  "graine_episode": 142
+}

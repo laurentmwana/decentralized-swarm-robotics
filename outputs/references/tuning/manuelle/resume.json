@@ -1,0 +1,14 @@
+{
+  "regle": "manuelle",
+  "n_robots": 40,
+  "graine_tuning": 7,
+  "cible": "geometries_cercle@50",
+  "essais_effectues": 27,
+  "meilleur": {
+    "gain_attirance": 2.0,
+    "gain_repulsion": 0.5,
+    "rayon_repulsion": 0.15,
+    "distance_finale": 0.06730936255070524,
+    "reussite": true
+  }
+}

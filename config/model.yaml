@@ -1,0 +1,10 @@
+# Hyperparametres du controleur GNN (phase 4). Aucun poids ne vit dans le code (AGENT.md regle 4).
+# Messages ecrits a la main : pas de bibliotheque de GNN (conventions AGENT.md 3).
+hidden_dim: 64          # largeur des representations par robot
+embedding_dim: 16       # dimension de l'embedding de l'identifiant de forme
+message_rounds: 2              # nombre de tours de message passing (1, 2 ou 3)
+n_shapes: 64            # taille du vocabulaire d'identifiants de forme
+aggregator: mean        # mean | normalized_sum | attention (bonus)
+activation: relu        # relu | tanh | gelu
+use_target_geometry: true   # consigne : identifiant seul (false) ou + vecteur vers le contour (true)
+init_seed: 20261021     # graine d'initialisation des poids (reproductibilite)

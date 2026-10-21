@@ -1,0 +1,52 @@
+# Agrégats — distance_finale
+
+| contrôleur | graine | robots | retraits | forme | moyenne ± écart-type | IC 95 % | n |
+|---|---|---|---|---|---|---|---|
+| flocking | - | 20 | 0.00 | geometries_cercle@50 | 0.521 ± 0.020 | [0.493, 0.549] | 2 |
+| flocking | - | 20 | 0.00 | geometries_etoile@50 | 0.361 ± 0.044 | [0.300, 0.421] | 2 |
+| flocking | - | 20 | 0.05 | geometries_cercle@50 | 0.548 ± 0.023 | [0.516, 0.580] | 2 |
+| flocking | - | 20 | 0.05 | geometries_etoile@50 | 0.349 ± 0.028 | [0.310, 0.388] | 2 |
+| flocking | - | 20 | 0.10 | geometries_cercle@50 | 0.560 ± 0.019 | [0.534, 0.587] | 2 |
+| flocking | - | 20 | 0.10 | geometries_etoile@50 | 0.353 ± 0.046 | [0.290, 0.417] | 2 |
+| flocking | - | 20 | 0.20 | geometries_cercle@50 | 0.588 ± 0.029 | [0.547, 0.628] | 2 |
+| flocking | - | 20 | 0.20 | geometries_etoile@50 | 0.357 ± 0.024 | [0.323, 0.391] | 2 |
+| flocking | - | 40 | 0.00 | geometries_cercle@50 | 0.402 ± 0.015 | [0.381, 0.423] | 2 |
+| flocking | - | 40 | 0.00 | geometries_etoile@50 | 0.317 ± 0.031 | [0.274, 0.360] | 2 |
+| flocking | - | 40 | 0.05 | geometries_cercle@50 | 0.403 ± 0.015 | [0.381, 0.424] | 2 |
+| flocking | - | 40 | 0.05 | geometries_etoile@50 | 0.317 ± 0.033 | [0.272, 0.363] | 2 |
+| flocking | - | 40 | 0.10 | geometries_cercle@50 | 0.421 ± 0.016 | [0.399, 0.444] | 2 |
+| flocking | - | 40 | 0.10 | geometries_etoile@50 | 0.336 ± 0.024 | [0.302, 0.369] | 2 |
+| flocking | - | 40 | 0.20 | geometries_cercle@50 | 0.446 ± 0.010 | [0.433, 0.459] | 2 |
+| flocking | - | 40 | 0.20 | geometries_etoile@50 | 0.328 ± 0.034 | [0.280, 0.375] | 2 |
+| flocking | - | 100 | 0.00 | geometries_cercle@50 | 0.446 ± 0.015 | [0.425, 0.467] | 2 |
+| flocking | - | 100 | 0.00 | geometries_etoile@50 | 0.436 ± 0.008 | [0.425, 0.448] | 2 |
+| flocking | - | 100 | 0.05 | geometries_cercle@50 | 0.436 ± 0.016 | [0.413, 0.458] | 2 |
+| flocking | - | 100 | 0.05 | geometries_etoile@50 | 0.421 ± 0.003 | [0.416, 0.426] | 2 |
+| flocking | - | 100 | 0.10 | geometries_cercle@50 | 0.432 ± 0.007 | [0.423, 0.441] | 2 |
+| flocking | - | 100 | 0.10 | geometries_etoile@50 | 0.415 ± 0.006 | [0.406, 0.423] | 2 |
+| flocking | - | 100 | 0.20 | geometries_cercle@50 | 0.415 ± 0.005 | [0.408, 0.422] | 2 |
+| flocking | - | 100 | 0.20 | geometries_etoile@50 | 0.389 ± 0.008 | [0.378, 0.400] | 2 |
+| manuelle | - | 20 | 0.00 | geometries_cercle@50 | 0.106 ± 0.000 | [0.105, 0.107] | 2 |
+| manuelle | - | 20 | 0.00 | geometries_etoile@50 | 0.250 ± 0.023 | [0.218, 0.282] | 2 |
+| manuelle | - | 20 | 0.05 | geometries_cercle@50 | 0.106 ± 0.000 | [0.105, 0.107] | 2 |
+| manuelle | - | 20 | 0.05 | geometries_etoile@50 | 0.248 ± 0.021 | [0.219, 0.277] | 2 |
+| manuelle | - | 20 | 0.10 | geometries_cercle@50 | 0.112 ± 0.003 | [0.108, 0.116] | 2 |
+| manuelle | - | 20 | 0.10 | geometries_etoile@50 | 0.251 ± 0.017 | [0.227, 0.275] | 2 |
+| manuelle | - | 20 | 0.20 | geometries_cercle@50 | 0.139 ± 0.000 | [0.139, 0.139] | 2 |
+| manuelle | - | 20 | 0.20 | geometries_etoile@50 | 0.249 ± 0.023 | [0.217, 0.281] | 2 |
+| manuelle | - | 40 | 0.00 | geometries_cercle@50 | 0.057 ± 0.007 | [0.048, 0.066] | 2 |
+| manuelle | - | 40 | 0.00 | geometries_etoile@50 | 0.168 ± 0.052 | [0.097, 0.240] | 2 |
+| manuelle | - | 40 | 0.05 | geometries_cercle@50 | 0.068 ± 0.009 | [0.055, 0.080] | 2 |
+| manuelle | - | 40 | 0.05 | geometries_etoile@50 | 0.172 ± 0.044 | [0.111, 0.234] | 2 |
+| manuelle | - | 40 | 0.10 | geometries_cercle@50 | 0.061 ± 0.010 | [0.046, 0.075] | 2 |
+| manuelle | - | 40 | 0.10 | geometries_etoile@50 | 0.170 ± 0.049 | [0.102, 0.238] | 2 |
+| manuelle | - | 40 | 0.20 | geometries_cercle@50 | 0.078 ± 0.001 | [0.076, 0.079] | 2 |
+| manuelle | - | 40 | 0.20 | geometries_etoile@50 | 0.188 ± 0.033 | [0.143, 0.234] | 2 |
+| manuelle | - | 100 | 0.00 | geometries_cercle@50 | 0.038 ± 0.000 | [0.038, 0.038] | 2 |
+| manuelle | - | 100 | 0.00 | geometries_etoile@50 | 0.084 ± 0.006 | [0.076, 0.092] | 2 |
+| manuelle | - | 100 | 0.05 | geometries_cercle@50 | 0.038 ± 0.004 | [0.033, 0.044] | 2 |
+| manuelle | - | 100 | 0.05 | geometries_etoile@50 | 0.086 ± 0.001 | [0.084, 0.088] | 2 |
+| manuelle | - | 100 | 0.10 | geometries_cercle@50 | 0.037 ± 0.001 | [0.036, 0.039] | 2 |
+| manuelle | - | 100 | 0.10 | geometries_etoile@50 | 0.094 ± 0.014 | [0.074, 0.113] | 2 |
+| manuelle | - | 100 | 0.20 | geometries_cercle@50 | 0.037 ± 0.000 | [0.037, 0.037] | 2 |
+| manuelle | - | 100 | 0.20 | geometries_etoile@50 | 0.097 ± 0.011 | [0.082, 0.112] | 2 |

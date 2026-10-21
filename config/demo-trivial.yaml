@@ -1,0 +1,9 @@
+# Config de la demonstration de controleur trivial (critere d'acceptation phase 1).
+# Experience : un controleur trivial tourne sur 20, 40 et 100 robots, reproductible.
+target: geometries_circle@50
+swarm_sizes: [20, 40, 100]
+episode_seed: 142
+controller:
+  attraction_gain: 2.0
+  repulsion_gain: 1.0
+  repulsion_radius: 0.25

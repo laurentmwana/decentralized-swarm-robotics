@@ -1,0 +1,12 @@
+{
+  "regle": "manuelle",
+  "cible": "geometries_cercle@50",
+  "n_robots": 20,
+  "graine_episode": 142,
+  "distance_finale": 0.07917855471143383,
+  "convergence_step": 11,
+  "reussite": true,
+  "taux_collisions": 0.009385964912280702,
+  "regularite_rapportee": 0.35986235432944214,
+  "composantes_finale": 1
+}

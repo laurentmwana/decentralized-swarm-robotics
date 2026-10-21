@@ -1,0 +1,47 @@
+# Phase 10 : préparation uniquement ; checkpoints complets du niveau 4 requis.
+output: outputs/complex_shapes
+expected_training: {profile: standard, n_robots: 50, hidden_dim: 64, message_rounds: 3}
+target_selection:
+  resolution: 50
+  types: [geometries, digits, letters, numbers]
+  seen_splits: [train, val]
+evaluation:
+  training_root: outputs/curriculum/level_4
+  # ScenarioGrid : graines réelles = 9001 * 1000 + répétition, donc 9001000..9001049.
+  # Disjointes des graines d'entraînement 11..15 et de validation 9001..9003.
+  evaluation_seed: 9001
+  seed_stride: 1000
+  training_seeds: [11, 12, 13, 14, 15]
+  repetitions: 50
+  evaluation_horizon: 120
+  swarm_sizes: [50]
+  failure_fractions: [0.0]
+  positions_per_condition: 50
+  # La liste effective est développée depuis le split figé de config/shapes.yaml.
+  shapes: []
+  controllers:
+    manual: {type: baseline}
+    gnn_3_rounds_id:
+      type: trained
+      variant: gnn_3_rounds_id
+      expected_use_target_geometry: false
+    gnn_3_rounds_geometry:
+      type: trained
+      variant: gnn_3_rounds_geometry
+      expected_use_target_geometry: true
+examples:
+  training_seed: 11
+  episode_seeds: [9001000, 9001001, 9001002, 9001003]
+  failure_fraction: 0.0
+  columns: 4
+comparison:
+  output: outputs/complex_shapes_comparison
+  shapes: [geometries_circle@50, digits_0@50, letters_A@50, numbers_12@50]
+  controllers:
+    gnn_3_rounds:
+      type: trained
+      variant: gnn_3_rounds
+      training_root: outputs/training
+      expected_n_robots: 40
+      # Le modèle cercle standard actuel utilise la géométrie ; vérifier son snapshot.
+      expected_use_target_geometry: true

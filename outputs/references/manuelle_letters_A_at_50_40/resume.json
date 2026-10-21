@@ -1,0 +1,12 @@
+{
+  "regle": "manuelle",
+  "cible": "letters_A@50",
+  "n_robots": 40,
+  "graine_episode": 142,
+  "distance_finale": 0.11391005549625222,
+  "convergence_step": 15,
+  "reussite": true,
+  "taux_collisions": 0.048846153846153845,
+  "regularite_rapportee": 0.548425521474396,
+  "composantes_finale": 1
+}

@@ -1,0 +1,2 @@
+regle,cible,n_robots,graine_episode,distance_finale,convergence_step,reussite,taux_collisions,regularite_rapportee,composantes_finale
+manuelle,numbers_12@50,40,142,0.1091807953050282,14,True,0.04269230769230769,0.6860189005156723,1

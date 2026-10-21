@@ -1,0 +1,10 @@
+# Phase 8 : checkpoints préalablement entraînés, évalués sans réentraînement.
+training_sizes: [20, 40, 100]
+evaluation_sizes: [20, 40, 100]
+controller: gnn_2_rounds
+evaluation_config: evaluation
+checkpoint_roots:
+  20: outputs/training/size_20
+  40: outputs/training/size_40
+  100: outputs/training/size_100
+output: outputs/size_transfer

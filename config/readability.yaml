@@ -1,0 +1,27 @@
+# Protocole humain uniquement : aucun panel supposé, aucun score sans réponses.
+mode: prepare
+source: outputs/shape_transfer
+output: outputs/readability
+score_output: outputs/readability_scores
+responses: outputs/readability/responses.csv
+controllers: [manual, gnn_3_rounds_id, gnn_3_rounds_geometry]
+training_seed: 11
+# Tous les types et splits de la campagne, sans sélection des réussites.
+episode_seeds: [9001000, 9001001, 9001002, 9001003]
+n_robots: 50
+failure_fraction: 0.0
+blind_seed: 20261022
+render_extent: 2.5
+image_pixels: 512
+image_dpi: 128
+point_size: 15
+require_complete: true
+confidence_level: 0.95
+bootstrap_repetitions: 10000
+bootstrap_seed: 20261023
+instructions: >-
+  Identifiez librement la forme de chaque essaim, sans accès aux cibles ni aux méthodes.
+  Utilisez les identifiants canoniques : geometries_<nom anglais>, digits_<chiffre>,
+  letters_<majuscule>, numbers_<nombre> ; répondez unknown si vous ne reconnaissez pas la forme.
+  Remplissez participant_id,sample_id,predicted_shape dans le CSV, une réponse par image.
+  Gardez votre participant_id constant. Ne consultez pas le dossier private.

@@ -1,0 +1,40 @@
+{
+  "cible": "geometries_cercle@50",
+  "graine_episode": 142,
+  "success_threshold": 0.15,
+  "lignes": [
+    {
+      "n_robots": 20,
+      "graine_episode": 142,
+      "distance_finale": 0.09300441101476123,
+      "convergence_step": 11,
+      "reussite": true,
+      "taux_collisions": 0.009035087719298245,
+      "regularite_valeur": 0.09766676688145567,
+      "regularite_rapportee": 0.3108829744997497,
+      "composantes_finale": 1
+    },
+    {
+      "n_robots": 40,
+      "graine_episode": 142,
+      "distance_finale": 0.10314132510480226,
+      "convergence_step": 12,
+      "reussite": true,
+      "taux_collisions": 0.015341880341880342,
+      "regularite_valeur": 0.06779688544656794,
+      "regularite_rapportee": 0.4316083778022507,
+      "composantes_finale": 1
+    },
+    {
+      "n_robots": 100,
+      "graine_episode": 142,
+      "distance_finale": 0.1325547303526377,
+      "convergence_step": 10,
+      "reussite": true,
+      "taux_collisions": 0.012097643097643098,
+      "regularite_valeur": 0.044867038069984135,
+      "regularite_rapportee": 0.7140810890730226,
+      "composantes_finale": 1
+    }
+  ]
+}

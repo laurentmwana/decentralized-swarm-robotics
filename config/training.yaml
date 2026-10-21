@@ -1,0 +1,63 @@
+# Entraînement phase 5 : perte à quatre termes, Adam, profils smoke/standard.
+# Budget de reglage IDENTIQUE pour toutes les variantes apprises (mêmes itérations,
+# mêmes tailles, mêmes graines) — trace dans outputs/training/budget.md.
+
+training_target: geometries_circle@50   # split train ; validation = graines de validation sur la meme cible + forme du split val
+validation_target: geometries_pentagon@50  # split val, jamais test
+
+optimizer:
+  lr: 0.001
+  lr_gamma: 0.995  # decoupage exponentiel : lr /10 tous les ~460 iterations
+  batch_episodes: 2
+  grad_clip: 1.0
+
+losses:
+  weights:
+    shape: 1.0
+    coverage: 1.0
+    collisions: 0.5
+    motion: 0.02
+  shape_window: 10  # forme/couverture moyennees sur les 10 derniers pas (signal dense)
+
+profiles:
+  smoke:
+    iterations: 20
+    n_robots: 20
+    horizon: 20
+    validation_interval: 10
+    seeds: [1]
+    validation_seeds: [9001, 9002, 9003]
+  standard:
+    iterations: 1200
+    n_robots: 40
+    horizon: 40  # 40 pas x v_max x dt = 4 unites : suffisant pour traverser l'arene
+    validation_interval: 50
+    seeds: [11, 12, 13, 14, 15]
+    validation_seeds: [9001, 9002, 9003]
+  size_20:
+    iterations: 1200
+    n_robots: 20
+    horizon: 40
+    validation_interval: 50
+    seeds: [11, 12, 13, 14, 15]
+    validation_seeds: [9001, 9002, 9003]
+  size_40:
+    iterations: 1200
+    n_robots: 40
+    horizon: 40
+    validation_interval: 50
+    seeds: [11, 12, 13, 14, 15]
+    validation_seeds: [9001, 9002, 9003]
+  size_100:
+    iterations: 1200
+    n_robots: 100
+    horizon: 40
+    validation_interval: 50
+    seeds: [11, 12, 13, 14, 15]
+    validation_seeds: [9001, 9002, 9003]
+
+variants:
+  gnn_1_round: {message_rounds: 1}
+  gnn_2_rounds: {message_rounds: 2}
+  gnn_3_rounds: {message_rounds: 3}
+  no_comm: {message_rounds: 2, communication: false}

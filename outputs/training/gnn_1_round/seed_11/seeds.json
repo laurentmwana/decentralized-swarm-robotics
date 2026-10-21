@@ -1,0 +1,17 @@
+{
+  "seed": 11,
+  "training_seeds": [
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "validation_seeds": [
+    9001,
+    9002,
+    9003
+  ],
+  "model_init_seed": 11,
+  "sampler_seed": 20261021
+}

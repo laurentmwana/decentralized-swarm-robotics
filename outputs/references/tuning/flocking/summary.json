@@ -1,0 +1,14 @@
+{
+  "rule": "flocking",
+  "n_robots": 40,
+  "tuning_seed": 7,
+  "target": "geometries_circle@50",
+  "completed_trials": 27,
+  "best": {
+    "cohesion_gain": 0.2,
+    "repulsion_gain": 2.0,
+    "repulsion_radius": 0.4,
+    "final_distance": 0.43729569661336204,
+    "success": false
+  }
+}

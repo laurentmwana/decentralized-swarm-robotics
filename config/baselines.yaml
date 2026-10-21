@@ -1,0 +1,38 @@
+# Baselines de la phase 3 : reglage sous budget fixe, puis regles reglees et evaluation.
+# Aucun parametre dans le code : grille, budget et valeurs retenues vivent ici.
+
+# --- Reglage (grille croseees, budget = nombre max d'essais par regle, fixe a l'avance) ---
+tuning_seed: 7
+tuning_swarm_size: 40
+tuning_target: geometries_circle@50
+criterion: final_distance  # minimisee
+budget_trials: 27
+grids:
+  flocking:
+    cohesion_gain: [0.2, 0.5, 1.0]
+    repulsion_gain: [1.0, 2.0, 4.0]
+    repulsion_radius: [0.2, 0.3, 0.4]
+  manual:
+    attraction_gain: [0.5, 1.0, 2.0]
+    repulsion_gain: [0.5, 1.0, 2.0]
+    repulsion_radius: [0.15, 0.25, 0.35]
+
+# --- Regles reglees (resultat du tuning : journal outputs/references/tuning/, 27 essais par regle) ---
+rules:
+  flocking:
+    cohesion_gain: 0.2
+    repulsion_gain: 2.0
+    repulsion_radius: 0.4
+  manual:
+    attraction_gain: 2.0
+    repulsion_gain: 0.5
+    repulsion_radius: 0.15
+
+# --- Evaluation (tableau des scores) ---
+evaluation:
+  episode_seed: 142
+  primary_target: geometries_circle@50
+  swarm_sizes: [20, 40, 100]
+  sample_swarm_size: 40
+  # formes difficiles pour la regle manuelle (lettre simple, lettre a diagonales, nombres)
+  hard_shapes_sample: [letters_A@50, letters_K@50, numbers_12@50, numbers_121@50]

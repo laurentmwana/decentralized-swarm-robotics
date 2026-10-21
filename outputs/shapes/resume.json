@@ -1,0 +1,15 @@
+{
+  "n_formes": 64,
+  "n_lignes_index": 128,
+  "formes_par_split": {
+    "train": 45,
+    "val": 9,
+    "test": 10
+  },
+  "planches": [
+    "outputs\\shapes\\planche_geometries.png",
+    "outputs\\shapes\\planche_digits.png",
+    "outputs\\shapes\\planche_letters.png",
+    "outputs\\shapes\\planche_numbers.png"
+  ]
+}

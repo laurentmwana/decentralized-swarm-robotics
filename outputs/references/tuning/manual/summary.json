@@ -1,0 +1,14 @@
+{
+  "rule": "manual",
+  "n_robots": 40,
+  "tuning_seed": 7,
+  "target": "geometries_circle@50",
+  "completed_trials": 27,
+  "best": {
+    "attraction_gain": 2.0,
+    "repulsion_gain": 0.5,
+    "repulsion_radius": 0.15,
+    "final_distance": 0.07428118673401628,
+    "success": true
+  }
+}

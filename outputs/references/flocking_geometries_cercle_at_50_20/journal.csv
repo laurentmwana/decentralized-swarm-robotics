@@ -1,0 +1,2 @@
+regle,cible,n_robots,graine_episode,distance_finale,convergence_step,reussite,taux_collisions,regularite_rapportee,composantes_finale
+flocking,geometries_cercle@50,20,142,0.5031432515189962,,False,0.0,0.049134574309331415,1

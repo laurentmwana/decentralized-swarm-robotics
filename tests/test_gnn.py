@@ -1,213 +1,172 @@
-"""Tests for GNN Controller (Phase 3)."""
+"""Tests obligatoires de la phase 4 — contrôleur GNN (PLAN, section Tests)."""
 
+from __future__ import annotations
+
+import numpy as np
 import pytest
-import torch
 
-from src.swarm_gnn.models import GNNController, NoCommunicationController
-
-
-class TestGNNController:
-    """Tests for GNNController."""
-
-    @pytest.fixture
-    def controller(self):
-        return GNNController(
-            hidden_dim=32,
-            message_passing_steps=2,
-            target_count=4,
-            max_speed=1.0,
-        )
-
-    @pytest.fixture
-    def batch_data(self):
-        """Batch of 2 episodes, 5 robots each."""
-        batch_size = 2
-        robot_count = 5
-        return {
-            "positions": torch.randn(batch_size, robot_count, 2),
-            "velocities": torch.randn(batch_size, robot_count, 2),
-            "adjacency": torch.randint(0, 2, (batch_size, robot_count, robot_count)).bool(),
-            "target_ids": torch.randint(0, 4, (batch_size,)),
-        }
-
-    def test_init_valid_params(self):
-        """Valid parameters create controller."""
-        ctrl = GNNController(
-            hidden_dim=32,
-            message_passing_steps=2,
-            target_count=4,
-            max_speed=1.0,
-        )
-        assert ctrl.max_speed == 1.0
-        assert ctrl.target_embedding.weight.shape == (4, 32)
-
-    def test_init_invalid_params_raises(self):
-        """Invalid parameters raise ValueError."""
-        with pytest.raises(ValueError):
-            GNNController(hidden_dim=32, message_passing_steps=0, target_count=4, max_speed=1.0)
-        with pytest.raises(ValueError):
-            GNNController(hidden_dim=32, message_passing_steps=2, target_count=0, max_speed=1.0)
-        with pytest.raises(ValueError):
-            GNNController(hidden_dim=32, message_passing_steps=2, target_count=4, max_speed=0.0)
-
-    def test_forward_shape(self, controller, batch_data):
-        """Forward returns [batch, robots, 2]."""
-        out = controller(
-            positions=batch_data["positions"],
-            velocities=batch_data["velocities"],
-            adjacency=batch_data["adjacency"],
-            target_ids=batch_data["target_ids"],
-        )
-        assert out.shape == (2, 5, 2)
-
-    def test_forward_speed_bounded(self, controller, batch_data):
-        """Output commands bounded by max_speed."""
-        out = controller(
-            positions=batch_data["positions"],
-            velocities=batch_data["velocities"],
-            adjacency=batch_data["adjacency"],
-            target_ids=batch_data["target_ids"],
-        )
-        speeds = torch.linalg.vector_norm(out, dim=-1)
-        assert torch.all(speeds <= controller.max_speed + 1e-6)
-
-    def test_forward_goal_relative_positions(self, controller, batch_data):
-        """Forward accepts goal_relative_positions."""
-        goal_rel = torch.randn_like(batch_data["positions"])
-        out = controller(
-            positions=batch_data["positions"],
-            velocities=batch_data["velocities"],
-            adjacency=batch_data["adjacency"],
-            target_ids=batch_data["target_ids"],
-            goal_relative_positions=goal_rel,
-        )
-        assert out.shape == (2, 5, 2)
-
-    def test_forward_target_geometry(self, controller, batch_data):
-        """Forward accepts target_geometry_features."""
-        geometry = torch.randn(2, 5, 3)  # [batch, robots, 3]
-        out = controller(
-            positions=batch_data["positions"],
-            velocities=batch_data["velocities"],
-            adjacency=batch_data["adjacency"],
-            target_ids=batch_data["target_ids"],
-            target_geometry_features=geometry,
-        )
-        assert out.shape == (2, 5, 2)
-
-    def test_forward_invalid_positions_raises(self, controller, batch_data):
-        """Invalid positions shape raises ValueError."""
-        with pytest.raises(ValueError, match="positions et velocities doivent être"):
-            controller(
-                positions=batch_data["positions"][0],  # missing batch dim
-                velocities=batch_data["velocities"],
-                adjacency=batch_data["adjacency"],
-                target_ids=batch_data["target_ids"],
-            )
-
-    def test_forward_invalid_adjacency_raises(self, controller, batch_data):
-        """Invalid adjacency shape raises ValueError."""
-        with pytest.raises(ValueError, match="adjacency doit être"):
-            controller(
-                positions=batch_data["positions"],
-                velocities=batch_data["velocities"],
-                adjacency=batch_data["adjacency"][0],  # missing batch dim
-                target_ids=batch_data["target_ids"],
-            )
-
-    def test_forward_invalid_target_ids_raises(self, controller, batch_data):
-        """Invalid target_ids shape raises ValueError."""
-        with pytest.raises(ValueError, match="target_ids doit être"):
-            controller(
-                positions=batch_data["positions"],
-                velocities=batch_data["velocities"],
-                adjacency=batch_data["adjacency"],
-                target_ids=batch_data["target_ids"][0].unsqueeze(0).expand(3),  # wrong batch size
-            )
-
-    def test_permutation_equivariance(self, controller):
-        """Output equivariant to robot permutation."""
-        # Create symmetric situation: 3 robots in line
-        positions = torch.tensor([[[0.0, 0.0], [1.0, 0.0], [2.0, 0.0]]], dtype=torch.float32)
-        velocities = torch.zeros(1, 3, 2)
-        adjacency = torch.ones(1, 3, 3, dtype=torch.bool)
-        # Remove self-loops properly for batched tensor
-        adjacency = adjacency & ~torch.eye(3, dtype=torch.bool).unsqueeze(0)
-        target_ids = torch.tensor([0])
-
-        out1 = controller(positions, velocities, adjacency, target_ids)
-
-        # Permute robots 0 and 2
-        perm = torch.tensor([2, 1, 0])
-        positions_perm = positions[:, perm, :]
-        velocities_perm = velocities[:, perm, :]
-        adjacency_perm = adjacency[:, perm, :][:, :, perm]
-
-        out2 = controller(positions_perm, velocities_perm, adjacency_perm, target_ids)
-
-        # Output should be permuted same way
-        out1_perm = out1[:, perm, :]
-        assert torch.allclose(out1_perm, out2, atol=1e-6)
-
-    def test_variable_robot_count(self):
-        """Controller handles variable robot counts."""
-        ctrl = GNNController(hidden_dim=16, message_passing_steps=1, target_count=2, max_speed=1.0)
-
-        for n_robots in [2, 5, 10, 20]:
-            positions = torch.randn(1, n_robots, 2)
-            velocities = torch.randn(1, n_robots, 2)
-            adjacency = torch.ones(1, n_robots, n_robots, dtype=torch.bool)
-            # Remove self-loops
-            adjacency = adjacency & ~torch.eye(n_robots, dtype=torch.bool).unsqueeze(0)
-            target_ids = torch.tensor([0])
-
-            out = ctrl(positions, velocities, adjacency, target_ids)
-            assert out.shape == (1, n_robots, 2)
-
-    def test_deterministic_same_inputs(self, controller, batch_data):
-        """Same inputs produce same outputs."""
-        out1 = controller(**batch_data)
-        out2 = controller(**batch_data)
-        assert torch.allclose(out1, out2)
+from src.common.config import ConfigLoader
+from src.common.mission import Mission
+from src.controllers.gnn import GNNController, NoCommGNNController
+from src.models.gnn import SwarmGNN
+from src.simulator.graph import CommunicationGraph
+from src.simulator.state import SwarmState
 
 
-class TestNoCommunicationController:
-    """Tests for baseline NoCommunicationController."""
+@pytest.fixture(scope="module")
+def cfg():
+    return ConfigLoader().load_model()
 
-    @pytest.fixture
-    def controller(self):
-        return NoCommunicationController(
-            hidden_dim=32,
-            target_count=4,
-            max_speed=1.0,
-        )
 
-    def test_forward_no_adjacency(self, controller):
-        """Forward works without adjacency matrix."""
-        batch_size = 2
-        robot_count = 5
-        velocities = torch.randn(batch_size, robot_count, 2)
-        target_ids = torch.randint(0, 4, (batch_size,))
+@pytest.fixture(scope="module")
+def sim():
+    return ConfigLoader().load_simulator()
 
-        out = controller(
-            velocities=velocities,
-            target_ids=target_ids,
-        )
-        assert out.shape == (batch_size, robot_count, 2)
 
-    def test_speed_bounded(self, controller):
-        """Output speed bounded by max_speed."""
-        velocities = torch.randn(1, 5, 2) * 10  # large velocities
-        target_ids = torch.tensor([0])
-        out = controller(velocities=velocities, target_ids=target_ids)
-        speeds = torch.linalg.vector_norm(out, dim=-1)
-        assert torch.all(speeds <= controller.max_speed + 1e-6)
+@pytest.fixture()
+def controller(cfg, sim):
+    return GNNController(cfg, sim.v_max)
 
-    def test_variable_robot_count(self):
-        """Handles variable robot counts."""
-        ctrl = NoCommunicationController(hidden_dim=16, target_count=2, max_speed=1.0)
-        for n_robots in [2, 5, 10]:
-            velocities = torch.randn(1, n_robots, 2)
-            target_ids = torch.tensor([0])
-            out = ctrl(velocities=velocities, target_ids=target_ids)
-            assert out.shape == (1, n_robots, 2)
+
+def _state(positions):
+    return SwarmState(positions=positions, active=np.ones(len(positions), dtype=bool), step=0)
+
+
+def _pure_command(controller, positions, adjacency, mission):
+    controller.reset()  # vitesse nulle -> commande fonction pure de (positions, graphe, consigne)
+    return controller.command(_state(positions), adjacency, mission)
+
+
+def _positions(n, seed=0):
+    return np.random.default_rng(seed).uniform(-1.0, 1.0, (n, 2))
+
+
+def _adj(positions, r_c):
+    return CommunicationGraph(r_c).adjacency(_state(positions))
+
+
+@pytest.fixture()
+def mission():
+    return Mission(shape_id=3, target=np.array([[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0]]))
+
+
+class TestInvariance:
+    def test_permutation_invariance(self, controller, sim, mission):
+        positions = _positions(30, seed=1)
+        adj = _adj(positions, sim.r_c)
+        perm = np.random.default_rng(7).permutation(30)
+        base = _pure_command(controller, positions, adj, mission)
+        permuted = _pure_command(controller, positions[perm], adj[np.ix_(perm, perm)], mission)
+        assert np.allclose(base[perm], permuted, atol=1e-5)
+
+    def test_translation_invariance(self, cfg, sim):
+        from dataclasses import replace
+
+        cfg_no_geometry = replace(cfg, use_target_geometry=False)
+        controller = GNNController(cfg_no_geometry, sim.v_max)
+        mission = Mission(shape_id=2, target=np.array([[1.0, 0.0], [0.0, 1.0]]))
+        assert not controller.cfg.use_target_geometry, "variante sans géométrie : translation pure"
+        positions = _positions(25, seed=2)
+        adj = _adj(positions, sim.r_c)
+        base = _pure_command(controller, positions, adj, mission)
+        shifted = positions + np.array([3.7, -2.1])
+        adj_shift = _adj(shifted, sim.r_c)
+        assert np.allclose(adj, adj_shift)
+        assert np.allclose(base, _pure_command(controller, shifted, adj_shift, mission), atol=1e-5)
+
+    def test_geometry_equivariant_under_scene_translation(self, cfg, sim):
+        from dataclasses import replace
+
+        ctrl = GNNController(replace(cfg, use_target_geometry=True), sim.v_max, seed=5)
+        positions = _positions(20, seed=3)
+        target = np.array([[1.0, 0.0], [0.0, 1.0], [-1.0, 0.0]])
+        adj = _adj(positions, sim.r_c)
+        base = _pure_command(ctrl, positions, adj, Mission(shape_id=1, target=target))
+        shift = np.array([2.0, 2.0])
+        scene = _pure_command(ctrl, positions + shift, _adj(positions + shift, sim.r_c), Mission(shape_id=1, target=target + shift))
+        assert np.allclose(base, scene, atol=1e-5)
+
+
+class TestVariableSizes:
+    def _parameter_count(self, cfg, sim):
+        return SwarmGNN(cfg, sim.v_max).parameter_count()
+
+    def test_same_model_for_20_40_100(self, controller, sim, mission):
+        for n in (20, 40, 100):
+            positions = _positions(n, seed=n)
+            adj = _adj(positions, sim.r_c)
+            cmd = _pure_command(controller, positions, adj, mission)
+            assert cmd.shape == (n, 2)
+            assert np.isfinite(cmd).all()
+
+    def test_parameter_count_independent_of_n(self, cfg, sim, mission):
+        controller = GNNController(cfg, sim.v_max)
+        ref = controller.parameter_count()
+        for n in (20, 40, 100):
+            _pure_command(controller, _positions(n, seed=n), _adj(_positions(n, seed=n), sim.r_c), mission)
+        assert controller.parameter_count() == ref
+
+
+class TestEdgeCases:
+    def test_isolated_robot_without_error(self, controller, sim, mission):
+        positions = np.array([[0.0, 0.0]])
+        adj = np.zeros((1, 1), dtype=bool)
+        cmd = _pure_command(controller, positions, adj, mission)
+        assert cmd.shape == (1, 2) and np.isfinite(cmd).all()
+
+    def test_empty_neighborhood_zero_aggregate(self, cfg, sim):
+        # Variante sans géométrie : deux robots isolés reçoivent une commande identique.
+        from dataclasses import replace
+
+        controller = GNNController(replace(cfg, use_target_geometry=False), sim.v_max)
+        positions = np.array([[0.0, 0.0], [9.9, 9.9]])
+        adj = np.zeros((2, 2), dtype=bool)
+        mission = Mission(shape_id=4, target=np.array([[1.0, 0.0]]))
+        cmd = _pure_command(controller, positions, adj, mission)
+        assert np.allclose(cmd[0], cmd[1], atol=1e-6)
+
+    def test_commands_always_bounded(self, controller, sim, mission):
+        for n in (20, 40, 100):
+            positions = _positions(n, seed=n + 10)
+            cmd = _pure_command(controller, positions, _adj(positions, sim.r_c), mission)
+            assert (np.linalg.norm(cmd, axis=1) <= sim.v_max + 1e-6).all()
+
+
+class TestConditioning:
+    def test_two_shapes_two_commands(self, controller, sim):
+        positions = _positions(20, seed=8)
+        adj = _adj(positions, sim.r_c)
+        target = np.array([[1.0, 0.0], [0.0, 1.0]])
+        a = _pure_command(controller, positions, adj, Mission(shape_id=1, target=target))
+        b = _pure_command(controller, positions, adj, Mission(shape_id=2, target=target))
+        assert not np.allclose(a, b, atol=1e-4), "l'identifiant de forme doit conditionner la commande"
+
+
+class TestNoCommunication:
+    def test_independent_of_neighbors(self, cfg, sim, mission):
+        ctrl = NoCommGNNController(cfg, sim.v_max)
+        positions = _positions(20, seed=9)
+        empty_adjacency = np.zeros((20, 20), dtype=bool)
+        full_adjacency = np.ones((20, 20), dtype=bool)
+        np.fill_diagonal(full_adjacency, False)
+        a = _pure_command(ctrl, positions, empty_adjacency, mission)
+        b = _pure_command(ctrl, positions, full_adjacency, mission)
+        assert np.allclose(a, b, atol=1e-6), "sans communication, les voisins ne doivent rien changer"
+
+    def test_size_comparable_to_gnn(self, cfg, sim):
+        gnn = GNNController(cfg, sim.v_max)
+        nocomm = NoCommGNNController(cfg, sim.v_max)
+        assert gnn.parameter_count() == nocomm.parameter_count()
+
+
+class TestAggregators:
+    @pytest.mark.parametrize("name", ["mean", "normalized_sum", "attention"])
+    def test_aggregation_variants_run(self, cfg, sim, name, mission):
+        from dataclasses import replace
+
+        cfg2 = replace(cfg, aggregator=name)
+        ctrl = GNNController(cfg2, sim.v_max)
+        positions = _positions(20, seed=11)
+        cmd = _pure_command(ctrl, positions, _adj(positions, sim.r_c), mission)
+        assert cmd.shape == (20, 2) and np.isfinite(cmd).all()
+        assert (np.linalg.norm(cmd, axis=1) <= sim.v_max + 1e-6).all()

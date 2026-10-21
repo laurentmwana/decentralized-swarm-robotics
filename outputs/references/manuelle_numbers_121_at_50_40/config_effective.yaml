@@ -1,0 +1,28 @@
+simulator:
+  arena_size: 4.0
+  dt: 0.1
+  v_max: 1.0
+  r_c: 1.5
+  horizon: 60
+  failure_fraction: 0.0
+  record_positions: true
+  spawn_radius: 1.8
+metrics:
+  success_threshold: 0.15
+  collision_radius: 0.1
+  regularity_reference: auto
+regle:
+  gain_attirance: 2.0
+  gain_repulsion: 0.5
+  rayon_repulsion: 0.15
+episode:
+  regle: manuelle
+  cible: numbers_121@50
+  n_robots: 40
+  graine_episode: 142
+  distance_finale: 0.1091807953050282
+  convergence_step: 14
+  reussite: true
+  taux_collisions: 0.04269230769230769
+  regularite_rapportee: 0.6860189005156723
+  composantes_finale: 1

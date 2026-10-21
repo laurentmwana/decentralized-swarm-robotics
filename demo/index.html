@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Essaim — démonstration locale</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #101721;
+      color: #edf3fa;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 2rem;
+    }
+
+    main {
+      max-width: 1160px;
+      margin: auto;
+    }
+
+    h1 {
+      margin: 0 0 .6rem;
+      font-size: clamp(1.5rem, 3vw, 2.3rem);
+    }
+
+    p {
+      line-height: 1.6;
+    }
+
+    .muted {
+      color: #adbed0;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 310px minmax(0, 1fr);
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .panel {
+      background: #192433;
+      border: 1px solid #34465b;
+      border-radius: 14px;
+      padding: 1.3rem;
+    }
+
+    label {
+      display: block;
+      margin: 1rem 0 .45rem;
+      font-weight: 600;
+    }
+
+    select,
+    input[type=number],
+    button {
+      font: inherit;
+      width: 100%;
+      border: 1px solid #64788e;
+      border-radius: 7px;
+      padding: .65rem;
+      background: #101b29;
+      color: #edf3fa;
+    }
+
+    select {
+      text-overflow: ellipsis;
+    }
+
+    button {
+      cursor: pointer;
+      background: #236cba;
+      border-color: #4f9dea;
+      font-weight: 600;
+      margin-top: 1.3rem;
+    }
+
+    button:disabled,
+    select:disabled {
+      opacity: .55;
+      cursor: default;
+    }
+
+    :focus-visible {
+      outline: 3px solid #f8c46c;
+      outline-offset: 3px;
+    }
+
+    canvas {
+      display: block;
+      background: #0d1520;
+      width: 100%;
+      height: auto;
+      border: 1px solid #34465b;
+      border-radius: 8px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: .9rem;
+      margin: .8rem 0;
+    }
+
+    .target {
+      color: #6fe0aa;
+    }
+
+    .robot {
+      color: #7fb9ff;
+    }
+
+    .inactive {
+      color: #adbed0;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: .8rem;
+    }
+
+    .timeline button {
+      width: auto;
+      margin: 0;
+    }
+
+    .timeline input {
+      width: 100%;
+      accent-color: #7fb9ff;
+    }
+
+    #status {
+      min-height: 3rem;
+      overflow-wrap: anywhere;
+    }
+
+    #status[data-error=true] {
+      color: #ffb3ad;
+    }
+
+    dl {
+      margin-bottom: 0;
+    }
+
+    dt {
+      color: #adbed0;
+      font-size: .9rem;
+      margin-top: .7rem;
+    }
+
+    dd {
+      margin: .2rem 0;
+      font-weight: 600;
+    }
+
+    .notice {
+      border-left: 3px solid #f8c46c;
+      padding-left: .9rem;
+      font-size: .9rem;
+    }
+
+    @media (max-width: 780px) {
+      body {
+        padding: 1rem;
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <header>
+      <h1>Essaim de robots</h1>
+      <p class="muted">Démonstration locale en lecture seule. Les trajectoires sont calculées côté serveur ; cette page
+        ne pilote aucun robot.</p>
+    </header>
+    <div class="layout">
+      <section class="panel" aria-labelledby="settings-title">
+        <h2 id="settings-title">Un épisode</h2>
+        <form id="simulation-form">
+          <label for="target-select">Forme cible</label>
+          <select id="target-select" name="target" required disabled></select>
+          <label for="controller-select">Contrôleur</label>
+          <select id="controller-select" name="controller" required disabled></select>
+          <label for="size-select">Nombre de robots</label>
+          <select id="size-select" name="n_robots" required disabled></select>
+          <label for="seed-input">Graine de l’épisode</label>
+          <input id="seed-input" name="seed" type="number" min="0" step="1" required disabled>
+          <button id="run-button" type="submit" disabled>Calculer l’épisode</button>
+        </form>
+        <p id="status" class="muted" role="status" aria-live="polite">Chargement du catalogue…</p>
+        <button id="reload-button" type="button" hidden>Recharger le catalogue</button>
+        <dl aria-label="Métriques du dernier épisode">
+          <dt>Distance de Chamfer finale</dt>
+          <dd id="distance-value">—</dd>
+          <dt>Réussite selon le seuil</dt>
+          <dd id="success-value">—</dd>
+          <dt>Seuil de réussite</dt>
+          <dd id="threshold-value">—</dd>
+          <dt>Pas de convergence stabilisée</dt>
+          <dd id="convergence-value">—</dd>
+        </dl>
+        <p class="notice muted">Une animation et les métriques d’un seul épisode sont une illustration, pas une preuve
+          statistique. Aucun entraînement n’est lancé ici.</p>
+      </section>
+      <section class="panel" aria-labelledby="trajectory-title">
+        <h2 id="trajectory-title">Trajectoire enregistrée</h2>
+        <canvas id="trajectory" width="720" height="720" role="img"
+          aria-label="Arène : points cibles verts, robots bleus, robots inactifs gris">Votre navigateur doit prendre en
+          charge le canvas pour afficher la trajectoire.</canvas>
+        <p class="legend"><span class="target">+ Cible</span><span class="robot">● Robot actif</span><span
+            class="inactive">○ Robot inactif</span></p>
+        <label for="frame-slider">Pas de simulation</label>
+        <div class="timeline">
+          <button id="play-button" type="button" disabled aria-pressed="false">Lire</button>
+          <input id="frame-slider" type="range" min="0" max="0" value="0" step="1" disabled>
+          <output id="frame-value" for="frame-slider">0 / 0</output>
+        </div>
+        <p id="episode-info" class="muted">Choisissez une cible puis calculez un épisode pour afficher les positions.
+        </p>
+      </section>
+    </div>
+  </main>
+  <script>
+    "use strict";
+    // Aucune politique de contrôle ici : seuls les tableaux reçus sont dessinés.
+    const byId = id => document.getElementById(id);
+    const form = byId("simulation-form");
+    const targetSelect = byId("target-select");
+    const controllerSelect = byId("controller-select");
+    const sizeSelect = byId("size-select");
+    const seedInput = byId("seed-input");
+    const runButton = byId("run-button");
+    const reloadButton = byId("reload-button");
+    const statusNode = byId("status");
+    const slider = byId("frame-slider");
+    const playButton = byId("play-button");
+    const canvas = byId("trajectory");
+    const context = canvas.getContext("2d");
+    let episode = null;
+    let playing = false;
+    let animationId = null;
+    let lastFrameTime = null;
+
+    function setStatus(message, error = false) {
+      statusNode.textContent = message;
+      statusNode.dataset.error = String(error);
+    }
+    function addOption(select, value, label, disabled = false) {
+      const option = document.createElement("option");
+      option.value = String(value);
+      option.textContent = label;
+      option.disabled = disabled;
+      select.appendChild(option);
+    }
+    async function fetchJson(url) {
+      const response = await fetch(url, { cache: "no-store" });
+      const data = await response.json();
+      if (!response.ok) throw new Error(typeof data.detail === "string" ? data.detail : "Requête invalide.");
+      return data;
+    }
+    function stopPlayback() {
+      playing = false;
+      if (animationId !== null) cancelAnimationFrame(animationId);
+      animationId = null;
+      lastFrameTime = null;
+      playButton.textContent = "Lire";
+      playButton.setAttribute("aria-pressed", "false");
+    }
+    function drawFrame() {
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      if (!episode) return;
+      const frame = Number(slider.value);
+      const extent = episode.arena_size / 2;
+      const padding = 24;
+      const scale = (canvas.width - 2 * padding) / (2 * extent);
+      const mapPoint = point => [canvas.width / 2 + point[0] * scale, canvas.height / 2 - point[1] * scale];
+      context.strokeStyle = "#34465b";
+      context.strokeRect(padding, padding, canvas.width - 2 * padding, canvas.height - 2 * padding);
+      context.strokeStyle = "#6fe0aa";
+      context.lineWidth = 1.5;
+      for (const point of episode.target) {
+        if (!point.every(Number.isFinite)) continue;
+        const [x, y] = mapPoint(point);
+        context.beginPath(); context.moveTo(x - 4, y); context.lineTo(x + 4, y);
+        context.moveTo(x, y - 4); context.lineTo(x, y + 4); context.stroke();
+      }
+      episode.positions[frame].forEach((point, index) => {
+        if (!point.every(Number.isFinite)) return;
+        const [x, y] = mapPoint(point);
+        const active = episode.active[frame][index];
+        context.beginPath(); context.arc(x, y, 4.5, 0, 2 * Math.PI);
+        if (active) { context.fillStyle = "#7fb9ff"; context.fill(); }
+        else { context.strokeStyle = "#adbed0"; context.stroke(); }
+      });
+      byId("frame-value").textContent = `${frame} / ${episode.horizon}`;
+      slider.setAttribute("aria-valuetext", `Pas ${frame} sur ${episode.horizon}`);
+    }
+    function formatMetric(value) {
+      return typeof value === "number" && Number.isFinite(value) ? value.toLocaleString("fr-FR", { maximumFractionDigits: 4 }) : "Non défini";
+    }
+    async function loadCatalog() {
+      reloadButton.hidden = true;
+      setStatus("Chargement du catalogue…");
+      try {
+        const catalog = await fetchJson("/api/targets");
+        targetSelect.replaceChildren(); controllerSelect.replaceChildren(); sizeSelect.replaceChildren();
+        for (const target of catalog.targets) addOption(targetSelect, target.key, `${target.name} — ${target.n_points} points`);
+        const labels = { manual: "Règle manuelle", flocking: "Règle de regroupement", gnn_2_rounds: "GNN entraîné — deux tours" };
+        for (const item of catalog.controllers) addOption(controllerSelect, item.name, `${labels[item.name] || item.name}${item.available ? "" : " (indisponible)"}`, !item.available);
+        for (const size of catalog.limits.swarm_sizes) addOption(sizeSelect, size, String(size));
+        if (catalog.targets.some(target => target.key === catalog.defaults.target)) targetSelect.value = catalog.defaults.target;
+        controllerSelect.value = catalog.defaults.controller;
+        sizeSelect.value = String(catalog.defaults.n_robots);
+        seedInput.value = String(catalog.defaults.seed);
+        seedInput.max = String(catalog.limits.seed_max);
+        for (const control of form.elements) control.disabled = false;
+        const unavailable = catalog.controllers.filter(item => !item.available);
+        setStatus(unavailable.length ? `Prêt. ${unavailable.map(item => item.reason).join(" ")}` : "Prêt. Calcul limité à un épisode.");
+      } catch (error) {
+        setStatus(error.message || "Catalogue indisponible.", true);
+        reloadButton.hidden = false;
+      }
+    }
+    form.addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      stopPlayback();
+      for (const control of form.elements) control.disabled = true;
+      form.setAttribute("aria-busy", "true");
+      setStatus("Calcul de l’épisode côté serveur…");
+      const params = new URLSearchParams({ target: targetSelect.value, controller: controllerSelect.value, n_robots: sizeSelect.value, seed: seedInput.value });
+      try {
+        episode = await fetchJson(`/api/simulate?${params}`);
+        slider.max = String(episode.horizon); slider.value = "0"; slider.disabled = false;
+        playButton.disabled = false;
+        byId("distance-value").textContent = formatMetric(episode.metrics.final_distance);
+        byId("success-value").textContent = episode.metrics.success ? "Oui" : "Non";
+        byId("threshold-value").textContent = formatMetric(episode.metrics.success_threshold);
+        byId("convergence-value").textContent = episode.metrics.convergence_step === null ? "Non atteinte" : String(episode.metrics.convergence_step);
+        byId("episode-info").textContent = `${episode.target_key} · ${episode.n_robots} robots · ${episode.controller} · graine ${episode.seed}${episode.training_seed === null ? "" : ` · graine d’entraînement ${episode.training_seed}`}`;
+        drawFrame();
+        setStatus("Épisode terminé. La lecture ne fait que parcourir les positions reçues.");
+      } catch (error) {
+        setStatus(error.message || "Simulation indisponible.", true);
+      } finally {
+        for (const control of form.elements) control.disabled = false;
+        form.removeAttribute("aria-busy");
+      }
+    });
+    slider.addEventListener("input", () => { stopPlayback(); drawFrame(); });
+    playButton.addEventListener("click", () => {
+      if (playing) { stopPlayback(); return; }
+      if (!episode) return;
+      if (Number(slider.value) >= episode.horizon) slider.value = "0";
+      playing = true;
+      playButton.textContent = "Pause";
+      playButton.setAttribute("aria-pressed", "true");
+      drawFrame();
+      function advance(timestamp) {
+        if (!playing) return;
+        if (lastFrameTime === null) lastFrameTime = timestamp;
+        if (timestamp - lastFrameTime >= episode.dt * 1000) {
+          slider.value = String(Math.min(episode.horizon, Number(slider.value) + 1));
+          lastFrameTime = timestamp;
+          drawFrame();
+          if (Number(slider.value) >= episode.horizon) { stopPlayback(); return; }
+        }
+        animationId = requestAnimationFrame(advance);
+      }
+      animationId = requestAnimationFrame(advance);
+    });
+    document.addEventListener("visibilitychange", () => { if (document.hidden) stopPlayback(); });
+    reloadButton.addEventListener("click", loadCatalog);
+    loadCatalog();
+  </script>
+</body>
+
+</html>
