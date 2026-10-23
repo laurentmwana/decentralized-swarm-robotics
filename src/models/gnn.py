@@ -28,7 +28,7 @@ class SwarmGNN(nn.Module):
             MessageLayer(cfg.hidden_dim, create_aggregator(cfg.aggregator, cfg.hidden_dim), cfg.activation)
             for _ in range(cfg.message_rounds)
         )
-        self.decoder = Decoder(cfg.hidden_dim, v_max, cfg.activation)
+        self.decoder = Decoder(cfg.hidden_dim, v_max, cfg.activation, cfg.geometry_prior)
 
     def forward(
         self,
@@ -42,7 +42,7 @@ class SwarmGNN(nn.Module):
         h = self.encoder(velocity, shape_id, geometry)
         for layer in self.layers:
             h = layer(h, positions, adjacency)
-        return self.decoder(h)
+        return self.decoder(h, geometry)
 
     def parameter_count(self) -> int:
         return sum(p.numel() for p in self.parameters())

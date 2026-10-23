@@ -7,4 +7,5 @@ n_shapes: 64            # taille du vocabulaire d'identifiants de forme
 aggregator: mean        # mean | normalized_sum | attention (bonus)
 activation: relu        # relu | tanh | gelu
 use_target_geometry: true   # consigne : identifiant seul (false) ou + vecteur vers le contour (true)
+geometry_prior: 1.0         # residu du decodeur : commande initiale ~ tanh(mlp(h) + prior * vecteur geometrie)
 init_seed: 20261021     # graine d'initialisation des poids (reproductibilite)

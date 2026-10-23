@@ -104,6 +104,7 @@ class ModelConfig:
     activation: str
     use_target_geometry: bool
     init_seed: int
+    geometry_prior: float = 1.0  # defaut seulement pour la relecture d'anciens snapshots ; model.yaml doit la declarer
 
     def __post_init__(self) -> None:
         if self.message_rounds not in (1, 2, 3):
