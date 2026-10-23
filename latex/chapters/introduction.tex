@@ -49,7 +49,7 @@ Trois hypothèses de recherche guident l'étude ; elles devront être confronté
 
 Les expériences du pilote historique sont réalisées dans une arène plane sans obstacle fixe. Chaque robot possède une position et une vitesse en deux dimensions ; les déplacements sont représentés par une dynamique simplifiée à vitesse directement commandée. Deux robots peuvent communiquer lorsque leur distance est inférieure à une portée définie. Les mesures et les messages sont supposés exacts, instantanés et sans perte. Un robot déclaré en panne est retiré de la dynamique active et du graphe de communication.
 
-Ces choix rendent le pilote plus contrôlable, sans isoler l'effet de chaque mécanisme du GNN en l'absence d'ablations. Le pilote exclut l'estimation de pose distribuée, le bruit des capteurs, les délais, les obstacles, la dynamique réaliste des actionneurs, la consommation énergétique et la validation sur matériel. La réécriture prépare des études de bruit d'observation, de suppression d'arêtes et de réduction de portée, mais leurs résultats ne sont pas encore disponibles. Le projet ne prétend donc pas démontrer un transfert direct vers des robots réels. Ces limites constituent au contraire des axes de discussion et de prolongement.
+Ces choix rendent le pilote plus contrôlable, sans isoler l'effet de chaque mécanisme du GNN en l'absence d'ablations. Le pilote exclut l'estimation de pose distribuée, le bruit des capteurs, les délais, les obstacles, la dynamique réaliste des actionneurs, la consommation énergétique et la validation sur matériel. L'implémentation actuelle prépare des études de bruit d'observation, de suppression d'arêtes et de réduction de portée, mais leurs résultats ne sont pas encore disponibles. Le projet ne prétend donc pas démontrer un transfert direct vers des robots réels. Ces limites constituent au contraire des axes de discussion et de prolongement.
 
 \section*{Objectifs poursuivis}
 \addcontentsline{toc}{section}{Objectifs poursuivis}
@@ -77,7 +77,7 @@ Le choix de la formation de formes répond à une raison méthodologique. Il est
   \label{fig:schema-formation}
 \end{figure}
 
-Le cercle sert de premier cas de validation. Sa géométrie est régulière et son contour peut être échantillonné facilement. Les chiffres, les lettres et les nombres permettent ensuite de vérifier que le pipeline ne dépend pas exclusivement d'une forme convexe et symétrique. Leur intérêt n'est pas de faire de la reconnaissance de caractères. Ils fournissent plutôt des contours présentant des segments, des angles, des régions moins régulières et parfois plusieurs parties visuellement distinctes. Une lettre formée de manière approximative reste donc un résultat de contrôle spatial, non la preuve qu'un système comprend un symbole.
+Le cercle sert de premier cas de validation. Sa géométrie est régulière et son contour peut être échantillonné facilement. Les chiffres, les lettres et les nombres permettent ensuite de vérifier que la chaîne expérimentale ne dépend pas exclusivement d'une forme convexe et symétrique. Leur intérêt n'est pas de faire de la reconnaissance de caractères. Ils fournissent plutôt des contours présentant des segments, des angles, des régions moins régulières et parfois plusieurs parties visuellement distinctes. Une lettre formée de manière approximative reste donc un résultat de contrôle spatial, non la preuve qu'un système comprend un symbole.
 
 Le projet adopte par ailleurs une vision pragmatique de la décentralisation. Il serait trompeur d'affirmer qu'un robot ne reçoit aucune information commune : toute mission suppose au minimum un objectif partagé. Ici, la forme à réaliser est connue avant le début de l'épisode. En revanche, la décision instantanée de mouvement ne dépend pas d'un tableau central contenant toutes les positions de l'essaim. Cette distinction entre une consigne commune et une observation globale est importante pour interpréter les résultats.
 
@@ -101,7 +101,7 @@ Enfin, les résultats sont analysés à plusieurs niveaux. Une courbe de perte r
 \section*{Contribution de l'étude}
 \addcontentsline{toc}{section}{Contribution de l'étude}
 
-La contribution de l'étude est l'articulation, dans un même banc d'essai, d'une représentation des formes par nuages de points, d'une politique locale partagée et de mesures rejouables à partir des trajectoires enregistrées. Elle ne consiste ni en une nouvelle théorie du contrôle distribué, ni en une démonstration de supériorité générale des GNN. Les résultats numériques présentés proviennent du pilote historique du prototype ; l'implémentation réécrite et ses protocoles complémentaires doivent encore être entraînés et validés expérimentalement.
+La contribution de l'étude est l'articulation, dans un même banc d'essai, d'une représentation des formes par nuages de points, d'une politique locale partagée et de mesures rejouables à partir des trajectoires enregistrées. Elle ne consiste ni en une nouvelle théorie du contrôle distribué, ni en une démonstration de supériorité générale des GNN. Les résultats numériques présentés proviennent du pilote historique du prototype ; l'implémentation actuelle et ses protocoles complémentaires doivent encore être entraînés et validés expérimentalement.
 
 \section*{Plan sommaire et subdivision du travail}
 \addcontentsline{toc}{section}{Plan sommaire et subdivision du travail}
