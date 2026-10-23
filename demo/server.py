@@ -147,10 +147,11 @@ class SimulationService:
         try:
             versions = self._get_factory().versions(name)
             if versions != self.settings.training_seeds:
-                raise ValueError("versions incompatibles")
+                raise ValueError("aucune graine d'entraînement commune avec le catalogue")
             return versions[0]
         except Exception as exc:
-            raise DemoUnavailable("Checkpoint GNN indisponible ou incomplet : un entraînement terminé avec tous ses artefacts est requis.") from exc
+            # La cause réelle vient du factory : artefact manquant ou entraînement non terminé.
+            raise DemoUnavailable(f"Checkpoint {name} indisponible : {str(exc).strip() or 'entraînement non terminé'}") from exc
 
     def targets(self) -> dict:
         with self._lock:

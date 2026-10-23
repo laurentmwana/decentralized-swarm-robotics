@@ -2,7 +2,9 @@
 host: 127.0.0.1
 port: 8000
 shapes_root: outputs/shapes
-training_root: outputs/training
+# Run « standard » deux tours inacheve (best.pt sans summary.json) : le checkpoint complet ci-
+# dessous a la meme configuration effective, 40 robots et 1 200 iterations, seul le nom de profil differe.
+training_root: outputs/training/size_40
 horizon: 120
 swarm_sizes: [20, 40, 100]
 seed_max: 2147483647
