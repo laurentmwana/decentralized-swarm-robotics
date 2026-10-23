@@ -3,9 +3,9 @@
 
 \section{Introduction}
 
-Ce chapitre décrit la solution effectivement présente dans l'implémentation actuelle : simulateur bidimensionnel, génération de cibles, contrôleur GNN partagé, apprentissage à travers la simulation et protocoles d'évaluation. Les caractéristiques architecturales et les paramètres sont tirés des modules et des configurations du dépôt ; leur disponibilité ne constitue pas une preuve de performance après apprentissage.
+Ce chapitre décrit la solution effectivement présente dans l'implémentation actuelle : simulateur bidimensionnel, génération de cibles, contrôleur GNN partagé, apprentissage à travers la simulation et protocoles d'évaluation. Les caractéristiques architecturales et les paramètres sont tirés des modules et des configurations du code source ; leur disponibilité ne constitue pas une preuve de performance après apprentissage.
 
-Une distinction organise l'ensemble du mémoire. Le présent chapitre expose la méthode actuelle et les expériences préparées. Le chapitre~\ref{chap:experiences} conserve les résultats du prototype historique, avec ses propres paramètres et conventions de mesure. Aucun entraînement ni aucune campagne comparative de la réécriture n'est attesté dans ce document. Les nouveaux schémas représentent des mécanismes de calcul ou des exemples géométriques construits, jamais des trajectoires obtenues par un modèle entraîné.
+Une distinction organise l'ensemble du mémoire. Le présent chapitre expose la méthode actuelle et les expériences préparées. Le chapitre~\ref{chap:experiences} conserve les résultats du prototype pilote, avec ses propres paramètres et conventions de mesure. Aucun entraînement ni aucune campagne comparative de l'implémentation actuelle n'est attesté dans ce document. Les nouveaux schémas représentent des mécanismes de calcul ou des exemples géométriques construits, jamais des trajectoires obtenues par un modèle entraîné.
 
 \section{Problème et hypothèses de simulation}
 
@@ -51,7 +51,7 @@ Les conditions nominales utilisent un repère commun, des observations exactes e
 
 \subsection{Représentation et échantillonnage}
 
-La configuration définit sept géométries, dix chiffres, 26 lettres et 21 nombres, soit 64 identifiants de formes. Les rendus utilisent une grille de $128\times128$ pixels. Le masque conserve les pixels du trait, puis l'échantillonnage par point le plus éloigné sélectionne 20 ou 50 pixels distincts, selon la résolution demandée. Il ne complète jamais une cible par duplication : un masque insuffisant est refusé. Cette sélection favorise la dispersion, sans garantir une répartition uniforme en longueur d'arc ni la restitution de tous les détails.
+La configuration définit sept géométries, dix chiffres, 26 lettres et 21 nombres, soit 64 identifiants de formes. Les rendus utilisent une grille de $128\times128$ pixels. Le masque conserve les pixels du trait, puis l'échantillonnage par point le plus éloigné sélectionne 20, 40 ou 50 pixels distincts, selon la résolution demandée. Il ne complète jamais une cible par duplication : un masque insuffisant est refusé. Cette sélection favorise la dispersion, sans garantir une répartition uniforme en longueur d'arc ni la restitution de tous les détails.
 
 Les points sont recentrés sur leur centroïde et redimensionnés pour que leur rayon maximal soit $R=1$. Cette échelle commune rend les distances sans dimension après normalisation ; elle n'égalise ni la difficulté des formes, ni la longueur de leurs traits. La Figure~\ref{fig:shape-pipeline} montre le principe de préparation. Le trait d'un glyphe pouvant être épais, le nuage représente ici ses pixels échantillonnés, et non nécessairement sa seule frontière extérieure.
 
@@ -100,7 +100,7 @@ La configuration nominale utilise deux tours ; les variantes préparées en util
 
 \subsection{Sortie bornée et propriétés structurelles}
 
-Le décodeur transforme l'état final en deux composantes, applique une tangente hyperbolique puis projette radialement la commande dans la boule de rayon $v_{\max}$ lorsqu'elle dépasse cette norme. La tangente hyperbolique borne séparément les composantes ; la projection est nécessaire pour garantir la borne euclidienne. ReLU, utilisée dans les couches internes, ne remplit pas ce rôle de sécurité.
+Le décodeur transforme l'état final en deux composantes, applique une tangente hyperbolique puis projette radialement la commande dans la boule de rayon $v_{\max}$ lorsqu'elle dépasse cette norme. Dans la variante géométrique, la direction unitaire vers le point cible le plus proche est d'abord additionnée, avec un poids configuré valant nominalement 1, aux deux composantes produites par le réseau avant la tangente hyperbolique. La commande initiale pointe donc déjà vers le contour et le réseau apprend un résidu par rapport à cette orientation ; le bornage reste garanti, car la somme passe avant l'écrêtage. Le poids de cette addition est une hypothèse de conception, non un résultat : mis à zéro, le décodeur redevient purement appris. La tangente hyperbolique borne séparément les composantes ; la projection est nécessaire pour garantir la borne euclidienne. ReLU, utilisée dans les couches internes, ne remplit pas ce rôle de sécurité.
 
 L'agrégat est invariant à l'ordre des voisins. Le contrôleur est \emph{équivariant} au réordonnancement des robots : les commandes suivent la même permutation. La translation des positions relatives ne change pas les messages ; dans la variante géométrique, cette propriété suppose que les robots et la cible soient translatés ensemble, en dehors des effets des frontières. Elle ne signifie pas que déplacer seulement les robots par rapport à une cible fixe doit laisser la commande inchangée. Aucune invariance générale par rotation n'est revendiquée.
 
@@ -136,7 +136,7 @@ L'Équation~\eqref{eq:perte-totale} conserve uniquement la combinaison nécessai
   +\lambda_c\mathcal{L}_{collisions}+\lambda_u\mathcal{L}_{mouvement}.
   \label{eq:perte-totale}
 \end{equation}
-La pénalité de collisions est nulle au-delà de la distance de sécurité et quadratique en deçà, après normalisation par cette distance. Les contributions sont sommées sur les paires non ordonnées et moyennées sur les états, y compris l'état final. Ce terme n'est pas divisé par le nombre de paires : son amplitude peut donc augmenter avec la population. La normalisation par les paires appartient à la \emph{métrique} de collisions, distincte de la perte d'entraînement.
+La pénalité de collisions est nulle au-delà de la distance de sécurité et quadratique en deçà, après normalisation par cette distance. Les contributions sont sommées sur les paires non ordonnées et moyennées sur les états, y compris l'état final. Les dix premiers états de la trajectoire sont exclus de cette moyenne : le chevauchement qui sort du tirage initial ne résulte d'aucune commande et son gradient serait du bruit. Ce terme n'est pas divisé par le nombre de paires : son amplitude peut donc augmenter avec la population. La normalisation par les paires appartient à la \emph{métrique} de collisions, distincte de la perte d'entraînement.
 
 La pénalité de mouvement moyenne la norme carrée des commandes sur tous les pas et tous les robots, divisée par $v_{\max}^2$. Elle décourage les vitesses élevées ; elle ne pénalise pas explicitement les variations temporelles, l'accélération ou les oscillations. Il ne s'agit pas d'une énergie physique mesurée. Les poids configurés valent respectivement 1 pour la forme, 1 pour la couverture, 0,5 pour les collisions et 0,02 pour le mouvement. Leur pertinence et leur sensibilité restent à vérifier par des expériences ; aucun effet causal d'une composante n'est établi sans ablation.
 
@@ -171,14 +171,16 @@ Le Tableau~\ref{tab:hyperparametres} rassemble les valeurs du profil standard ac
     Arène ; rayon de cible ; rayon de départ & $4\times4$ ; 1 ; 1,8 \\
     Pas de temps ; vitesse maximale & 0,1 ; 1 \\
     Portée ; distance de sécurité & 1,5 ; 0,1 \\
-    Robots ; points cibles, entraînement cercle & 40 ; 50 \\
+    Robots ; points cibles, entraînement cercle & 40 ; 40 \\
     Largeur cachée ; représentation de forme & 64 ; 16 \\
     Tours de messages ; agrégation nominale & 1, 2 ou 3 ; moyenne \\
     Horizon cercle ; horizon d'évaluation & 40 ; 120 \\
-    Itérations ; épisodes par lot & 1\,200 ; 2 \\
-    Taux initial ; facteur de décroissance & 0,001 ; 0,995 par itération \\
+    Itérations ; épisodes par lot & 1\,200 ; 8 \\
+    Taux initial ; facteur de décroissance & 0,001 ; 0,999 par itération \\
     Borne de norme du gradient & 1 \\
     Fenêtre de proximité et de couverture & 10 derniers états \\
+    États initiaux exclus des collisions & 10 premiers \\
+    Poids de la direction dans le décodeur & 1 \\
     Graines d'entraînement & 11, 12, 13, 14, 15 \\
     Graines de validation & 9001, 9002, 9003 \\
     Validation ; répétitions d'évaluation & toutes les 50 itérations ; 50 par condition \\
@@ -244,23 +246,23 @@ Pour les caractères, la proximité géométrique ne vaut pas reconnaissance. Un
 
 \section{Organisation logicielle et niveau de preuve}
 
-La séparation des responsabilités est conservée entre formes, simulateur, modèle, entraînement, métriques, évaluation et restitution. La Figure~\ref{fig:module-architecture} représente ces flux à un niveau scientifique, sans arborescence de dépôt ni extrait de programme.
+La séparation des responsabilités est conservée entre formes, simulateur, modèle, entraînement, métriques, évaluation et restitution. La Figure~\ref{fig:module-architecture} représente ces flux à un niveau scientifique, sans arborescence de code ni extrait de programme.
 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\linewidth,height=.65\textheight,keepaspectratio]{images/software_modules.png}
-  \caption[Responsabilités et flux de données]{Séparation des responsabilités : préparation des formes, contrôleur, dynamique, mesures et restitution. Ce schéma de principe commun aux deux versions ne signifie pas que les fichiers historiques soient compatibles avec la réécriture. Les résultats actuels sont attendus, non produits par cette illustration.}
+  \caption[Responsabilités et flux de données]{Séparation des responsabilités : préparation des formes, contrôleur, dynamique, mesures et restitution. Ce schéma de principe commun aux deux versions ne signifie pas que les fichiers du pilote soient compatibles avec la version actuelle. Les résultats actuels sont attendus, non produits par cette illustration.}
   \label{fig:module-architecture}
 \end{figure}
 
-Les configurations effectives, graines, cibles et version du programme doivent accompagner chaque expérience. Les campagnes chargent les poids et leur configuration sauvegardée, vérifient les empreintes des modèles et refusent les ensembles de résultats incomplets. Les rapports sont construits à partir d'artefacts enregistrés, non de chiffres recopiés ou de nouvelles optimisations cachées. La reproductibilité est conditionnelle à la version, aux dépendances et aux données : une graine identique n'impose pas les mêmes trajectoires entre deux implémentations différentes.
+Les configurations effectives, graines, cibles et version du programme doivent accompagner chaque expérience. Les campagnes chargent les poids et leur configuration sauvegardée, contrôlent la cohérence des modèles et refusent les ensembles de résultats incomplets. Les rapports sont construits à partir d'artefacts enregistrés, non de chiffres recopiés ou de nouvelles optimisations cachées. La reproductibilité est conditionnelle à la version, aux dépendances et aux données : une graine identique n'impose pas les mêmes trajectoires entre deux implémentations différentes.
 
-Les tests contrôlent les propriétés de permutation, de translation sous leurs hypothèses, de bornage, de voisinage, de cibles distinctes et de cohérence des mesures. Les tests de gradient et d'orchestration simulée vérifient les contrats du pipeline sans démontrer qu'Adam apprend une politique utile. Il convient donc de distinguer quatre niveaux : composant implémenté, propriété testée, modèle réellement entraîné et performance évaluée sur une campagne indépendante.
+Les tests contrôlent les propriétés de permutation, de translation sous leurs hypothèses, de bornage, de voisinage, de cibles distinctes et de cohérence des mesures. Les tests de gradient et d'orchestration simulée vérifient les propriétés de la chaîne de traitement sans démontrer qu'Adam apprend une politique utile. Il convient donc de distinguer quatre niveaux : composant implémenté, propriété testée, modèle réellement entraîné et performance évaluée sur une campagne indépendante.
 
-La démonstration locale choisit un contrôleur et rejoue une cible avec une graine ; le navigateur restitue la trajectoire calculée, sans substituer des règles d'animation au contrôleur annoncé. Un contrôleur manuel peut servir à vérifier l'interface, mais ses images ne sont pas des résultats du GNN. Les routes techniques et les commandes d'exécution restent dans le dépôt et ne sont pas nécessaires à l'argument scientifique du mémoire.
+La démonstration locale choisit un contrôleur et rejoue une cible avec une graine ; le navigateur restitue la trajectoire calculée, sans substituer des règles d'animation au contrôleur annoncé. Un contrôleur manuel peut servir à vérifier l'interface, mais ses images ne sont pas des résultats du GNN. Les commandes d'exécution font partie du code source et ne sont pas nécessaires à l'argument scientifique du mémoire.
 
 La représentation matricielle des messages calcule des paires avant masquage. La mémoire et le coût peuvent donc croître quadratiquement avec le nombre de robots, même si l'agrégation finale est locale. Le déroulement temporel conserve en outre les opérations de chaque épisode jusqu'à la rétropropagation. Les épisodes d'un lot sont exécutés successivement, avec accumulation des pertes, et non par une unique dynamique vectorisée du lot. Aucun temps d'entraînement actuel n'est mesuré ici : une durée ne peut être déduite du seul nombre d'itérations ou des durées de l'ancien prototype.
 
 \section{Conclusion partielle}
 
-Ce chapitre a décrit la méthode actuelle à partir des composants effectivement implémentés : cibles distinctes et normalisées, information de mission explicitée, GNN à ReLU et corrections résiduelles, sortie bornée en norme, pertes de proximité et de couverture séparées, apprentissage par simulation différentiable par morceaux et sélection sur validation. Il a également défini les mesures actuelles, les comparaisons préparées et leurs limites, sans assimiler des tests de logiciel à une performance apprise. Le chapitre~\ref{chap:experiences} confronte cette implémentation au prototype historique et présente uniquement les résultats pilotes de ce dernier ; les campagnes de la réécriture restent à réaliser.
+Ce chapitre a décrit la méthode actuelle à partir des composants effectivement implémentés : cibles distinctes et normalisées, information de mission explicitée, GNN à ReLU et corrections résiduelles, sortie bornée en norme, pertes de proximité et de couverture séparées, apprentissage par simulation différentiable par morceaux et sélection sur validation. Il a également défini les mesures actuelles, les comparaisons préparées et leurs limites, sans assimiler des tests de logiciel à une performance apprise. Le chapitre~\ref{chap:experiences} confronte cette implémentation au prototype pilote et présente uniquement les résultats pilotes de ce dernier ; les campagnes de l'implémentation actuelle restent à réaliser.

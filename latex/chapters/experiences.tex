@@ -3,13 +3,13 @@
 
 \section{Introduction}
 
-Les expériences, tableaux, courbes et valeurs présentés dans ce chapitre concernent exclusivement le \emph{prototype historique}. Ils sont conservés pour documenter son protocole pilote et ses limites. La \emph{réécriture actuelle} ne dispose d'aucun entraînement accepté : ces résultats historiques ne constituent donc ni des résultats de cette réécriture ni une validation de son contrôleur.
+Les expériences, tableaux, courbes et valeurs présentés dans ce chapitre concernent exclusivement le \emph{prototype pilote}. Ils sont conservés pour documenter son protocole et ses limites. L'\emph{implémentation actuelle} ne dispose d'aucun entraînement accepté : ces résultats du pilote ne constituent donc ni des résultats de cette implémentation ni une validation de son contrôleur.
 
-Ce chapitre confronte d'abord les caractéristiques de l'implémentation actuelle à celles du prototype historique. Il rappelle ensuite les paramètres du pilote et présente ses seuls résultats disponibles : entraînement sur un cercle, passage à l'échelle, scénarios de retrait, dispersion entre graines et curriculum de formes. Une propriété implémentée ou testée n'est jamais assimilée à une performance après apprentissage.
+Ce chapitre confronte d'abord les caractéristiques de l'implémentation actuelle à celles du prototype pilote. Il rappelle ensuite les paramètres du pilote et présente ses seuls résultats disponibles : entraînement sur un cercle, passage à l'échelle, scénarios de retrait, dispersion entre graines et curriculum de formes. Une propriété implémentée ou testée n'est jamais assimilée à une performance après apprentissage.
 
 \section{Correspondance entre méthode et implémentation}
 
-La comparaison du mémoire avec les composants actuels confirme la présence du simulateur, de l'échantillonnage sans doublons, du GNN partagé, des quatre pertes, du curriculum, des campagnes et de leurs rapports. Elle révèle aussi des différences qui empêchent de réutiliser les scores du pilote comme preuve de la réécriture. Le Tableau~\ref{tab:implementation-comparison} expose les principales distinctions vérifiées dans les modules et les configurations actuels ; les valeurs anciennes restent celles consignées pour le prototype.
+La comparaison du mémoire avec les composants actuels confirme la présence du simulateur, de l'échantillonnage sans doublons, du GNN partagé, des quatre pertes, du curriculum, des campagnes et de leurs rapports. Elle révèle aussi des différences qui empêchent de réutiliser les scores du pilote comme preuve de la version actuelle. Le Tableau~\ref{tab:implementation-comparison} expose les principales distinctions vérifiées dans les modules et les configurations actuels ; les valeurs anciennes restent celles consignées pour le prototype.
 
 \begin{table}[htbp]
   \centering
@@ -28,7 +28,7 @@ La comparaison du mémoire avec les composants actuels confirme la présence du 
     Succès & franchissement de 0,5 avant le dernier pas & suffixe sous 0,15 jusqu'au dernier état, distance normalisée \\
     Ablation des messages & non évaluée dans le pilote & même modèle à deux tours et graphe vide, implémenté \\
     Évaluation & dix épisodes par condition, modèle fixe & 50 répétitions et cinq graines d'entraînement prévues \\
-    Niveau de preuve & données pilotes historiques & propriétés et pipeline testables ; entraînements et campagnes à réaliser \\
+    Niveau de preuve & données pilotes historiques & propriétés et chaîne de traitement testables ; entraînements et campagnes à réaliser \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -37,7 +37,7 @@ Les tests logiciels contrôlent des propriétés de représentation, de bornage 
 
 \section{Implémentation du prototype historique}
 
-La chaîne historique associe un simulateur, un contrôleur GNN à messages, une fonction de perte et des scripts de mesure. À chaque pas, le graphe de communication décrit les voisinages des robots actifs ; le contrôleur partage ses paramètres entre robots et agrège les messages locaux par une moyenne. Le simulateur applique les commandes et fournit les positions nécessaires aux mesures de forme, de proximité et de répartition. Les épisodes sont ensuite conservés pour produire les agrégats et les visualisations analysés dans ce chapitre. Ce rappel décrit le fonctionnement du prototype ayant produit les données archivées, sans attester un entraînement accepté de la réécriture actuelle.
+La chaîne pilote associe un simulateur, un contrôleur GNN à messages, une fonction de perte et des scripts de mesure. À chaque pas, le graphe de communication décrit les voisinages des robots actifs ; le contrôleur partage ses paramètres entre robots et agrège les messages locaux par une moyenne. Le simulateur applique les commandes et fournit les positions nécessaires aux mesures de forme, de proximité et de répartition. Les épisodes sont ensuite conservés pour produire les agrégats et les visualisations analysés dans ce chapitre. Ce rappel décrit le fonctionnement du prototype ayant produit les données du pilote, sans attester un entraînement accepté de l'implémentation actuelle.
 
 Les paramètres anciens sont conservés dans le Tableau~\ref{tab:historical-hyperparameters}, afin que les données qui suivent restent interprétables. Les deux premières campagnes utilisent l'identifiant de forme ; l'information géométrique supplémentaire appartient à la campagne complexe. L'entraînement historique utilisait une Chamfer quadratique et une régularisation des espacements. Les tableaux d'évaluation rapportent des distances non carrées. Ces variantes ne sont pas interchangeables et peuvent classer différemment deux configurations.
 
@@ -73,6 +73,8 @@ Le niveau géométrique de la campagne complexe avait été exécuté dans le pr
 Les expériences historiques sont organisées en deux phases. La première contrôle que le GNN peut être entraîné sur un cercle et qu'il produit visuellement une distribution autour de la cible. La seconde est un protocole pilote d'évaluation, conçu pour vérifier la chaîne de mesure avant une campagne plus large. Ce pilote fixe dix graines par condition, soit 240 épisodes. Il évalue une cible circulaire avec 20, 40 et 100 robots, ainsi que des retraits de 5, 10 et 20\% des robots. Chaque épisode dure 20 pas.
 
 Les métriques rapportées sont la distance de Chamfer, le nombre ou le taux de collisions, la régularité des distances entre voisins et un taux de succès associé à un seuil de distance de Chamfer de $0{,}5$. La distance de Chamfer mesure l'adéquation spatiale à la forme, mais elle ne garantit ni une couverture uniforme ni la lisibilité d'un symbole. Les métriques sont donc complémentaires et doivent être interprétées avec les visualisations finales.
+
+Les distances rapportées dans ce chapitre sont normalisées par le rayon de la cible après mise à l'échelle des formes (rayon maximal $R=1$). Une distance de Chamfer de $0{,}592$ correspond ainsi à un écart moyen d'environ 59\,\% du rayon de la cible. Cette normalisation rend les valeurs comparables entre tailles d'essaim et scénarios, mais ne signifie pas que toutes les formes soient également difficiles à approximer.
 
 Le succès historique correspond au premier franchissement de 0,5 survenant avant le dernier pas. Il n'exige pas que la distance reste sous le seuil ensuite ; un franchissement au seul dernier pas est exclu. Lorsqu'aucun franchissement admissible n'est observé, le champ du pas rapporté prend la valeur terminale. Les pourcentages ci-dessous conservent cette convention, sans être recalculés avec le succès stabilisé actuel.
 
@@ -165,7 +167,7 @@ Le résultat doit donc être formulé avec précision. Le GNN conserve, dans le 
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\linewidth,height=.75\textheight,keepaspectratio]{images/historical_scaling.png}
-  \caption{Distance moyenne de Chamfer lors du passage à l'échelle dans le protocole pilote. Cette figure doit être complétée par les valeurs numériques et leur dispersion dans la campagne finale.}
+  \caption{Distance moyenne de Chamfer lors du passage à l'échelle dans le protocole pilote.}
   \label{fig:scale-pilote}
 \end{figure}
 
@@ -282,7 +284,7 @@ Le curriculum réduit donne donc un résultat de faisabilité. Il montre que l'e
 
 \section{Discussion des résultats}
 
-Le premier résultat historique est un contrôle de bon fonctionnement de la chaîne expérimentale : le simulateur, le contrôleur à messages, la fonction de perte et l'optimisation ont permis d'obtenir une formation circulaire plus proche de la cible que l'état initial. Le partage des paramètres permet d'appliquer la même politique à chaque robot, tandis que l'agrégation locale accepte un nombre variable de voisins. Le protocole pilote historique indique aussi que le GNN est plus proche du cercle que la règle de regroupement utilisée comme contrôle. Ces observations ne valident pas la réécriture actuelle, qui ne dispose d'aucun entraînement accepté.
+Le premier résultat pilote est un contrôle de bon fonctionnement de la chaîne expérimentale : le simulateur, le contrôleur à messages, la fonction de perte et l'optimisation ont permis d'obtenir une formation circulaire plus proche de la cible que l'état initial. Le partage des paramètres permet d'appliquer la même politique à chaque robot, tandis que l'agrégation locale accepte un nombre variable de voisins. Le protocole pilote indique aussi que le GNN est plus proche du cercle que la règle de regroupement utilisée comme contrôle. Ces observations ne valident pas l'implémentation actuelle, qui ne dispose d'aucun entraînement accepté.
 
 Cette observation doit rester limitée à son cadre. La règle de regroupement ne reçoit pas la même consigne de forme que le GNN. Elle répond donc à un problème différent et ne peut pas servir de preuve qu'un GNN est meilleur que toute règle décentralisée. Une comparaison plus juste devra inclure une règle classique ayant accès à la même cible, ainsi qu'une version apprise sans échange de messages.
 
@@ -318,7 +320,7 @@ La troisième menace concerne les formes elles-mêmes. Les nombres et lettres du
 
 \section{Plan d'expériences pour la campagne finale}
 
-Le plan suivant décrit des expériences à réaliser, non des résultats disponibles. Il ne suppose aucun entraînement accepté de la réécriture actuelle et ne constitue pas une campagne exécutée.
+Le plan suivant décrit des expériences à réaliser, non des résultats disponibles. Il ne suppose aucun entraînement accepté de l'implémentation actuelle et ne constitue pas une campagne exécutée.
 
 La campagne finale doit être organisée autour de questions simples et mesurables. La première question concerne la qualité de formation : pour chaque catégorie de formes, quelle est la distance à la cible, quelle est la régularité de la répartition et quelle proportion d'épisodes franchit le seuil de succès ? La deuxième question concerne l'apport de la communication : que se passe-t-il lorsqu'on retire les messages de voisins en conservant la même consigne de forme ? La troisième question concerne la robustesse : comment évoluent les mesures lorsque des robots disparaissent, lorsque le rayon de communication diminue ou lorsque les positions sont bruitées ?
 
@@ -328,7 +330,7 @@ Une présentation complète devra associer un tableau numérique à une figure. 
 
 \section{Interprétation prudente des résultats pilotes}
 
-Le pilote historique est utile parce qu'il a vérifié l'enchaînement complet des scripts : production des épisodes, agrégation des résultats et génération des graphiques sans intervention manuelle. Il a aussi mis en évidence un écart important entre le GNN conditionné par la cible et la règle de regroupement. Cet écart motive la poursuite des expériences, mais ne suffit ni à conclure à la supériorité générale d'une méthode ni à valider la réécriture actuelle.
+Le pilote est utile parce qu'il a vérifié l'enchaînement complet des scripts : production des épisodes, agrégation des résultats et génération des graphiques sans intervention manuelle. Il a aussi mis en évidence un écart important entre le GNN conditionné par la cible et la règle de regroupement. Cet écart motive la poursuite des expériences, mais ne suffit ni à conclure à la supériorité générale d'une méthode ni à valider l'implémentation actuelle.
 
 La première raison est l'asymétrie d'information déjà discutée. La seconde est le nombre de répétitions. La troisième est que les résultats concernent principalement une cible circulaire. Une méthode peut être très performante pour un contour régulier et moins convaincante pour une lettre présentant des angles ou des traits éloignés. L'objectif de la campagne finale est donc de remplacer une affirmation générale par un ensemble de résultats précis, chacun associé à une forme, une taille d'essaim et une perturbation donnée.
 
@@ -336,4 +338,27 @@ Cette prudence améliore la valeur du mémoire. Un résultat négatif, comme une
 
 \section{Conclusion partielle}
 
-Ce chapitre a présenté la chaîne d'implémentation et les résultats du prototype historique : diminution de la perte, meilleure proximité du cercle que la règle de regroupement dans le protocole retenu, exécution à différentes tailles d'essaim et faible variation de la distance moyenne lors des retraits simulés. Les données conservées restent celles d'un pilote limité à dix graines par condition, avec une asymétrie d'information entre contrôleurs, un seuil de succès sensible et des formations symboliques approximatives ; elles ne démontrent pas une robustesse générale. La réécriture actuelle ne dispose d'aucun entraînement accepté et ne peut être validée par ces résultats historiques. La discussion, non numérotée, mettra ces observations en perspective avec les travaux antérieurs et leurs limites ; la conclusion générale, également non numérotée, dégagera ensuite les enseignements et les perspectives du travail.
+Ce chapitre a présenté la chaîne d'implémentation et les résultats du prototype pilote : diminution de la perte, meilleure proximité du cercle que la règle de regroupement dans le protocole retenu, exécution à différentes tailles d'essaim et faible variation de la distance moyenne lors des retraits simulés. Les données conservées restent celles d'un pilote limité à dix graines par condition, avec une asymétrie d'information entre contrôleurs, un seuil de succès sensible et des formations symboliques approximatives ; elles ne démontrent pas une robustesse générale. L'implémentation actuelle ne dispose d'aucun entraînement accepté et ne peut être validée par ces résultats du pilote.
+
+Le Tableau~\ref{tab:etabli-non-etabli} résume ce qui est établi par les résultats du pilote et ce qui reste à confirmer par des campagnes complémentaires.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \caption{Résultats établis par le pilote et validations restant à réaliser.}
+  \label{tab:etabli-non-etabli}
+  \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}X}
+    \toprule
+    \textbf{Établi par le pilote} & \textbf{À confirmer} \\
+    \midrule
+    La chaîne expérimentale fonctionne : simulateur, contrôleur, pertes, optimisation et rapports. & L'implémentation actuelle n'a pas encore été entraînée ni évaluée. \\
+    Le GNN entraîné atteint une distance de Chamfer inférieure à celle de la règle de regroupement sur cible circulaire (20 robots, 10 graines). & La comparaison reste limitée à une cible circulaire et à une baseline ne recevant pas la même consigne. \\
+    Le même modèle s'exécute avec 40 et 100 robots sans modification des poids. & La qualité de formation à grande échelle et l'effet de la densité du graphe ne sont pas isolés. \\
+    La distance moyenne varie peu entre 0 et 20\,\% de retraits simulés. & Le protocole ne démontre pas une robustesse générale : dix épisodes par condition, pas d'intervalle de confiance. \\
+    Le curriculum réduit permet de poursuivre l'optimisation lorsque de nouvelles cibles sont ajoutées. & Les formes symboliques (lettres, nombres) restent approximatives et peu lisibles. \\
+    Les propriétés de permutation, de bornage et de calcul des mesures sont testées. & L'apprentissage réel d'une politique utile et sa généralisation à des formes non vues restent à valider. \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+La discussion, non numérotée, mettra ces observations en perspective avec les travaux antérieurs et leurs limites ; la conclusion générale, également non numérotée, dégagera ensuite les enseignements et les perspectives du travail.
