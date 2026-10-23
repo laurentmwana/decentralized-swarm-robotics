@@ -13,7 +13,7 @@ SHELL := powershell.exe
 .SHELLFLAGS := -NoProfile -Command
 endif
 
-.PHONY: help install install-dev test test-all test-training shapes demo tuning baselines metrics train train-all train-smoke training-plan training-summary train-size-20 train-size-40 train-size-100 train-sizes campaign comparison size-transfer curriculum-plan train-curriculum train-curriculum-all curriculum-summary complex-shapes curriculum-comparison shape-transfer readability readability-score robustness web clean
+.PHONY: help install install-dev test test-all test-training shapes demo tuning baselines metrics train train-all train-complete train-smoke training-plan training-summary train-size-20 train-size-40 train-size-100 train-sizes campaign comparison size-transfer curriculum-plan train-curriculum train-curriculum-all curriculum-summary complex-shapes curriculum-comparison shape-transfer readability readability-score robustness web clean
 .DEFAULT_GOAL := help
 
 help:
@@ -21,6 +21,7 @@ help:
 	@echo "make install / test / shapes : dependances, tests sans entrainement, cibles"
 	@echo "make train VARIANT=gnn_2_rounds SEED=11 PROFILE=standard : un entrainement"
 	@echo "make train-all : toutes les variantes et les cinq graines du profil"
+	@echo "make train-complete : complete les variantes et graines manquantes"
 	@echo "make train-smoke : optimisation courte REELLE, a lancer vous-meme"
 	@echo "make training-plan / curriculum-plan : budgets sans optimisation"
 	@echo "make training-summary : courbes et synthese des entrainements complets"
@@ -67,6 +68,14 @@ train:
 
 train-all:
 	$(PYTHON) -m src.training.train --all-variants --all-seeds --profile $(PROFILE) --output "$(TRAINING_OUTPUT)"
+
+train-complete:
+	$(PYTHON) -m src.training.train --variant gnn_3_rounds --seed 11 --profile $(PROFILE) --output "$(TRAINING_OUTPUT)"
+	$(PYTHON) -m src.training.train --variant no_comm --seed 11 --profile $(PROFILE) --output "$(TRAINING_OUTPUT)"
+	$(PYTHON) -m src.training.train --variant no_comm --seed 12 --profile $(PROFILE) --output "$(TRAINING_OUTPUT)"
+	$(PYTHON) -m src.training.train --variant no_comm --seed 13 --profile $(PROFILE) --output "$(TRAINING_OUTPUT)"
+	$(PYTHON) -m src.training.train --variant no_comm --seed 14 --profile $(PROFILE) --output "$(TRAINING_OUTPUT)"
+	$(PYTHON) -m src.training.train --variant no_comm --seed 15 --profile $(PROFILE) --output "$(TRAINING_OUTPUT)"
 
 train-smoke:
 	$(PYTHON) -m src.training.train --variant $(VARIANT) --seed 1 --profile smoke --output outputs/training_smoke

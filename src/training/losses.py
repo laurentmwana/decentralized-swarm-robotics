@@ -62,25 +62,30 @@ class CoverageLoss(LossTerm):
 
 
 class CollisionLoss(LossTerm):
-    """Collisions : pénalité quadratique douce (r - d)² sur toutes les paires à d < r, tous pas."""
+    """Collisions : pénalité quadratique douce (r - d)² sur toutes les paires à d < r.
+
+    `skip_steps` exclut les premiers pas : le chevauchement issu du tirage initial
+    n'est pas un choix de la politique et son gradient est du bruit.
+    """
 
     name = "collisions"
 
-    def __init__(self, collision_radius: float) -> None:
+    def __init__(self, collision_radius: float, skip_steps: int = 0) -> None:
         self.collision_radius = float(collision_radius)
+        self.skip_steps = max(0, int(skip_steps))
 
     def forward(self, rollout: Rollout, target: torch.Tensor) -> torch.Tensor:
         r = self.collision_radius
         total = torch.zeros(())
         step_count = 0
-        for t in range(rollout.commands.shape[0] + 1):
+        for t in range(self.skip_steps, rollout.commands.shape[0] + 1):
             p = rollout.positions[t]
             d = torch.cdist(p, p)
             mask = ~torch.eye(p.shape[0], dtype=torch.bool)
             deviation = torch.relu(r - d)[mask]
             total = total + (deviation / r).pow(2).sum()
             step_count += 1
-        return total / (2 * step_count)  # paires comptees deux fois (i,j) et (j,i)
+        return total / (2 * max(1, step_count))  # paires comptees deux fois (i,j) et (j,i)
 
 
 class MotionLoss(LossTerm):
@@ -112,10 +117,11 @@ class CompositeLoss:
     def from_config(cfg_training: dict, cfg_sim, target_radius: float, collision_radius: float) -> "CompositeLoss":
         weights = cfg_training["losses"]["weights"]
         window = int(cfg_training["losses"].get("shape_window", 1))
+        collision_skip = int(cfg_training["losses"].get("collision_skip_steps", 0))
         terms: list[LossTerm] = [
             ShapeLoss(target_radius, window),
             CoverageLoss(target_radius, window),
-            CollisionLoss(collision_radius),
+            CollisionLoss(collision_radius, collision_skip),
             MotionLoss(cfg_sim.v_max),
         ]
         return CompositeLoss(terms, weights)

@@ -2,13 +2,13 @@
 # Budget de reglage IDENTIQUE pour toutes les variantes apprises (mêmes itérations,
 # mêmes tailles, mêmes graines) — trace dans outputs/training/budget.md.
 
-training_target: geometries_circle@50   # split train ; validation = graines de validation sur la meme cible + forme du split val
+training_target: geometries_circle@40   # split train ; 40 points = n_robots standard, plancher de couverture minimal (validation = graines dédiées sur la meme cible + forme du split val)
 validation_target: geometries_pentagon@50  # split val, jamais test
 
 optimizer:
   lr: 0.001
-  lr_gamma: 0.995  # decoupage exponentiel : lr /10 tous les ~460 iterations
-  batch_episodes: 2
+  lr_gamma: 0.999  # decoupage exponentiel : lr /10 tous les ~2300 iterations, fin de course a ~0.3x du lr initial
+  batch_episodes: 8  # moyenne sur 8 rollouts : gradient moins bruite qu'a 2
   grad_clip: 1.0
 
 losses:
@@ -18,6 +18,7 @@ losses:
     collisions: 0.5
     motion: 0.02
   shape_window: 10  # forme/couverture moyennees sur les 10 derniers pas (signal dense)
+  collision_skip_steps: 10  # exclure les 10 premiers pas : le chevauchement au tirage initial n'est pas un choix de la politique
 
 profiles:
   smoke:

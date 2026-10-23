@@ -53,7 +53,8 @@ def test_plan_only_reports_cost_without_touching_outputs(curriculum):
     assert plan["duration_seconds"] is None
     assert plan["budget"]["n_robots"] == 50
     assert len(plan["levels"]) == 4
-    assert plan["levels"][0]["optimization_rollout_steps"] == 1200 * 2 * 120
+    batch = ConfigLoader().load_raw("training")["optimizer"]["batch_episodes"]
+    assert plan["levels"][0]["optimization_rollout_steps"] == 1200 * batch * 120
     assert not curriculum.output.exists()
 
 
