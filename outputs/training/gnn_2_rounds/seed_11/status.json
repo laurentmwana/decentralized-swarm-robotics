@@ -1,6 +1,7 @@
 {
-  "status": "completed",
+  "status": "failed",
   "variant": "gnn_2_rounds",
   "seed": 11,
-  "profile": "standard"
+  "profile": "standard",
+  "error": ""
 }

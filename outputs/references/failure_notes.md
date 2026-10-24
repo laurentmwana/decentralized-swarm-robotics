@@ -7,6 +7,6 @@ Seuil de succes : 0.15 (Chamfer normalisee, docs/decisions/06-evaluation.md). 7/
 
 | regle | cible | n_robots | distance_finale | reussite |
 |---|---|---|---|---|
-| flocking | geometries_cercle@50 | 20 | 0.503 | non |
-| flocking | geometries_cercle@50 | 40 | 0.413 | non |
-| flocking | geometries_cercle@50 | 100 | 0.467 | non |
+| flocking | geometries_circle@50 | 20 | 0.440 | non |
+| flocking | geometries_circle@50 | 40 | 0.383 | non |
+| flocking | geometries_circle@50 | 100 | 0.465 | non |

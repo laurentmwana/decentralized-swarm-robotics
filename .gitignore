@@ -24,6 +24,7 @@ results/*
 data/shapes/
 data/shapes-complex/
 data/*.zip
+outputs
 
 # LaTeX build artifacts
 *.aux

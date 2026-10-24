@@ -2,6 +2,7 @@
 \phantomsection
 \addcontentsline{toc}{chapter}{Liste des figures}
 \listoffigures
+
 \cleardoublepage
 \phantomsection
 \addcontentsline{toc}{chapter}{Liste des tableaux}
@@ -9,23 +10,66 @@
 
 \chapter*{Résumé}
 \addcontentsline{toc}{chapter}{Résumé}
-La robotique en essaim vise à obtenir des comportements collectifs à partir de règles locales appliquées par de nombreux robots simples. La formation de formes en est un cas d'étude particulièrement exigeant : le résultat recherché est global, alors que chaque robot ne dispose que d'une information locale et de messages limités à son voisinage. Les travaux sur le contrôle décentralisé d'essaims proposent des règles locales et des contrôleurs appris ; cependant, leurs hypothèses de consigne, leurs tâches et leurs protocoles diffèrent, ce qui complique les comparaisons à information équivalente et l'évaluation de formes symboliques variées.
 
-Dans ce mémoire, nous proposons un contrôleur décentralisé fondé sur un réseau de neurones sur graphes (GNN) partagé par tous les robots. Chaque robot ne traite que son état local, les messages de ses voisins proches et une consigne commune de forme ; il doit former des nuages de points représentant des formes géométriques et symboliques, tout en conservant un comportement utile face aux pannes et aux changements de taille de l'essaim. La chaîne expérimentale associe un simulateur bidimensionnel, un jeu de formes, un contrôleur GNN, un entraînement différentiable et un protocole d'évaluation.
+La robotique en essaim cherche à obtenir des comportements collectifs
+à partir de règles locales appliquées par de nombreux robots. Former une
+forme est un défi particulier : chaque robot ne dispose que d'informations
+limitées, et doit pourtant contribuer à un objectif commun. Les approches
+existantes reposent soit sur des règles écrites à la main, soit sur des
+contrôleurs appris, et les comparer reste difficile, car leurs hypothèses
+et leurs méthodes d'évaluation diffèrent.
 
-Les résultats préliminaires du pilote historique du prototype indiquent une meilleure adéquation à une cible circulaire que celle d'une règle locale de regroupement, dans les scénarios de taille et de retrait étudiés. Ces observations restent exploratoires : les méthodes ne reçoivent pas la même information de consigne et le nombre de répétitions est limité. Elles ne valident pas l'implémentation actuelle, dont les entraînements et les campagnes comparatives restent à réaliser.
+Ce mémoire étudie un contrôleur décentralisé fondé sur un réseau de
+neurones sur graphes (GNN), partagé par tous les robots. Chaque robot
+s'appuie sur son état local, sur les informations de ses voisins et sur
+une consigne commune qui décrit la forme à réaliser. Nous utilisons un
+simulateur bidimensionnel et un protocole qui évalue la formation de
+formes, le retrait de robots et les variations de taille de l'essaim.
 
-Ce travail fournit un banc d'essai reproductible pour étudier l'apport des réseaux de neurones sur graphes dans le contrôle décentralisé d'essaims, ainsi qu'un protocole d'évaluation explicite et rejouable, dont les hypothèses sont rendues visibles pour chaque campagne.
+Les essais préliminaires d'un prototype antérieur suivent mieux un
+contour circulaire qu'une règle locale de regroupement. Ces observations
+ont toutefois une portée limitée, car les deux approches ne reçoivent pas
+la même information. L'entraînement et l'évaluation comparative de
+l'implémentation actuelle restent à réaliser.
 
-\noindent\textbf{Mots-clés :} robotique en essaim, contrôle décentralisé, réseaux de neurones sur graphes, formation de formes, apprentissage différentiable, simulation de robots.
+Ce travail propose ainsi un cadre expérimental pour étudier ce que les
+GNN apportent au contrôle décentralisé des essaims de robots, avec un
+protocole pensé pour faciliter la reproductibilité des expériences.
+
+\noindent\textbf{Mots-clés :} robotique en essaim, contrôle décentralisé,
+réseaux de neurones sur graphes, formation de formes, apprentissage
+différentiable, simulation robotique.
 
 \chapter*{Abstract}
 \addcontentsline{toc}{chapter}{Abstract}
-This thesis studies the decentralized control of a simulated robot swarm driven by a shared graph neural network. Each robot only processes its local state, messages from its nearby neighbours, and a common shape instruction. Research on decentralized swarm control has proposed both local rules and learned controllers; however, differences in target information, tasks, and evaluation protocols complicate information-equivalent comparisons and the assessment of varied symbolic shapes. In this thesis, we propose a reproducible experimental chain combining a two-dimensional simulator, a shape dataset, a local GNN controller, differentiable training, and an evaluation protocol that includes failures and changes in swarm size.
 
-Preliminary results from the historical prototype pilot indicate a closer match to a circular target than that obtained by a local gathering rule in the tested swarm-size and removal scenarios. These observations remain exploratory because the methods do not receive the same target information and the number of repetitions is limited. They do not validate the current implementation, whose training runs and comparative campaigns have yet to be carried out. This work provides a reproducible testbed for studying the contribution of graph neural networks to decentralized swarm control, together with an explicit and replayable evaluation protocol whose assumptions are made visible for every campaign.
+Swarm robotics aims to produce collective behaviours from local rules
+applied by many robots. Shape formation is a particular challenge: each
+robot has only limited information, yet it must contribute to a common
+goal. Existing approaches rely either on hand-written rules or on
+learned controllers, and comparing them is hard because their assumptions
+and evaluation methods differ.
 
-\noindent\textbf{Keywords:} swarm robotics, decentralized control, graph neural networks, shape formation, differentiable learning, robot simulation.
+This thesis investigates a decentralized controller based on a graph
+neural network (GNN) shared by all robots. Each robot relies on its local
+state, on information from its neighbours, and on a common instruction
+describing the target shape. We use a two-dimensional simulator and an
+evaluation protocol that covers shape formation, robot removal, and
+changes in swarm size.
+
+Preliminary tests of an earlier prototype follow a circular contour
+better than a local gathering rule. These observations are limited,
+however, because the two approaches do not receive the same target
+information. Training and comparative evaluation of the current
+implementation remain to be done.
+
+This work thus offers an experimental framework for studying what graph
+neural networks bring to decentralized swarm control, with a protocol
+designed to make the experiments easier to reproduce.
+
+\noindent\textbf{Keywords:} swarm robotics, decentralized control,
+graph neural networks, shape formation, differentiable learning,
+robot simulation.
 
 \cleardoublepage
 \tableofcontents
