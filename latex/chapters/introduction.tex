@@ -5,53 +5,18 @@
 \section*{Contexte de l'étude}
 \addcontentsline{toc}{section}{Contexte de l'étude}
 
-La robotique en essaim s'intéresse à la coopération entre plusieurs robots
-relativement simples. Plutôt que de confier toute la mission à un seul
-robot, elle s'appuie sur des décisions locales et des échanges limités
-pour faire émerger un comportement collectif \cite{brambilla2013}.
-Cette organisation répartit les tâches et peut aider le système à
-continuer de fonctionner quand un robot tombe en panne ou quand
-de nouvelles unités s'ajoutent. On y recourt notamment pour l'exploration,
-la surveillance, le transport coopératif et l'occupation d'une zone.
+La robotique en essaim s'intéresse à la coopération entre robots relativement simples. Au lieu de confier toute la mission à une seule machine, on mise sur des décisions locales et des échanges limités, d'où émerge un comportement collectif \cite{brambilla2013}. L'idée a des avantages concrets. Le travail se répartit, et le système tient mieux le coup quand un robot tombe en panne ou que d'autres arrivent. On l'utilise surtout pour explorer, surveiller, transporter une charge à plusieurs ou occuper une zone.
 
-Obtenir un résultat collectif précis reste pourtant difficile.
-Le but peut être de couvrir une région, de maintenir une formation
-ou de dessiner une figure, alors que chaque robot ne connaît qu'une
-partie de la situation. Les méthodes classiques, en particulier celles
-inspirées du flocking, combinent cohésion, séparation et
-alignement pour coordonner les mouvements \cite{reynolds1987,olfati2006}.
-Elles sont faciles à comprendre. Les adapter devient en revanche
-plus délicat dès que les robots doivent reproduire des formes précises,
-et différentes les unes des autres.
+Obtenir un résultat collectif précis reste pourtant difficile. Le but peut être de couvrir une région, de garder une formation ou de dessiner une figure, et dans tous les cas chaque robot ne voit qu'une partie de la situation. Les méthodes classiques, celles inspirées du flocking en tête, combinent cohésion, séparation et alignement \cite{reynolds1987,olfati2006}. Elles se comprennent bien. Les adapter se complique dès qu'il faut produire des formes précises, et différentes les unes des autres.
 
-La formation de formes offre un bon terrain pour étudier cette difficulté.
-Rassembler plusieurs robots dans une même zone ne donne ni un
-cercle, ni une lettre, ni un symbole. Les robots doivent se répartir
-sur les différentes parties du contour, tout en évitant de se rapprocher
-trop près les uns des autres. Plusieurs travaux ont proposé des
-contrôleurs décentralisés pour former des courbes et organiser
-progressivement les robots \cite{hsieh2008,li2019}. Ils montrent l'intérêt
-du contrôle local, et aussi le poids des informations dont disposent
-les robots.
+La formation de formes met bien cette difficulté en évidence. Rassembler des robots dans une même zone ne donne ni un cercle, ni une lettre, ni un symbole. Il faut qu'ils se répartissent sur les différentes parties du contour sans trop se rapprocher les uns des autres. Plusieurs travaux ont proposé des contrôleurs décentralisés pour former des courbes et organiser les robots progressivement \cite{hsieh2008,li2019}. Ils montrent l'intérêt du contrôle local. Ils montrent aussi à quel point tout dépend de ce que chaque robot sait.
 
-Dans ce mémoire, le comportement des robots est piloté par un
-réseau de neurones sur graphes (\emph{Graph Neural Network}, GNN).
-Les robots y sont les nœuds d'un graphe et leurs communications en
-sont les arêtes. Tous partagent les mêmes paramètres, et chacun traite
-ce que lui envoient ses voisins pour décider de son mouvement.
-Les GNN permettent ainsi d'apprendre une politique locale tout en gardant
-une exécution décentralisée \cite{gilmer2017,battaglia2018,tolstaya2020}.
+Dans ce mémoire, le comportement des robots est piloté par un réseau de neurones sur graphes (\emph{Graph Neural Network}, GNN). Les robots en sont les nœuds, leurs communications les arêtes. Tous partagent les mêmes paramètres, et chacun traite ce que lui envoient ses voisins avant de décider de son mouvement. L'intérêt, c'est qu'on peut ainsi apprendre une politique locale tout en gardant une exécution décentralisée \cite{gilmer2017,battaglia2018,tolstaya2020}.
 
 \section*{Problématique}
 \addcontentsline{toc}{section}{Problématique}
 
-Un contrôle centralisé organise facilement une formation, car un système
-central connaît les positions de tous les robots et calcule leurs
-déplacements. Mais cette solution s'accorde mal avec les contraintes
-d'un essaim, où les communications sont limitées, où le nombre de robots
-peut varier et où certaines unités peuvent tomber en panne. Il s'agit donc
-d'obtenir un comportement collectif sans qu'aucun robot ne dispose de
-toutes les informations sur le groupe.
+Un contrôle centralisé organise facilement une formation. Un système central connaît les positions de tous les robots et calcule leurs déplacements. Mais cette solution s'accorde mal avec un essaim, où les communications sont limitées, où le nombre de robots peut varier et où certaines unités tombent en panne. Il faut donc obtenir un comportement collectif sans qu'aucun robot ne possède toutes les informations sur le groupe.
 
 La question principale de ce mémoire est la suivante :
 
@@ -63,36 +28,26 @@ lorsque des robots tombent en panne ou que la taille de l'essaim
 change ?}
 \end{quote}
 
-Le caractère décentralisé porte sur la décision de mouvement.
-Chaque robot utilise le même contrôleur et ne communique qu'avec
-les voisins à sa portée. La forme à réaliser est définie avant
-l'exécution et transmise à l'essaim comme une consigne de mission.
-Les robots ne la découvrent pas d'eux-mêmes. Selon la configuration,
-cette consigne prend la forme d'un identifiant de cible ou d'une
-information géométrique locale sur le contour.
+Le caractère décentralisé concerne la décision de mouvement. Chaque robot utilise le même contrôleur et ne parle qu'à ses voisins à portée. La forme à réaliser est fixée avant l'exécution et transmise à l'essaim comme une consigne de mission. Les robots ne la découvrent pas eux-mêmes. Selon la configuration, cette consigne est un identifiant de cible ou une information géométrique locale sur le contour.
 
-L'entraînement, lui, reste centralisé, dans un simulateur
-différentiable où une perte globale permet d'ajuster les poids
-du réseau. À l'exécution, chaque robot décide à partir de ses
-informations locales, sans accéder aux positions des robots éloignés.
+L'entraînement, lui, reste centralisé. Il se fait dans un simulateur différentiable, où une perte globale ajuste les poids du réseau. À l'exécution, en revanche, chaque robot décide avec ses informations locales, sans accéder aux positions des robots éloignés.
 
 Cette problématique se décline en quatre questions :
 
 \begin{enumerate}
     \item Le contrôleur appris rapproche-t-il la configuration
-    finale des robots de la forme cible, à partir de positions
-    initiales aléatoires ?
+    finale de la forme cible, à partir de positions initiales
+    aléatoires ?
 
     \item Les échanges entre voisins améliorent-ils la formation
     par rapport à des règles locales ou à une politique sans
-    communication, quand les informations de consigne sont
-    comparables ?
+    communication, à information de consigne comparable ?
 
-    \item La politique fonctionne-t-elle encore correctement
-    quand le nombre de robots, et donc de voisins, varie ?
+    \item La politique tient-elle encore quand le nombre de robots,
+    et donc de voisins, varie ?
 
-    \item Comment la qualité de la formation évolue-t-elle quand
-    certains robots sont retirés pendant une simulation ?
+    \item Que devient la qualité de la formation quand des robots
+    sont retirés en cours de simulation ?
 \end{enumerate}
 
 \newpage
@@ -100,8 +55,7 @@ Cette problématique se décline en quatre questions :
 \section*{Hypothèses}
 \addcontentsline{toc}{section}{Hypothèses}
 
-Trois hypothèses guident cette étude. Des expériences contrôlées
-devront les vérifier.
+Trois hypothèses guident cette étude. Seules des expériences contrôlées pourront les confirmer, ou non.
 
 \begin{enumerate}
     \item Une politique GNN partagée et conditionnée par la forme
@@ -109,45 +63,25 @@ devront les vérifier.
     cible.
 
     \item À consigne et ressources comparables, les échanges locaux
-    peuvent améliorer la qualité de la formation par rapport à une
+    pourraient améliorer la qualité de la formation par rapport à une
     politique sans communication.
 
     \item Le partage des paramètres permet d'utiliser la politique
-    avec différentes tailles d'essaim, mais ses performances
-    dépendent notamment de la densité des robots et de la connectivité
-    du réseau.
+    avec différentes tailles d'essaim. Ses performances dépendront
+    pourtant de la densité des robots et de la connectivité du
+    réseau.
 \end{enumerate}
 
 \subsection*{Hypothèses de modélisation et périmètre}
 
-Les expériences du prototype historique se déroulent dans une
-arène plane, sans obstacle fixe. Chaque robot a une position et une
-vitesse en deux dimensions, et se déplace selon une dynamique
-simplifiée où la vitesse est directement commandée. Deux robots
-communiquent quand leur distance est inférieure à une portée donnée.
-Mesures et messages sont supposés exacts, instantanés et sans perte.
-Un robot déclaré en panne est retiré de la simulation active et
-du graphe de communication.
+Les expériences du prototype historique se déroulent dans une arène plane, sans obstacle fixe. Chaque robot a une position et une vitesse en deux dimensions. Sa dynamique est simplifiée, la vitesse étant commandée directement. Deux robots communiquent quand leur distance passe sous une portée donnée. Mesures et messages sont supposés exacts, instantanés et sans perte. Un robot en panne est simplement retiré de la simulation et du graphe de communication.
 
-Ces hypothèses simplifient l'étude, au détriment de sa portée.
-Le pilote ne tient compte ni du bruit des capteurs, ni des délais
-de communication, ni des obstacles, ni de la dynamique réelle des
-actionneurs, ni de la consommation d'énergie. Aucun essai sur robots
-physiques ne figure non plus dans cette validation.
-L'implémentation actuelle prévoit d'étudier certaines perturbations,
-en particulier le bruit des observations et la réduction de la portée
-de communication, mais les résultats correspondants restent à obtenir.
-Il faudra aussi d'autres expériences pour déterminer ce que chaque
-mécanisme du GNN apporte.
+Ces hypothèses simplifient l'étude, mais elles en limitent la portée. Le prototype ignore le bruit des capteurs, les délais de communication, les obstacles, la dynamique réelle des actionneurs et la consommation d'énergie. Aucun essai n'a été mené sur des robots physiques. L'implémentation actuelle prévoit d'étudier certaines perturbations, surtout le bruit des observations et la réduction de la portée de communication, mais les résultats restent à obtenir. Il faudra aussi d'autres expériences pour savoir ce que chaque mécanisme du GNN apporte vraiment.
 
 \section*{Objectifs poursuivis}
 \addcontentsline{toc}{section}{Objectifs poursuivis}
 
-L'objectif général est de construire un cadre expérimental reproductible
-pour étudier le contrôle décentralisé d'un essaim de robots par GNN.
-Il ne s'agit pas de valider directement un système physique, mais de
-disposer d'un environnement où cette approche puisse être étudiée de
-façon contrôlée.
+L'objectif général est de construire un cadre expérimental reproductible pour étudier le contrôle décentralisé d'un essaim par GNN. Il ne s'agit pas de valider un système physique. On cherche plutôt un environnement où cette approche puisse être étudiée de façon contrôlée.
 
 Les objectifs spécifiques sont les suivants :
 
@@ -172,24 +106,11 @@ Les objectifs spécifiques sont les suivants :
     comportement quand la taille de l'essaim varie.
 \end{itemize}
 
-Le titre déposé parle de « réseaux de neurones cellulaires ». Cette
-appellation renvoie au partage d'une même règle de comportement et
-aux interactions limitées entre voisins. L'architecture effectivement
-implémentée est pourtant un GNN à passage de messages sur un graphe
-dynamique, et c'est le terme GNN que nous emploierons dans la suite
-pour la désigner précisément. Toute modification officielle du titre
-reste soumise à l'accord de l'encadrement.
+Le titre déposé parle de « réseaux de neurones cellulaires ». Cette expression renvoie au partage d'une même règle de comportement et à des interactions limitées entre voisins. Or l'architecture réellement implémentée est un GNN à passage de messages sur un graphe dynamique. C'est donc le terme GNN que nous employons dans la suite. Toute modification officielle du titre reste soumise à l'accord de l'encadrement.
 
 \subsection*{Choix du problème étudié}
 
-Nous avons retenu la formation de formes parce qu'on peut l'étudier
-dans un simulateur bidimensionnel tout en y rencontrant de vraies
-difficultés de coordination. À la différence du simple regroupement,
-elle demande aux robots de se répartir sur l'ensemble du contour
-cible. On y observe donc plusieurs aspects du contrôle décentralisé,
-notamment la couverture de la cible, les collisions et les problèmes de
-connectivité. La Figure~\ref{fig:schema-formation} présente les
-principales étapes d'une telle formation.
+Nous avons retenu la formation de formes parce qu'elle se prête à un simulateur bidimensionnel tout en posant de vraies difficultés de coordination. Contrairement au simple regroupement, elle oblige les robots à se répartir sur tout le contour cible. On y observe plusieurs aspects du contrôle décentralisé, comme la couverture de la cible, les collisions et la connectivité. La Figure~\ref{fig:schema-formation} en présente les grandes étapes.
 
 \begin{figure}[htbp]
     \centering
@@ -204,102 +125,42 @@ principales étapes d'une telle formation.
     \label{fig:schema-formation}
 \end{figure}
 
-Le cercle est le premier cas étudié, car son contour est régulier et
-se représente facilement par un nuage de points. Les chiffres et
-les lettres permettent ensuite de passer à des formes plus variées,
-avec des angles, des segments et des contours moins réguliers.
-Nous ne cherchons pas à reconnaître les symboles, seulement à voir si
-les robots peuvent en reproduire la géométrie. Qu'une lettre soit
-formée approximativement ne signifie pas que le système en comprend
-le sens.
+Le cercle vient en premier, car son contour est régulier et se représente facilement par un nuage de points. Chiffres et lettres suivent, avec leurs angles, leurs segments et leurs contours moins réguliers. Nous ne cherchons pas à reconnaître les symboles. Il s'agit seulement de voir si les robots en reproduisent la géométrie. Une lettre formée à peu près ne veut pas dire que le système en comprend le sens.
 
-La consigne commune joue elle aussi un rôle important. La forme cible
-est connue avant le début de la simulation, mais chaque robot décide
-de son mouvement à partir de ses propres informations et de celles de
-ses voisins. Aucun système central ne lui transmet l'ensemble des
-positions de l'essaim. Cette distinction précise ce qui est réellement
-décentralisé dans le fonctionnement du contrôleur.
+La consigne commune compte beaucoup. La forme cible est connue avant le début de la simulation, mais chaque robot décide de son mouvement avec ses propres informations et celles de ses voisins. Aucun système central ne lui envoie les positions de tout l'essaim. C'est ce point précis qui rend le contrôleur décentralisé.
 
 \subsection*{Critères de réussite}
 
-Une animation convaincante à l'œil ne démontre pas que la formation
-est réussie. Les robots doivent se rapprocher du contour cible et en
-couvrir les différentes parties, leurs commandes doivent rester
-bornées et les collisions rares.
+Une animation convaincante à l'œil ne prouve pas que la formation est réussie. Les robots doivent s'approcher du contour cible et en couvrir les différentes parties, avec des commandes bornées et peu de collisions.
 
-La reproductibilité compte aussi. Une même configuration et une même
-graine aléatoire doivent redonner le même scénario. Il faut en outre
-utiliser plusieurs graines, pour s'assurer que les résultats ne
-viennent pas d'une seule simulation favorable.
+La reproductibilité compte aussi. Une même configuration et une même graine aléatoire doivent redonner le même scénario. Et il faut plusieurs graines, pour ne pas s'appuyer sur une seule simulation favorable.
 
-La robustesse, elle, s'évalue à part. Que le modèle fonctionne avec
-plus de robots que pendant l'entraînement ne prouve pas sa capacité à
-généraliser. De même, retirer des robots n'est qu'un scénario simplifié
-de panne, et les capteurs défaillants comme les robots immobilisés qui
-restent dans l'environnement demanderont des études complémentaires.
+La robustesse s'évalue à part. Qu'un modèle fonctionne avec plus de robots qu'à l'entraînement ne prouve pas qu'il généralise. Retirer des robots n'est qu'une panne simplifiée. Les capteurs défaillants, ou les robots immobilisés qui restent dans l'environnement, demanderont d'autres études.
 
 \section*{Méthodes et techniques utilisées}
 \addcontentsline{toc}{section}{Méthodes et techniques utilisées}
 
-La démarche expérimentale commence par un simulateur stable, qui doit
-représenter correctement les distances entre robots, les communications
-et l'évolution des positions. Une erreur à ce niveau fausserait les
-résultats quelle que soit la qualité du modèle appris. Une règle locale
-de regroupement sert de première référence pour vérifier que la
-simulation se comporte comme prévu.
+Tout commence par un simulateur fiable. Il doit représenter correctement les distances entre robots, les communications et l'évolution des positions, sans quoi les résultats seraient faussés, quelle que soit la qualité du modèle appris. Une règle locale de regroupement sert de première référence : la simulation doit se comporter comme elle le prédit.
 
-La deuxième étape consiste à représenter les formes cibles par des
-nuages de points. Une forme y devient un ensemble de positions à
-couvrir, plutôt qu'une image à reconstruire pixel par pixel, ce qui
-permet de comparer la distribution des robots à celle du contour cible.
-Le nombre de robots disponibles limite néanmoins le niveau de détail
-qu'on peut reproduire.
+Les formes cibles sont ensuite représentées par des nuages de points. Une forme devient alors un ensemble de positions à couvrir, et non une image à reconstruire pixel par pixel. On peut ainsi comparer la distribution des robots à celle du contour cible. Le nombre de robots disponibles limite quand même le niveau de détail reproductible.
 
-La troisième étape est l'apprentissage du contrôleur GNN. Les robots
-partent de positions initiales variables et utilisent les mêmes
-paramètres pour déterminer leurs mouvements, de sorte que le contrôleur
-doit s'adapter aux situations très différentes qu'il rencontre pendant
-la simulation. Pour évaluer correctement son comportement, il faut des
-scénarios variés et plusieurs graines aléatoires.
+Vient l'apprentissage du contrôleur GNN. Les robots partent de positions initiales variables et partagent les mêmes paramètres. Le contrôleur doit donc faire face à des situations très différentes pendant la simulation. Son comportement ne s'évalue correctement que sur des scénarios variés, avec plusieurs graines aléatoires.
 
-Enfin, nous examinons les résultats à partir de plusieurs éléments.
-La courbe de perte renseigne sur l'apprentissage, et les visualisations
-montrent la formation obtenue. Les mesures calculées sur plusieurs
-épisodes donnent la variabilité des performances. Il faut lire ces
-éléments ensemble, pour ne pas prendre une belle animation pour une
-validation expérimentale.
+Les résultats se lisent enfin à partir de plusieurs éléments. La courbe de perte renseigne sur l'apprentissage, les visualisations montrent la formation obtenue et les mesures calculées sur plusieurs épisodes donnent la variabilité des performances. Aucun de ces éléments ne suffit seul. Une belle animation ne vaut pas une validation expérimentale.
 
 \section*{Contribution de l'étude}
 \addcontentsline{toc}{section}{Contribution de l'étude}
 
-Ce travail propose un cadre expérimental qui réunit la représentation
-des formes par nuages de points, un contrôleur GNN partagé et un
-protocole permettant de reproduire les simulations et d'analyser
-les trajectoires enregistrées. Il vise à faciliter l'étude du
-contrôle décentralisé, sans prétendre établir une supériorité
-générale des GNN sur les autres méthodes.
+Ce travail propose un cadre expérimental qui réunit la représentation des formes par nuages de points, un contrôleur GNN partagé et un protocole pour rejouer les simulations et analyser les trajectoires enregistrées. Il veut faciliter l'étude du contrôle décentralisé. Il ne prétend pas établir une supériorité générale des GNN sur les autres méthodes.
 
-Les résultats numériques disponibles viennent du prototype
-historique. Il faudra entraîner et valider expérimentalement
-l'implémentation actuelle avant de tirer des conclusions plus générales.
+Les résultats numériques disponibles viennent du prototype historique. Avant de tirer des conclusions plus générales, il faudra entraîner et valider l'implémentation actuelle.
 
 \section*{Plan sommaire et subdivision du travail}
 \addcontentsline{toc}{section}{Plan sommaire et subdivision du travail}
 
-Après cette introduction générale, le mémoire compte quatre chapitres.
-Le premier présente les notions fondamentales de la robotique en essaim
-et du contrôle local. Le deuxième examine les méthodes existantes et
-les travaux liés à la formation de formes. Le troisième décrit la
-méthodologie, le simulateur, les formes cibles, le contrôleur et la
-procédure d'apprentissage. Le quatrième présente l'implémentation et
-les résultats du prototype historique, avec leurs limites. Une
-discussion et une conclusion générale complètent le travail.
+Après cette introduction, le mémoire compte quatre chapitres. Le premier pose les notions de base de la robotique en essaim et du contrôle local. Le deuxième passe en revue les méthodes existantes et les travaux sur la formation de formes. Le troisième décrit la méthodologie, avec le simulateur, les formes cibles, le contrôleur et la procédure d'apprentissage. Le quatrième présente l'implémentation et les résultats du prototype historique, avec leurs limites. Une discussion et une conclusion générale terminent le travail.
 
-La Figure~\ref{fig:experimental-pipeline} résume le fonctionnement
-de la chaîne expérimentale. L'apprentissage utilise une perte globale
-dans le simulateur. Ensuite, chaque robot applique la politique
-partagée à partir de ses observations locales, des informations de ses
-voisins et de la consigne de mission.
+La Figure~\ref{fig:experimental-pipeline} résume la chaîne expérimentale. L'apprentissage utilise une perte globale dans le simulateur. Ensuite, chaque robot applique la politique partagée avec ses observations locales, les informations de ses voisins et la consigne de mission.
 
 \begin{figure}[htbp]
     \centering

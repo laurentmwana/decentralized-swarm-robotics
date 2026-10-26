@@ -2,7 +2,11 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[french]{babel}
-\addto\captionsfrench{\renewcommand{\tablename}{Tableau}}
+\addto\captionsfrench{%
+  \renewcommand{\tablename}{Tableau}%
+  \renewcommand{\listfigurename}{Liste des figures}%
+  \renewcommand{\contentsname}{Table des matières}%
+}
 \usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{setspace}
@@ -33,6 +37,8 @@
 \include{frontmatter/dedicace}
 \include{frontmatter/remerciements}
 \include{frontmatter/abbreviations}
+
+% Intégration unique des listes, de la table des matières et des résumés
 \include{frontmatter/sumaires}
 
 \pagenumbering{arabic}
@@ -41,7 +47,6 @@
 \include{chapters/introduction}
 \renewcommand{\thefigure}{\thechapter.\arabic{figure}}
 \renewcommand{\theHfigure}{\thechapter.\arabic{figure}}
-\include{chapters/preliminaries}
 \include{chapters/etat-art}
 \include{chapters/methode}
 \include{chapters/experiences}
