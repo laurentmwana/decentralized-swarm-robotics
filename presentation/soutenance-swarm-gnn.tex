@@ -229,7 +229,7 @@
   \includegraphics[width=0.46\textwidth,keepaspectratio]{images/differentiable_training_flow.png}
   \vspace{0.05cm}
   \begin{beamercolorbox}[wd=\textwidth,leftskip=0.4cm,dp=1.2em]{block body}
-    \footnotesize\textbf{1 200 itérations · 8 épisodes par lot} --- Adam $0{,}001$, décroissance $0{,}999$, gradient borné à 1, validation toutes les 50 itérations, 5 graines.
+    \footnotesize\textbf{1 200 itérations · 8 épisodes par lot} --- Adam $0{,}001$, décroissance $0{,}999$, gradient borné à 1, validation toutes les 50 itérations, cinq graines prévues et une seule entraînée pour le GNN avec messages.
     \textit{Valeurs configurées, non des réglages optimaux : des hypothèses de travail, pas des résultats.}\par
   \end{beamercolorbox}
 \end{frame}
@@ -330,7 +330,7 @@
       {\footnotesize\itshape\color{swarmmuted} Perte par cible au fil des quatre étapes (pilote historique).\par}
       \vspace{0.3em}
       \begin{block}{À retenir}
-        \footnotesize Le curriculum a fonctionné : les formes anciennes restent atteintes. Pas de preuve d'un apprentissage plus rapide. La campagne prévue ajoutera cinq graines par niveau, un contrôle sans curriculum à budget identique et des cibles tenues hors entraînement.
+        \footnotesize Le curriculum a fonctionné : les formes anciennes restent atteintes. Pas de preuve d'un apprentissage plus rapide. La campagne prévue ajoutera cinq graines d'entraînement, cinquante répétitions par condition et des cibles tenues hors entraînement avant la mesure.
       \end{block}
     \end{column}
   \end{columns}
@@ -341,10 +341,10 @@
   \begin{columns}[T]
     \begin{column}{0.46\textwidth}
       \textbf{\color{swarmblue}Validité interne}\\
-      {\footnotesize Dix épisodes par condition et une seule graine pilotée. Le couplage curriculum / architecture n'est pas séparé ; aucune ligne de base apprise sans communication n'est évaluée.\par}
+      {\footnotesize Dix épisodes par condition, une seule graine pilotée. Le couplage curriculum / architecture n'est pas séparé. La variante sans communication est entraînée et évaluée : c'est son analyse qui manque, le GNN avec messages n'ayant qu'un seul run.\par}
       \vspace{0.4em}
       \textbf{\color{swarmblue}Validité externe}\\
-      {\footnotesize Repère commun entre robots, positions exactes sans capteur bruité, aucun délai ni perte de message, panne propre, arène finie, vingt pas d'horizon seulement.\par}
+      {\footnotesize Repère commun, positions exactes sans capteur bruité, aucun délai ni perte de message, panne propre, arène finie ; vingt pas d'horizon au pilote, 40 à l'entraînement et 120 à l'évaluation depuis.\par}
       \vspace{0.4em}
       \textbf{\color{swarmblue}Ce que la mesure ne dit pas}\\
       {\footnotesize La distance de forme est aveugle à la lisibilité de la figure ; le seuil de succès est un choix opérationnel ; un taux de collisions n'est pas un impact mécanique.\par}
@@ -352,7 +352,7 @@
     \begin{column}{0.54\textwidth}
       \includegraphics[width=\textwidth,keepaspectratio]{images/controller_information_matrix.png}
       \vspace{0.15cm}
-      {\footnotesize\itshape\color{swarmmuted} Information reçue par chaque contrôleur : voisinage, identifiant de forme, géométrie cible, poids ajustables. La matrice décrit ce qui est préparé, pas des performances : quatre variantes attendent encore un entraînement.\par}
+      {\footnotesize\itshape\color{swarmmuted} Ce que chaque contrôleur reçoit à l'exécution : voisinage, identifiant de forme, géométrie cible, poids ajustables. Cette matrice décrit ce qui est préparé, pas des performances : le pilote n'a évalué que l'ancien GNN et le regroupement.\par}
     \end{column}
   \end{columns}
   \vspace{0.2em}
@@ -381,7 +381,7 @@
       \textbf{\color{swarmgold}CE QUI RESTE À CONDUIRE}
       \begin{itemize}\footnotesize
         \item Au moins 50 départs par condition et cinq graines d'entraînement.
-        \item La comparaison prioritaire : la même consigne, sans message.
+        \item Analyser les variantes déjà entraînées : la même consigne, sans message, et la règle manuelle à consigne comparable.
         \item Bruit d'observation, suppression d'arêtes, portée réduite.
         \item Un questionnaire aveugle sur la lisibilité des figures.
         \item Aucun résultat d'entraînement accepté pour l'implémentation actuelle.
