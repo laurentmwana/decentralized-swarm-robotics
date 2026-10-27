@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Essaim — démonstration locale</title>
   <style>
+    
     :root {
       color-scheme: light;
       --bg: #f3f6fa;
@@ -208,7 +209,8 @@
 
     .metric dt {
       color: var(--muted);
-      font-size: .8rem;
+      font-size: .78rem;
+      line-height: 1.3;
     }
 
     .metric dd {
@@ -225,6 +227,110 @@
       color: var(--danger);
     }
 
+    .controller-list {
+      list-style: none;
+      margin: 0 0 1rem;
+      padding: 0;
+      display: grid;
+      gap: .7rem;
+    }
+
+    .controller-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: .75rem .85rem;
+      background: var(--panel-soft);
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    .controller-card[data-available=false] {
+      background: #fffaf2;
+      border-color: #f0d9b5;
+    }
+
+    .controller-card[data-flash=true] {
+      border-color: var(--focus);
+      box-shadow: 0 0 0 3px rgb(217 137 11 / .2);
+    }
+
+    .controller-card header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: .6rem;
+      margin: 0 0 .3rem;
+    }
+
+    .controller-card strong {
+      font-size: .93rem;
+    }
+
+    .controller-card p {
+      font-size: .84rem;
+      line-height: 1.45;
+      margin: 0 0 .35rem;
+    }
+
+    .pill {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      font-size: .74rem;
+      font-weight: 600;
+      padding: .15rem .55rem;
+      border-radius: 999px;
+      background: #e3f4ec;
+      color: #0d6b47;
+    }
+
+    .pill::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .controller-card[data-available=false] .pill {
+      background: #fbe9d0;
+      color: #8a5300;
+    }
+
+    .remedy {
+      margin: .5rem 0 0;
+      padding-left: 1.2rem;
+      font-size: .84rem;
+      display: grid;
+      gap: .45rem;
+    }
+
+    .remedy-command {
+      display: flex;
+      align-items: stretch;
+      gap: .4rem;
+      margin-top: .3rem;
+    }
+
+    .remedy-command code {
+      flex: 1 1 auto;
+      min-width: 0;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding: .35rem .55rem;
+      border-radius: 6px;
+      background: #1a2533;
+      color: #e8eef6;
+      font-family: ui-monospace, 'Cascadia Code', Consolas, monospace;
+      font-size: .8rem;
+    }
+
+    .remedy-command button {
+      width: auto;
+      padding: .25rem .6rem;
+      font-size: .78rem;
+    }
+
     .notice {
       border-left: 3px solid var(--focus);
       padding-left: .9rem;
@@ -235,15 +341,48 @@
 
     .stage {
       position: relative;
+      aspect-ratio: 1;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--arena);
     }
 
+    /* Taille CSS fixée par le conteneur ; la résolution interne suit devicePixelRatio (rendu net). */
     canvas {
       display: block;
-      background: var(--arena);
       width: 100%;
-      height: auto;
+      height: 100%;
+    }
+
+    .chart-panel {
+      margin-top: 1.1rem;
+    }
+
+    .chart-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: .2rem 1rem;
+      margin-bottom: .4rem;
+    }
+
+    .chart-header h3 {
+      margin: 0;
+    }
+
+    .chart-header output {
+      min-width: 0;
+      font-size: .85rem;
+    }
+
+    .chart {
+      height: 170px;
+      background: var(--panel-soft);
       border: 1px solid var(--border);
       border-radius: 10px;
+      cursor: crosshair;
+      touch-action: none;
     }
 
     .overlay {
@@ -284,21 +423,22 @@
     .legend {
       display: flex;
       flex-wrap: wrap;
-      gap: 1.2rem;
-      font-size: .9rem;
-      margin: .9rem 0 1.1rem;
+      gap: .5rem 1.3rem;
+      font-size: .88rem;
+      color: var(--muted);
+      margin: .8rem 0 1.1rem;
+      padding: 0;
+      list-style: none;
     }
 
-    .target {
-      color: var(--target);
+    .legend li {
+      display: flex;
+      align-items: center;
+      gap: .45rem;
     }
 
-    .robot {
-      color: var(--robot);
-    }
-
-    .inactive {
-      color: var(--inactive);
+    .legend svg {
+      flex: 0 0 auto;
     }
 
     .controls {
@@ -460,15 +600,23 @@
           <button id="reload-button" type="button" hidden>Recharger le catalogue</button>
         </section>
 
+        <section class="panel" aria-labelledby="controllers-title">
+          <h2 id="controllers-title">Contrôleurs</h2>
+          <ul id="controller-list" class="controller-list" aria-live="polite">
+            <li class="muted">Chargement…</li>
+          </ul>
+          <button id="recheck-button" type="button" disabled>Vérifier à nouveau</button>
+        </section>
+
         <section class="panel" aria-labelledby="metrics-title">
           <h2 id="metrics-title">Métriques du dernier épisode</h2>
           <dl class="metrics">
             <div class="metric">
-              <dt>Distance de Chamfer finale</dt>
+              <dt>Distance finale (Chamfer)</dt>
               <dd id="distance-value">—</dd>
             </div>
             <div class="metric">
-              <dt>Réussite selon le seuil</dt>
+              <dt>Réussite</dt>
               <dd id="success-value">—</dd>
             </div>
             <div class="metric">
@@ -476,8 +624,16 @@
               <dd id="threshold-value">—</dd>
             </div>
             <div class="metric">
-              <dt>Pas de convergence stabilisée</dt>
+              <dt>Convergence stable (pas)</dt>
               <dd id="convergence-value">—</dd>
+            </div>
+            <div class="metric">
+              <dt>Taux de collisions</dt>
+              <dd id="collision-value">—</dd>
+            </div>
+            <div class="metric">
+              <dt>Composantes connexes finales</dt>
+              <dd id="components-value">—</dd>
             </div>
           </dl>
           <p class="notice muted">Une animation et les métriques d’un seul épisode sont une illustration, pas une
@@ -488,16 +644,30 @@
       <section class="panel" aria-labelledby="trajectory-title">
         <h2 id="trajectory-title">Trajectoire enregistrée</h2>
         <div class="stage">
-          <canvas id="trajectory" width="720" height="720" role="img"
-            aria-label="Arène : points cibles verts, robots bleus, robots inactifs gris">Votre navigateur doit prendre en
+          <canvas id="trajectory" role="img"
+            aria-label="Arène : points cibles verts, robots bleus, robots inactifs gris">Votre navigateur doit prendre
+            en
             charge le canvas pour afficher la trajectoire.</canvas>
           <div id="loading" class="overlay" aria-hidden="true" hidden>
             <span class="spinner"></span>
             <span id="loading-text">Calcul en cours…</span>
           </div>
         </div>
-        <p class="legend"><span class="target">+ Cible</span><span class="robot">● Robot actif</span><span
-            class="inactive">○ Robot inactif</span></p>
+        <!-- Pictogrammes identiques aux marqueurs dessinés dans l'arène. -->
+        <ul class="legend">
+          <li><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+              <circle cx="6" cy="6" r="3.2" fill="none" stroke="#139562" stroke-width="1.6" />
+            </svg>Point cible</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+              <circle cx="7" cy="7" r="5" fill="#1f6fd1" stroke="#fff" stroke-width="1.5" />
+            </svg>Robot actif</li>
+          <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+              <circle cx="7" cy="7" r="4.5" fill="#fff" stroke="#8493a4" stroke-width="1.6" />
+            </svg>Robot retiré</li>
+          <li><svg width="22" height="10" viewBox="0 0 22 10" aria-hidden="true">
+              <path d="M1 8 Q11 0 21 4" fill="none" stroke="#1f6fd1" stroke-opacity=".4" stroke-width="1.6" />
+            </svg>Traînée</li>
+        </ul>
 
         <div class="controls">
           <div>
@@ -526,6 +696,14 @@
             </div>
             <div class="opt"><input id="loop-check" type="checkbox"><label for="loop-check">Boucle</label></div>
           </div>
+        </div>
+        <div class="chart-panel">
+          <div class="chart-header">
+            <h3 id="chart-title">Distance à la cible</h3>
+            <output id="chart-value" for="frame-slider"></output>
+          </div>
+          <canvas id="distance-chart" class="chart" role="img" aria-labelledby="chart-title"
+            aria-describedby="chart-value">Courbe de distance de Chamfer par pas, avec le seuil de réussite.</canvas>
         </div>
         <p id="episode-info" class="muted">Choisissez une cible puis calculez un épisode pour afficher les positions.
         </p>
@@ -557,10 +735,17 @@
     const loopCheck = byId("loop-check");
     const canvas = byId("trajectory");
     const context = canvas.getContext("2d");
+    const chart = byId("distance-chart");
+    const chartContext = chart.getContext("2d");
+    const chartValue = byId("chart-value");
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const TRAIL_LENGTH = 14;
-    const COLORS = { arena: "#c3cedc", target: "#139562", robot: "#1f6fd1", inactive: "#8493a4", trail: "31, 111, 209" };
+    const COLORS = {
+      grid: "#e6ebf2", axis: "#c3cedc", tick: "#7a8899", target: "#139562", robot: "#1f6fd1",
+      inactive: "#8493a4", trail: "31, 111, 209", threshold: "#d9890b", success: "rgba(19, 149, 98, 0.08)",
+    };
+    const FONT = "12px Inter, system-ui, -apple-system, 'Segoe UI', sans-serif";
 
     let episode = null;
     let playing = false;
@@ -605,8 +790,99 @@
     async function fetchJson(url) {
       const response = await fetch(url, { cache: "no-store" });
       const data = await response.json();
-      if (!response.ok) throw new Error(typeof data.detail === "string" ? data.detail : "Requête invalide.");
+      if (!response.ok) {
+        const error = new Error(typeof data.detail === "string" ? data.detail : "Requête invalide.");
+        error.remedy = Array.isArray(data.remedy) ? data.remedy : [];
+        throw error;
+      }
       return data;
+    }
+
+    // --- Panneau « Contrôleurs » : état, explication et marche à suivre, construits nœud par nœud (textContent, jamais de HTML injecté).
+    const CONTROLLER_INFO = {
+      manual: { label: "Règle manuelle", description: "Règle écrite : attraction vers le point de contour le plus proche et répulsion entre voisins proches." },
+      flocking: { label: "Règle de regroupement", description: "Règle écrite : cohésion et répulsion entre voisins, sans consigne de forme. Sert de plancher." },
+      gnn_2_rounds: { label: "GNN entraîné — deux tours", description: "Réseau de neurones sur graphe : deux tours de messages entre voisins à portée, poids appris et partagés." },
+    };
+    const controllerList = byId("controller-list");
+    const recheckButton = byId("recheck-button");
+    let controllerStates = [];
+
+    function element(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+
+    async function copyCommand(command, button) {
+      try {
+        await navigator.clipboard.writeText(command);
+        button.textContent = "Copié";
+      } catch {
+        button.textContent = "Copie impossible";
+      }
+      setTimeout(() => { button.textContent = "Copier"; }, 1600);
+    }
+
+    function renderControllers() {
+      controllerList.replaceChildren();
+      for (const item of controllerStates) {
+        const info = CONTROLLER_INFO[item.name] || { label: item.name, description: "" };
+        const card = element("li", "controller-card");
+        card.dataset.name = item.name;
+        card.dataset.available = String(item.available);
+        const header = element("header");
+        header.append(element("strong", "", info.label), element("span", "pill", item.available ? "Disponible" : "Indisponible"));
+        card.append(header);
+        if (info.description) card.append(element("p", "muted", info.description));
+        if (!item.available) {
+          card.append(element("p", "", item.reason || "Checkpoint indisponible."));
+          if (item.remedy?.length) {
+            card.append(element("p", "", "Pour le rendre disponible :"));
+            const steps = element("ol", "remedy");
+            for (const step of item.remedy) {
+              const entry = element("li", "", step.text);
+              if (step.command) {
+                const row = element("div", "remedy-command");
+                const button = element("button", "", "Copier");
+                button.type = "button";
+                button.setAttribute("aria-label", `Copier la commande ${step.command}`);
+                button.addEventListener("click", () => copyCommand(step.command, button));
+                row.append(element("code", "", step.command), button);
+                entry.append(row);
+              }
+              steps.append(entry);
+            }
+            card.append(steps);
+          }
+        }
+        controllerList.append(card);
+      }
+    }
+
+    // Une erreur de calcul met à jour la carte concernée et la signale, au lieu d'un simple message.
+    function flagController(name, reason, remedy) {
+      const state = controllerStates.find(item => item.name === name);
+      if (!state) return;
+      Object.assign(state, { available: false, reason, remedy });
+      renderControllers();
+      refreshControllerOptions();
+      const card = controllerList.querySelector(`[data-name="${CSS.escape(name)}"]`);
+      card.dataset.flash = "true";
+      card.scrollIntoView({ block: "nearest", behavior: reducedMotion.matches ? "auto" : "smooth" });
+      setTimeout(() => { card.dataset.flash = "false"; }, 2500);
+    }
+
+    function refreshControllerOptions() {
+      const previous = controllerSelect.value;
+      controllerSelect.replaceChildren();
+      for (const item of controllerStates) {
+        const label = (CONTROLLER_INFO[item.name] || { label: item.name }).label;
+        addOption(controllerSelect, item.name, item.available ? label : `${label} — indisponible`, !item.available);
+      }
+      const usable = controllerStates.find(item => item.name === previous && item.available);
+      controllerSelect.value = usable ? previous : controllerStates.find(item => item.available)?.name ?? "";
     }
 
     function setTransportEnabled(enabled) {
@@ -631,34 +907,87 @@
       drawFrame();
     }
 
-    function drawCross(x, y) {
-      context.beginPath();
-      context.moveTo(x - 4, y); context.lineTo(x + 4, y);
-      context.moveTo(x, y - 4); context.lineTo(x, y + 4);
-      context.stroke();
+    // Résolution interne = taille affichée × densité de pixels ; on dessine ensuite en pixels CSS.
+    function fitCanvas(node, ctx) {
+      const ratio = window.devicePixelRatio || 1;
+      const { width, height } = node.getBoundingClientRect();
+      const pixelWidth = Math.max(1, Math.round(width * ratio));
+      const pixelHeight = Math.max(1, Math.round(height * ratio));
+      if (node.width !== pixelWidth || node.height !== pixelHeight) {
+        node.width = pixelWidth;
+        node.height = pixelHeight;
+      }
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      return { width, height };
+    }
+
+    const formatNumber = (value, digits = 2) => value.toLocaleString("fr-FR", { maximumFractionDigits: digits });
+
+    // Grille d'une unité du repère commun (rayon de cible = 1), axes passant par l'origine.
+    function drawArena(width, height, extent, mapPoint) {
+      context.fillStyle = "#fbfdff";
+      context.fillRect(0, 0, width, height);
+      context.lineWidth = 1;
+      for (let value = -Math.floor(extent); value <= extent; value += 0.5) {
+        const [x] = mapPoint([value, 0]);
+        const [, y] = mapPoint([0, value]);
+        context.strokeStyle = value === 0 ? COLORS.axis : COLORS.grid;
+        context.beginPath(); context.moveTo(Math.round(x) + 0.5, 0); context.lineTo(Math.round(x) + 0.5, height); context.stroke();
+        context.beginPath(); context.moveTo(0, Math.round(y) + 0.5); context.lineTo(width, Math.round(y) + 0.5); context.stroke();
+      }
+      context.fillStyle = COLORS.tick;
+      context.font = FONT;
+      context.textBaseline = "bottom";
+      for (let value = -Math.floor(extent) + 1; value < extent; value += 1) {
+        if (value === 0) continue;
+        const [x, yAxis] = mapPoint([value, 0]);
+        context.textAlign = "center";
+        context.fillText(String(value), x, yAxis - 3);
+        const [xAxis, y] = mapPoint([0, value]);
+        context.textAlign = "left";
+        context.fillText(String(value), xAxis + 4, y - 2);
+      }
+    }
+
+    // Bandeau d'état dessiné dans l'arène : pas, temps simulé et distance au pas affiché.
+    function drawHud(frame) {
+      const distance = episode.metrics.distance_curve?.[frame];
+      const parts = [`pas ${frame}/${episode.horizon}`, `t = ${formatNumber(frame * episode.dt, 1)} s`];
+      if (Number.isFinite(distance)) parts.push(`distance ${formatNumber(distance, 3)}`);
+      const text = parts.join("  ·  ");
+      context.font = FONT;
+      context.textAlign = "left";
+      context.textBaseline = "middle";
+      const width = context.measureText(text).width + 20;
+      context.fillStyle = "rgba(255, 255, 255, 0.9)";
+      context.strokeStyle = "#d6dee9";
+      context.beginPath(); context.roundRect(10, 10, width, 26, 6); context.fill(); context.stroke();
+      context.fillStyle = "#1a2533";
+      context.fillText(text, 20, 23.5);
     }
 
     function drawFrame() {
-      context.clearRect(0, 0, canvas.width, canvas.height);
+      const { width, height } = fitCanvas(canvas, context);
+      context.clearRect(0, 0, width, height);
+      drawChart();
       if (!episode) return;
       const frame = Math.min(episode.horizon, Math.floor(playhead));
       const next = Math.min(episode.horizon, frame + 1);
       const frac = smoothCheck.checked && !reducedMotion.matches ? playhead - frame : 0;
       const extent = episode.arena_size / 2;
-      const padding = 24;
-      const scale = (canvas.width - 2 * padding) / (2 * extent);
-      const mapPoint = point => [canvas.width / 2 + point[0] * scale, canvas.height / 2 - point[1] * scale];
+      const scale = Math.min(width, height) / (2 * extent);
+      const mapPoint = point => [width / 2 + point[0] * scale, height / 2 - point[1] * scale];
+      // Marqueurs proportionnés à l'arène, bornés pour rester lisibles sur petit et grand écran.
+      const robotRadius = Math.max(3.5, Math.min(7, scale * 0.045));
 
-      context.lineWidth = 1;
-      context.strokeStyle = COLORS.arena;
-      context.strokeRect(padding, padding, canvas.width - 2 * padding, canvas.height - 2 * padding);
+      drawArena(width, height, extent, mapPoint);
 
       context.strokeStyle = COLORS.target;
-      context.lineWidth = 1.5;
+      context.lineWidth = 1.4;
       for (const point of episode.target) {
         if (!point.every(Number.isFinite)) continue;
         const [x, y] = mapPoint(point);
-        drawCross(x, y);
+        context.beginPath(); context.arc(x, y, robotRadius * 0.62, 0, 2 * Math.PI); context.stroke();
       }
 
       const current = episode.positions[frame];
@@ -697,20 +1026,151 @@
         });
       }
 
-      context.lineWidth = 1.6;
-      shown.forEach((point, index) => {
-        if (!point.every(Number.isFinite)) return;
-        const [x, y] = mapPoint(point);
-        const active = episode.active[frame][index];
-        context.beginPath(); context.arc(x, y, 4.5, 0, 2 * Math.PI);
-        if (active) { context.fillStyle = COLORS.robot; context.fill(); }
-        else { context.strokeStyle = COLORS.inactive; context.stroke(); }
-      });
+      // Robots retirés d'abord, robots actifs par-dessus ; liseré blanc pour séparer les robots proches.
+      for (const drawActive of [false, true]) {
+        shown.forEach((point, index) => {
+          if (!point.every(Number.isFinite) || Boolean(episode.active[frame][index]) !== drawActive) return;
+          const [x, y] = mapPoint(point);
+          context.beginPath(); context.arc(x, y, drawActive ? robotRadius : robotRadius * 0.9, 0, 2 * Math.PI);
+          context.lineWidth = drawActive ? 1.5 : 1.6;
+          context.fillStyle = drawActive ? COLORS.robot : "#ffffff";
+          context.strokeStyle = drawActive ? "#ffffff" : COLORS.inactive;
+          context.fill(); context.stroke();
+        });
+      }
+      drawHud(frame);
 
       slider.value = String(frame);
       byId("frame-value").textContent = `${frame} / ${episode.horizon}`;
       slider.setAttribute("aria-valuetext", `Pas ${frame} sur ${episode.horizon}`);
     }
+
+    const CHART_MARGIN = { left: 44, right: 14, top: 12, bottom: 26 };
+
+    function chartGeometry(width, height) {
+      const curve = episode.metrics.distance_curve || [];
+      const finite = curve.filter(Number.isFinite);
+      const threshold = episode.metrics.success_threshold;
+      // Graduation « ronde » (1, 2, 2,5 ou 5 × 10^k) sur quatre intervalles.
+      const peak = Math.max(...finite, Number.isFinite(threshold) ? threshold * 1.4 : 0, 1e-6);
+      const magnitude = 10 ** Math.floor(Math.log10(peak / 4));
+      const tickStep = [1, 2, 2.5, 5, 10].map(factor => factor * magnitude).find(step => step * 4 >= peak);
+      const top = tickStep * 4;
+      const plotWidth = width - CHART_MARGIN.left - CHART_MARGIN.right;
+      const plotHeight = height - CHART_MARGIN.top - CHART_MARGIN.bottom;
+      return {
+        curve, threshold, top,
+        x: step => CHART_MARGIN.left + (step / Math.max(1, episode.horizon)) * plotWidth,
+        y: value => CHART_MARGIN.top + (1 - value / top) * plotHeight,
+        step: px => Math.round(((px - CHART_MARGIN.left) / plotWidth) * episode.horizon),
+      };
+    }
+
+    // Courbe de distance déjà calculée par le serveur ; le graphique ne recalcule aucune métrique.
+    function drawChart() {
+      const { width, height } = fitCanvas(chart, chartContext);
+      const ctx = chartContext;
+      ctx.clearRect(0, 0, width, height);
+      ctx.font = FONT;
+      if (!episode || !episode.metrics.distance_curve) {
+        ctx.fillStyle = COLORS.tick;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("La courbe apparaîtra après le calcul d’un épisode.", width / 2, height / 2);
+        chartValue.textContent = "";
+        return;
+      }
+      const g = chartGeometry(width, height);
+      const left = CHART_MARGIN.left, right = width - CHART_MARGIN.right;
+      const bottom = height - CHART_MARGIN.bottom;
+
+      // Zone de réussite (sous le seuil) et graduations.
+      if (Number.isFinite(g.threshold)) {
+        ctx.fillStyle = COLORS.success;
+        ctx.fillRect(left, g.y(g.threshold), right - left, bottom - g.y(g.threshold));
+      }
+      ctx.lineWidth = 1;
+      ctx.textBaseline = "middle";
+      ctx.textAlign = "right";
+      for (let index = 0; index <= 4; index++) {
+        const value = (g.top * index) / 4;
+        const y = Math.round(g.y(value)) + 0.5;
+        ctx.strokeStyle = index === 0 ? COLORS.axis : COLORS.grid;
+        ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(right, y); ctx.stroke();
+        ctx.fillStyle = COLORS.tick;
+        ctx.fillText(formatNumber(value, 2), left - 6, y);
+      }
+      ctx.textAlign = "center";
+      ctx.textBaseline = "top";
+      const tickStep = Math.max(1, Math.ceil(episode.horizon / 6 / 10) * 10);
+      for (let step = 0; step <= episode.horizon; step += tickStep) ctx.fillText(String(step), g.x(step), bottom + 6);
+
+      if (Number.isFinite(g.threshold)) {
+        const y = g.y(g.threshold);
+        ctx.strokeStyle = COLORS.threshold;
+        ctx.setLineDash([5, 4]);
+        ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(right, y); ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = COLORS.threshold;
+        ctx.textAlign = "right";
+        ctx.textBaseline = "bottom";
+        ctx.fillText(`seuil ${formatNumber(g.threshold, 3)}`, right - 2, y - 3);
+      }
+
+      const convergence = episode.metrics.convergence_step;
+      if (Number.isInteger(convergence)) {
+        const x = Math.round(g.x(convergence)) + 0.5;
+        ctx.strokeStyle = COLORS.target;
+        ctx.setLineDash([2, 3]);
+        ctx.beginPath(); ctx.moveTo(x, CHART_MARGIN.top); ctx.lineTo(x, bottom); ctx.stroke();
+        ctx.setLineDash([]);
+      }
+
+      // Courbe : interrompue sur les valeurs non définies (aucun robot actif).
+      ctx.strokeStyle = COLORS.robot;
+      ctx.lineWidth = 2;
+      ctx.lineJoin = "round";
+      ctx.beginPath();
+      let drawing = false;
+      g.curve.forEach((value, step) => {
+        if (!Number.isFinite(value)) { drawing = false; return; }
+        if (drawing) ctx.lineTo(g.x(step), g.y(value)); else ctx.moveTo(g.x(step), g.y(value));
+        drawing = true;
+      });
+      ctx.stroke();
+
+      // Tête de lecture synchronisée avec l'arène.
+      const frame = Math.min(episode.horizon, Math.round(playhead));
+      const x = Math.round(g.x(frame)) + 0.5;
+      ctx.strokeStyle = "#1a2533";
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(x, CHART_MARGIN.top); ctx.lineTo(x, bottom); ctx.stroke();
+      const value = g.curve[frame];
+      if (Number.isFinite(value)) {
+        ctx.fillStyle = COLORS.robot;
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 2;
+        ctx.beginPath(); ctx.arc(x, g.y(value), 4.5, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+      }
+      const reached = Number.isInteger(convergence) ? ` · stable dès le pas ${convergence}` : " · jamais stable sous le seuil";
+      chartValue.textContent = `Pas ${frame} : ${Number.isFinite(value) ? formatNumber(value, 3) : "non défini"}${reached}`;
+    }
+
+    // Cliquer ou glisser sur la courbe déplace la tête de lecture.
+    function seekFromChart(event) {
+      if (!episode || !episode.metrics.distance_curve) return;
+      const bounds = chart.getBoundingClientRect();
+      const g = chartGeometry(bounds.width, bounds.height);
+      stopPlayback();
+      seek(g.step(event.clientX - bounds.left));
+    }
+    chart.addEventListener("pointerdown", event => {
+      chart.setPointerCapture(event.pointerId);
+      seekFromChart(event);
+    });
+    chart.addEventListener("pointermove", event => {
+      if (chart.hasPointerCapture(event.pointerId)) seekFromChart(event);
+    });
 
     function formatMetric(value) {
       return typeof value === "number" && Number.isFinite(value) ? value.toLocaleString("fr-FR", { maximumFractionDigits: 4 }) : "Non défini";
@@ -718,31 +1178,40 @@
 
     async function loadCatalog() {
       reloadButton.hidden = true;
+      recheckButton.disabled = true;
+      // Une re-vérification conserve les choix déjà faits ; le premier chargement prend les valeurs par défaut.
+      const kept = controllerStates.length ? { target: targetSelect.value, controller: controllerSelect.value, size: sizeSelect.value, seed: seedInput.value } : null;
       setBusy("Chargement du catalogue…");
       try {
         const catalog = await fetchJson("/api/targets");
-        targetSelect.replaceChildren(); controllerSelect.replaceChildren(); sizeSelect.replaceChildren();
+        targetSelect.replaceChildren(); sizeSelect.replaceChildren();
         for (const target of catalog.targets) addOption(targetSelect, target.key, `${target.name} — ${target.n_points} points`);
-        const labels = { manual: "Règle manuelle", flocking: "Règle de regroupement", gnn_2_rounds: "GNN entraîné — deux tours" };
-        for (const item of catalog.controllers) addOption(controllerSelect, item.name, `${labels[item.name] || item.name}${item.available ? "" : " (indisponible)"}`, !item.available);
         for (const size of catalog.limits.swarm_sizes) addOption(sizeSelect, size, String(size));
-        if (catalog.targets.some(target => target.key === catalog.defaults.target)) targetSelect.value = catalog.defaults.target;
-        controllerSelect.value = catalog.defaults.controller;
-        sizeSelect.value = String(catalog.defaults.n_robots);
-        seedInput.value = String(catalog.defaults.seed);
+        controllerStates = catalog.controllers;
+        renderControllers();
+        refreshControllerOptions();
+        const wanted = kept ? kept.controller : catalog.defaults.controller;
+        if (controllerStates.some(item => item.name === wanted && item.available)) controllerSelect.value = wanted;
+        const target = kept ? kept.target : catalog.defaults.target;
+        if (catalog.targets.some(item => item.key === target)) targetSelect.value = target;
+        sizeSelect.value = kept ? kept.size : String(catalog.defaults.n_robots);
+        seedInput.value = kept ? kept.seed : String(catalog.defaults.seed);
         seedInput.max = String(catalog.limits.seed_max);
         for (const control of form.elements) control.disabled = false;
-        const unavailable = catalog.controllers.filter(item => !item.available);
-        setStatus(unavailable.length
-          ? `Prêt. ${unavailable.map(item => item.reason).join(" ")} Calcul limité aux règles écrites.`
-          : "Prêt. Calcul limité à un épisode.");
+        const unavailable = controllerStates.filter(item => !item.available).length;
+        setStatus(unavailable
+          ? `Prêt. ${unavailable} contrôleur${unavailable > 1 ? "s" : ""} indisponible${unavailable > 1 ? "s" : ""} : voir « Contrôleurs ».`
+          : "Prêt. Tous les contrôleurs sont disponibles.");
       } catch (error) {
         setStatus(error.message || "Catalogue indisponible.", true);
         for (const select of [targetSelect, controllerSelect, sizeSelect]) {
           select.replaceChildren();
           addOption(select, "", "Aucune valeur : catalogue indisponible");
         }
+        controllerList.replaceChildren(element("li", "muted", "État inconnu : catalogue indisponible."));
         reloadButton.hidden = false;
+      } finally {
+        recheckButton.disabled = false;
       }
     }
 
@@ -799,11 +1268,19 @@
         byId("distance-value").textContent = formatMetric(episode.metrics.final_distance);
         byId("threshold-value").textContent = formatMetric(episode.metrics.success_threshold);
         byId("convergence-value").textContent = episode.metrics.convergence_step === null ? "Non atteinte" : String(episode.metrics.convergence_step);
+        byId("collision-value").textContent = formatMetric(episode.metrics.collision_rate);
+        byId("components-value").textContent = formatMetric(episode.metrics.final_components);
         byId("episode-info").textContent = `${episode.target_key} · ${episode.n_robots} robots · ${episode.controller} · graine ${episode.seed}${episode.training_seed === null ? "" : ` · graine d’entraînement ${episode.training_seed}`}`;
         drawFrame();
         setStatus("Épisode terminé. La lecture ne fait que parcourir les positions reçues.");
       } catch (error) {
+        const failed = controllerSelect.value;
         setStatus(error.message || "Simulation indisponible.", true);
+        // Un checkpoint devenu inutilisable depuis le chargement : la carte explique quoi faire.
+        if (error.remedy?.length && controllerStates.some(item => item.name === failed && item.available)) {
+          flagController(failed, error.message, error.remedy);
+          setStatus(`${error.message} Voir « Contrôleurs ».`, true);
+        }
         if (episode) setTransportEnabled(true);
       } finally {
         for (const control of form.elements) control.disabled = false;
@@ -813,13 +1290,19 @@
       }
     });
 
-    slider.addEventListener("input", () => { stopPlayback(); seek(Number(slider.value)); });
+    // Lire la valeur AVANT stopPlayback : son redessin remet le curseur sur l'ancien pas.
+    slider.addEventListener("input", () => { const frame = Number(slider.value); stopPlayback(); seek(frame); });
     prevButton.addEventListener("click", () => { stopPlayback(); seek(Math.round(playhead) - 1); });
     nextButton.addEventListener("click", () => { stopPlayback(); seek(Math.round(playhead) + 1); });
     playButton.addEventListener("click", () => { if (playing) stopPlayback(); else startPlayback(); });
     for (const control of [smoothCheck, trailCheck]) control.addEventListener("change", drawFrame);
     document.addEventListener("visibilitychange", () => { if (document.hidden && playing) stopPlayback(); });
     reloadButton.addEventListener("click", loadCatalog);
+    recheckButton.addEventListener("click", loadCatalog);
+
+    // Redessin à chaque changement de taille (fenêtre, zoom, passage en une colonne).
+    new ResizeObserver(() => drawFrame()).observe(canvas);
+    new ResizeObserver(() => drawChart()).observe(chart);
 
     setTransportEnabled(false);
     applyMotionPreference();

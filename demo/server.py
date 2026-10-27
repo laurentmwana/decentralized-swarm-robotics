@@ -83,7 +83,25 @@ class SimulationRequest(BaseModel):
 
 
 class DemoUnavailable(Exception):
-    """Erreur publique sans chemin local ni détail technique sensible."""
+    """Erreur publique sans chemin local ni détail technique sensible.
+
+    `remedy` : étapes à suivre pour lever l'indisponibilité ({"text", "command"}), affichées
+    telles quelles par la page ; jamais de chemin absolu.
+    """
+
+    def __init__(self, message: str, remedy: list[dict] | None = None) -> None:
+        super().__init__(message)
+        self.remedy = remedy or []
+
+
+# Erreurs de ControllerFactory.build -> explication publique. Les messages d'origine restent internes.
+_BUILD_ERRORS = (
+    ("index des formes", "Le checkpoint a été entraîné avec un autre catalogue de formes : "
+                         "config/shapes.yaml a changé depuis l'entraînement.", True),
+    ("configuration simulateur", "Le checkpoint a été entraîné avec une autre configuration du simulateur : "
+                                 "config/simulator.yaml a changé depuis l'entraînement.", False),
+    ("provenance", "Le checkpoint ne correspond pas à sa configuration sauvegardée.", False),
+)
 
 
 def finite_json(value: Any) -> Any:
@@ -143,15 +161,72 @@ class SimulationService:
             )
         return self._factory
 
+    def _training_steps(self) -> list[dict]:
+        """Étapes pour reproduire les checkpoints de training_root (commande make si elle existe)."""
+        root = Path(self.settings.training_root)
+        # Chemin public : relatif au projet, sinon le seul nom du dossier (jamais de chemin absolu).
+        try:
+            shown = (root if not root.is_absolute() else root.relative_to(PROJECT_ROOT)).as_posix()
+        except ValueError:
+            shown = root.name
+        target = f"train-{root.name.replace('_', '-')}"
+        makefile = PROJECT_ROOT / "Makefile"
+        text = f"Ré-entraîner gnn_2_rounds dans {shown} (graines {', '.join(map(str, self.settings.training_seeds))})"
+        try:
+            known = any(line.startswith(f"{target}:") for line in makefile.read_text(encoding="utf-8").splitlines())
+        except OSError:
+            known = False
+        steps = []
+        run = self._path(self.settings.training_root) / "gnn_2_rounds"
+        if run.is_dir() and any(run.iterdir()):
+            # L'entraînement refuse d'écraser un run : sans cette étape, la commande suivante échoue.
+            steps.append({"text": f"Archiver ou renommer {shown}/gnn_2_rounds : l'entraînement n'écrase jamais un run existant",
+                          "command": None})
+        steps.append({"text": text, "command": f"make {target}" if known else None})
+        return steps
+
     def _trained_seed(self, name: str) -> int:
         try:
             versions = self._get_factory().versions(name)
-            if versions != self.settings.training_seeds:
-                raise ValueError("aucune graine d'entraînement commune avec le catalogue")
-            return versions[0]
+        except FileNotFoundError as exc:
+            # Le message du factory contient un chemin local : il reste dans la cause, pas dans la réponse.
+            raise DemoUnavailable(f"Checkpoint {name} indisponible : aucun run complet (best.pt, summary.json…).",
+                                  self._training_steps()) from exc
+        except ValueError as exc:
+            raise DemoUnavailable(f"Checkpoint {name} indisponible : entraînement non terminé ou en échec.",
+                                  self._training_steps()) from exc
         except Exception as exc:
-            # La cause réelle vient du factory : artefact manquant ou entraînement non terminé.
-            raise DemoUnavailable(f"Checkpoint {name} indisponible : {str(exc).strip() or 'entraînement non terminé'}") from exc
+            raise DemoUnavailable(f"Checkpoint {name} indisponible : dossier d'entraînement illisible.") from exc
+        if versions != self.settings.training_seeds:
+            raise DemoUnavailable(f"Checkpoint {name} indisponible : aucune graine d'entraînement commune avec le catalogue.",
+                                  self._training_steps())
+        return versions[0]
+
+    def _trained_controller(self, name: str, index) -> tuple[int, Any]:
+        """Vérifie tout le contrat du checkpoint et construit le contrôleur, ou explique pourquoi c'est impossible."""
+        training_seed = self._trained_seed(name)
+        snapshot = self._get_factory().snapshot(name, training_seed)
+        from src.common.config import ShapesConfig
+        from src.shapes.index import build_sources
+
+        identifiers = [source.identifier for source in build_sources(ShapesConfig(**snapshot["shapes"]))]
+        if identifiers != index.identifiers:
+            raise DemoUnavailable(
+                "Cible incompatible avec le vocabulaire du checkpoint ; aucun alias modulo n'est permis.",
+                [{"text": "Régénérer le catalogue de formes", "command": "make shapes"}] + self._training_steps())
+        if snapshot["model"]["message_rounds"] != 2:
+            raise DemoUnavailable("Le checkpoint ne correspond pas au GNN à deux tours.", self._training_steps())
+        try:
+            return training_seed, self._get_factory().build(name, training_seed)
+        except ValueError as exc:
+            for marker, message, shapes_changed in _BUILD_ERRORS:
+                if marker in str(exc):
+                    steps = [{"text": "Régénérer le catalogue de formes", "command": "make shapes"}] if shapes_changed else []
+                    raise DemoUnavailable(message, steps + self._training_steps()) from exc
+            raise DemoUnavailable("Checkpoint GNN incompatible avec la configuration actuelle.", self._training_steps()) from exc
+        except Exception as exc:
+            raise DemoUnavailable("Checkpoint GNN illisible : fichier de poids corrompu ou d'une autre version.",
+                                  self._training_steps()) from exc
 
     def targets(self) -> dict:
         with self._lock:
@@ -166,13 +241,15 @@ class SimulationService:
                 })
             controllers = []
             for name, settings in self.settings.controllers.items():
-                available, reason = True, None
+                available, reason, remedy = True, None, []
                 if settings.type == "trained":
+                    # Diagnostic complet dès le catalogue : la page n'a pas à découvrir l'erreur au calcul.
                     try:
-                        self._trained_seed(name)
+                        self._trained_controller(name, index)
                     except DemoUnavailable as exc:
-                        available, reason = False, str(exc)
-                controllers.append({"name": name, "type": settings.type, "available": available, "reason": reason})
+                        available, reason, remedy = False, str(exc), exc.remedy
+                controllers.append({"name": name, "type": settings.type, "available": available,
+                                    "reason": reason, "remedy": remedy})
             return {
                 "targets": entries, "controllers": controllers,
                 "defaults": {
@@ -209,17 +286,12 @@ class SimulationService:
                 if not np.isfinite(target).all():
                     raise DemoUnavailable("Le nuage cible contient des coordonnées non finies.")
                 if self.settings.controllers[name].type == "trained":
-                    training_seed = self._trained_seed(name)
-                    snapshot = self._get_factory().snapshot(name, training_seed)
-                    from src.common.config import ShapesConfig
-                    from src.shapes.index import build_sources
-
-                    identifiers = [source.identifier for source in build_sources(ShapesConfig(**snapshot["shapes"]))]
-                    if identifiers != index.identifiers or not 0 <= shape_id < snapshot["model"]["n_shapes"]:
+                    snapshot = self._get_factory().snapshot(name, self._trained_seed(name))
+                    if not 0 <= shape_id < snapshot["model"]["n_shapes"]:
                         raise DemoUnavailable("Cible incompatible avec le vocabulaire du checkpoint ; aucun alias modulo n'est permis.")
-                    if snapshot["model"]["message_rounds"] != 2:
-                        raise DemoUnavailable("Le checkpoint ne correspond pas au GNN à deux tours.")
-                controller = self._get_factory().build(name, training_seed)
+                    training_seed, controller = self._trained_controller(name, index)
+                else:
+                    controller = self._get_factory().build(name, training_seed)
                 controller.reset()
                 config = replace(self.loader.load_simulator(), horizon=self.settings.horizon, record_positions=True)
                 mission = Mission(shape_id=shape_id, target=target)
@@ -249,7 +321,7 @@ class ApiServer:
 
         @self.app.exception_handler(DemoUnavailable)
         async def unavailable_handler(request, exc):
-            return JSONResponse(status_code=503, content={"detail": str(exc)})
+            return JSONResponse(status_code=503, content={"detail": str(exc), "remedy": exc.remedy})
 
         @self.app.exception_handler(RequestValidationError)
         async def validation_handler(request, exc):

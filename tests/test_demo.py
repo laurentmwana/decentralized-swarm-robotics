@@ -300,3 +300,36 @@ def test_configuration_cannot_expand_safety_limits(settings, overrides):
 def test_optional_training_root_is_backward_compatible(settings):
     settings.pop("training_root")
     assert WebDemoSettings.model_validate(settings).training_root == "outputs/training"
+
+
+def test_catalog_explains_missing_checkpoint_without_local_paths(client, settings):
+    response = client.get("/api/targets")
+    gnn = next(item for item in response.json()["controllers"] if item["name"] == "gnn_2_rounds")
+    assert not gnn["available"]
+    assert gnn["remedy"] and all(step["text"] for step in gnn["remedy"])
+    root = Path(settings["training_root"])
+    for variant in (str(root), root.as_posix(), str(PROJECT_ROOT), PROJECT_ROOT.as_posix()):
+        assert variant not in response.json()["controllers"].__repr__()
+
+
+class IncompatibleFactory(FakeFactory):
+    """Checkpoint complet mais entraîné avec une autre config des formes."""
+
+    def build(self, name, training_seed):
+        self.build_calls.append((name, training_seed))
+        raise ValueError("index des formes différent de celui du checkpoint")
+
+
+def test_incompatible_checkpoint_is_diagnosed_in_catalog_and_simulation(loader, settings, shape_index):
+    factory = IncompatibleFactory(loader)
+    service = SimulationService(loader=loader, index=shape_index, factory=factory, settings=settings)
+    with TestClient(ApiServer(service).app) as client:
+        gnn = next(item for item in client.get("/api/targets").json()["controllers"] if item["name"] == "gnn_2_rounds")
+        assert not gnn["available"]
+        assert "catalogue de formes" in gnn["reason"]
+        assert gnn["remedy"][0] == {"text": "Régénérer le catalogue de formes", "command": "make shapes"}
+        response = client.get("/api/simulate", params={"controller": "gnn_2_rounds"})
+        assert response.status_code == 503
+        assert "catalogue de formes" in response.json()["detail"]
+        assert response.json()["remedy"][0]["command"] == "make shapes"
+        assert "index des formes différent" not in response.text
