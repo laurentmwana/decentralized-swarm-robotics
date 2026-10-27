@@ -93,7 +93,7 @@
       \end{block}
     \end{column}
     \begin{column}{0.45\textwidth}
-      \includegraphics[width=\textwidth,keepaspectratio]{images/formation_principle.png}
+      \includegraphics[width=\textwidth,keepaspectratio]{images/formation_principle.png}\par
       \vspace{0.2cm}
       {\footnotesize\itshape\color{swarmmuted} Les robots convergent vers un nuage de points, sans affectation permanente robot--point.\par}
     \end{column}
@@ -136,7 +136,7 @@
       {\footnotesize\color{swarmmuted}\textbf{Hypothèses fortes, assumées :} repère commun, positions exactes, échanges sans délai ni perte.\par}
     \end{column}
     \begin{column}{0.48\textwidth}
-      \includegraphics[width=0.92\textwidth,keepaspectratio]{images/swarm_communication_graph.png}
+      \includegraphics[width=0.92\textwidth,keepaspectratio]{images/swarm_communication_graph.png}\par
       \vspace{0.15cm}
       {\footnotesize\itshape\color{swarmmuted} Graphe de communication à portée disque : les arêtes dépendent seulement des positions.\par}
     \end{column}
@@ -152,7 +152,7 @@
     \item Découpage fixe entraînement / validation / test --- le test ne sert ni au réglage ni au choix du modèle.
   \end{itemize}
   \vspace{0.2cm}
-  \includegraphics[width=0.86\textwidth,keepaspectratio]{images/target_preparation_pipeline.png}
+  \includegraphics[width=0.86\textwidth,keepaspectratio]{images/target_preparation_pipeline.png}\par
   \vspace{0.1cm}
   {\footnotesize\itshape\color{swarmmuted} Préparation d'une cible : rendu, binarisation, sélection de points, normalisation. L'échelle commune rend les distances sans dimension ; elle n'égalise pas la difficulté des formes.\par}
 \end{frame}
@@ -165,7 +165,7 @@
     \item \textbf{Décodeur borné :} résidu directionnel, tangente hyperbolique, puis projection radiale sous $v_{\max}$.
   \end{itemize}
   \vspace{0.1cm}
-  \includegraphics[width=0.74\textwidth,keepaspectratio]{images/gnn_current_architecture.png}
+  \includegraphics[width=0.74\textwidth,keepaspectratio]{images/gnn_current_architecture.png}\par
   \vspace{0.05cm}
   {\footnotesize\itshape\color{swarmmuted} Architecture de l'implémentation actuelle : observation, encodage, messages, décodage.\par}
 \end{frame}
@@ -182,7 +182,7 @@
       \end{itemize}
     \end{column}
     \begin{column}{0.5\textwidth}
-      \includegraphics[width=\textwidth,keepaspectratio]{images/message_aggregation.png}
+      \includegraphics[width=\textwidth,keepaspectratio]{images/message_aggregation.png}\par
       \vspace{0.15cm}
       {\footnotesize\itshape\color{swarmmuted} Somme, moyenne, max : la moyenne retire le facteur de degré, sans garantir la qualité de formation.\par}
     \end{column}
@@ -211,7 +211,7 @@
       \end{tabular}
     \end{column}
     \begin{column}{0.5\textwidth}
-      \includegraphics[width=\textwidth,keepaspectratio]{images/shape_loss_geometry.png}
+      \includegraphics[width=\textwidth,keepaspectratio]{images/shape_loss_geometry.png}\par
       \vspace{0.15cm}
       {\footnotesize\itshape\color{swarmmuted} Deux sens de la comparaison entre ensembles, sans affectation bijective. Un amas peut rester proche de la cible en laissant une partie du contour découvert.\par}
     \end{column}
@@ -226,7 +226,7 @@
     \item Meilleur état sélectionné sur la validation, jamais sur la dernière perte d'entraînement ; le graphe de voisinage et le point le plus proche sont discrets : la simulation est différentiable \emph{par morceaux}.
   \end{itemize}
   \vspace{0.05cm}
-  \includegraphics[width=0.46\textwidth,keepaspectratio]{images/differentiable_training_flow.png}
+  \includegraphics[width=0.46\textwidth,keepaspectratio]{images/differentiable_training_flow.png}\par
   \vspace{0.05cm}
   \begin{beamercolorbox}[wd=\textwidth,leftskip=0.4cm,dp=1.2em]{block body}
     \footnotesize\textbf{1 200 itérations · 8 épisodes par lot} --- Adam $0{,}001$, décroissance $0{,}999$, gradient borné à 1, validation toutes les 50 itérations, cinq graines prévues et une seule entraînée pour le GNN avec messages.
@@ -246,7 +246,7 @@
       {\footnotesize Un franchissement au seul dernier pas était exclu ; une distance finale sous le seuil pouvait rester un échec.\par}
     \end{column}
     \begin{column}{0.5\textwidth}
-      \includegraphics[width=\textwidth,keepaspectratio]{images/success_criterion_comparison.png}
+      \includegraphics[width=\textwidth,keepaspectratio]{images/success_criterion_comparison.png}\par
       \vspace{0.15cm}
       {\footnotesize\itshape\color{swarmmuted} Même trajectoire, deux conventions : le pas rapporté et le verdict changent.\par}
     \end{column}
@@ -299,9 +299,9 @@
       \end{itemize}
     \end{column}
     \begin{column}{0.54\textwidth}
-      \includegraphics[width=0.92\textwidth,keepaspectratio]{images/historical_chamfer_vs_failures.png}
+      \includegraphics[width=0.92\textwidth,keepaspectratio]{images/historical_chamfer_vs_failures.png}\par
       \vspace{0.05cm}
-      \includegraphics[width=0.92\textwidth,keepaspectratio]{images/historical_seed_dispersion.png}
+      \includegraphics[width=0.92\textwidth,keepaspectratio]{images/historical_seed_dispersion.png}\par
       \vspace{0.05cm}
       {\scriptsize\itshape\color{swarmmuted} À gauche : distance selon la fraction retirée. À droite : dix graines, 20 robots sans retrait.\par}
     \end{column}
@@ -325,7 +325,7 @@
       {\footnotesize Une graine, un budget réduit, des cibles uniquement symboliques (A, B, C, 010, 123) : un résultat de faisabilité, pas une mesure de capacité.\par}
     \end{column}
     \begin{column}{0.5\textwidth}
-      \includegraphics[width=0.8\textwidth,keepaspectratio]{images/historical_curriculum_per_target.png}
+      \includegraphics[width=0.9\textwidth,keepaspectratio]{images/historical_curriculum_per_target.png}\par
       \vspace{0.1cm}
       {\footnotesize\itshape\color{swarmmuted} Perte par cible au fil des quatre étapes (pilote historique).\par}
       \vspace{0.3em}
@@ -350,7 +350,7 @@
       {\footnotesize La distance de forme est aveugle à la lisibilité de la figure ; le seuil de succès est un choix opérationnel ; un taux de collisions n'est pas un impact mécanique.\par}
     \end{column}
     \begin{column}{0.54\textwidth}
-      \includegraphics[width=\textwidth,keepaspectratio]{images/controller_information_matrix.png}
+      \includegraphics[width=\textwidth,keepaspectratio]{images/controller_information_matrix.png}\par
       \vspace{0.15cm}
       {\footnotesize\itshape\color{swarmmuted} Ce que chaque contrôleur reçoit à l'exécution : voisinage, identifiant de forme, géométrie cible, poids ajustables. Cette matrice décrit ce qui est préparé, pas des performances : le pilote n'a évalué que l'ancien GNN et le regroupement.\par}
     \end{column}
