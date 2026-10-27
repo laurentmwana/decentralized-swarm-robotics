@@ -49,9 +49,7 @@ texput.log
 latex/*.pdf
 !latex/images/*.pdf
 
-# LaTeX temporary files
-latex/log.txt
-latex/part1.txt
+latex/*.txt
 
 # Backup files
 *.bak

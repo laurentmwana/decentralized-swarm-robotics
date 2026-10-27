@@ -5,7 +5,7 @@
 
 Ce chapitre décrit la solution telle qu'elle est codée aujourd'hui. Un simulateur en deux dimensions, un générateur de cibles, un contrôleur GNN dont les poids sont communs à tous les robots, un apprentissage mené à travers la simulation, des protocoles d'évaluation. Architecture et paramètres viennent des modules et des fichiers de configuration, tels quels. Une option présente dans le code ne dit pourtant rien de ce qu'elle donnera après entraînement, et nous veillons à ne pas l'oublier.
 
-Un fil conducteur traverse tout le mémoire. Ici, la méthode actuelle et les expériences prêtes à partir. Au chapitre~\ref{chap:experiences}, les résultats du prototype pilote, avec leurs paramètres et leurs conventions de mesure propres. Ce document n'atteste aucun entraînement ni aucune campagne comparative de l'implémentation actuelle. Les schémas nouveaux, eux, montrent des mécanismes de calcul ou des géométries construites à la main. Jamais la trajectoire d'un modèle entraîné.
+Un fil conducteur traverse tout le mémoire. Ici, la méthode actuelle et les expériences prêtes à partir. Au chapitre~\ref{chap:experiences}, les résultats du prototype pilote, avec leurs paramètres et leurs conventions de mesure propres. Les entraînements et la campagne comparative déjà conduits sur l'implémentation actuelle ne sont pas reportés dans ce mémoire. Les schémas nouveaux, eux, montrent des mécanismes de calcul ou des géométries construites à la main. Jamais la trajectoire d'un modèle entraîné.
 
 \section{Problème et hypothèses de simulation}
 
@@ -94,7 +94,7 @@ La configuration nominale prend deux tours, et les variantes préparées en pren
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\linewidth,height=.7\textheight,keepaspectratio]{images/gnn_current_architecture.png}
-  \caption[Architecture du GNN actuel]{Architecture de l'implémentation actuelle : observation, encodage, messages, moyenne, correction résiduelle et décodage. Les dimensions correspondent à la largeur cachée 64 et à la représentation de forme de dimension 16. Schéma original établi à partir des modules du modèle, dans le cadre du passage de messages \cite{gilmer2017,battaglia2018} ; aucun apprentissage n'y est représenté.}
+  \caption[Architecture du GNN actuel]{Architecture de l'implémentation actuelle : observation, encodage, messages, moyenne, correction résiduelle et décodage. Les dimensions correspondent à la largeur cachée 64 et à la représentation de forme de dimension 16. Schéma original établi à partir des modules du modèle, dans le cadre du passage de messages \cite{gilmer2017} ; aucun apprentissage n'y est représenté.}
   \label{fig:gnn-message-passing}
 \end{figure}
 
@@ -189,7 +189,7 @@ Les valeurs du profil standard actuel sont rassemblées dans le Tableau~\ref{tab
   \end{tabularx}
 \end{table}
 
-L'entraînement initial porte sur le cercle. La validation combine de nouveaux départs sur cette cible et une forme du découpage de validation, le pentagone. On retient le meilleur état d'après la moyenne des distances sur les cibles et les graines de validation. Les profils de transfert de taille prévoient séparément 20, 40 et 100 robots, mais leur présence dans la configuration n'atteste pas l'existence de modèles entraînés correspondants.
+L'entraînement initial porte sur le cercle. La validation combine de nouveaux départs sur cette cible et une forme du découpage de validation, le pentagone. On retient le meilleur état d'après la moyenne des distances sur les cibles et les graines de validation. Les profils de transfert de taille prévoient séparément 20, 40 et 100 robots. Des modèles entraînés existent pour 20 et pour 40, et celui de 100 robots reste inachevé.
 
 \subsection{Progression cumulative et oubli}
 
@@ -211,7 +211,7 @@ Le curriculum actuel distingue deux variantes à trois tours, l'une avec l'ident
   \end{tabular}
 \end{table}
 
-Le profil standard prévoit 50 robots, 120 pas et 1\,200 itérations par niveau. Le meilleur état d'un niveau initialise les poids du suivant, après un contrôle de compatibilité. L'empreinte du fichier transféré est calculée, puis notée dans la configuration effective. L'état de l'optimiseur, lui, ne passe pas d'un niveau à l'autre. Les mêmes cibles et graines de validation sont réévaluées pour mesurer la variation de distance. Une hausse supérieure à la tolérance configurée de 0,05 est signalée comme un oubli notable, sans que cette valeur ait force de loi. Garder les cibles précédentes vise à limiter l'oubli, et que cela marche reste une question expérimentale \cite{goodfellow2013,kirkpatrick2017}.
+Le profil standard prévoit 50 robots, 120 pas et 1\,200 itérations par niveau. Le meilleur état d'un niveau initialise les poids du suivant, après un contrôle de compatibilité. L'empreinte du fichier transféré est calculée, puis notée dans la configuration effective. L'état de l'optimiseur, lui, ne passe pas d'un niveau à l'autre. Les mêmes cibles et graines de validation sont réévaluées pour mesurer la variation de distance. Une hausse supérieure à la tolérance configurée de 0,05 est signalée comme un oubli notable, sans que cette valeur ait force de loi. Garder les cibles précédentes vise à limiter l'oubli, et que cela marche reste une question expérimentale \cite{kirkpatrick2017}.
 
 \section{Évaluation : définition et limites des mesures}
 
@@ -238,7 +238,7 @@ Pour la connectivité, on reconstruit le graphe à partir des positions enregist
 
 \subsection{Comparaisons et lisibilité}
 
-La campagne préparée croise les tailles 20, 40 et 100 avec quatre fractions de retrait, de 0 à 20\,\%. Chaque condition est répétée 50 fois, et chaque variante apprise dispose de cinq graines d'entraînement. Les comparaisons appariées partagent les mêmes graines d'épisode. La variabilité entre entraînements est rapportée à part de celle entre épisodes. Réutiliser les mêmes départs sur plusieurs formes ne donne pas autant d'échantillons indépendants en plus.
+La campagne préparée croise les tailles 20, 40 et 100 avec quatre fractions de retrait, de 0 à 20\,\%. Chaque condition est répétée 50 fois, et chaque variante apprise prévoit cinq graines d'entraînement. Les comparaisons appariées partagent les mêmes graines d'épisode. La variabilité entre entraînements est rapportée à part de celle entre épisodes. Réutiliser les mêmes départs sur plusieurs formes ne donne pas autant d'échantillons indépendants en plus.
 
 Les modules disponibles prévoient la comparaison avec et sans communication, le transfert de taille à poids gelés, les formes réservées, la réduction de portée et le bruit d'observation. Ce bruit perturbe ce que reçoit le contrôleur, pas les positions physiques qui servent à mesurer la trajectoire. Ces protocoles sont implémentés, et leurs résultats restent à produire.
 
@@ -255,7 +255,7 @@ Les responsabilités restent séparées entre formes, simulateur, modèle, entra
   \label{fig:module-architecture}
 \end{figure}
 
-Chaque expérience doit s'accompagner de sa configuration effective, de ses graines, de ses cibles et de la version du programme. Les campagnes chargent les poids avec leur configuration sauvegardée, vérifient la cohérence des modèles et refusent les ensembles de résultats incomplets. Les rapports se construisent à partir d'artefacts enregistrés, sans chiffres recopiés et sans nouvelle optimisation lancée en cachette. La reproductibilité reste conditionnelle. Elle dépend de la version, des dépendances et des données, et une même graine ne garantit pas les mêmes trajectoires d'une implémentation à l'autre.
+Chaque expérience doit s'accompagner de sa configuration effective, de ses graines, de ses cibles et de la version du programme. Les campagnes chargent les poids avec leur configuration sauvegardée, vérifient la cohérence des modèles et refusent les ensembles de résultats incomplets. Un mode explicite autorise malgré tout un bilan partiel, à la condition d'en consigner chaque exclusion avec sa raison. Les rapports se construisent à partir d'artefacts enregistrés, sans chiffres recopiés et sans nouvelle optimisation lancée en cachette. La reproductibilité reste conditionnelle. Elle dépend de la version, des dépendances et des données, et une même graine ne garantit pas les mêmes trajectoires d'une implémentation à l'autre.
 
 Les tests vérifient les propriétés de permutation, de translation (sous leurs hypothèses), de bornage, de voisinage, de cibles distinctes et de cohérence des mesures. Les tests de gradient et d'orchestration simulée contrôlent la chaîne de traitement. Aucun ne démontre qu'Adam apprend une politique utile. Quatre niveaux de preuve sont donc à tenir séparés : le composant implémenté, la propriété testée, le modèle réellement entraîné, la performance évaluée sur une campagne indépendante.
 
@@ -265,4 +265,4 @@ Reste le coût de calcul. La représentation matricielle des messages calcule to
 
 \section{Conclusion partielle}
 
-Nous avons décrit la méthode actuelle à partir de ce qui est réellement implémenté. Des cibles distinctes et normalisées, une information de mission explicite, un GNN à ReLU avec corrections résiduelles, une sortie bornée en norme. S'y ajoutent deux termes de forme tenus séparés, la proximité et la couverture, un apprentissage par simulation différentiable par morceaux, et une sélection sur validation. Les mesures en usage et les comparaisons préparées complètent le tableau, avec une ligne de partage assumée : un test logiciel qui passe ne vaut pas performance apprise. Le chapitre~\ref{chap:experiences} confronte cette implémentation au prototype pilote, mais il ne présente que les résultats de ce dernier. Les campagnes de l'implémentation actuelle restent à mener.
+Nous avons décrit la méthode actuelle à partir de ce qui est réellement implémenté. Des cibles distinctes et normalisées, une information de mission explicite, un GNN à ReLU avec corrections résiduelles, une sortie bornée en norme. S'y ajoutent deux termes de forme tenus séparés, la proximité et la couverture, un apprentissage par simulation différentiable par morceaux, et une sélection sur validation. Les mesures en usage et les comparaisons préparées complètent le tableau, avec une ligne de partage assumée : un test logiciel qui passe ne vaut pas performance apprise. Le chapitre~\ref{chap:experiences} confronte cette implémentation au prototype pilote, mais il ne présente que les résultats de ce dernier. Les entraînements et la campagne comparative de l'implémentation actuelle ont été conduits ; leur analyse reste à écrire.

@@ -1,60 +1,49 @@
 # Cible de pagination du mémoire
 
-La version compilée du 21 octobre 2026 compte **84 pages** dans une structure à **cinq chapitres**, avec 27 figures et 12 tableaux.
+La version compilée du 27 octobre 2026 compte **78 pages** dans une structure à **quatre chapitres numérotés**, avec 17 figures, 13 tableaux et 17 entrées bibliographiques.
 
-Décompte relevé dans `main.toc` :
+Décompte relevé dans `main.toc` (numérotation arabe, après les 8 pages liminaires) :
 
 | Partie | Pages |
 |---|---:|
-| Pages préliminaires (titre, épigraphie, dédicace, remerciements, abréviations, listes, résumés) | 1 à 13 |
-| 1. Introduction | 14 à 19 |
-| 2. État de l'art | 20 à 33 |
-| 3. Méthode et architecture logicielle | 34 à 55 |
-| 4. Expériences et résultats | 56 à 73 |
-| 5. Discussion et conclusion | 74 à 79 |
-| Bibliographie (35 entrées citées sur 37 dans `references.bib`) | 80 à 84 |
+| Page de titre (non numérotée) + pages liminaires (épigraphe, dédicace, remerciements, abréviations, listes, résumés) | i à viii |
+| Table des matières | ix à xii |
+| Introduction générale | 1 à 7 |
+| 1. Concepts de base | 8 à 12 |
+| 2. État de l'art | 13 à 23 |
+| 3. Méthodologie et solution proposée | 24 à 37 |
+| 4. Implémentation, expérimentations et résultats | 38 à 55 |
+| Discussion | 56 à 61 |
+| Conclusion générale et perspectives | 62 à 63 |
+| Bibliographie (17 entrées) | 64 à 65 |
 
-Structure conforme aux consignes : chaque chapitre s'ouvre sur une section *Introduction* et se clôt par une *Conclusion partielle* résumant le chapitre en un paragraphe et annonçant le suivant (le chapitre 5 se termine par sa *Conclusion et perspectives*). Les pages liminaires suivent l'ordre imposé : Épigraphe, Dédicace, Remerciements (signés du nom complet de l'auteur), Liste des abréviations, Liste des figures, Liste des tableaux, Résumé (6 mots clés), Abstract (6 keywords).
+Soit 13 pages liminaires et 65 pages numérotées en chiffres arabes, pour 78 pages physiques.
 
-## Organisation à cinq chapitres
+Structure conforme aux consignes du directeur : chaque chapitre numéroté s'ouvre sur une section *Introduction* et se clôt par une *Conclusion partielle* qui résume le chapitre en un paragraphe et annonce le suivant. Les pages liminaires suivent l'ordre imposé : Épigraphe, Dédicace, Remerciements (les deux signés du nom complet), Liste des abréviations (GNN, LiDAR, ReLU, par ordre alphabétique), Liste des figures, Liste des tableaux, Résumé (8 mots clés), Abstract (8 keywords). L'ordre des chapitres reprend le plan exigé : concepts de base, état de l'art, méthodologie, implémentation et résultats.
 
-- Le chapitre 3 fusionne l'ancienne partie méthodologique et l'ancien chapitre d'architecture logicielle : les sections d'implémentation y sont devenues des sous-sections.
-- Le chapitre 5 fusionne l'ancienne discussion et l'ancienne conclusion en une seule marche argumentative, terminée par une section « Conclusion et perspectives ».
+## Chapitres
 
-## Illustrations intégrées
+- Le chapitre 1 *Concepts de base* a été ajouté le 27 octobre 2026 ; il était déjà annoncé par le « Plan sommaire » de l'introduction générale mais n'existait pas. Il ne contient aucune valeur de paramètre, et un seul visuel, la Figure 1.1 (neurone formel et tour de passage de messages), qui est un schéma conceptuel sans résultat d'expérience.
+- Le chapitre 2 *État de l'art* suit le plan imposé : Introduction, Méthodes traditionnelles, Méthodes avancées, Quelques travaux connexes (trois études, chacune en Contexte de l'étude, Méthodologie adoptée, Aperçu sur les résultats, Critique), Positionnement, Conclusion partielle. La section *Quelques travaux connexes* a été retirée le 27 octobre 2026 puis rétablie le même jour, sur demande de l'auteur : elle est exigée par la consigne 16 du directeur et porte la critique sur laquelle s'appuie le Positionnement.
+- La *Discussion* et la *Conclusion générale et perspectives* restent des chapitres non numérotés après le chapitre 4, comme l'annoncent la consigne 16 du directeur et le « Plan sommaire » de l'introduction générale (« le mémoire compte quatre chapitres »). Leurs flottants suivent la convention déjà utilisée pour l'introduction générale (figures `I.n`) : la Discussion porte le préfixe `D.n`, la conclusion `C.n`. Le bloc `D.n` est posé dans `main.tex` avant `\include{chapters/discussion}`, le bloc `C.n` dans `chapters/discussion.tex` juste avant le chapitre de conclusion. Les sections de la Discussion, non numérotées, apparaissent dans la table des matières grâce à `\addcontentsline`, comme celles de l'introduction générale ; la numérotation continue donc sans trou apparent entre 4.18 et la bibliographie. Les anciens `\label{chap:discussion}` et `\label{chap:conclusion}`, qui résolvaient au chapitre 4, ont été supprimés ; aucun `\ref` ne les utilisait.
 
-27 figures, toutes citées et analysées dans le texte, toutes issues de `latex/images/` dans la même charte (Latin Modern, matplotlib 300 dpi, sans titre interne) : 23 illustrations et schémas du jeu livré, plus les 4 figures de données (perte et configuration du cercle, pertes et planche du curriculum) régénérées depuis les résultats versionnés par `python scripts/generate_data_figures.py`. L'ancien répertoire `latex/figures/` a été supprimé le 18 octobre 2026. Deux fichiers de `images/` restent inutilisés : les planches du jeu de formes (`fig_extra_planche_formes_20pts.png` et `_50pts.png`), retirées du document à la demande de l'auteur.
+## Illustrations
 
-Chapitre 1 (2 figures) :
-- `fig_1_1_chaine_experimentale.png` — chaîne expérimentale de haut niveau.
-- `fig_extra_schema_formation.png` — illustration conceptuelle d'une formation (départs aléatoires → formation approchée).
+17 figures dans le manuscrit, toutes annoncées dans le texte avant leur flottant, toutes en `width=\linewidth`, produites par `generate_manuscript_figures.py` et `generate_scientific_figures.py` (matplotlib 300 dpi, Latin Modern, aucun titre interne). Aucune figure n'est empruntée à un article, donc aucune légende n'appelle de citation.
 
-Chapitre 2 (4 figures) :
-- `fig_2_1_consensus.png` — convergence d'un consensus sur un graphe linéaire.
-- `fig_2_2_flocking.png` — cohésion, séparation et alignement sur un essaim miniature.
-- `fig_2_3_agregation.png` — principe de l'agrégation moyenne des messages.
-- `fig_2_4_portee_information.png` — portée de l'information selon le nombre de tours.
+Chapitre 1 (1) : `neuron_and_message_passing.png` (Figure 1.1).
+Introduction (2) : `formation_principle.png`, `experimental_chain.png` (numérotées I.1 et I.2).
+Chapitre 3 (7) : `swarm_communication_graph.png`, `target_preparation_pipeline.png`, `gnn_current_architecture.png`, `shape_loss_geometry.png`, `differentiable_training_flow.png`, `success_criterion_comparison.png`, `software_modules.png`.
+Chapitre 4 (7) : `historical_pilot_summary.png`, `historical_chamfer_vs_failures.png`, `failure_timeline.png`, `historical_scaling.png`, `threshold_crossing_schema.png`, `historical_seed_dispersion.png`, `historical_curriculum_per_target.png`.
 
-Chapitre 3 (9 figures) :
-- `fig_3_1_essaim_communication.png` — voisinage de communication.
-- `fig_3_2_chaine_preparation_cible.png` — image → masque → nuage de points.
-- `fig_3_3_controleur_local.png` — bloc de calcul local du contrôleur GNN.
-- `fig_3_4_distance_chamfer.png` — lecture géométrique de la distance de Chamfer.
-- `fig_3_5_composition_perte.png` — composition des quatre termes de la perte.
-- `fig_3_6_curriculum_reduit.png` — progression du curriculum réduit (vraies cibles).
-- `fig_3_7_retropropagation.png` — rétropropagation à travers les pas de simulation.
-- `fig_3_8_modules_prototype.png` — organisation en modules du prototype.
-- `fig_3_9_cycle_episode.png` — cycle de vie d'un épisode.
+13 tableaux : 1 au chapitre 2 (synthèse comparative des familles), 3 au chapitre 3 (notations, hyperparamètres, curriculum), 8 au chapitre 4, 1 en Discussion (`D.1`, matrice des contrôleurs), les légendes sont placées au-dessus du tableau.
 
-Chapitre 4 (10 figures) :
-- `fig_4_1_perte_cercle.png`, `fig_4_3_configuration_cercle.png` (données) et `fig_4_2_synthese_pilote.png` — entraînement du cercle et synthèse du pilote.
-- `fig_4_4_chamfer_vs_pannes.png` — Chamfer selon la fraction de robots retirés (GNN et règle de regroupement).
-- `fig_4_5_chronologie_retrait.png` — chronologie d'un retrait à mi-épisode.
-- `fig_4_6_passage_echelle.png` — passage à l'échelle du pilote.
-- `fig_4_7_schema_convergence.png` — schéma de la mesure de convergence.
-- `fig_4_x_dispersion_graines.png` — dispersion des dix graines du pilote, seuil et moyenne.
-- `fig_4_x_curriculum_pertes_par_cible.png` — lecture visuelle des pertes par cible et par étape.
-- `fig_4_10_pertes_curriculum.png`, `fig_4_11_planche_curriculum.png` (données) — pertes et planche du curriculum.
+`latex/images/` contient 21 PNG : 17 figures du manuscrit, `logo_unikin.png` pour la page de garde, et 3 visuels sans usage (`controller_information_matrix.png`, `message_aggregation.png`, `activation_functions.png`). Les diapositives de `../presentation/soutenance-swarm-gnn.tex` chargent leurs propres copies dans `presentation/images/`. Les 4 PNG sans usage (règles de regroupement, consensus, portée de l'information, fonctions d'activation) avaient été supprimés le 27 octobre 2026 ; `activation_functions.png` est réapparu avec la Figure 1.1, car le script le régénère à chaque exécution.
 
-Chapitre 5 (2 figures) :
-- `fig_extra_matrice_comparaison.png` — matrice des contrôleurs comparés ou prévus, avec leur statut.
+**Attention, à lire avant de relancer un générateur.** Les six figures de `generate_scientific_figures.py` telles qu'elles sont commitées n'ont pas les dimensions que ce script produit (`gnn_current_architecture.png` commité : 2007×861, soit 2,33 de rapport ; le canevas du script : 3150×2790, rapport 1,13). Lancer le script entier remplace donc ces six visuels par d'autres rendus. Pour n'ajouter qu'une figure, appeler le constructeur ciblé :
+`.venv/Scripts/python.exe -c "import sys; sys.path.insert(0,'latex'); import generate_scientific_figures as g; g.save_figure(g.neuron_and_message_passing(), 'neuron_and_message_passing')"`
+Le script écrit aussi des `.pdf` à côté des `.png` ; le manuscrit n'inclut que des `.png`.
+
+## Fichiers morts
+
+`chapters/preliminaries.tex` n'est pas inclus par `main.tex` ; il double le Résumé et l'Abstract de `frontmatter/sumaires.tex`. `page_de_garde.tex` est un modèle externe (autre auteur), conservé pour référence de mise en page.

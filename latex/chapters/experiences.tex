@@ -3,7 +3,7 @@
 
 \section{Introduction}
 
-Tout ce que contient ce chapitre (expériences, tableaux, courbes, valeurs) concerne uniquement le \emph{prototype pilote}. Nous le gardons pour documenter son protocole et ses limites. L'\emph{implémentation actuelle}, elle, n'a encore aucun entraînement accepté. Les résultats du pilote ne sont donc pas les siens, et ils ne valident pas son contrôleur.
+Tout ce que contient ce chapitre (expériences, tableaux, courbes, valeurs) concerne uniquement le \emph{prototype pilote}. Nous le gardons pour documenter son protocole et ses limites. L'\emph{implémentation actuelle} a depuis été entraînée, et une campagne comparative l'a évaluée ainsi que ses références. Ce chapitre ne reporte pas encore ces chiffres. Les résultats du pilote ne sont donc pas les siens, et ils ne valident pas son contrôleur.
 
 Nous comparons d'abord l'implémentation actuelle au prototype pilote. Viennent ensuite les paramètres du pilote, puis les seuls résultats disponibles : l'entraînement sur un cercle, le passage à l'échelle, les scénarios de retrait, la dispersion entre graines, le curriculum de formes. Une propriété implémentée ou testée ne se confond jamais, dans ce chapitre, avec une performance obtenue après apprentissage.
 
@@ -26,9 +26,9 @@ En confrontant le mémoire aux composants actuels, on retrouve bien le simulateu
     Couverture & comparaison des espacements & distance non carrée cible vers robot, normalisée \\
     Temps de la perte de forme & configuration finale & dix derniers états, profil nominal \\
     Succès & franchissement de 0,5 avant le dernier pas & suffixe sous 0,15 jusqu'au dernier état, distance normalisée \\
-    Ablation des messages & non évaluée dans le pilote & même modèle à deux tours et graphe vide, implémenté \\
-    Évaluation & dix épisodes par condition, modèle fixe & 50 répétitions et cinq graines d'entraînement prévues \\
-    Niveau de preuve & données pilotes historiques & propriétés et chaîne de traitement testables ; entraînements et campagnes à réaliser \\
+    Ablation des messages & non évaluée dans le pilote & même modèle à deux tours et graphe vide, entraîné et évalué \\
+    Évaluation & dix épisodes par condition, modèle fixe & 50 répétitions par condition, cinq graines prévues et une seule entraînée pour le contrôleur avec messages \\
+    Niveau de preuve & données pilotes historiques & propriétés et chaîne de traitement testables ; analyse des campagnes déjà exécutées à conduire \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -37,7 +37,7 @@ Les tests logiciels vérifient des propriétés de représentation, de bornage e
 
 \section{Implémentation du prototype historique}
 
-La chaîne du pilote réunit un simulateur, un contrôleur GNN à messages, une fonction de perte et des scripts de mesure. À chaque pas, le graphe de communication donne les voisinages des robots actifs. Le contrôleur partage ses paramètres entre tous les robots et agrège les messages locaux par une moyenne. Le simulateur applique les commandes et fournit les positions dont dépendent les mesures de forme, de proximité et de répartition. Les épisodes sont ensuite conservés, pour produire les agrégats et les visualisations analysés plus loin. Ce rappel décrit le prototype qui a produit les données du pilote, et il n'atteste aucun entraînement accepté de l'implémentation actuelle.
+La chaîne du pilote réunit un simulateur, un contrôleur GNN à messages, une fonction de perte et des scripts de mesure. À chaque pas, le graphe de communication donne les voisinages des robots actifs. Le contrôleur partage ses paramètres entre tous les robots et agrège les messages locaux par une moyenne. Le simulateur applique les commandes et fournit les positions dont dépendent les mesures de forme, de proximité et de répartition. Les épisodes sont ensuite conservés, pour produire les agrégats et les visualisations analysés plus loin. Ce rappel décrit le prototype qui a produit les données du pilote, et il ne dit rien des entraînements conduits depuis sur l'implémentation actuelle.
 
 Les anciens paramètres sont repris au Tableau~\ref{tab:historical-hyperparameters}, pour que les données qui suivent restent interprétables. Les deux premières campagnes utilisent l'identifiant de forme, et l'information géométrique supplémentaire n'apparaît qu'en campagne complexe. L'entraînement historique reposait sur une Chamfer quadratique et une régularisation des espacements, alors que les tableaux d'évaluation rapportent des distances non carrées. Ces variantes ne sont pas interchangeables et peuvent classer différemment deux configurations.
 
@@ -78,7 +78,7 @@ Les distances de ce chapitre sont normalisées par le rayon de la cible, après 
 
 Le succès historique correspond au premier franchissement de 0,5 survenant avant le dernier pas. Rien n'exige que la distance reste ensuite sous le seuil, et un franchissement au seul dernier pas est exclu. Quand aucun franchissement admissible n'est observé, le pas rapporté prend la valeur terminale. Les pourcentages ci-dessous gardent cette convention et ne sont pas recalculés avec le succès stabilisé actuel.
 
-Le protocole comporte deux types de comparaison. La première oppose le GNN à la règle de regroupement, pour vérifier que le contrôleur entraîné atteint mieux la cible circulaire dans le cadre retenu. Les variations de taille et de panne évaluent ensuite le même GNN dans des conditions différentes de celles de l'entraînement. Le protocole ne sépare pas encore l'effet de tous les choix de conception. Deux choses manquent : une baseline apprise sans communication, et une règle manuelle recevant la même consigne de forme.
+Le protocole comporte deux types de comparaison. La première oppose le GNN à la règle de regroupement, pour vérifier que le contrôleur entraîné atteint mieux la cible circulaire dans le cadre retenu. Les variations de taille et de panne évaluent ensuite le même GNN dans des conditions différentes de celles de l'entraînement. Le protocole ne sépare pas encore l'effet de tous les choix de conception. Deux choses manquaient dans ce protocole : une baseline apprise sans communication, et une règle manuelle recevant la même consigne de forme. Les deux ont depuis été entraînées et évaluées, et leur analyse reste à conduire.
 
 Chaque épisode peut être reproduit à partir de sa graine. Les positions initiales sont tirées au hasard dans l'arène, puis la même dynamique s'applique pendant vingt pas. Dans un scénario de panne, le retrait a lieu à mi-épisode. Les fichiers bruts gardent une ligne par épisode, et le tableau de synthèse donne la moyenne et l'écart-type de la distance de forme. On retrouve ainsi les cas individuels derrière une moyenne inhabituelle.
 
@@ -145,7 +145,7 @@ Comment la distance évolue avec le taux de pannes, la Figure~\ref{fig:pannes-pi
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\linewidth,height=.75\textheight,keepaspectratio]{images/historical_chamfer_vs_failures.png}
-  \caption[Distance de Chamfer selon la fraction de robots retirés]{Distance moyenne de Chamfer (moyenne $\pm$ 1 écart-type sur dix épisodes) selon la fraction de robots retirés à mi-épisode, pour 20 robots, avec le GNN à gauche et la règle de regroupement à droite. Le seuil de succès $\tau=0{,}5$ est indiqué pour le GNN.}
+  \caption[Distance de Chamfer selon la fraction de robots retirés]{Distance moyenne de Chamfer, avec l'écart-type consigné au Tableau~\ref{tab:pannes-20}, selon la fraction de robots retirés à mi-épisode, pour 20 robots, avec le GNN à gauche et la règle de regroupement à droite. Le seuil de succès $\tau=0{,}5$ est indiqué pour le GNN. La figure reproduit les valeurs de ce tableau et n'ajoute aucune mesure.}
   \label{fig:pannes-pilote}
 \end{figure}
 
@@ -202,7 +202,7 @@ La première observation tient à l'ampleur de la dispersion. Entre le meilleur 
 
 La troisième concerne le seuil de succès. Avec $\tau=0{,}5$, un seul épisode sur dix franchit le seuil avant le dernier pas, alors que la distance moyenne (0,592) en reste proche. La graine 103 illustre la convention retenue. Sa distance finale (0,499) passe sous le seuil, mais seulement au dernier pas. Elle n'est donc pas comptée selon la convention historique décrite plus haut, qui diffère de la mesure actuelle du chapitre~\ref{chap:methode}. Le succès indique qu'un seuil a été franchi avant la fin de l'épisode, pas qu'une distance finale est favorable ni qu'une stabilisation est durable. À l'inverse, la graine 107 compte comme un succès malgré une distance finale de 0,521, car le maintien sous le seuil n'est pas exigé. Le taux de succès est donc très sensible aux petits écarts. Un léger décalage de la distribution des distances peut le faire passer de 10\,\% à 0\,\% sans changement qualitatif du comportement. Il se lit avec les distances de forme, dont le Tableau~\ref{tab:pannes-20} donne aussi les écarts-types.
 
-Le pas de premier franchissement dit autre chose. Le champ historiquement nommé « pas de convergence » ne mesure pas une stabilisation. La Figure~\ref{fig:threshold-convergence} en propose un schéma. Dans cet exemple construit, la distance de forme décroît et son premier franchissement est comparé au seuil $\tau$. Dans la condition du Tableau~\ref{tab:dispersion}, le seuil n'est franchi avant la fin de l'épisode que dans un seul cas. Pour les autres départs, la convention attribue le pas 20. Rien n'établit donc, à elle seule, si la formation s'est stabilisée. Deux explications restent ouvertes. L'épisode est peut-être trop court, ou bien la politique ne ralentit pas assez en approchant du contour. Prolonger l'épisode permettrait de trancher, et c'est prévu dans le protocole, mais nous n'avons pas encore de résultat.
+Le pas de premier franchissement dit autre chose. Le champ historiquement nommé « pas de convergence » ne mesure pas une stabilisation. La Figure~\ref{fig:threshold-convergence} en propose un schéma. Dans cet exemple construit, la distance de forme décroît et son premier franchissement est comparé au seuil $\tau$. Dans la condition du Tableau~\ref{tab:dispersion}, le seuil n'est franchi avant la fin de l'épisode que dans un seul cas. Pour les autres départs, la convention attribue le pas 20. Rien n'établit donc, à elle seule, si la formation s'est stabilisée. Deux explications restent ouvertes. L'épisode est peut-être trop court, ou bien la politique ne ralentit pas assez en approchant du contour. Prolonger l'épisode permettrait de trancher, et la campagne récente allonge justement son horizon, sans que ses chiffres soient encore analysés.
 
 \begin{figure}[htbp]
   \centering
@@ -284,7 +284,7 @@ Le curriculum réduit fournit donc un résultat de faisabilité. Il montre que l
 
 \section{Discussion des résultats}
 
-Le premier résultat du pilote est un contrôle de bon fonctionnement de la chaîne expérimentale. Le simulateur, le contrôleur à messages, la fonction de perte et l'optimisation ont produit une formation circulaire plus proche de la cible que l'état initial. Le partage des paramètres applique la même politique à chaque robot, et l'agrégation locale accepte un nombre variable de voisins. Le protocole indique aussi que le GNN est plus proche du cercle que la règle de regroupement servant de contrôle. Ces observations ne valident pas l'implémentation actuelle, qui n'a aucun entraînement accepté.
+Le premier résultat du pilote est un contrôle de bon fonctionnement de la chaîne expérimentale. Le simulateur, le contrôleur à messages, la fonction de perte et l'optimisation ont produit une formation circulaire plus proche de la cible que l'état initial. Le partage des paramètres applique la même politique à chaque robot, et l'agrégation locale accepte un nombre variable de voisins. Le protocole indique aussi que le GNN est plus proche du cercle que la règle de regroupement servant de contrôle. Ces observations ne valident pas l'implémentation actuelle, dont les entraînements et les campagnes se conduisent séparément.
 
 Cette observation doit rester dans son cadre. La règle de regroupement ne reçoit pas la même consigne de forme que le GNN. Elle résout un problème différent et ne prouve pas qu'un GNN est meilleur que n'importe quelle règle décentralisée. Une comparaison plus juste devra inclure une règle classique ayant accès à la même cible, ainsi qu'une version apprise sans échange de messages.
 
@@ -316,11 +316,11 @@ La première menace tient au faible nombre de répétitions. Dix épisodes par c
 
 La deuxième est l'écart entre le simulateur et un système réel. Les robots du projet connaissent un repère commun, échangent des messages exacts et sont modélisés par une vitesse appliquée directement. Sur un robot physique, les estimations de position sont bruitées, les roues ont de l'inertie et les communications peuvent être retardées. Ces hypothèses rendent l'étude historique plus contrôlable, mais limitent la portée des conclusions.
 
-La troisième concerne les formes elles-mêmes. Les nombres et lettres du curriculum réduit sont peu nombreux et servent pendant l'entraînement. Savoir former A, B ou C ne prouve pas qu'on généralise à toutes les lettres. Une expérience de généralisation devra réserver des formes entières avant l'entraînement, puis mesurer la performance sur ces cibles inconnues sans toucher aux poids du modèle.
+La troisième concerne les formes elles-mêmes. Les nombres et les lettres du curriculum réduit sont peu nombreux et servent pendant l'entraînement. Savoir former A, B ou C ne prouve pas qu'on généralise à toutes les lettres. Une expérience de généralisation devra réserver des formes entières avant l'entraînement, puis mesurer la performance sur ces cibles inconnues sans toucher aux poids du modèle.
 
 \section{Plan d'expériences pour la campagne finale}
 
-Le plan qui suit décrit des expériences à réaliser, pas des résultats disponibles. Il ne suppose aucun entraînement accepté de l'implémentation actuelle et ne correspond à aucune campagne exécutée.
+Le plan qui suit décrit des expériences à compléter, pas l'inventaire des résultats déjà obtenus. Des entraînements et une campagne comparative ont été conduits depuis, et leur analyse reste à écrire.
 
 La campagne finale doit s'organiser autour de questions simples et mesurables. La première porte sur la qualité de formation. Pour chaque catégorie de formes, quelle est la distance à la cible, quelle est la régularité de la répartition et quelle proportion d'épisodes franchit le seuil de succès ? La deuxième porte sur l'apport de la communication. Que se passe-t-il quand on retire les messages des voisins en gardant la même consigne de forme ? La troisième porte sur la robustesse. Comment évoluent les mesures quand des robots disparaissent, quand le rayon de communication diminue ou quand les positions sont bruitées ?
 
@@ -338,7 +338,7 @@ Cette prudence sert le mémoire. Un résultat négatif, comme une lettre diffici
 
 \section{Conclusion partielle}
 
-Nous avons présenté la chaîne d'implémentation et les résultats du prototype pilote. La perte diminue. Le cercle est mieux approché que par la règle de regroupement, dans le protocole retenu. Le même modèle s'exécute à différentes tailles d'essaim, et la distance moyenne varie peu lors des retraits simulés. Ce sont les données d'un pilote à dix graines par condition, marqué par une asymétrie d'information entre contrôleurs, un seuil de succès sensible et des formations symboliques approximatives. La robustesse générale n'est donc pas établie, et l'implémentation actuelle, qui n'a aucun entraînement accepté, ne peut pas être validée par ces résultats.
+Nous avons présenté la chaîne d'implémentation et les résultats du prototype pilote. La perte diminue. Le cercle est mieux approché que par la règle de regroupement, dans le protocole retenu. Le même modèle s'exécute à différentes tailles d'essaim, et la distance moyenne varie peu lors des retraits simulés. Ce sont les données d'un pilote à dix graines par condition, marqué par une asymétrie d'information entre contrôleurs, un seuil de succès sensible et des formations symboliques approximatives. La robustesse générale n'est donc pas établie. L'implémentation actuelle a depuis été entraînée et évaluée, mais ses chiffres ne figurent pas dans ce chapitre, et les résultats du pilote ne peuvent pas la valider.
 
 Ce que le pilote établit, et ce qui reste à confirmer par des campagnes complémentaires, est résumé au Tableau~\ref{tab:etabli-non-etabli}.
 
@@ -351,7 +351,7 @@ Ce que le pilote établit, et ce qui reste à confirmer par des campagnes compl�
     \toprule
     \textbf{Établi par le pilote} & \textbf{À confirmer} \\
     \midrule
-    La chaîne expérimentale fonctionne : simulateur, contrôleur, pertes, optimisation et rapports. & L'implémentation actuelle n'a pas encore été entraînée ni évaluée. \\
+    La chaîne expérimentale fonctionne : simulateur, contrôleur, pertes, optimisation et rapports. & L'analyse des campagnes conduites depuis reste à écrire dans ce mémoire. \\
     Le GNN entraîné atteint une distance de Chamfer inférieure à celle de la règle de regroupement sur cible circulaire (20 robots, 10 graines). & La comparaison reste limitée à une cible circulaire et à une baseline ne recevant pas la même consigne. \\
     Le même modèle s'exécute avec 40 et 100 robots sans modification des poids. & La qualité de formation à grande échelle et l'effet de la densité du graphe ne sont pas isolés. \\
     La distance moyenne varie peu entre 0 et 20\,\% de retraits simulés. & Le protocole ne démontre pas une robustesse générale, avec dix épisodes par condition et sans intervalle de confiance. \\
