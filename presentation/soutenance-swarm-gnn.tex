@@ -362,14 +362,15 @@
 % 15 --- Conclusion
 {
 \setbeamercolor{background canvas}{bg=swarmnavy}
-\setbeamercolor{normal text}{fg=white}
+\setbeamercolor{normal text}{fg=white, bg=swarmnavy}
 \setbeamercolor{frametitle}{fg=white, bg=swarmnavy}
 \setbeamercolor{itemize item}{fg=swarmgold}
 \begin{frame}{Bilan : ce qui est établi, ce qui reste à conduire}
+  \color{white}\relax
   \begin{columns}[T]
     \begin{column}{0.5\textwidth}
       \textbf{\color{swarmgold}CE QUI EST ÉTABLI}
-      \begin{itemize}\footnotesize
+      \begin{itemize}\footnotesize\color{white}
         \item Une commande décentralisée, sans coordinateur ni identifiant de forme global.
         \item Un apprentissage différentiable sur simulation complète, sélectionné sur validation.
         \item Une chaîne d'évaluation, de robustesse et de lisibilité prête à l'emploi.
@@ -379,7 +380,7 @@
     \end{column}
     \begin{column}{0.5\textwidth}
       \textbf{\color{swarmgold}CE QUI RESTE À CONDUIRE}
-      \begin{itemize}\footnotesize
+      \begin{itemize}\footnotesize\color{white}
         \item Au moins 50 départs par condition et cinq graines d'entraînement.
         \item Analyser les variantes déjà entraînées : la même consigne, sans message, et la règle manuelle à consigne comparable.
         \item Bruit d'observation, suppression d'arêtes, portée réduite.
