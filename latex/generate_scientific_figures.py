@@ -203,64 +203,54 @@ def style_plot(ax: plt.Axes) -> None:
 
 
 def neuron_and_message_passing() -> plt.Figure:
-    height = 5.6
+    height = 4.3
     fig, ax = canvas(height)
-    header(fig, "Du neurone formel au tour de passage de messages")
     ratio = WIDTH / height
 
-    def node(x: float, y: float, radius: float, text: str, color: str = PALE_BLUE,
-             edge: str = BLUE, fontsize: float = 15.5, weight: str = "normal") -> None:
+    def node(x: float, y: float, radius: float, text: str = "", color: str = PALE_BLUE,
+             edge: str = BLUE, fontsize: float = 12.5, weight: str = "normal") -> None:
         ax.add_patch(Ellipse((x, y), 2 * radius, 2 * radius * ratio,
-                             facecolor=color, edgecolor=edge, linewidth=1.6, zorder=4))
-        ax.text(x, y, text, ha="center", va="center", fontsize=fontsize, weight=weight, zorder=5)
+                             facecolor=color, edgecolor=edge, linewidth=1.5, zorder=4))
+        if text:
+            ax.text(x, y, text, ha="center", va="center", fontsize=fontsize, weight=weight, zorder=5)
 
-    ax.text(0.255, 0.885, "(a) Un neurone formel", ha="center", va="top", weight="bold", fontsize=18)
-    hub_a = (0.248, 0.560)
-    for y, label, weight_label in ((0.700, "x₁", "w₁"), (0.560, "x₂", "w₂"), (0.420, "x₃", "w₃")):
-        node(0.072, y, 0.025, label)
-        arrow(ax, (0.098, y), (hub_a[0] - 0.031, hub_a[1]), color=GRAY, linewidth=1.5, mutation_scale=13)
-        ax.text(0.163, (y + hub_a[1]) / 2 + 0.020, weight_label, ha="center", fontsize=14, color=GRAY)
-    node(*hub_a, 0.029, "Σ", color="white", fontsize=19)
-    box(ax, 0.312, 0.505, 0.122, 0.110, "Activation f", color=PALE_TEAL, fontsize=14)
-    arrow(ax, (hub_a[0] + 0.030, hub_a[1]), (0.305, hub_a[1]), color=GRAY)
-    node(0.478, hub_a[1], 0.025, "y", color=PALE_ORANGE, edge=ORANGE)
-    arrow(ax, (0.437, hub_a[1]), (0.450, hub_a[1]), color=GRAY)
-    ax.text(0.255, 0.330, "z = w₁x₁ + w₂x₂ + w₃x₃ + b,   y = f(z)",
-            ha="center", va="top", fontsize=14.5)
-    ax.text(0.255, 0.258, "Chaque entrée agit par son poids.\nLes poids s'ajustent par descente de gradient.",
-            ha="center", va="top", fontsize=13.5, color=GRAY, linespacing=1.5)
+    ax.text(0.040, 0.92, "(a)", ha="left", fontsize=14, weight="bold")
+    ax.text(0.520, 0.92, "(b)", ha="left", fontsize=14, weight="bold")
+    ax.plot([0.492, 0.492], [0.16, 0.90], color=GRID, linewidth=1.0)
 
-    ax.text(0.755, 0.885, "(b) Un tour de passage de messages", ha="center", va="top",
-            weight="bold", fontsize=18)
-    hub = (0.598, 0.560)
-    ax.add_patch(Ellipse(hub, 0.170, 0.170 * ratio, facecolor="white", edgecolor=GRAY,
-                         linewidth=1.3, linestyle="--", zorder=1))
-    ax.text(hub[0], 0.742, "portée de communication", ha="center", va="top", fontsize=13.5, color=GRAY)
-    node(*hub, 0.027, "i", color=PALE_BLUE, weight="bold", fontsize=17)
-    for angle, label in ((130, "j₁"), (200, "j₂"), (320, "j₃")):
-        rad = np.deg2rad(angle)
-        x = hub[0] + 0.062 * np.cos(rad)
-        y = hub[1] + 0.105 * np.sin(rad)
-        node(x, y, 0.021, label, color="white", edge=TEAL, fontsize=14)
-        arrow(ax, (x, y), hub, color=TEAL, linewidth=1.5, mutation_scale=12, shrink=22)
-    ax.text(0.505, 0.678, "m(i,j)", ha="center", fontsize=13, color=TEAL,
-            bbox={"facecolor": "white", "edgecolor": "none", "pad": 1.5})
-    rad = np.deg2rad(215)
-    kx, ky = hub[0] + 0.105 * np.cos(rad), hub[1] + 0.175 * np.sin(rad)
-    node(kx, ky, 0.021, "k", color="#f2f3f5", edge=GRAY, fontsize=14)
-    ax.text(kx, ky - 0.058, "hors portée", ha="center", va="top", fontsize=13.5, color=GRAY)
-    for index, (label, face) in enumerate((("Agrégation\nsymétrique", PALE_TEAL),
-                                           ("Mise à jour de hᵢ", PALE_BLUE),
-                                           ("Commande locale", PALE_ORANGE))):
-        bottom = 0.655 - index * 0.168
-        box(ax, 0.780, bottom, 0.190, 0.100, label, color=face, fontsize=14.5)
-        if index:
-            arrow(ax, (0.875, bottom + 0.132), (0.875, bottom + 0.106), color=GRAY, linewidth=1.6)
-    arrow(ax, (hub[0] + 0.030, hub[1] - 0.015), (0.773, 0.660), color=TEAL)
-    ax.text(0.755, 0.258, "Un message par arête du voisinage,\npuis une combinaison symétrique.",
-            ha="center", va="top", fontsize=13.5, color=GRAY, linespacing=1.5)
-    ax.text(0.50, 0.082, "Schéma conceptuel : le nombre de voisins change, les poids restent partagés entre les robots.",
-            ha="center", va="top", fontsize=14.5)
+    columns = {0.100: (0.660, 0.530, 0.400),
+               0.245: (0.725, 0.595, 0.465, 0.335),
+               0.390: (0.595, 0.465)}
+    for x, ys in columns.items():
+        for y in ys:
+            node(x, y, 0.019)
+    pairs = list(columns.items())
+    for (x1, ys1), (x2, ys2) in zip(pairs, pairs[1:]):
+        for y1 in ys1:
+            for y2 in ys2:
+                ax.plot([x1 + 0.019, x2 - 0.019], [y1, y2],
+                        color=GRAY, linewidth=0.7, alpha=0.45, zorder=2)
+    ax.plot([0.119, 0.226], [0.660, 0.595], color=BLUE, linewidth=2.2, zorder=3)
+    ax.text(0.178, 0.655, "poids", ha="center", fontsize=12, color=BLUE,
+            bbox={"facecolor": "white", "edgecolor": "none", "pad": 1.5}, zorder=4)
+    node(0.245, 0.595, 0.019, "Σ", color="white", fontsize=11)
+    for x, label in ((0.100, "entrée"), (0.245, "cachée"), (0.390, "sortie")):
+        ax.text(x, 0.250, label, ha="center", va="top", fontsize=12.5, color=GRAY)
+
+    hub = (0.680, 0.530)
+    ax.add_patch(Ellipse(hub, 0.238, 0.238 * ratio, facecolor="white", edgecolor=GRAY,
+                         linewidth=1.2, linestyle="--", zorder=1))
+    ax.text(hub[0], 0.840, "portée", ha="center", va="bottom", fontsize=12.5, color=GRAY)
+    neighbors = ((0.597, 0.615, "j₁"), (0.612, 0.367, "j₂"),
+                 (0.727, 0.647, "j₃"), (0.723, 0.400, "j₄"))
+    for index, (x1, y1, _) in enumerate(neighbors):
+        for x2, y2, _ in neighbors[index + 1:]:
+            ax.plot([x1, x2], [y1, y2], color=GRAY, linewidth=0.7, alpha=0.40, zorder=1)
+    for x, y, label in neighbors:
+        node(x, y, 0.019, label, color="white", edge=TEAL)
+        arrow(ax, (x, y), hub, color=TEAL, linewidth=1.5, mutation_scale=11, shrink=20)
+    node(*hub, 0.022, "i", weight="bold", fontsize=13)
+    node(0.884, 0.310, 0.019, "k", color="#f1f2f4", edge=GRAY)
     return fig
 
 
