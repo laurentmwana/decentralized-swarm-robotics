@@ -182,3 +182,12 @@ class ConfigLoader:
                 raise ConfigError(f"{origin.name} : découpage {kind!r} avec des formes dans plusieurs splits")
             if set(seen) != set(names):
                 raise ConfigError(f"{origin.name} : découpage {kind!r} incomplet ou surabondant")
+        # Un nombre à un chiffre est le même glyphe que le chiffre : ils doivent partager le split.
+        digit_split = {name: split for split, values in cfg.splits["digits"].items() for name in values}
+        for split, values in cfg.splits["numbers"].items():
+            for name in values:
+                if name in digit_split and digit_split[name] != split:
+                    raise ConfigError(
+                        f"{origin.name} : numbers_{name} ({split}) est identique à digits_{name} "
+                        f"({digit_split[name]}) : fuite entre splits"
+                    )

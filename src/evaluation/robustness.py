@@ -25,7 +25,7 @@ import yaml
 from src.common.config import ConfigLoader
 from src.common.mission import Mission
 from src.evaluation.factory import ControllerFactory
-from src.evaluation.results import ResultsTable
+from src.evaluation.results import CI95_METHOD, ResultsTable
 from src.evaluation.scenario import Scenario, ScenarioGrid
 from src.metrics import MetricSuite
 from src.shapes.index import ShapeIndex
@@ -198,7 +198,7 @@ class RobustnessStudy:
                 "reformation": "pre_failure_window_then_post_failure_stable_suffix_duration",
                 "final_graph": "diagnostic_sample_without_controller_command",
                 "breakpoint": "first_tested_strength_with_seed_mean_success_strictly_below_0.5_no_interpolation",
-                "ci95_method": "normal_approximation_1.96_sample_standard_error",
+                "ci95_method": CI95_METHOD,
                 "undefined_metrics": "nan_in_npz_null_in_json_excluded_from_metric_statistics",
             },
         }
@@ -351,7 +351,7 @@ class RobustnessStudy:
         self._plot(between, within)
         return {"within_seed": within, "between_seeds": between, "breakpoints": breakpoints,
                 "success_threshold": self.suite.success_threshold,
-                "ci95_method": "normal_approximation_1.96_sample_standard_error"}
+                "ci95_method": CI95_METHOD}
 
     def _plot(self, between: list[dict], within: list[dict]) -> None:
         import matplotlib

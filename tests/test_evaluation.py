@@ -94,7 +94,7 @@ class TestAggregates:
         agg = table.aggregates("final_distance")[("x", None, 20, 0.0, "f")]
         assert agg["mean"] == pytest.approx(0.25)
         assert agg["std"] == pytest.approx(float(np.std([0.1, 0.2, 0.3, 0.4], ddof=1)))
-        assert agg["ci95"] == pytest.approx(1.96 * agg["std"] / 2.0)
+        assert agg["ci95"] == pytest.approx(3.1824 * agg["std"] / 2.0)  # Student, 3 ddl
         assert agg["n"] == 4
 
     def test_baseline_vs_trained_pairing(self):
@@ -251,3 +251,17 @@ class TestCampaignReproducibility:
         (directory / "status.json").write_text(json.dumps({"status": "failed"}), encoding="utf-8")
         with pytest.raises(ValueError, match="non terminé"):
             factory.versions("gnn_2_rounds")
+
+
+class TestStudentInterval:
+    def test_t_critical_values(self):
+        from src.evaluation.results import t_critical_95
+
+        assert t_critical_95(4) == pytest.approx(2.7764, abs=1e-4)
+        # Raccord continu entre la table (30 ddl) et le développement (au-delà).
+        assert t_critical_95(31) == pytest.approx(2.0395, abs=2e-4)
+        assert t_critical_95(49) == pytest.approx(2.0096, abs=2e-4)
+        assert t_critical_95(10_000) == pytest.approx(1.96, abs=1e-3)
+
+    def test_single_value_has_zero_interval(self):
+        assert ResultsTable.statistics([0.3])["ci95"] == 0.0

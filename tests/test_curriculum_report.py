@@ -174,7 +174,7 @@ def test_known_statistics_paired_forgetting_and_read_only_sources(campaign, monk
                  and row["level"] == "1" and row["target"] == "geometries_a@50")
     assert float(first["mean"]) == pytest.approx(0.6)
     assert float(first["std_sample"]) == pytest.approx(math.sqrt(0.1))
-    assert float(first["ci95"]) == pytest.approx(1.96 * math.sqrt(0.1) / math.sqrt(5))
+    assert float(first["ci95"]) == pytest.approx(2.7764 * math.sqrt(0.1) / math.sqrt(5))  # Student, 4 ddl
     assert int(first["n"]) == 5
     geo = next(row for row in distances if row["variant"] == "gnn_3_rounds_geometry"
                and row["level"] == "1" and row["target"] == "geometries_a@50")
@@ -186,7 +186,7 @@ def test_known_statistics_paired_forgetting_and_read_only_sources(campaign, monk
     # La dispersion des différences appariées est dix fois plus faible que
     # celle des distances ; les deux dispersions de niveaux ne sont pas additionnées.
     assert float(old["std_sample"]) == pytest.approx(math.sqrt(0.001))
-    assert float(old["ci95"]) == pytest.approx(1.96 * math.sqrt(0.001) / math.sqrt(5))
+    assert float(old["ci95"]) == pytest.approx(2.7764 * math.sqrt(0.001) / math.sqrt(5))
     assert int(old["n"]) == 5
     assert int(old["notable_forgetting_count"]) == 3
     assert old["notable_forgetting"] == "True"

@@ -10,7 +10,7 @@ from abc import ABC, abstractmethod
 
 import numpy as np
 from matplotlib.figure import Figure
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageFont, ImageOps
 
 
 class ShapeSource(ABC):
@@ -131,15 +131,17 @@ class NumberShape(ShapeSource):
 
 
 def _render_text(text: str, size: int, font_path: str) -> np.ndarray:
-    margin = max(2, size // 16)
-    img = Image.new("L", (size + 2 * margin, size + 2 * margin), 255)
-    draw = ImageDraw.Draw(img)
     try:
         font = ImageFont.truetype(font_path, size)
     except OSError as exc:
         raise RuntimeError(f"police introuvable pour le rendu des glyphes : {font_path!r}") from exc
-    draw.text((margin, margin), text, font=font, fill=0)
-    bbox = img.getbbox()
+    # Le canevas est dimensionné sur le texte réel : un nombre à 3 chiffres ne doit pas être tronqué.
+    margin = max(2, size // 16)
+    left, top, right, bottom = ImageDraw.Draw(Image.new("L", (1, 1))).textbbox((0, 0), text, font=font)
+    img = Image.new("L", (right - left + 2 * margin, bottom - top + 2 * margin), 255)
+    ImageDraw.Draw(img).text((margin - left, margin - top), text, font=font, fill=0)
+    # getbbox() cherche les pixels non nuls : on inverse pour cadrer l'encre (noire), pas le fond blanc.
+    bbox = ImageOps.invert(img).getbbox()
     if bbox is None:
         raise ValueError(f"glyphe rendu vide : {text!r}")
     crop = img.crop(bbox)

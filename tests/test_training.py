@@ -73,6 +73,18 @@ class TestKnownLossCases:
         overlapping = np.array([[[0.0, 0.0], [0.05, 0.0]]])
         assert float(loss.forward(_rollout(overlapping), torch.zeros(2, 2))) > 0.0
 
+    def test_collision_loss_is_a_mean_over_pairs(self):
+        # Une seule paire à mi-rayon : ((0.1 - 0.05)/0.1)² = 0.25, quel que soit le nombre de robots.
+        loss = CollisionLoss(0.1)
+        pair = np.array([[[0.0, 0.0], [0.05, 0.0]]])
+        assert float(loss.forward(_rollout(pair), torch.zeros(2, 2))) == pytest.approx(0.25, abs=1e-5)
+        # Mêmes paires en collision, mais 18 robots isolés en plus : la moyenne diminue,
+        # elle ne croît pas en N² comme une somme.
+        far = np.stack([np.arange(18) * 5.0 + 10.0, np.zeros(18)], axis=1)
+        crowd = np.concatenate([pair[0], far])[None]
+        expected = 0.25 * 2 / (20 * 19)
+        assert float(loss.forward(_rollout(crowd), torch.zeros(2, 2))) == pytest.approx(expected, rel=1e-4)
+
     def test_zero_motion_for_zero_commands(self):
         positions = _circle(8)
         assert float(MotionLoss(1.0).forward(_rollout(np.stack([positions, positions])), torch.zeros(8, 2))) == pytest.approx(0.0)

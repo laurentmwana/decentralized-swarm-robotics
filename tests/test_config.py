@@ -47,6 +47,17 @@ class TestConfigLoader:
         with pytest.raises(ConfigError, match="incomplet"):
             loader.load_shapes()
 
+    def test_single_digit_number_shares_digit_split(self, loader, tmp_path):
+        # numbers_9 et digits_9 sont le même glyphe : un split différent serait une fuite de test.
+        import yaml
+
+        bases = ConfigLoader().load_raw("shapes")
+        bases["splits"]["numbers"]["test"].remove(9)
+        bases["splits"]["numbers"]["train"].append(9)
+        (tmp_path / "shapes.yaml").write_text(yaml.safe_dump(bases), encoding="utf-8")
+        with pytest.raises(ConfigError, match="fuite"):
+            loader.load_shapes()
+
 
 class TestSeedManager:
     @pytest.mark.parametrize("key", ["initial_positions", "failures"])

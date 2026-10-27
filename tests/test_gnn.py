@@ -131,6 +131,20 @@ class TestEdgeCases:
             cmd = _pure_command(controller, positions, _adj(positions, sim.r_c), mission)
             assert (np.linalg.norm(cmd, axis=1) <= sim.v_max + 1e-6).all()
 
+    @pytest.mark.parametrize("v_max", [0.5, 2.0, 3.0])
+    def test_decoder_scales_with_v_max(self, v_max):
+        # Sorties saturées : la norme doit atteindre v_max, ni plafonner à √2 ni la dépasser.
+        import torch
+
+        from src.models.decoder import Decoder
+
+        decoder = Decoder(hidden_dim=4, v_max=v_max)
+        with torch.no_grad():
+            decoder.mlp[-1].weight.zero_()
+            decoder.mlp[-1].bias.copy_(torch.tensor([50.0, 0.0]))
+            norms = torch.linalg.norm(decoder(torch.zeros(3, 4)), dim=-1)
+        assert torch.allclose(norms, torch.full((3,), v_max), atol=1e-5)
+
 
 class TestConditioning:
     def test_two_shapes_two_commands(self, controller, sim):

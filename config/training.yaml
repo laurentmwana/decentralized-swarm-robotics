@@ -15,6 +15,9 @@ losses:
   weights:
     shape: 1.0
     coverage: 1.0
+    # Depuis le 2026-10-27, la perte de collision est une MOYENNE par paire (dans [0, 1]),
+    # plus une somme : à poids égal elle pèse ~N² fois moins. Poids à re-régler (même budget
+    # pour toutes les variantes) ; runs antérieurs non comparables.
     collisions: 0.5
     motion: 0.02
   shape_window: 10  # forme/couverture moyennees sur les 10 derniers pas (signal dense)

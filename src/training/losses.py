@@ -62,10 +62,12 @@ class CoverageLoss(LossTerm):
 
 
 class CollisionLoss(LossTerm):
-    """Collisions : pénalité quadratique douce (r - d)² sur toutes les paires à d < r.
+    """Collisions : pénalité quadratique douce ((r - d)/r)², moyennée sur les paires et les pas.
 
-    `skip_steps` exclut les premiers pas : le chevauchement issu du tirage initial
-    n'est pas un choix de la politique et son gradient est du bruit.
+    Moyenne par paire (et non somme) : la valeur reste dans [0, 1] quel que soit N, donc
+    comparable entre 20, 40 et 100 robots, et ne domine plus les termes de forme (une
+    somme croît en N²). `skip_steps` exclut les premiers pas : le chevauchement issu du
+    tirage initial n'est pas un choix de la politique et son gradient est du bruit.
     """
 
     name = "collisions"
@@ -80,12 +82,15 @@ class CollisionLoss(LossTerm):
         step_count = 0
         for t in range(self.skip_steps, rollout.commands.shape[0] + 1):
             p = rollout.positions[t]
+            if p.shape[0] < 2:
+                continue
             d = torch.cdist(p, p)
             mask = ~torch.eye(p.shape[0], dtype=torch.bool)
             deviation = torch.relu(r - d)[mask]
-            total = total + (deviation / r).pow(2).sum()
+            # Moyenne sur les N(N-1) paires ordonnées = moyenne sur les paires non ordonnées.
+            total = total + (deviation / r).pow(2).mean()
             step_count += 1
-        return total / (2 * max(1, step_count))  # paires comptees deux fois (i,j) et (j,i)
+        return total / max(1, step_count)
 
 
 class MotionLoss(LossTerm):

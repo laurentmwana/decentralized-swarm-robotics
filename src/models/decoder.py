@@ -26,7 +26,9 @@ class Decoder(nn.Module):
         raw = self.mlp(h)
         if geometry is not None and self.geometry_prior > 0:
             raw = raw + self.geometry_prior * geometry
-        raw = torch.tanh(raw)  # chaque composante dans (-1, 1)
+        # Chaque composante dans (-v_max, v_max) : sans ce facteur, la vitesse plafonnerait à √2
+        # quelle que soit v_max. Identique à l'ancien comportement pour v_max = 1.
+        raw = self.v_max * torch.tanh(raw)
         norms = torch.linalg.norm(raw, dim=-1, keepdim=True)
         factor = torch.clamp(self.v_max / norms.clamp(min=1e-9), max=1.0)
         return raw * factor

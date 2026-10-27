@@ -22,7 +22,10 @@ Sert à la sélection de modèle (validation) et jamais au réglage. Le test ne 
 | Géométries (7) | cercle, carré, triangle, ellipse, croix | pentagone | étoile |
 | Chiffres (10) | 0,1,2,3,4,5 | 6,7 | 8,9 |
 | Lettres (26) | A–K, M–U (20 lettres) | V, W, X | Y, Z, et L réservée (3) |
-| Nombres (9–999) | 9,12,45,77,100,108,121,144,200,222,333,404,500,707 | 99,111,555 | 314,606,789,999 |
+| Nombres (9–999) | 12,45,77,100,108,121,144,200,222,333,404,500,707 | 99,111,555 | 9,314,606,789,999 |
+
+- **Correction du 2026-10-27 (fuite de test)** : le nombre `9` est le même glyphe que le chiffre `9` (test). Il était en entraînement, ce qui exposait une forme de test ; il est déplacé en test. `ConfigLoader` refuse désormais tout nombre à un chiffre placé dans un autre split que le chiffre identique.
+- **Correction du 2026-10-27 (rendu)** : les nombres à 2 et 3 chiffres débordaient du canevas (« 314 » rendu « 31 »). Le canevas est maintenant dimensionné sur le texte ; catalogue à régénérer (`make shapes`), checkpoints antérieurs incompatibles avec le nouvel index.
 
 - L'index `outputs/shapes/index.csv` porte une ligne par forme avec sa colonne `split` ; le découpage est **verrouillé par hash** : `ShapeSplit` rejette toute tentative d'échantillonner une forme d'un split non demandé.
 - Le cercle seul est utilisé en phases 3–8 ; les autres formes entraînement à partir du curriculum (phase 9).

@@ -25,6 +25,7 @@ splits:
     val: [V, W, X]
     test: [Y, Z, L]
   numbers:
-    train: [9, 12, 45, 77, 100, 108, 121, 144, 200, 222, 333, 404, 500, 707]
+    # 9 est le même glyphe que digits_9 (test) : il reste dans le même split pour éviter une fuite.
+    train: [12, 45, 77, 100, 108, 121, 144, 200, 222, 333, 404, 500, 707]
     val: [99, 111, 555]
-    test: [314, 606, 789, 999]
+    test: [9, 314, 606, 789, 999]

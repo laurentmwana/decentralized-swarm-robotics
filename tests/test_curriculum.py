@@ -38,7 +38,7 @@ def curriculum(tmp_path):
 
 def test_levels_are_cumulative_and_never_use_test(curriculum):
     split = build_split(ConfigLoader().load_shapes())
-    assert [len(level.training_targets) for level in curriculum.levels] == [5, 11, 31, 45]
+    assert [len(level.training_targets) for level in curriculum.levels] == [5, 11, 31, 44]  # numbers_9 en test (même glyphe que digits_9)
     assert [len(level.validation_targets) for level in curriculum.levels] == [1, 3, 6, 9]
     previous = set()
     for level in curriculum.levels:

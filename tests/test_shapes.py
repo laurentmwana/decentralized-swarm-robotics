@@ -98,3 +98,20 @@ class TestBinarization:
             mask = source.binarize(image)
             assert mask.any(), f"aucune encre pour {source.identifier}"
             assert (~mask).any(), f"image entièrement pleine pour {source.identifier}"
+
+
+class TestGlyphRendering:
+    @pytest.mark.parametrize("value", [12, 314, 999])
+    def test_numbers_are_not_clipped(self, value):
+        # Régression : « 314 » était rendu « 31 » (texte plus large que le canevas).
+        from src.shapes.sources import NumberShape
+
+        shape = NumberShape(value, ConfigLoader().load_shapes().font_path)
+        mask = shape.binarize(shape.render(128))
+        columns = np.flatnonzero(mask.any(axis=0))
+        # Le texte cadré occupe toute la largeur, avec une marge blanche à gauche et à droite.
+        assert columns.min() <= 2 and columns.max() >= 125
+        assert not mask[:, 0].all() and not mask[:, -1].all()
+        # Autant de groupes de colonnes encrées que de chiffres (chiffres séparés par un blanc).
+        groups = 1 + int((np.diff(columns) > 1).sum())
+        assert groups == len(str(value))

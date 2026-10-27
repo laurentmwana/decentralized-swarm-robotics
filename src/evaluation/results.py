@@ -11,6 +11,26 @@ from pathlib import Path
 import numpy as np
 
 AGGREGATABLE_METRICS = ["final_distance", "success", "collision_rate", "normalized_regularity", "final_components"]
+CI95_METHOD = "student_t_0.975_sample_standard_error"
+
+# Quantiles 0,975 de la loi de Student, ddl 1 à 30 (tables standard). Avec 5 graines
+# d'entraînement (ddl 4), 1,96 sous-estimerait l'intervalle d'environ 30 %.
+_T975 = (
+    12.7062, 4.3027, 3.1824, 2.7764, 2.5706, 2.4469, 2.3646, 2.3060, 2.2622, 2.2281,
+    2.2010, 2.1788, 2.1604, 2.1448, 2.1314, 2.1199, 2.1098, 2.1009, 2.0930, 2.0860,
+    2.0796, 2.0739, 2.0687, 2.0639, 2.0595, 2.0555, 2.0518, 2.0484, 2.0452, 2.0423,
+)
+
+
+def t_critical_95(degrees_of_freedom: int) -> float:
+    """Quantile bilatéral 95 % de Student ; développement de Cornish-Fisher au-delà de 30 ddl."""
+    if degrees_of_freedom < 1:
+        raise ValueError(f"degrés de liberté invalides : {degrees_of_freedom}")
+    if degrees_of_freedom <= len(_T975):
+        return _T975[degrees_of_freedom - 1]
+    z, df = 1.959964, float(degrees_of_freedom)
+    return (z + (z**3 + z) / (4 * df) + (5 * z**5 + 16 * z**3 + 3 * z) / (96 * df**2)
+            + (3 * z**7 + 19 * z**5 + 17 * z**3 - 15 * z) / (384 * df**3))
 
 
 @dataclass(frozen=True)
@@ -41,8 +61,11 @@ class ResultsTable:
     @staticmethod
     def statistics(values) -> dict[str, float]:
         values = np.asarray(values, dtype=float)
-        deviation = float(values.std(ddof=1)) if len(values) > 1 else 0.0
-        return {"mean": float(values.mean()), "std": deviation, "ci95": 1.96 * deviation / math.sqrt(len(values)), "n": len(values)}
+        if len(values) < 2:
+            return {"mean": float(values.mean()), "std": 0.0, "ci95": 0.0, "n": len(values)}
+        deviation = float(values.std(ddof=1))
+        ci95 = t_critical_95(len(values) - 1) * deviation / math.sqrt(len(values))
+        return {"mean": float(values.mean()), "std": deviation, "ci95": ci95, "n": len(values)}
 
     def aggregates(self, metric: str = "final_distance") -> dict[tuple, dict[str, float]]:
         groups: dict[tuple, list[float]] = defaultdict(list)
