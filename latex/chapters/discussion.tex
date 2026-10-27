@@ -4,31 +4,31 @@
 \section*{Introduction}
 \addcontentsline{toc}{section}{Introduction}
 
-Revenons sur les résultats du pilote historique. Le chapitre~\ref{chap:etat-art} servira de repère, nous examinerons ensuite ce qui fragilise l'étude, puis ce qu'on peut en tirer pour concevoir des contrôleurs décentralisés. Le périmètre d'abord : il s'agit bien du pilote, pas de l'implémentation actuelle, dont les entraînements et la campagne comparative ne sont pas encore analysés dans ce mémoire. Implications pratiques et suite expérimentale closent le chapitre, avant la conclusion générale.
+Revenons sur les résultats de ce pilote historique. Après un bref ancrage dans le chapitre~\ref{chap:etat-art}, nous analyserons les fragilités de l'étude avant d'en tirer des leçons pour la conception de contrôleurs décentralisés. Précisons d'emblée le périmètre : il est ici question du prototype initial, et non de la version actuelle dont les entraînements et la campagne comparative n'ont pas encore été versés dans ce mémoire. Des implications pratiques et des pistes expérimentales viendront clore ce chapitre, juste avant la conclusion générale.
 
 \section*{Interprétation des résultats}
 \addcontentsline{toc}{section}{Interprétation des résultats}
 
-Le pilote montre d'abord que la chaîne historique tient debout. Le simulateur, le contrôleur à messages, la fonction de perte et l'optimisation fonctionnent ensemble et produisent une configuration circulaire plus proche de la cible que l'état initial. Rien là-dedans qui dise quoi que ce soit d'une convergence asymptotique, que nous ne pouvons pas affirmer. Les paramètres sont partagés, donc le même réseau s'applique à chaque robot, et l'agrégation locale s'accommode d'un nombre variable de voisins. Le protocole, lui, indique que l'essaim s'ajuste mieux au cercle que la règle de regroupement implémentée.
+Ce premier retour montre que la chaîne initiale tient la route. Le simulateur, le contrôleur par passage de messages, la fonction de perte et l'optimisation coopèrent pour converger vers une configuration circulaire plus proche de la cible que l'état de départ. Point de conclusion hâtive toutefois : rien ici ne garantit une convergence asymptotique, que nos données ne permettent pas d'affirmer. Les paramètres étant partagés, un unique réseau s'applique à l'ensemble des robots, tandis que l'agrégation locale encaisse sans broncher un nombre variable de voisins. De surcroît, le protocole indique que l'essaim épouse le cercle de manière plus satisfaisante que la règle de regroupement de référence.
 
-Il ne faut pas pour autant faire dire plus à cette observation. La baseline de regroupement ne reçoit pas la même consigne que le GNN, et elle n'est ni apprise ni adaptée à la tâche du cercle. L'écart de distance de Chamfer ne permet donc pas de savoir si le GNN fait mieux à information égale. La question que le pilote tranche est plus modeste : dans la configuration retenue, la politique entraînée se rapproche davantage du cercle qu'une règle qui se contente de regrouper les robots.
+Il convient toutefois de garder raison. La baseline de regroupement ne disposant ni de la même consigne que le GNN, ni d'un apprentissage adapté à la tâche circulaire, l'écart de distance de Chamfer ne suffit pas à décréter la supériorité absolue du GNN à information égale. La question tranchée ici est plus circonscrite : dans les conditions testées, la politique entraînée se rapproche nettement mieux du cercle qu'une simple règle d'agrégation brute.
 
-Un détail de protocole change la lecture des résultats. Le pilote aurait évalué le modèle issu du dernier niveau du curriculum réduit, et non un modèle entraîné uniquement sur le cercle. Aucun artefact conservé ne permet aujourd'hui de l'établir, et le seul poids dont la provenance est enregistrée provient d'un entraînement sur cible circulaire. Nous voulions évaluer le contrôleur réellement destiné à la démonstration. Si l'attribution au curriculum est exacte, les résultats mêlent l'effet du curriculum et celui de l'architecture. Une campagne définitive devra les distinguer, en évaluant à la fois le modèle spécialisé sur le cercle et celui du curriculum, sur les mêmes épisodes.
+Un détail protocolaire nuance toutefois la lecture des scores. Le pilote évalue en effet un modèle issu du dernier niveau d'un curriculum réduit, plutôt qu'un agent formé exclusivement sur le cercle. Aucun registre conservé ne permet aujourd'hui d'en attester formellement, d'autant que le seul jeu de poids documenté provient d'un entraînement sur cible circulaire. Si l'hypothèse du curriculum s'avère, les performances brassent l'effet conjoint de l'apprentissage progressif et de l'architecture. Une campagne rigoureuse devra impérativement découpler ces facteurs en confrontant les deux variantes sur des épisodes stricts.
 
-Quand on retire 20\,\% des robots, la distance moyenne se dégrade peu. C'est un signal à creuser, pas une preuve de robustesse générale. Le taux de succès, nul à ce niveau de pannes avec le seuil retenu, rappelle d'ailleurs que la moyenne de Chamfer ne dit pas tout. À vingt robots, le premier franchissement du seuil est rare. Or le champ historique appelé « pas de convergence » n'exige pas de rester sous le seuil ensuite, et il ne dit pas, à lui seul, si la formation s'est stabilisée. La mesure actuelle, qui exige de rester sous le seuil jusqu'à la fin, suit une autre convention et se limite à un horizon fini.
+Lorsque l'on retire 20,% des robots, la distance moyenne ne s'effondre que modérément. C'est un indicateur encourageant, mais en aucun cas un blanc-seing sur la robustesse globale. D'ailleurs, le taux de succès — nul à ce niveau de pannes avec le seuil retenu — rappelle que la moyenne de Chamfer ne dit pas tout. À vingt unités, franchir la barre du seuil relève de l'exception. De plus, la métrique historique de « pas de convergence » ne réclame pas de maintenir la formation sous le seuil par la suite, ni ne garantit une stabilisation pérenne. La mesure actuelle, plus stricte, exige au contraire de conserver le cap jusqu'au terme de l'épisode sur un horizon fini.
 
 \section*{Comparaison avec les travaux antérieurs}
 \addcontentsline{toc}{section}{Comparaison avec les travaux antérieurs}
 
-Situons maintenant ces résultats par rapport au chapitre~\ref{chap:etat-art}, en distinguant ce qui relève de l'architecture de ce qui relève du protocole.
+Confrontons à présent ces observations aux écrits du chapitre~\ref{chap:etat-art}, en séparant soigneusement la part de l'architecture de celle du protocole.
 
-Tolstaya et al. montrent qu'un contrôleur GNN peut être entraîné pour des tâches de robotique en essaim sur un graphe de communication mobile \cite{tolstaya2020}. Notre travail est de la même famille, mais la tâche est différente : il s'agit de converger vers une géométrie de cible donnée, non de suivre une trajectoire ni d'éviter des obstacles. Former une figure oblige à couvrir tout le contour, ce qui n'a pas d'équivalent direct en navigation.
+Tolstaya et al. ont établi qu'un GNN pouvait piloter des essaims robotiques sur des graphes de communication mobiles \cite{tolstaya2020}. Notre démarche s'inscrit dans cette même lignée, à ceci près que la tâche change de nature : il ne s'agit plus de suivre une trajectoire ou d'esquiver des obstacles, mais de converger vers une géométrie fixe. Former une figure impose de saturer l'ensemble du contour, un défi singulier sans équivalent direct en navigation pure.
 
-Le pilote confirme l'intuition qui sous-tend les contrôleurs GNN décentralisés. L'architecture ne s'effondre pas quand le nombre de robots change. Là où nous nous démarquons, c'est sur l'apprentissage. Plusieurs travaux forment le contrôleur par imitation d'un expert, et il faut alors disposer d'une référence. Nous n'en avons pas. Le signal vient d'une perte de forme évaluée en fin d'épisode, rétropropagée à travers une simulation différentiable. Rien à imiter, donc, mais un horizon de rétropropagation aussi long que l'épisode.
+Ce pilote valide l'intuition fondatrice des contrôleurs GNN décentralisés : l'architecture encaisse les variations d'effectif sans s'effondrer. Là où notre approche se distingue, c'est sur le mode d'apprentissage. Contrairement aux méthodes par imitation qui nécessitent un expert de référence — ce que nous n'avons pas —, notre signal découle d'une perte évaluée en fin d'épisode, rétropropagée à travers un simulateur différentiable. Pas de modèle à singer, mais un horizon de rétropropagation qui épouse toute la durée de l'épisode.
 
-Jiang, Huang et Guo proposent une formation décentralisée de bout en bout fondée sur un GNN \cite{jiang2023}. Le rapprochement est direct, mais les hypothèses de perception diffèrent. Leurs observations viennent de capteurs embarqués, transformées en cartes locales, alors que notre prototype travaille sur des états simulés, avec une consigne géométrique fournie avant l'épisode. Comparer les performances n'aurait de sens qu'à hypothèses de perception comparables.
+Jiang, Huang et Guo ont également exploré la formation décentralisée de bout en bout via GNN \cite{jiang2023}. Le parallèle est évident, mais les hypothèses perceptives divergent. Leurs robots s'appuient sur des capteurs embarqués convertis en cartes locales, tandis que notre prototype exploite des états simulés et une consigne géométrique préétablie. Une confrontation directe des performances exigerait un alignement strict de ces conditions d'accès à l'information.
 
-Les contrôleurs écrits à la main pour générer des formes \cite{hsieh2008,li2019} restent la référence à atteindre. Ils sont lisibles et n'exigent aucun entraînement, mais il faut les concevoir pour chaque famille de formes. Nous ne prétendons pas les remplacer. Nous montrons simplement qu'une loi apprise, exécutée localement, peut être entraînée de manière reproductible sur des formes variées. La comparaison équitable, avec une règle manuelle qui reçoit une consigne de contour comparable, a depuis été conduite. Ses résultats restent à analyser et ne sont pas reportés ici. Les perspectives y reviennent.
+Les lois de commande manuelles pour la formation de figures \cite{hsieh2008,li2019} demeurent l'étalon-or. Transparentes et affranchies de toute phase d'apprentissage, elles exigent toutefois d'être repensées pour chaque nouvelle famille de formes. Notre ambition n'est pas de les balayer d'un revers de main, mais de démontrer qu'une politique apprise, exécutée localement, peut s'entraîner de façon reproductible sur des structures variées. Une confrontation équitable, face à une règle manuelle dotée d'une consigne de contour équivalente, a depuis été réalisée. Ses conclusions, en cours d'analyse, ne figurent pas dans ce manuscrit mais s'annoncent dans les perspectives.
 
 \section*{Menaces à la validité}
 \addcontentsline{toc}{section}{Menaces à la validité}
@@ -36,85 +36,85 @@ Les contrôleurs écrits à la main pour générer des formes \cite{hsieh2008,li
 \subsection*{Validité interne}
 \addcontentsline{toc}{subsection}{Validité interne}
 
-La première limite est le nombre de répétitions. Avec dix épisodes par condition, on peut valider une chaîne de mesure et repérer de gros écarts, mais pas estimer précisément une moyenne, encore moins comparer des distributions. S'y ajoute un couplage entre architecture et protocole. La provenance du modèle évalué n'est pas établie, ce qui brouille l'attribution des résultats au seul passage de messages.
+La première limite tient au volume de répétitions. Avec dix essais par condition, on valide une chaîne de mesure et repère de gros écarts, mais on s'interdit d'estimer finement une moyenne, et encore moins de comparer des distributions. S'y greffe un couplage entre architecture et protocole : l'ascendance exacte du modèle évalué reste floue, ce qui brouille l'attribution des gains au seul passage de messages.
 
-La deuxième limite ne porte plus sur l'existence d'une baseline apprise sans communication. Cette variante a été entraînée et évaluée, et l'écart historique entre le GNN et le regroupement garde son interprétation, un système connaît sa cible et l'autre non. La limite actuelle vient des graines. Le contrôleur avec messages ne dispose que d'un seul entraînement, quand la variante sans communication en compte plusieurs. L'écart mesuré entre les deux ne peut donc pas encore être attribué aux seuls échanges, et les résultats décrivent un entraînement particulier, pas la performance attendue de l'architecture.
+La seconde réserve ne concerne plus l'existence d'une baseline apprise sans communication. Cette variante a bien été entraînée et évaluée, préservant l'interprétation de l'écart historique : l'un connaît sa cible, l'autre l'ignore. Le point bloquant provient plutôt des graines aléatoires. Le contrôleur avec messages ne dispose que d'un unique run d'entraînement, alors que son alter ego sans communication en cumule plusieurs. L'écart mesuré ne peut donc être imputé aux seuls flux d'échanges ; il décrit un apprentissage singulier plutôt que la performance intrinsèque de l'architecture.
 
 \subsection*{Validité externe}
 \addcontentsline{toc}{subsection}{Validité externe}
 
-Dans le simulateur, les robots partagent un repère commun, connaissent leurs positions exactes et communiquent sans délai ni perte. Les collisions sont pénalisées par une fonction continue, sans dynamique de contact. Un robot en panne disparaît proprement du graphe, alors qu'un robot défaillant réel peut rester immobile, gêner les autres ou transmettre des valeurs aberrantes. L'arène est finie et ses bords modifient les trajectoires : rien ne s'extrapole donc à un espace ouvert. Enfin, les épisodes sont très courts (vingt pas dans le pilote), bien en deçà d'une mission réelle.
+Dans le cadre simulé, les robots partagent un repère commun, connaissent leurs positions exactes et communiquent sans le moindre délai ni perte de paquets. Les collisions se résument à une pénalité continue, exempte de toute dynamique de contact physique. Un agent en panne s'évapore proprement du graphe, loin des comportements erratiques d'un matériel défaillant qui pourrait s'immobiliser, perturber ses pairs ou propager des données aberrantes. Enfin, les épisodes se révèlent extrêmement brefs — vingt pas dans le pilote —, bien en deçà des exigences d'une mission réelle.
 
-Ces hypothèses rendent l'étude contrôlable, mais elles en limitent la portée. Les résultats établissent une faisabilité en simulation 2D, pas un transfert vers des plateformes physiques.
+Ces hypothèses garantissent la contrôlabilité de l'étude, mais bornent strictement sa portée. Les résultats attestent d'une faisabilité en simulation 2D, sans préjuger d'un transfert sur des plateformes matérielles.
 
 \subsection*{Validité de construit}
 \addcontentsline{toc}{subsection}{Validité de construit}
 
-Les mesures elles-mêmes comportent des approximations. La distance de Chamfer prend en compte les deux ensembles de points mais ignore la lisibilité d'un symbole : deux configurations peuvent avoir des distances voisines alors que l'une se lit et l'autre pas. Le seuil de succès, fixé à 0,5 dans le pilote, est un choix opérationnel dont dépend directement le pourcentage de réussite. Le taux de collisions compte les rapprochements sous une distance de sécurité, pas des chocs mécaniques. Quant à la régularité des voisins, elle repère les amas sans garantir que tout le contour est couvert.
+Les métriques elles-mêmes intègrent des approximations. La distance de Chamfer met en balance deux nuages de points tout en faisant abstraction de la lisibilité visuelle d'un symbole : deux agencements afficheront des scores voisins alors que l'un se déchiffrera clairement et l'autre non. Fixé à 0,5 dans le pilote, le seuil de réussite relève d'un choix opérationnel qui pilote directement le taux de succès. Le compteur de collisions recense les proximités sous un seuil de sécurité, sans mesurer de chocs mécaniques réels. Quant à la régularité des voisinages, elle repère des amas sans certitude que le contour soit intégralement scellé.
 
-Inutiles, ces mesures ne le sont pas. Elles imposent juste de les présenter ensemble, avec leur définition, au lieu de retenir celle qui donne le résultat le plus flatteur.
+Ces mesures ne sont pas vaines pour autant. Tout l'enjeu réside dans leur restitution conjointe, accompagnée de leurs définitions, plutôt que dans le choix opportuniste de l'indicateur le plus flatteur.
 
 \section*{Implications pour la conception de contrôleurs décentralisés}
 \addcontentsline{toc}{section}{Implications pour la conception de contrôleurs décentralisés}
 
-Trois enseignements se dégagent du travail, sous réserve des limites qui précèdent.
+Trois grands enseignements se dégagent de ces travaux, sous réserve des limites précédemment dressées.
 
-Le premier : le prototype qui combine consigne et messages a produit des formations non triviales dans les scénarios étudiés. Laquelle des deux contributions pèse le plus, nous ne le savons pas encore, et les données disponibles ne permettent pas de les séparer. C'est l'objet de l'ablation sans communication, déjà entraînée et évaluée, et de la comparaison entre identifiant seul et géométrie, qui reste à conduire.
+Premièrement, le prototype combinant consigne et messages a généré des formations non triviales au fil des scénarios. S'il est encore délicat de peser la contribution exacte de chaque composant, l'ablation sans communication — déjà entraînée et évaluée — ainsi que le comparatif entre identifiant seul et géométrie (en attente d'analyse) permettront bientôt de trancher.
 
-Deuxième point, la moyenne : elle évite que la somme des messages grossisse mécaniquement avec le nombre de voisins. Elle ne garantit pas pour autant que leurs distributions restent identiques quand la densité change. Les résultats historiques à 40 et 100 robots sont compatibles avec ce choix de conception, sans en établir l'effet causal. Une attention à poids normalisés peut aussi former une moyenne pondérée, et ses propriétés comme sa performance méritent d'être évaluées plutôt que écartées d'emblée.
+Deuxièmement, l'utilisation de la moyenne arithmétique évite que la somme des messages ne enfle mécaniquement avec la densité du voisinage. Elle ne garantit en rien la stabilité des distributions lorsque la configuration évolue. Les tests historiques menés à 40 et 100 robots s'accordent avec ce choix de conception, sans pour autant en valider la causalité stricte. Des mécanismes à poids normalisés ou des moyennes pondérées mériteraient d'être testés plutôt que balayés d'un revers de main.
 
-Reste la progression cumulative, censée limiter l'oubli. Le pilote n'isole pas son gain par rapport à un entraînement non progressif, et conserver les anciennes cibles ne dispense pas de mesurer leur performance à chaque niveau, sur des épisodes appariés. Le Tableau~\ref{tab:curriculum-pertes} du chapitre~\ref{chap:experiences} est un premier pas dans cette direction.
+Reste enfin la question du curriculum, censé prémunir contre l'oubli catastrophique. Le pilote n'isole pas son gain par rapport à un apprentissage direct, et la conservation des anciennes cibles ne dispense pas de mesurer leur niveau de performance à chaque étape sur des épisodes appariés. Le Tableau~\ref{tab:curriculum-pertes} (présenté au chapitre~\ref{chap:experiences}) constitue un premier jalon dans cette direction.
 
 \section*{Considérations pratiques et sociales}
 \addcontentsline{toc}{section}{Considérations pratiques et sociales}
 
-On justifie souvent les essaims robotiques par leur faible coût unitaire et leur redondance, et des plateformes comme les Kilobot montrent qu'on peut déployer des centaines de robots simples \cite{rubenstein2014}. De quoi changer la manière d'évaluer un contrôleur. Un système qui fonctionne en simulation mais repose sur des hypothèses fragiles de repère ou de communication peut imposer, à l'échelle du groupe, des coûts de recalibrage considérables.
+L'argument massue en faveur des essaims robotiques demeure leur faible coût unitaire et leur redondance naturelle, à l'image des Kilobot qui permettent de déployer des centaines d'unités simples \cite{rubenstein2014}. Une telle perspective redéfinit la manière d'évaluer un contrôleur : un système performant en simulation mais adossé à des hypothèses fragiles de synchronisation ou de repérage risque d'entraîner, à grande échelle, des coûts de calibration prohibitifs.
 
-La simulation, elle, allège la facture. Entraîner et valider numériquement avant tout déploiement physique réduit le nombre d'essais sur le matériel, donc la consommation et les pertes qui en découlent. La reproductibilité des campagnes, assurée ici par des configurations et des graines explicites, va dans le même sens : rejouer une expérience coûte du temps de calcul, alors que refaire des robots coûte des matières.
+La simulation allège considérablement cette facture. Valider et entraîner numériquement en amont de tout déploiement physique limite les essais destructifs, réduisant d'autant la consommation énergétique et les pertes matérielles. La reproductibilité des campagnes, garantie ici par des fichiers de configuration et des graines fixées, va dans le même sens : rejouer une simulation consomme du temps processeur, quand remplacer des robots détruits consomme de la matière.
 
-Enfin, une formation de forme par un essaim est un dispositif visible dans l'espace public. Toute extension vers des plateformes réelles devra tenir compte du bruit, de l'occupation de l'espace et du consentement des personnes concernées, ainsi que des usages ambivalents d'un tel dispositif. Nous n'abordons pas ces questions de façon expérimentale dans ce mémoire. Elles font partie des limites de son périmètre.
+Enfin, voir un essaim s'assembler pour former une figure dans l'espace public ne laisse pas indifférent. Toute velléité d'extension vers des systèmes réels devra composer avec le bruit ambiant, l'occupation de l'espace, le consentement des usagers et les usages ambivalents d'un tel dispositif. Ce mémoire se garde bien d'aborder ces dimensions sur le plan expérimental, ce qui constitue une limite assumée de son périmètre.
 
 \section*{Suite expérimentale}
 \addcontentsline{toc}{section}{Suite expérimentale}
 
-Les campagnes préparées prévoient au moins 50 départs par condition et cinq graines d'entraînement, avec une séparation nette des deux sources de variabilité. Elles incluent du bruit d'observation, la suppression aléatoire d'arêtes et la réduction de portée. Supprimer des arêtes n'équivaut pas à bruiter le contenu des messages. La comparaison prioritaire oppose la politique sans communication à son équivalent avec messages, à consigne identique. Les modules distinguent désormais proximité, couverture, régularité et sécurité, et un questionnaire en aveugle prépare l'étude de lisibilité. Mais leur existence ne remplace ni l'exécution des campagnes ni la collecte de réponses humaines. Le Tableau~\ref{tab:controller-matrix} récapitule, contrôleur par contrôleur, l'information disponible et le statut de chaque comparaison.
+Les protocoles en cours de déploiement prévoient au moins 50 exécutions par condition et cinq graines d'entraînement distinctes, assurant une étanchéité parfaite entre les sources de variabilité. Ils intègrent désormais du bruit d'observation, des ruptures aléatoires d'arêtes de communication et des réductions de portée. Couper des arêtes ne se substitue toutefois pas à l'altération du contenu des messages. La confrontation prioritaire oppose la politique sans communication à son équivalent avec messages, à consigne rigoureusement identique. Les modules de métriques dissocient désormais la proximité, la couverture, la régularité et la sécurité, tandis qu'un questionnaire en aveugle prépare l'évaluation de la lisibilité humaine. Pour autant, ces outils ne se substituent ni à l'exécution effective des campagnes ni à la collecte des retours utilisateurs. Le Tableau~\ref{tab:controller-matrix} résume l'état des informations disponibles et le statut des comparaisons pour chaque contrôleur.
 
 % Préambule requis : \usepackage{booktabs,tabularx,array}
 \begin{table}[htbp]
-  \centering
-  \small
-  \caption[Information reçue par les contrôleurs actuels]{Information reçue par les contrôleurs actuels (voisinage, identifiant et géométrie). Cette matrice décrit ce que chaque contrôleur reçoit, pas des performances.}
-  \label{tab:controller-matrix}
-  \setlength{\tabcolsep}{4pt}
-  \renewcommand{\arraystretch}{1.25}
-  \begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{3.1cm} c c >{\raggedright\arraybackslash}X c@{}}
-    \toprule
-    \textbf{Contrôleur} & \textbf{Voisins} & \textbf{ID forme} & \textbf{Géométrie de la cible} & \textbf{Poids appris} \\
-    \midrule
-    Regroupement (flocking) & Oui & Non & Aucune & Non \\
-    Règle manuelle & Oui & Non & Déplacement vers le point le plus proche (direction et distance) & Non \\
-    GNN identifiant seul & Oui & Oui & Aucune & Oui \\
-    GNN avec géométrie & Oui & Oui & Direction unitaire vers le point le plus proche & Oui \\
-    GNN sans communication & Non & Oui & Direction unitaire vers le point le plus proche & Oui \\
-    \bottomrule
-  \end{tabularx}
+\centering
+\small
+\caption[Information reçue par les contrôleurs actuels]{Information reçue par les contrôleurs actuels (voisinage, identifiant et géométrie). Cette matrice décrit ce que chaque contrôleur reçoit, pas des performances.}
+\label{tab:controller-matrix}
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{3.1cm} c c >{\raggedright\arraybackslash}X c@{}}
+\toprule
+\textbf{Contrôleur} & \textbf{Voisins} & \textbf{ID forme} & \textbf{Géométrie de la cible} & \textbf{Poids appris} \\
+\midrule
+Regroupement (flocking) & Oui & Non & Aucune & Non \\
+Règle manuelle & Oui & Non & Déplacement vers le point le plus proche (direction et distance) & Non \\
+GNN identifiant seul & Oui & Oui & Aucune & Oui \\
+GNN avec géométrie & Oui & Oui & Direction unitaire vers le point le plus proche & Oui \\
+GNN sans communication & Non & Oui & Direction unitaire vers le point le plus proche & Oui \\
+\bottomrule
+\end{tabularx}
 
-  \vspace{0.6em}
-  \begin{minipage}{\linewidth}
-    \footnotesize\raggedright
-    Les poids appris sont les paramètres à optimiser.\par
-    \textbf{Le pilote n'a évalué que l'ancien GNN et le regroupement.} Deux variantes ont depuis été entraînées et évaluées, la règle manuelle à consigne comparable et la politique sans communication. Le contrôleur avec messages n'a encore qu'un seul entraînement. Le GNN sans communication garde ses 2 tours, mais son graphe et ses agrégats sont nuls.
-  \end{minipage}
+\vspace{0.6em}
+\begin{minipage}{\linewidth}
+\footnotesize\raggedright
+Les poids appris sont les paramètres à optimiser.\par
+\textbf{Le pilote n'a évalué que l'ancien GNN et le regroupement.} Deux variantes ont depuis été entraînées et évaluées, la règle manuelle à consigne comparable et la politique sans communication. Le contrôleur avec messages n'a encore qu'un seul entraînement. Le GNN sans communication garde ses 2 tours, mais son graphe et ses agrégats sont nuls.
+\end{minipage}
 \end{table}
 
-Commençons par l'agrégation. Comparer la moyenne à une agrégation tronquée ou pondérée permettrait de mesurer la sensibilité du contrôleur à un voisin défaillant. Vient ensuite la profondeur. Comparer un, deux et trois tours à budget d'entraînement égal évalue l'effet conjoint de la portée informationnelle, de la profondeur et de la capacité paramétrique. Les distinguer demandera des contrôles supplémentaires.
+Abordons à présent l'agrégation. Mettre en balance la moyenne arithmétique avec une agrégation tronquée ou pondérée permettra de jauger la vulnérabilité du contrôleur face à un voisin défaillant. Vient ensuite la question de la profondeur : évaluer des architectures à un, deux et trois tours de graphe sous budget d'entraînement constant permettra de dissocier l'impact de la portée informationnelle, de la profondeur et de la capacité paramétrique, des contrôles additionnels s'avérant nécessaires pour démêler ces effets.
 
-À plus long terme, il faudra remplacer le repère commun par des observations relatives, une localisation distribuée ou une balise mesurable. Passer d'une dynamique à vitesse directe à un modèle cinématique ou dynamique plus réaliste permettra ensuite d'évaluer le transfert vers des robots physiques.
+À terme, il s'agira de s'affranchir du repère global en lui substituant des observations relatives, une localisation distribuée ou des balises mesurables. L'adoption d'un modèle cinématique ou dynamique plus fidèle ouvrira ensuite la voie vers des essais sur matériel réel.
 
 \section*{Conclusion partielle}
 \addcontentsline{toc}{section}{Conclusion partielle}
 
-Cette discussion a replacé les observations du pilote historique dans la littérature et précisé leurs limites : une consigne asymétrique, peu de répétitions, la dépendance à une seule graine d'entraînement et une simulation simplifiée. Elle a distingué l'exécution à taille variable de la généralisation mesurée, et la proximité géométrique de la lisibilité. La conclusion générale reprend les apports de l'étude et les validations expérimentales qui restent à conduire.
+Cette discussion a permis de replacer les enseignements du pilote historique dans le paysage de la littérature, tout en posant clairement leurs limites : asymétrie de la consigne, faible volume de répétitions, dépendance à une unique graine et simplifications de la simulation. Elle a également pris soin de distinguer la scalabilité numérique de la généralisation réelle, ainsi que la simple proximité géométrique de la lisibilité visuelle. La conclusion générale qui suit synthétise les apports de ce travail et les chantiers d'évaluation restant à mener.
 
 \setcounter{figure}{0}
 \renewcommand{\thefigure}{C.\arabic{figure}}
@@ -125,14 +125,14 @@ Cette discussion a replacé les observations du pilote historique dans la litté
 \chapter*{Conclusion générale et perspectives}
 \addcontentsline{toc}{chapter}{Conclusion générale et perspectives}
 
-Ce travail a mis en place une chaîne expérimentale reproductible pour étudier la formation de formes par un essaim piloté par GNN. Le système réunit un simulateur 2D, des formes représentées par des nuages de points, une politique locale à paramètres partagés et un apprentissage différentiable. Le cercle a donné une première observation, visuelle et chiffrée, du fonctionnement du prototype historique. Elle ne valide toutefois pas les performances de l'implémentation actuelle. Génération de données, entraînement, évaluation et visualisation sont des modules séparés, si bien que les expériences se rejouent à partir de leurs configurations.
+Ce travail a structuré une chaîne expérimentale reproductible dédiée à l'étude de la formation de formes par des essaims pilotés par GNN. Le dispositif rassemble un simulateur 2D, des formes encodées sous forme de nuages de points, une politique locale à paramètres partagés et une optimisation par différenciation de bout en bout. L'expérimentation sur le cercle a fourni un premier aperçu — à la fois visuel et quantitatif — du comportement du prototype historique, sans pour autant certifier les performances de l'implémentation actuelle. La génération des données, l'entraînement, l'évaluation et la visualisation étant découplés, chaque campagne peut être rejouée fidèlement à partir de ses fichiers de configuration.
 
-Le résultat principal n'est pas encore une démonstration sur robots physiques. Il est plus précis. Dans le simulateur retenu, une politique GNN partagée peut recevoir des informations locales, échanger des messages avec ses voisins et produire des mouvements qui rapprochent l'essaim d'une cible. Le modèle peut aussi s'exécuter avec un nombre de robots différent de celui de l'entraînement. C'est une conséquence du partage des paramètres et de l'agrégation des messages ; la qualité obtenue, elle, doit être vérifiée expérimentalement pour chaque scénario.
+Le résultat central ne réside pas dans une démonstration matérielle, mais dans une constatation plus circonscrite : au sein du simulateur considéré, une politique GNN paramétrée de manière homogène sait exploiter des perceptions locales et des échanges de messages pour guider un essaim vers une géométrie cible. Le modèle s'accommode en outre d'un effectif variable par rapport à sa phase d'apprentissage, fruit direct du partage de paramètres et de l'agrégation de voisinage. La qualité effective de cette adaptation reste toutefois à auditer au cas par cas.
 
-Le protocole pilote suggère que le contrôleur appris s'ajuste mieux à une cible circulaire qu'une règle locale de regroupement, y compris dans les scénarios de retrait étudiés. Nous restreignons volontairement cette conclusion : nous n'avons que dix épisodes par condition, une seule graine d'entraînement et une baseline qui ne reçoit pas la même consigne. Pour les formes symboliques, la couverture reste approximative. La chaîne de traitement accepte plusieurs types de contours, mais on ne peut affirmer qu'elle forme des lettres ou des nombres lisibles et généralisables.
+Les données du pilote indiquent que le contrôleur appris s'ajuste plus finement à une cible circulaire qu'une règle d'agrégation locale, y compris en cas d'ablation d'agents. Nous posons des limites strictes à cette conclusion : l'étude ne repose que sur dix épisodes par condition, une unique graine d'entraînement et une baseline privée d'une consigne équivalente. Concernant les motifs symboliques, la couverture demeure approximative. Si la chaîne de traitement ingère divers contours, rien ne prouve formellement qu'elle engendre des lettres ou des chiffres lisibles et généralisables.
 
-Les premières perspectives sont expérimentales. Il faut augmenter le nombre de répétitions, fixer un jeu de formes inconnues, mesurer des intervalles de confiance et conserver les épisodes défavorables autant que les favorables. Il faut aussi poursuivre avec les variantes déjà entraînées et évaluées, la politique sans communication et la règle manuelle à consigne comparable. Leur analyse reste à conduire, avec plusieurs graines d'entraînement pour le contrôleur avec messages et d'autres profondeurs de passage de messages. La consigne de la règle manuelle reste plus riche, puisqu'elle conserve la longueur du déplacement vers la cible. L'équivalence d'information doit donc être explicitée, et non supposée. Ces comparaisons permettront d'interroger l'apport propre des messages.
+Les perspectives immédiates relèvent du terrain expérimental. Il conviendra d'amplifier le nombre de répétitions, d'élargir le banc d'évaluation à des formes inédites, de calculer des intervalles de confiance robustes et d'analyser les épisodes d'échec avec autant de soin que les réussites. Il importe également d'exploiter pleinement les variantes déjà entraînées — la politique sans communication et la règle manuelle à consigne appariée. Leur analyse exhaustive, menée sur plusieurs graines et différentes profondeurs de graphe, permettra de dissocier l'apport réel des messages par rapport aux autres composantes. La supériorité informationnelle de la règle manuelle — qui conserve la distance au point cible — impose d'ailleurs d'expliciter rigoureusement toute équivalence avant de conclure.
 
-Les perspectives techniques touchent au réalisme du simulateur. Des bruits de position et de communication, des délais, des obstacles et une dynamique de robot non holonome rapprocheraient le cadre de situations réelles. À plus long terme, la consigne géométrique pourrait venir d'une perception locale, d'une balise ou d'une carte distribuée. Passer à une plateforme physique demanderait alors une estimation de pose, une stratégie de sécurité et une validation progressive, d'abord sur quelques robots, puis sur un essaim plus grand.
+Sur le plan technique, les pistes d'amélioration résident dans l'accroissement du réalisme de la simulation. L'introduction de bruits observationnels et communicationnels, de latences, d'obstacles et de contraintes cinématiques non holonomes rapprochera le cadre d'étude des conditions opérationnelles. À plus long terme, la consigne géométrique pourrait émaner d'une perception locale, d'un balisage ou d'une carte distribuée. Le passage vers des robots physiques exigera alors des briques d'estimation de pose, des gardes-fous de sécurité et une montée en charge progressive, de quelques unités vers un véritable essaim.
 
-Le projet répond donc en partie à la question initiale. Il montre qu'un contrôleur GNN local peut former des formes en simulation, et il fournit les outils d'une évaluation plus rigoureuse. La suite devra établir, avec des expériences mieux contrôlées, dans quelles conditions cette approche apporte un avantage réel sur les méthodes classiques de contrôle distribué.
+Ce projet apporte ainsi une réponse nuancée à la problématique initiale. Il démontre qu'un contrôleur GNN local est capable de façonner des structures géométriques en simulation, tout en fournissant les instruments nécessaires à une rigueur méthodologique accrue. Les travaux futurs devront déterminer, à l'aide d'expériences finement contrôlées, dans quelles mesures exactes cette approche surclasse les méthodes de contrôle distribué conventionnelles.
