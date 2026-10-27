@@ -25,7 +25,7 @@ def loader():
 @pytest.fixture
 def settings(loader, tmp_path):
     raw = loader.load_raw("web-demo")
-    raw.update(horizon=4, default_target="geometries_circle@3", default_swarm_size=20,
+    raw.update(horizon=4, default_target="geometries_circle", default_swarm_size=20,
                training_root=str(tmp_path / "missing_training"), shapes_root=str(tmp_path / "missing_shapes"))
     return raw
 
@@ -35,8 +35,8 @@ def shape_index():
     return ShapeIndex(
         rows=[],
         point_clouds={
-            "geometries_circle@3": np.array([[1., 0.], [-.5, .8], [-.5, -.8]]),
-            "geometries_star@3": np.array([[0., 1.], [-.7, -.7], [.7, -.7]]),
+            "geometries_circle": np.array([[1., 0.], [-.5, .8], [-.5, -.8]]),
+            "geometries_star": np.array([[0., 1.], [-.7, -.7], [.7, -.7]]),
         },
         identifiers=["geometries_circle", "geometries_star"],
     )
@@ -99,7 +99,7 @@ def test_catalog_reports_exact_targets_and_controller_availability(client):
     assert response.status_code == 200
     data = response.json()
     assert [(item["key"], item["shape_id"]) for item in data["targets"]] == [
-        ("geometries_circle@3", 0), ("geometries_star@3", 1),
+        ("geometries_circle", 0), ("geometries_star", 1),
     ]
     assert data["limits"]["swarm_sizes"] == [20, 40, 100]
     assert data["defaults"]["controller"] == "manual"
@@ -113,7 +113,7 @@ def test_catalog_reports_exact_targets_and_controller_availability(client):
 @pytest.mark.parametrize("controller", ["manual", "flocking"])
 @pytest.mark.parametrize("size", [20, 40, 100])
 def test_baselines_are_deterministic_complete_and_finite(client, controller, size):
-    params = {"target": "geometries_star@3", "controller": controller, "n_robots": size, "seed": 0}
+    params = {"target": "geometries_star", "controller": controller, "n_robots": size, "seed": 0}
     first = client.get("/api/simulate", params=params)
     second = client.get("/api/simulate", params=params)
     assert first.status_code == second.status_code == 200
@@ -162,8 +162,8 @@ def test_schema_rejects_invalid_or_extra_fields(client, params):
 
 @pytest.mark.parametrize("params", [
     {"controller": "unknown"}, {"controller": "gnn_1_round"},
-    {"target": "geometries_unknown@3"}, {"target": "geometries_circle@50"},
-    {"target": "geometries_circle@03"},
+    {"target": "geometries_unknown"}, {"target": "geometries_Circle"},
+    {"target": "letters_circle"},
 ])
 def test_unknown_controller_or_exact_target_is_not_aliased(client, params):
     assert client.get("/api/simulate", params=params).status_code == 404
@@ -252,13 +252,13 @@ def test_trained_shape_identity_and_model_contract_prevent_modulo_alias(loader, 
         factory.saved["model"]["message_rounds"] = 1
     service = SimulationService(loader=loader, index=shape_index, factory=factory, settings=settings)
     with TestClient(ApiServer(service).app) as client:
-        response = client.get("/api/simulate", params={"controller": "gnn_2_rounds", "target": "geometries_star@3"})
+        response = client.get("/api/simulate", params={"controller": "gnn_2_rounds", "target": "geometries_star"})
         assert response.status_code == 503
     assert factory.build_calls == []
 
 
 def test_corrupt_target_is_a_clear_503(service, shape_index):
-    shape_index.point_clouds["geometries_circle@3"][0, 0] = np.nan
+    shape_index.point_clouds["geometries_circle"][0, 0] = np.nan
     with TestClient(ApiServer(service).app) as client:
         response = client.get("/api/simulate")
         assert response.status_code == 503
@@ -333,3 +333,13 @@ def test_incompatible_checkpoint_is_diagnosed_in_catalog_and_simulation(loader, 
         assert "catalogue de formes" in response.json()["detail"]
         assert response.json()["remedy"][0]["command"] == "make shapes"
         assert "index des formes différent" not in response.text
+
+
+def test_catalog_offers_figures_not_resolutions(client):
+    # Une figure = un nom ; aucun nombre de points n'est exposé ni accepté.
+    targets = client.get("/api/targets").json()["targets"]
+    assert targets == [
+        {"key": "geometries_circle", "shape_id": 0, "type": "geometries", "figure": "circle"},
+        {"key": "geometries_star", "shape_id": 1, "type": "geometries", "figure": "star"},
+    ]
+    assert client.get("/api/simulate", params={"target": "geometries_circle@50"}).status_code == 422

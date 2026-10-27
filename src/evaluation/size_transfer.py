@@ -92,7 +92,7 @@ class SizeTransferStudy:
             axis.set_ylabel("distance finale (IC entre graines)")
             axis.legend()
             fig.tight_layout()
-            fig.savefig(self.output / f"transfer_failure{round(failure * 100):02d}_{shape.replace('@', '_at_')}.png")
+            fig.savefig(self.output / f"transfer_failure{round(failure * 100):02d}_{shape}.png")
             plt.close(fig)
 
 

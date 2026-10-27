@@ -104,7 +104,7 @@ def run() -> dict:
 def _write_run_dir(
     rule: str, target_key: str, swarm_size: int, result, row: dict, cfg, cfg_sim, cfg_shapes
 ) -> None:
-    name = f"{rule}_{target_key.replace('@', '_at_')}_{swarm_size}"
+    name = f"{rule}_{target_key}_{swarm_size}"
     output_dir = OUTPUT / name
     output_dir.mkdir(parents=True, exist_ok=True)
     np.save(output_dir / "positions.npy", result.positions)
@@ -166,7 +166,7 @@ def _figures(panels: dict, cfg_eval) -> None:
         for axis, ((target_key, swarm_size), (target, final_positions)) in zip(axes, items):
             axis.scatter(target[:, 0], target[:, 1], s=6, c="lightgray", label="cible")
             axis.scatter(final_positions[:, 0], final_positions[:, 1], s=12, c="tab:blue", label="robots")
-            axis.set_title(f"{target_key.split('@')[0]} — {swarm_size} robots")
+            axis.set_title(f"{target_key} — {swarm_size} robots")
             axis.set_aspect("equal")
             axis.grid(alpha=0.3)
         axes[0].legend(loc="lower right", fontsize=8)

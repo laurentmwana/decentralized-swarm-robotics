@@ -1,7 +1,6 @@
 # Les niveaux conservent toutes les cibles des niveaux précédents, sans accès au test.
 training_config: training
 output: outputs/curriculum
-resolution: 50
 target_sampling: cyclic
 transfer_checkpoint: best
 forgetting_tolerance: 0.05

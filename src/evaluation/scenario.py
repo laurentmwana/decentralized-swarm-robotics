@@ -20,7 +20,7 @@ class Scenario:
 
     @property
     def identifier(self) -> str:
-        shape = self.shape_key.replace("@", "_at_")
+        shape = self.shape_key
         return f"n{self.n_robots}_failure{int(round(self.failure_fraction * 100)):02d}_{shape}_seed{self.episode_seed}"
 
 

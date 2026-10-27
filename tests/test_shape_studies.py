@@ -22,7 +22,7 @@ from src.reports.readability import HumanReadabilityProtocol, ReadabilityProtoco
 from src.shapes.index import ShapeIndex, build_split
 
 
-def row(name="gnn", seed=11, episode=9001000, shape="letters_A@50", distance=0.1):
+def row(name="gnn", seed=11, episode=9001000, shape="letters_A", distance=0.1):
     return {"controller": name, "training_seed": seed, "episode_seed": episode,
             "n_robots": 50, "failure_fraction": 0.0, "shape": shape, "shape_id": 0,
             "final_distance": distance, "convergence_step": None, "success": distance <= 0.15,
@@ -49,8 +49,8 @@ def study_env(tmp_path, monkeypatch):
     for identifier in identifiers:
         kind, name = identifier.split("_", 1)
         index.rows.append({"name": name, "type": kind, "shape_id": identifiers.index(identifier),
-                           "resolution": 50, "split": split.mapping[identifier], "n_points": 50})
-        index.point_clouds[identifier + "@50"] = cloud.copy()
+                           "split": split.mapping[identifier], "n_points": 50})
+        index.point_clouds[identifier] = cloud.copy()
     monkeypatch.setattr(studies.ShapeIndex, "load", lambda directory: index)
     calls = []
 
@@ -94,11 +94,11 @@ def study_env(tmp_path, monkeypatch):
             snapshot = {"profile": "standard", "communication": True,
                         "model": {**asdict(loader.load_model()), "message_rounds": 3,
                                   "use_target_geometry": settings["expected_use_target_geometry"]},
-                        "training": {"training_target": "geometries_circle@50", "validation_target": "geometries_pentagon@50",
+                        "training": {"training_target": "geometries_circle", "validation_target": "geometries_pentagon",
                                      "profiles": {"standard": {"n_robots": settings.get("expected_n_robots", 50)}}},
                         "simulator": asdict(loader.load_simulator()), "shapes": asdict(cfg_shapes),
-                        "curriculum": {"training_targets": [key + "@50" for key, part in split.mapping.items() if part == "train"],
-                                       "validation_targets": [key + "@50" for key, part in split.mapping.items() if part == "val"]}}
+                        "curriculum": {"training_targets": [key for key, part in split.mapping.items() if part == "train"],
+                                       "validation_targets": [key for key, part in split.mapping.items() if part == "val"]}}
             if name == "gnn_3_rounds":
                 snapshot.pop("curriculum")
             path = directory / "effective_config.yaml"
@@ -143,7 +143,7 @@ def test_complex_campaign_uses_existing_engine_and_frozen_metadata(study_env):
     assert summary["information_equivalent"] is False
     assert summary["readability_status"] == "pending"
     assert not list(output.rglob("*.md"))
-    assert all("@50" in key for keys in summary["shape_split"].values() for key in keys)
+    assert all("@" not in key for keys in summary["shape_split"].values() for key in keys)
     assert all(before[path] == hashlib.sha256(path.read_bytes()).hexdigest() for path in paths.values())
     snapshot = yaml.safe_load((output / "effective_config.yaml").read_text())
     assert snapshot["evaluation"]["heldout_shapes"] == []
@@ -165,10 +165,9 @@ def test_heldout_seen_and_test_are_separate(study_env):
 
 @pytest.mark.parametrize("name,seed,section", [("gnn_3_rounds_id", 11, "training_targets"),
                                               ("gnn_3_rounds_geometry", 12, "validation_targets")])
-@pytest.mark.parametrize("resolution", [20, 50])
-def test_every_snapshot_and_resolution_checked_for_test_leakage(study_env, name, seed, section, resolution):
+def test_every_snapshot_checked_for_test_leakage(study_env, name, seed, section):
     config, index, paths, calls = study_env
-    edit_snapshot(paths[(name, seed)], lambda snapshot: snapshot["curriculum"][section].append(f"letters_Y@{resolution}"))
+    edit_snapshot(paths[(name, seed)], lambda snapshot: snapshot["curriculum"][section].append("letters_Y"))
     with pytest.raises(ValueError, match="fuite"):
         studies.HeldOutEvaluator(config).run()
     assert not Path(config["output"]).exists()
@@ -177,7 +176,7 @@ def test_every_snapshot_and_resolution_checked_for_test_leakage(study_env, name,
 
 def test_seen_label_requires_actual_exposure(study_env):
     config, index, paths, calls = study_env
-    edit_snapshot(paths[("gnn_3_rounds_id", 11)], lambda snapshot: snapshot["curriculum"]["training_targets"].remove("letters_A@50"))
+    edit_snapshot(paths[("gnn_3_rounds_id", 11)], lambda snapshot: snapshot["curriculum"]["training_targets"].remove("letters_A"))
     with pytest.raises(ValueError, match="annoncées vues"):
         studies.HeldOutEvaluator(config).run()
     assert not Path(config["output"]).exists()
@@ -225,11 +224,11 @@ def test_shape_index_validation(study_env, mutation):
     elif mutation == "split":
         index.rows[0]["split"] = "test"
     elif mutation == "duplicates":
-        index.point_clouds["geometries_circle@50"][:] = 0
+        index.point_clouds["geometries_circle"][:] = 0
     elif mutation == "missing":
         index.rows.pop(0)
     else:
-        index.point_clouds["geometries_circle@50"][0, 0] = np.nan
+        index.point_clouds["geometries_circle"][0, 0] = np.nan
     with pytest.raises(ValueError):
         studies.ComplexShapeStudy(config).run()
     assert not Path(config["output"]).exists()
@@ -295,7 +294,7 @@ def test_archive_or_seed_contract_refused(study_env, field, value):
 def test_grouped_statistics_use_seeds_not_pooled_episodes():
     rows = [row(seed=seed, episode=episode, distance=distance)
             for seed, count, distance in ((11, 2, 0.1), (12, 10, 0.5)) for episode in range(count)]
-    within, between = studies.ShapeStudyReport.grouped(ResultsTable(rows), {"letters_A@50": "seen"})
+    within, between = studies.ShapeStudyReport.grouped(ResultsTable(rows), {"letters_A": "seen"})
     distance = next(record for record in between if record["metric"] == "final_distance")
     assert distance["n"] == 2
     assert distance["mean"] == pytest.approx(0.3)
@@ -308,9 +307,9 @@ def test_grouped_statistics_use_seeds_not_pooled_episodes():
 def test_shared_episode_seeds_across_shapes_are_not_independent_samples(seed):
     rows = [row(seed=seed, episode=episode, shape=shape, distance=distance)
             for episode, distances in ((1, (0.1, 0.3)), (2, (0.5, 0.7)))
-            for shape, distance in zip(("letters_A@50", "letters_B@50"), distances)]
+            for shape, distance in zip(("letters_A", "letters_B"), distances)]
     within, between = studies.ShapeStudyReport.grouped(
-        ResultsTable(rows), {"letters_A@50": "seen", "letters_B@50": "seen"})
+        ResultsTable(rows), {"letters_A": "seen", "letters_B": "seen"})
     distance = next(record for record in within if record["metric"] == "final_distance")
     assert distance["shape_count"] == 2
     assert distance["n"] == 2
@@ -322,7 +321,7 @@ def test_shared_episode_seeds_across_shapes_are_not_independent_samples(seed):
 
 def test_single_seed_ci_absent_and_baseline_episode_uncertainty():
     table = ResultsTable([row(), row("manual", None)])
-    _, between = studies.ShapeStudyReport.grouped(table, {"letters_A@50": "seen"})
+    _, between = studies.ShapeStudyReport.grouped(table, {"letters_A": "seen"})
     assert all(record["ci95"] is None for record in between)
     assert {record["uncertainty_unit"] for record in between} == {"training_seed", "episode"}
 
@@ -338,16 +337,16 @@ def test_fixed_examples_both_extremes_and_incomplete_refused():
 
 
 @pytest.mark.parametrize("snapshot", [{}, {"curriculum": {}},
-                                      {"curriculum": {"training_targets": "letters_A@50", "validation_targets": []}},
-                                      {"curriculum": {"training_targets": ["letters_A@50"] * 2, "validation_targets": ["letters_V@50"]}}])
+                                      {"curriculum": {"training_targets": "letters_A", "validation_targets": []}},
+                                      {"curriculum": {"training_targets": ["letters_A"] * 2, "validation_targets": ["letters_V"]}}])
 def test_missing_effective_lists_never_inferred_from_split(snapshot):
     with pytest.raises(ValueError, match="effectives"):
         studies.effective_targets(snapshot)
 
 
 def test_specialized_effective_targets_contract():
-    assert studies.effective_targets({"training": {"training_target": "geometries_circle@50", "validation_target": "geometries_pentagon@50"}}) == (
-        ["geometries_circle@50"], ["geometries_pentagon@50"])
+    assert studies.effective_targets({"training": {"training_target": "geometries_circle", "validation_target": "geometries_pentagon"}}) == (
+        ["geometries_circle"], ["geometries_pentagon"])
 
 
 @pytest.fixture
@@ -358,7 +357,7 @@ def readability_env(tmp_path):
     config.update(source=str(source), output=str(tmp_path / "readability"), score_output=str(tmp_path / "scores"),
                   responses=None, controllers=["manual"], n_robots=2, episode_seeds=[9001000, 9001001],
                   bootstrap_repetitions=200, image_pixels=64, image_dpi=64)
-    shapes = ["letters_Y@50", "numbers_314@50"]
+    shapes = ["letters_Y", "numbers_314"]
     rows = []
     for shape in shapes:
         for episode in config["episode_seeds"]:
@@ -521,7 +520,7 @@ def test_csv_truth_columns_rejected_without_output(readability_env):
 def test_formal_configs_are_explicit_and_seeds_disjoint(name):
     config = ConfigLoader().load_raw(name)
     evaluation = config["evaluation"]
-    effective = {ScenarioGrid.from_config({**evaluation, "shapes": ["letters_A@50"]}).episode_seed(index)
+    effective = {ScenarioGrid.from_config({**evaluation, "shapes": ["letters_A"]}).episode_seed(index)
                  for index in range(50)}
     assert evaluation["repetitions"] == evaluation["positions_per_condition"] == 50
     assert evaluation["swarm_sizes"] == [50] and evaluation["evaluation_horizon"] == 120

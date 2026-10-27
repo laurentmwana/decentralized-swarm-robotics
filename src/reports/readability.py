@@ -99,7 +99,7 @@ class HumanReadabilityProtocol(ReadabilityProtocol):
             image = f"images/{identifier}.png"
             self._render(final, self.output / image)
             questionnaire.append({"sample_id": identifier, "image_path": image})
-            truth.append({"sample_id": identifier, "true_shape": row["shape"].split("@", 1)[0],
+            truth.append({"sample_id": identifier, "true_shape": row["shape"],
                           "controller": row["controller"], "training_seed": row["training_seed"],
                           "episode_seed": row["episode_seed"], "source_archive": str(path),
                           "archive_sha256": hashlib.sha256(path.read_bytes()).hexdigest()})

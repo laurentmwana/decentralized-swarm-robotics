@@ -6,8 +6,9 @@ Daté : 2026-10-21. Fige les points §0.5 « repère commun 2D et consigne de fo
 - Toutes les formes sont normalisées dans le **cadre commun [-1, 1]²** : centrage sur le centroïde des pixels, puis mise à l'échelle pour que le **rayon de cible** (plus grande distance centroïde→point) soit exactement `1.0`.
 - Une seule échelle pour tous les types (géométries, lettres, chiffres, nombres) → distances comparables entre formes.
 - Rendu intermédiaire : **128×128**, géométries tracées (matplotlib), caractères et nombres rendus par police (Pillow, Arial) ; binarisation au **milieu de la plage de gris observée** `(min+max)/2`, jamais à un seuil arbitraire.
-- Échantillonnage : **point le plus éloigné** (farthest-point), premier point tiré par la graine de l'échantillonneur. Résolutions : **20 et 50** points (80–100 pour les nombres en phase 10 si les traits le exigent).
-- **Contrainte absolue (anomalie §0.6)** : le nombre de points distincts d'une cible doit être égal à la résolution demandée ; sinon `ShapeSampler` lève une erreur. Aucun `np.resize`, aucun remplissage par duplication, jamais.
+- Échantillonnage : **point le plus éloigné** (farthest-point), premier point tiré par la graine de l'échantillonneur.
+- **Une figure = un nom** (`letters_A`, `numbers_314`), sans résolution. On demande aux robots de dessiner une figure ; ses **points de référence** (`reference_points: 50` dans `config/shapes.yaml`, un seul nombre pour tout le projet) servent uniquement à mesurer la distance essaim → figure, de façon comparable entre toutes les expériences. Décision du 2026-10-28, remplace les résolutions multiples (20, 40, 50) ; le cercle d'entraînement passe de 40 à 50 points de référence.
+- **Contrainte absolue (anomalie §0.6)** : le nombre de points distincts d'une cible doit être égal au nombre de points de référence demandé ; sinon `ShapeSampler` lève une erreur. Aucun `np.resize`, aucun remplissage par duplication, jamais.
 
 ## Consigne de forme (partagée, décentralisée)
 - Consigne par défaut : **identifiant de forme** (`shape_id`, entier partagé entre tous les robots) → embedding appris par le GNN (phase 4).

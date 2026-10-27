@@ -43,8 +43,8 @@ def test_levels_are_cumulative_and_never_use_test(curriculum):
     previous = set()
     for level in curriculum.levels:
         assert previous <= set(level.training_targets)
-        assert all(split.mapping[key.split("@")[0]] == "train" for key in level.training_targets)
-        assert all(split.mapping[key.split("@")[0]] == "val" for key in level.validation_targets)
+        assert all(split.mapping[key] == "train" for key in level.training_targets)
+        assert all(split.mapping[key] == "val" for key in level.validation_targets)
         previous = set(level.training_targets)
 
 
@@ -58,7 +58,7 @@ def test_plan_only_reports_cost_without_touching_outputs(curriculum):
     assert not curriculum.output.exists()
 
 
-@pytest.mark.parametrize("change", ["repeated_type", "unknown_type", "empty_levels", "invalid_resolution", "invalid_sampling"])
+@pytest.mark.parametrize("change", ["repeated_type", "unknown_type", "empty_levels", "invalid_sampling"])
 def test_invalid_curriculum_rejected_before_outputs(curriculum, change):
     config = deepcopy(curriculum.config)
     if change == "repeated_type":
@@ -67,8 +67,6 @@ def test_invalid_curriculum_rejected_before_outputs(curriculum, change):
         config["levels"][0]["shape_types"] = ["unknown"]
     elif change == "empty_levels":
         config["levels"] = []
-    elif change == "invalid_resolution":
-        config["resolution"] = 100
     else:
         config["target_sampling"] = "random"
     with pytest.raises(ValueError):
@@ -164,9 +162,9 @@ def test_multitarget_entry_transfers_exact_weights_and_saves_provenance(tmp_path
     module = importlib.import_module("src.training.train")
     loader = ConfigLoader()
     config = loader.load_raw("training")
-    keys = ["geometries_circle@50", "geometries_square@50", "geometries_pentagon@50"]
+    keys = ["geometries_circle", "geometries_square", "geometries_pentagon"]
     clouds = {key: np.array([[0., 0.], [1., 0.], [0., 1.]]) for key in keys}
-    index = ShapeIndex([], clouds, [key.split("@")[0] for key in keys])
+    index = ShapeIndex([], clouds, list(keys))
     monkeypatch.setattr(module, "generate_index", Mock(return_value=(index, build_split(loader.load_shapes()))))
     model = module.build_model(replace(loader.load_model(), init_seed=11), config["variants"]["gnn_2_rounds"], loader.load_simulator().v_max)
     checkpoint = CheckpointManager(tmp_path / "previous").save(model, "best", {"seed": 11, "communication": True})
@@ -208,7 +206,7 @@ def test_curriculum_producer_artifacts_are_accepted_by_report(curriculum, monkey
     curriculum.config["profiles"]["standard"]["seeds"] = [11, 12]
     curriculum.config["variants"] = {"gnn_3_rounds_geometry": curriculum.config["variants"]["gnn_3_rounds_geometry"]}
     keys = curriculum.levels[-1].training_targets + curriculum.levels[-1].validation_targets
-    identifiers = [key.split("@")[0] for key in keys]
+    identifiers = list(keys)
     clouds = {key: np.array([[0., 0.], [1., 0.], [0., 1.]]) for key in keys}
     index = ShapeIndex([], clouds, identifiers)
     monkeypatch.setattr(module, "generate_index", Mock(return_value=(index, build_split(curriculum.loader.load_shapes()))))

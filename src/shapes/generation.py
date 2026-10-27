@@ -14,9 +14,6 @@ from src.common.config import ConfigLoader
 
 from .index import generate_index
 
-SHEET_RESOLUTION = 50
-
-
 def contact_sheets(index, output: Path) -> list[Path]:
     import matplotlib
 
@@ -25,7 +22,7 @@ def contact_sheets(index, output: Path) -> list[Path]:
 
     written: list[Path] = []
     for shape_type in ("geometries", "digits", "letters", "numbers"):
-        rows = [l for l in index.rows if l["type"] == shape_type and l["resolution"] == SHEET_RESOLUTION]
+        rows = [l for l in index.rows if l["type"] == shape_type]
         if not rows:
             continue
         n = len(rows)
@@ -35,11 +32,11 @@ def contact_sheets(index, output: Path) -> list[Path]:
         for axis in axes.ravel():
             axis.axis("off")
         for axis, row in zip(axes.ravel(), rows):
-            points = index.point_cloud_by_key(f"{row['type']}_{row['name']}@{SHEET_RESOLUTION}")
+            points = index.point_cloud_by_key(f"{row['type']}_{row['name']}")
             axis.axis("equal")
             axis.scatter(points[:, 0], points[:, 1], s=8)
             axis.set_title(f"{row['name']} ({row['split']})", fontsize=9)
-        fig.suptitle(f"Planche de controle — {shape_type} (resolution {SHEET_RESOLUTION})")
+        fig.suptitle(f"Planche de controle — {shape_type} ({len(points)} points de reference)")
         fig.tight_layout()
         path = output / f"sheet_{shape_type}.png"
         fig.savefig(path, dpi=110)
@@ -54,8 +51,8 @@ def main(output: Path | str = "outputs/shapes") -> dict:
     index, split = generate_index(cfg, output)
     written = contact_sheets(index, output)
     summary = {
-        "shape_count": len({(l["type"], l["name"]) for l in index.rows}),
-        "index_row_count": len(index.rows),
+        "shape_count": len(index.rows),
+        "reference_points": cfg.reference_points,
         "shapes_per_split": split.count(),
         "contact_sheets": [str(p) for p in written],
     }

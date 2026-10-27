@@ -18,7 +18,7 @@ from src.reports.communication import CommunicationComparison
 
 def _row(controller, seed, episode_seed, size, distance):
     return {"controller": controller, "training_seed": seed, "episode_seed": episode_seed,
-            "n_robots": size, "failure_fraction": 0.0, "shape": "geometries_circle@50", "shape_id": 0,
+            "n_robots": size, "failure_fraction": 0.0, "shape": "geometries_circle", "shape_id": 0,
             "final_distance": distance, "convergence_step": None, "success": distance <= 0.15,
             "collision_rate": 0.0, "normalized_regularity": 0.0, "final_components": 1, "step": 4}
 

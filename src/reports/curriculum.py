@@ -136,8 +136,8 @@ class CurriculumReport:
             for kind in kinds:
                 parts = shapes.get("splits", {}).get(kind, {})
                 _check(parts.get("train") and parts.get("val"), f"découpage sauvegardé incomplet : {kind}")
-                training.extend(f"{kind}_{name}@{raw['resolution']}" for name in parts["train"])
-                validation.extend(f"{kind}_{name}@{raw['resolution']}" for name in parts["val"])
+                training.extend(f"{kind}_{name}" for name in parts["train"])
+                validation.extend(f"{kind}_{name}" for name in parts["val"])
             used.update(kinds)
             _check(len(set(training + validation)) == len(training + validation),
                    "cibles sauvegardées dupliquées ou splits communs")

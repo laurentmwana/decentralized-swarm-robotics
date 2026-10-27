@@ -9,7 +9,8 @@ horizon: 120
 swarm_sizes: [20, 40, 100]
 seed_max: 2147483647
 default_seed: 142
-default_target: geometries_circle@50
+# L'utilisateur choisit une figure, jamais un nombre de points (voir reference_points, config/shapes.yaml).
+default_target: geometries_circle
 default_swarm_size: 40
 default_controller: manual
 # Une seule version existante est utilisée ; aucun choix de checkpoint par l'API.

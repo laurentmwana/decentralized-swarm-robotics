@@ -93,7 +93,12 @@ class ControllerFactory:
         for field in ("dt", "v_max", "r_c", "arena_size", "spawn_radius"):
             if getattr(cfg_sim, field) != getattr(current_sim, field):
                 raise ValueError(f"configuration simulateur différente du checkpoint : {field}")
-        if ShapesConfig(**snapshot["shapes"]) != self.loader.load_shapes():
+        try:
+            saved_shapes = ShapesConfig(**snapshot["shapes"])
+        except TypeError as exc:
+            # Snapshot d'une ancienne version (clés de formes différentes, ex. « resolutions »).
+            raise ValueError("index des formes différent de celui du checkpoint") from exc
+        if saved_shapes != self.loader.load_shapes():
             raise ValueError("index des formes différent de celui du checkpoint")
         communication = bool(snapshot["communication"])
         controller = GNNController(cfg_model, cfg_sim.v_max, communication=communication, seed=training_seed)

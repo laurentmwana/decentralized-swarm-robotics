@@ -9,7 +9,7 @@ repetitions: 50
 evaluation_horizon: 120
 swarm_sizes: [20, 40, 100]
 failure_fractions: [0.0, 0.1]
-shapes: [geometries_circle@50, geometries_star@50]
+shapes: [geometries_circle, geometries_star]
 # Doit être égal au seuil figé de config/metrics.yaml.
 success_threshold: 0.15
 # Réussite stable sur cette fenêtre avant panne, puis suffixe stable après panne.

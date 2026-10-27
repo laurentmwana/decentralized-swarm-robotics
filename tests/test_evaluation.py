@@ -129,9 +129,9 @@ class TestCampaignReproducibility:
 
         from src.shapes.index import ShapeIndex
 
-        config = dict(cfg_eval, swarm_sizes=[4], failure_fractions=[0.0], shapes=["geometries_circle@50"], evaluation_horizon=4)
+        config = dict(cfg_eval, swarm_sizes=[4], failure_fractions=[0.0], shapes=["geometries_circle"], evaluation_horizon=4)
         target = np.stack([np.cos(np.linspace(0, 2 * np.pi, 50, endpoint=False)), np.sin(np.linspace(0, 2 * np.pi, 50, endpoint=False))], axis=1)
-        index = ShapeIndex([], {"geometries_circle@50": target}, ["geometries_circle"])
+        index = ShapeIndex([], {"geometries_circle": target}, ["geometries_circle"])
         original_load = ConfigLoader.load_raw
         monkeypatch.setattr(ConfigLoader, "load_raw", lambda self, name: config if name == "evaluation" else original_load(self, name))
         monkeypatch.setattr(ShapeIndex, "load", lambda directory: index)

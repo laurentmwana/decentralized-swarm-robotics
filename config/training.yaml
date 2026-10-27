@@ -2,8 +2,8 @@
 # Budget de reglage IDENTIQUE pour toutes les variantes apprises (mêmes itérations,
 # mêmes tailles, mêmes graines) — trace dans outputs/training/budget.md.
 
-training_target: geometries_circle@40   # split train ; 40 points = n_robots standard, plancher de couverture minimal (validation = graines dédiées sur la meme cible + forme du split val)
-validation_target: geometries_pentagon@50  # split val, jamais test
+training_target: geometries_circle   # split train ; mesurée avec les mêmes points de référence que l'évaluation (validation = graines dédiées sur la même cible + forme du split val)
+validation_target: geometries_pentagon  # split val, jamais test
 
 optimizer:
   lr: 0.001

@@ -61,7 +61,7 @@ def tiny_config(tmp_path):
     cfg = ConfigLoader().load_raw("robustness")
     return {**cfg, "output": str(tmp_path / "study"), "training_root": str(tmp_path / "missing"),
             "controllers": {"manual": {"type": "baseline"}}, "training_seeds": [11, 12],
-            "swarm_sizes": [4], "failure_fractions": [0.0], "shapes": ["geometries_circle@4"],
+            "swarm_sizes": [4], "failure_fractions": [0.0], "shapes": ["geometries_circle"],
             "repetitions": 2, "evaluation_horizon": 4, "stability_steps": 2,
             "perturbations": {"position_noise": {"strengths": [0.0, 0.1]},
                               "communication_noise": {"strengths": [0.0, 1.0]},
@@ -71,7 +71,7 @@ def tiny_config(tmp_path):
 
 @pytest.fixture
 def tiny_index(mission):
-    return ShapeIndex([], {"geometries_circle@4": mission.target}, ["geometries_circle"])
+    return ShapeIndex([], {"geometries_circle": mission.target}, ["geometries_circle"])
 
 
 @pytest.mark.parametrize("perturbation", [PositionNoise(0.2), CommunicationNoise(0.5), RangeReduction(0.5),
@@ -290,8 +290,8 @@ def test_invalid_strengths_rejected(constructor, value):
 
 
 def test_output_names_do_not_round_conditions_or_strengths():
-    a = condition_identifier(Scenario(4, 0.101, "shape@4", 42))
-    b = condition_identifier(Scenario(4, 0.102, "shape@4", 42))
+    a = condition_identifier(Scenario(4, 0.101, "geometries_shape", 42))
+    b = condition_identifier(Scenario(4, 0.102, "geometries_shape", 42))
     assert a != b
     assert PerturbationLevel("position_noise", 0.101, 1).identifier != PerturbationLevel("position_noise", 0.102, 1).identifier
 

@@ -2,7 +2,9 @@
 render_size: 128          # grille de rendu avant échantillonnage
 target_radius: 1.0        # rayon de cible après normalisation (cadre commun [-1,1]^2)
 sampler_seed: 20261021    # graine de l'échantillonnage (premier point du farthest-point)
-resolutions: [20, 40, 50]     # résolutions standard (80-100 pour les nombres en phase 10)
+# Une figure = un nom (letters_A). Ses points de référence ne servent qu'à mesurer la distance
+# essaim -> figure ; un seul nombre pour tout le projet, donc des mesures toujours comparables.
+reference_points: 50
 font_path: arial.ttf      # police pour les glyphes (lettres, chiffres, nombres)
 
 geometries: [circle, ellipse, square, triangle, pentagon, star, cross]

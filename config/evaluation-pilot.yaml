@@ -9,7 +9,7 @@ repetitions: 50
 evaluation_horizon: 120
 swarm_sizes: [20, 40, 100]
 failure_fractions: [0.0, 0.05, 0.1, 0.2]
-shapes: [geometries_circle@50, geometries_star@50]
+shapes: [geometries_circle, geometries_star]
 positions_per_condition: 5   # 5 trajectoires conservees par condition : le reste reste recalculable
 
 controllers:

@@ -33,9 +33,9 @@ def build_model(cfg_model: ModelConfig, override: dict, v_max: float) -> SwarmGN
 
 
 def validate_splits(split: ShapeSplit, training_key: str, validation_key: str) -> None:
-    """Contrôle les identifiants sans résolution dans le découpage figé."""
+    """Contrôle les figures dans le découpage figé."""
     for key, expected in ((training_key, "train"), (validation_key, "val")):
-        actual = split.mapping.get(key.split("@")[0])
+        actual = split.mapping.get(key)
         if actual != expected:
             raise ValueError(f"cible {key!r} du split {actual!r}, attendu {expected!r} : accès refusé")
 
@@ -125,7 +125,7 @@ def run(
         return {
             "key": key,
             "shape_id": index.shape_id(key),
-            "split": split.mapping[key.split("@")[0]],
+            "split": split.mapping[key],
             "points": index.point_cloud_by_key(key).tolist(),
         }
 

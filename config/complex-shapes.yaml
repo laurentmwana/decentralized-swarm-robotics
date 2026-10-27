@@ -2,7 +2,6 @@
 output: outputs/complex_shapes
 expected_training: {profile: standard, n_robots: 50, hidden_dim: 64, message_rounds: 3}
 target_selection:
-  resolution: 50
   types: [geometries, digits, letters, numbers]
   seen_splits: [train, val]
 evaluation:
@@ -36,7 +35,7 @@ examples:
   columns: 4
 comparison:
   output: outputs/complex_shapes_comparison
-  shapes: [geometries_circle@50, digits_0@50, letters_A@50, numbers_12@50]
+  shapes: [geometries_circle, digits_0, letters_A, numbers_12]
   controllers:
     gnn_3_rounds:
       type: trained

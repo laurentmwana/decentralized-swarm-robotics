@@ -21,7 +21,8 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 MAX_SEED = 2**31 - 1
 ControllerName = Literal["manual", "flocking", "gnn_2_rounds"]
 SwarmSize = Literal[20, 40, 100]
-TargetKey = Annotated[str, Field(min_length=1, max_length=96, pattern=r"^[A-Za-z0-9_-]+@[0-9]+$")]
+# Une figure : <type>_<nom> (letters_A, numbers_314), jamais un nombre de points.
+TargetKey = Annotated[str, Field(min_length=3, max_length=96, pattern=r"^[a-z]+_[A-Za-z0-9]+$")]
 
 
 class ControllerSettings(BaseModel):
@@ -209,7 +210,13 @@ class SimulationService:
         from src.common.config import ShapesConfig
         from src.shapes.index import build_sources
 
-        identifiers = [source.identifier for source in build_sources(ShapesConfig(**snapshot["shapes"]))]
+        try:
+            identifiers = [source.identifier for source in build_sources(ShapesConfig(**snapshot["shapes"]))]
+        except TypeError:
+            identifiers = None  # snapshot d'une ancienne version du catalogue
+        if identifiers is None:
+            raise DemoUnavailable(_BUILD_ERRORS[0][1], [{"text": "Régénérer le catalogue de formes", "command": "make shapes"}]
+                                  + self._training_steps())
         if identifiers != index.identifiers:
             raise DemoUnavailable(
                 "Cible incompatible avec le vocabulaire du checkpoint ; aucun alias modulo n'est permis.",
@@ -231,14 +238,11 @@ class SimulationService:
     def targets(self) -> dict:
         with self._lock:
             index = self._get_index()
+            # Une entrée par figure ; ses points de référence ne sont pas un choix de l'utilisateur.
             entries = []
-            for key in sorted(index.point_clouds):
-                identifier, resolution = key.rsplit("@", 1)
-                shape_id = index.shape_id(key)
-                entries.append({
-                    "key": key, "shape_id": shape_id, "name": identifier,
-                    "resolution": int(resolution), "n_points": len(index.point_cloud_by_key(key)),
-                })
+            for key in sorted(index.point_clouds, key=index.shape_id):
+                shape_type, _, name = key.partition("_")
+                entries.append({"key": key, "shape_id": index.shape_id(key), "type": shape_type, "figure": name})
             controllers = []
             for name, settings in self.settings.controllers.items():
                 available, reason, remedy = True, None, []
@@ -272,7 +276,7 @@ class SimulationService:
                 raise HTTPException(422, "Taille d'essaim ou graine hors des limites configurées.")
             index = self._get_index()
             if key not in index.point_clouds:
-                raise HTTPException(404, "Cible inconnue : sélectionnez une clé exacte de l'index.")
+                raise HTTPException(404, "Figure inconnue : sélectionnez une figure du catalogue.")
             training_seed = None
             try:
                 from src.common.mission import Mission
@@ -280,7 +284,7 @@ class SimulationService:
                 from src.simulator.episode import Episode
 
                 shape_id = index.shape_id(key)
-                if not 0 <= shape_id < len(index.identifiers) or index.identifiers[shape_id] != key.rsplit("@", 1)[0]:
+                if not 0 <= shape_id < len(index.identifiers) or index.identifiers[shape_id] != key:
                     raise DemoUnavailable("Identifiant de forme incohérent dans l'index.")
                 target = np.array(index.point_cloud_by_key(key), dtype=np.float64, copy=True)
                 if not np.isfinite(target).all():

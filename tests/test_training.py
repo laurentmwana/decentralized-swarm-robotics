@@ -303,7 +303,7 @@ def mocked_entry(cfgs, monkeypatch):
     training = deepcopy(cfg_training)
     keys = [training["training_target"], training["validation_target"]]
     index = ShapeIndex(rows=[], point_clouds={keys[0]: _circle(8), keys[1]: _circle(5)},
-                       identifiers=[key.split("@")[0] for key in keys])
+                       identifiers=list(keys))
     loader = Mock()
     loader.load_raw.return_value = training
     loader.load_simulator.return_value = cfg_sim
@@ -380,7 +380,7 @@ class TestTrainingEntry:
         entry, training, _, generated, train = mocked_entry
         split = generated.return_value[1]
         identifier = next((key for key, value in split.mapping.items() if value == actual_split), "unknown_shape")
-        training[field] = identifier + "@50"
+        training[field] = identifier
         build = Mock(side_effect=AssertionError("modèle construit avant contrôle du split"))
         monkeypatch.setattr(entry, "build_model", build)
         with pytest.raises(ValueError, match="split"):

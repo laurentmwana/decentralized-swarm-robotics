@@ -158,7 +158,7 @@ class Campaign:
         shape = self.evaluator.grid.shapes[0]
         size = self.evaluator.grid.swarm_sizes[0]
         fraction = self.evaluator.grid.failure_fractions[0]
-        condition = f"n{size}_failure{int(round(fraction * 100)):02d}_{shape.replace('@', '_at_')}"
+        condition = f"n{size}_failure{int(round(fraction * 100)):02d}_{shape}"
         position_dirs = []
         for name in names:
             for seed in versions[name]:

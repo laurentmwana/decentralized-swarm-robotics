@@ -100,9 +100,6 @@ class Curriculum:
         if config["target_sampling"] != "cyclic" or config["transfer_checkpoint"] != "best":
             raise ValueError("le curriculum exige un échantillonnage cyclique et le transfert du meilleur état")
         shapes = self.loader.load_shapes()
-        resolution = int(config["resolution"])
-        if resolution not in shapes.resolutions:
-            raise ValueError("résolution du curriculum absente de la configuration des formes")
         self.levels = []
         training, validation, used_types = [], [], set()
         for number, definition in enumerate(config["levels"], start=1):
@@ -112,8 +109,8 @@ class Curriculum:
             for kind in kinds:
                 if kind not in shapes.splits:
                     raise ValueError(f"type de forme inconnu : {kind}")
-                training.extend(f"{kind}_{name}@{resolution}" for name in shapes.splits[kind]["train"])
-                validation.extend(f"{kind}_{name}@{resolution}" for name in shapes.splits[kind]["val"])
+                training.extend(f"{kind}_{name}" for name in shapes.splits[kind]["train"])
+                validation.extend(f"{kind}_{name}" for name in shapes.splits[kind]["val"])
             used_types.update(kinds)
             self.levels.append(CurriculumLevel(number, definition["name"], tuple(training), tuple(validation)))
         if not self.levels:

@@ -96,7 +96,7 @@ def main() -> dict:
     from src.shapes.index import generate_index
 
     index, _ = generate_index(loader.load_shapes(), Path("outputs/shapes"))
-    target = index.point_cloud_by_key("geometries_circle@50")
+    target = index.point_cloud_by_key("geometries_circle")
     summary = write_architecture(cfg, sim.v_max)
     print(f"[gnn] architecture -> {OUTPUT}")
     for name, parameter_count in summary.items():

@@ -4,7 +4,7 @@
 # --- Reglage (grille croseees, budget = nombre max d'essais par regle, fixe a l'avance) ---
 tuning_seed: 7
 tuning_swarm_size: 40
-tuning_target: geometries_circle@50
+tuning_target: geometries_circle
 criterion: final_distance  # minimisee
 budget_trials: 27
 grids:
@@ -31,8 +31,8 @@ rules:
 # --- Evaluation (tableau des scores) ---
 evaluation:
   episode_seed: 142
-  primary_target: geometries_circle@50
+  primary_target: geometries_circle
   swarm_sizes: [20, 40, 100]
   sample_swarm_size: 40
   # formes difficiles pour la regle manuelle (lettre simple, lettre a diagonales, nombres)
-  hard_shapes_sample: [letters_A@50, letters_K@50, numbers_12@50, numbers_121@50]
+  hard_shapes_sample: [letters_A, letters_K, numbers_12, numbers_121]

@@ -33,7 +33,7 @@ def write_records(path: Path, rows: list[dict], columns: list[str] | None = None
 
 def archive_path(source: Path, row: dict) -> Path:
     condition = (f"n{row['n_robots']}_failure{round(row['failure_fraction'] * 100):02d}_"
-                 f"{row['shape'].replace('@', '_at_')}")
+                 f"{row['shape']}")
     directory = source / row["controller"]
     if row["training_seed"] is not None:
         directory /= f"seed_{row['training_seed']}"
@@ -57,7 +57,7 @@ def effective_targets(snapshot: dict) -> tuple[list[str], list[str]]:
         validation = [section["validation_target"]] if "validation_target" in section else None
     for targets in (training, validation):
         if not isinstance(targets, list) or not targets or any(
-            not isinstance(key, str) or "@" not in key for key in targets
+            not isinstance(key, str) or "_" not in key or "@" in key for key in targets
         ) or len(targets) != len(set(targets)):
             raise ValueError("listes effectives training/validation absentes ou invalides dans le snapshot")
     return list(training), list(validation)
@@ -205,27 +205,24 @@ class ComplexShapeStudy:
         if index.identifiers != expected_ids:
             raise ValueError("identifiants de formes différents de l'ordre stable configuré")
         request = self.config["target_selection"]
-        resolution = request["resolution"]
         if (not request["types"] or len(request["types"]) != len(set(request["types"]))
                 or not set(request["types"]) <= {"geometries", "digits", "letters", "numbers"}
                 or not request["seen_splits"] or len(request["seen_splits"]) != len(set(request["seen_splits"]))
-                or not set(request["seen_splits"]) <= {"train", "val"}
-                or resolution not in cfg.resolutions):
-            raise ValueError("types, résolution ou splits vus invalides ; test réservé au mode heldout")
+                or not set(request["seen_splits"]) <= {"train", "val"}):
+            raise ValueError("types ou splits vus invalides ; test réservé au mode heldout")
         selection = {part: [] for part in ("train", "val", "test")}
         indexed = {}
         for row in index.rows:
-            key = f"{row['type']}_{row['name']}@{row['resolution']}"
-            if key in indexed or split.mapping.get(key.split("@")[0]) != row["split"] or index.shape_id(key) != row["shape_id"]:
+            key = f"{row['type']}_{row['name']}"
+            if key in indexed or split.mapping.get(key) != row["split"] or index.shape_id(key) != row["shape_id"]:
                 raise ValueError("index des formes incompatible avec le split figé")
             indexed[key] = row
-        for identifier, part in split.mapping.items():
-            key = f"{identifier}@{resolution}"
-            if identifier.split("_", 1)[0] in self.config["target_selection"]["types"]:
+        for key, part in split.mapping.items():
+            if key.split("_", 1)[0] in self.config["target_selection"]["types"]:
                 if key not in indexed:
                     raise ValueError(f"cible absente de l'index : {key}")
                 cloud = index.point_cloud_by_key(key)
-                if (cloud.shape != (resolution, 2) or not np.isfinite(cloud).all()
+                if (cloud.shape != (cfg.reference_points, 2) or not np.isfinite(cloud).all()
                         or len(np.unique(cloud, axis=0)) < max(self.config["evaluation"]["swarm_sizes"])
                         or indexed[key]["n_points"] != len(cloud)):
                     raise ValueError(f"cible insuffisante, non finie ou dupliquée : {key}")
@@ -269,14 +266,14 @@ class ComplexShapeStudy:
                            for label in getattr(shapes_cfg, kind)]
             if (model["hidden_dim"] != expected["hidden_dim"] or model["message_rounds"] != expected["message_rounds"]
                     or model["use_target_geometry"] != settings["expected_use_target_geometry"]
-                    or model["n_shapes"] <= max(identifiers.index(key.split("@")[0]) for key in exposure)
+                    or model["n_shapes"] <= max(identifiers.index(key) for key in exposure)
                     or not snapshot["communication"]):
                 raise ValueError("architecture ou information du checkpoint incompatible")
             training, validation = effective_targets(snapshot)
-            used = {key.split("@")[0] for key in training + validation}
+            used = set(training + validation)
             if heldout:
-                leaked = [key for key, group in exposure.items() if group == "heldout" and key.split("@")[0] in used]
-                unseen = [key for key, group in exposure.items() if group == "seen" and key.split("@")[0] not in used]
+                leaked = [key for key, group in exposure.items() if group == "heldout" and key in used]
+                unseen = [key for key, group in exposure.items() if group == "seen" and key not in used]
                 if leaked:
                     raise ValueError(f"fuite de cibles test dans training/validation : {name}/{seed} : {leaked}")
                 if unseen:

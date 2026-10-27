@@ -80,7 +80,7 @@ class CommunicationComparison:
                 for (name, seed, *_), stats in condition_table.aggregates(metric).items():
                     records.append({"controller": name, "training_seed": seed, "metric": metric, **stats,
                                     "success_threshold": snapshot["metrics"]["success_threshold"]})
-            condition_name = f"n{size}_failure{round(failure * 100):02d}_{shape.replace('@', '_at_')}"
+            condition_name = f"n{size}_failure{round(failure * 100):02d}_{shape}"
             self._write_csv(self.output / f"table_{condition_name}.csv", records)
             condition_gains = []
             for name in self.controllers:

@@ -100,7 +100,7 @@ class Evaluator:
         if seen_count >= self.positions_per_condition:
             return
         self._seen[condition] = seen_count + 1
-        shape = scenario.shape_key.replace("@", "_at_")
+        shape = scenario.shape_key
         condition_name = f"n{scenario.n_robots}_failure{int(round(scenario.failure_fraction * 100)):02d}_{shape}"
         base = self.output_dir / name / (f"seed_{training_seed}" if training_seed is not None else "")
         output_dir = base / "positions" / condition_name

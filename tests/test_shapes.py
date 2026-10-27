@@ -23,13 +23,14 @@ def index_and_split(cfg_shapes, tmp_path_factory):
 
 
 class TestNoDuplicates:
-    def test_distinct_points_match_resolution(self, cfg_shapes, index_and_split):
+    def test_distinct_points_match_reference_points(self, cfg_shapes, index_and_split):
         index, _ = index_and_split
+        assert len(index.rows) == len(index.identifiers)  # une ligne par figure, aucune résolution
         for row in index.rows:
-            point_cloud = index.point_cloud_by_key(f"{row['type']}_{row['name']}@{row['resolution']}")
+            point_cloud = index.point_cloud_by_key(f"{row['type']}_{row['name']}")
             distinct = np.unique(np.round(point_cloud, 12), axis=0)
-            assert len(distinct) == row["resolution"], (
-                f"doublons sur {row['type']}_{row['name']} : {len(distinct)} != {row['resolution']}"
+            assert len(distinct) == cfg_shapes.reference_points, (
+                f"doublons sur {row['type']}_{row['name']} : {len(distinct)} != {cfg_shapes.reference_points}"
             )
 
     def test_reject_coarse_render(self):
@@ -53,14 +54,14 @@ class TestNormalization:
     def test_all_shapes_in_common_frame(self, cfg_shapes, index_and_split):
         index, _ = index_and_split
         for row in index.rows:
-            point_cloud = index.point_cloud_by_key(f"{row['type']}_{row['name']}@{row['resolution']}")
+            point_cloud = index.point_cloud_by_key(f"{row['type']}_{row['name']}")
             assert np.abs(point_cloud).max() <= 1.0 + 1e-9
             radius = np.linalg.norm(point_cloud, axis=1).max()
             assert radius == pytest.approx(cfg_shapes.target_radius, abs=1e-9)
 
     def test_centered_centroid(self, index_and_split):
         index, _ = index_and_split
-        point_cloud = index.point_cloud_by_key("geometries_circle@50")
+        point_cloud = index.point_cloud_by_key("geometries_circle")
         assert np.linalg.norm(point_cloud.mean(axis=0)) < 1e-9
 
 

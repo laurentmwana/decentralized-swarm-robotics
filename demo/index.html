@@ -571,7 +571,7 @@
           <h2 id="settings-title">Un épisode</h2>
           <form id="simulation-form">
             <div class="field">
-              <label for="target-select">Forme cible</label>
+              <label for="target-select">Figure à dessiner</label>
               <select id="target-select" name="target" required disabled>
                 <option value="">Chargement du catalogue…</option>
               </select>
@@ -637,7 +637,8 @@
             </div>
           </dl>
           <p class="notice muted">Une animation et les métriques d’un seul épisode sont une illustration, pas une
-            preuve statistique. Aucun entraînement n’est lancé ici.</p>
+            preuve statistique. Aucun entraînement n’est lancé ici. La distance compare l’essaim à des points de
+            référence répartis sur la figure ; leur nombre est fixé par la configuration, pas choisi ici.</p>
         </section>
       </aside>
 
@@ -645,7 +646,7 @@
         <h2 id="trajectory-title">Trajectoire enregistrée</h2>
         <div class="stage">
           <canvas id="trajectory" role="img"
-            aria-label="Arène : points cibles verts, robots bleus, robots inactifs gris">Votre navigateur doit prendre
+            aria-label="Arène : figure à dessiner en vert, robots bleus, robots inactifs gris">Votre navigateur doit prendre
             en
             charge le canvas pour afficher la trajectoire.</canvas>
           <div id="loading" class="overlay" aria-hidden="true" hidden>
@@ -657,7 +658,7 @@
         <ul class="legend">
           <li><svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
               <circle cx="6" cy="6" r="3.2" fill="none" stroke="#139562" stroke-width="1.6" />
-            </svg>Point cible</li>
+            </svg>Figure à dessiner</li>
           <li><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
               <circle cx="7" cy="7" r="5" fill="#1f6fd1" stroke="#fff" stroke-width="1.5" />
             </svg>Robot actif</li>
@@ -796,6 +797,23 @@
         throw error;
       }
       return data;
+    }
+
+    // --- Figures : noms lisibles à partir des identifiants de l'index (geometries_circle, letters_A…).
+    const FIGURE_TYPES = {
+      geometries: { group: "Géométries", prefix: "" },
+      digits: { group: "Chiffres", prefix: "Chiffre " },
+      letters: { group: "Lettres", prefix: "Lettre " },
+      numbers: { group: "Nombres", prefix: "Nombre " },
+    };
+    const GEOMETRY_NAMES = {
+      circle: "Cercle", ellipse: "Ellipse", square: "Carré", triangle: "Triangle",
+      pentagon: "Pentagone", star: "Étoile", cross: "Croix",
+    };
+    const figureLabels = new Map();
+    function figureLabel(target) {
+      if (target.type === "geometries") return GEOMETRY_NAMES[target.figure] ?? target.figure;
+      return `${FIGURE_TYPES[target.type]?.prefix ?? ""}${target.figure}`;
     }
 
     // --- Panneau « Contrôleurs » : état, explication et marche à suivre, construits nœud par nœud (textContent, jamais de HTML injecté).
@@ -1185,7 +1203,18 @@
       try {
         const catalog = await fetchJson("/api/targets");
         targetSelect.replaceChildren(); sizeSelect.replaceChildren();
-        for (const target of catalog.targets) addOption(targetSelect, target.key, `${target.name} — ${target.n_points} points`);
+        // Une figure par entrée, regroupées par type ; la clé technique (avec résolution) reste cachée.
+        const groups = new Map();
+        for (const target of catalog.targets) {
+          if (!groups.has(target.type)) {
+            const group = document.createElement("optgroup");
+            group.label = FIGURE_TYPES[target.type]?.group ?? target.type;
+            groups.set(target.type, group);
+            targetSelect.append(group);
+          }
+          addOption(groups.get(target.type), target.key, figureLabel(target));
+          figureLabels.set(target.key, figureLabel(target));
+        }
         for (const size of catalog.limits.swarm_sizes) addOption(sizeSelect, size, String(size));
         controllerStates = catalog.controllers;
         renderControllers();
@@ -1270,7 +1299,7 @@
         byId("convergence-value").textContent = episode.metrics.convergence_step === null ? "Non atteinte" : String(episode.metrics.convergence_step);
         byId("collision-value").textContent = formatMetric(episode.metrics.collision_rate);
         byId("components-value").textContent = formatMetric(episode.metrics.final_components);
-        byId("episode-info").textContent = `${episode.target_key} · ${episode.n_robots} robots · ${episode.controller} · graine ${episode.seed}${episode.training_seed === null ? "" : ` · graine d’entraînement ${episode.training_seed}`}`;
+        byId("episode-info").textContent = `${figureLabels.get(episode.target_key) ?? episode.target_key} · ${episode.n_robots} robots · ${episode.controller} · graine ${episode.seed}${episode.training_seed === null ? "" : ` · graine d’entraînement ${episode.training_seed}`}`;
         drawFrame();
         setStatus("Épisode terminé. La lecture ne fait que parcourir les positions reçues.");
       } catch (error) {

@@ -57,7 +57,7 @@ class ShapesConfig:
     render_size: int
     target_radius: float
     sampler_seed: int
-    resolutions: tuple[int, ...]
+    reference_points: int
     font_path: str
     geometries: tuple[str, ...]
     digits: tuple[int, ...]
@@ -66,7 +66,9 @@ class ShapesConfig:
     splits: dict[str, dict[str, tuple[str, ...]]]
 
     def __post_init__(self) -> None:
-        object.__setattr__(self, "resolutions", tuple(int(r) for r in self.resolutions))
+        if int(self.reference_points) < 1:
+            raise ValueError(f"nombre de points de référence invalide : {self.reference_points}")
+        object.__setattr__(self, "reference_points", int(self.reference_points))
         object.__setattr__(self, "geometries", tuple(str(g) for g in self.geometries))
         object.__setattr__(self, "digits", tuple(int(d) for d in self.digits))
         object.__setattr__(self, "letters", tuple(str(l) for l in self.letters))

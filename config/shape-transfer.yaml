@@ -3,7 +3,6 @@
 output: outputs/shape_transfer
 expected_training: {profile: standard, n_robots: 50, hidden_dim: 64, message_rounds: 3}
 target_selection:
-  resolution: 50
   types: [geometries, digits, letters, numbers]
   seen_splits: [train, val]
 evaluation:

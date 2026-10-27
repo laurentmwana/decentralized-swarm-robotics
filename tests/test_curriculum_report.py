@@ -57,7 +57,7 @@ def _build_campaign(tmp_path, profile="standard"):
                 "gnn_3_rounds_geometry": {"message_rounds": 3, "use_target_geometry": True}}
     budget = {"iterations": 10, "n_robots": 3, "horizon": 4, "validation_interval": 5,
               "seeds": [11, 12, 13, 14, 15], "validation_seeds": [9001, 9002, 9003]}
-    raw = {"training_config": "training", "output": str(root), "resolution": 50,
+    raw = {"training_config": "training", "output": str(root),
            "target_sampling": "cyclic", "transfer_checkpoint": "best", "forgetting_tolerance": 0.05,
            "variants": variants, "profiles": {"standard": budget, "smoke": {**budget, "seeds": [1]}},
            "levels": [{"name": kind, "shape_types": [kind]} for kind in kinds]}
@@ -65,7 +65,7 @@ def _build_campaign(tmp_path, profile="standard"):
     shapes = {"sampler_seed": 123, "splits": {kind: {"train": ["a"], "val": ["b"], "test": ["c"]}
                                             for kind in kinds}}
     weights = {"shape": 2.0, "coverage": 3.0, "collisions": 5.0, "motion": 7.0}
-    ids = {f"{kind}_{name}@50": 2 * index + offset
+    ids = {f"{kind}_{name}": 2 * index + offset
            for index, kind in enumerate(kinds) for offset, name in enumerate(("a", "b"))}
     for variant, override in variants.items():
         for seed_index, seed in enumerate(budget["seeds"]):
@@ -79,8 +79,8 @@ def _build_campaign(tmp_path, profile="standard"):
             rows, levels, previous = [], [], {}
             training, validation = [], []
             for number, kind in enumerate(kinds, start=1):
-                training.append(f"{kind}_a@50")
-                validation.append(f"{kind}_b@50")
+                training.append(f"{kind}_a")
+                validation.append(f"{kind}_b")
                 level_dir = root / f"level_{number}" / variant / f"seed_{seed}"
                 level_dir.mkdir(parents=True)
                 saved = {"variant": variant, "override": override, "profile": profile, "communication": True,
@@ -171,17 +171,17 @@ def test_known_statistics_paired_forgetting_and_read_only_sources(campaign, monk
     assert calls == [5] * 64  # Jamais 15 épisodes, ni 10 graines de variantes mélangées.
     distances = _read_csv(campaign / "distance_matrix.csv")
     first = next(row for row in distances if row["variant"] == "gnn_3_rounds_id"
-                 and row["level"] == "1" and row["target"] == "geometries_a@50")
+                 and row["level"] == "1" and row["target"] == "geometries_a")
     assert float(first["mean"]) == pytest.approx(0.6)
     assert float(first["std_sample"]) == pytest.approx(math.sqrt(0.1))
     assert float(first["ci95"]) == pytest.approx(2.7764 * math.sqrt(0.1) / math.sqrt(5))  # Student, 4 ddl
     assert int(first["n"]) == 5
     geo = next(row for row in distances if row["variant"] == "gnn_3_rounds_geometry"
-               and row["level"] == "1" and row["target"] == "geometries_a@50")
+               and row["level"] == "1" and row["target"] == "geometries_a")
     assert float(geo["mean"]) == pytest.approx(0.55)
     forgetting = _read_csv(campaign / "forgetting.csv")
     old = next(row for row in forgetting if row["variant"] == "gnn_3_rounds_id"
-               and row["level"] == "2" and row["target"] == "geometries_a@50")
+               and row["level"] == "2" and row["target"] == "geometries_a")
     assert float(old["mean"]) == pytest.approx(0.06)
     # La dispersion des différences appariées est dix fois plus faible que
     # celle des distances ; les deux dispersions de niveaux ne sont pas additionnées.
@@ -190,11 +190,11 @@ def test_known_statistics_paired_forgetting_and_read_only_sources(campaign, monk
     assert int(old["n"]) == 5
     assert int(old["notable_forgetting_count"]) == 3
     assert old["notable_forgetting"] == "True"
-    assert not any(row["target"] == "numbers_a@50" for row in forgetting)
+    assert not any(row["target"] == "numbers_a" for row in forgetting)
     consolidated = _read_csv(campaign / "losses_by_target.csv")
     assert len(consolidated) == 200
     assert {row["seed"] for row in consolidated} == {"11", "12", "13", "14", "15"}
-    introduced = next(row for row in consolidated if row["level"] == "2" and row["target"] == "digits_b@50")
+    introduced = next(row for row in consolidated if row["level"] == "2" and row["target"] == "digits_b")
     assert introduced["previous_distance"] == introduced["forgetting"] == ""
     for variant in summary["variants"]:
         assert (campaign / f"heatmap_{variant}.png").read_bytes().startswith(b"\x89PNG\r\n\x1a\n")
@@ -334,8 +334,8 @@ def test_incomplete_or_inconsistent_campaign_rejected_before_writes(campaign, da
         _edit_json(directory / "summary.json", notable_forgetting_count=0)
     else:
         rows = _read_csv(csv_path)
-        retained = next(row for row in rows if row["level"] == "4" and row["target"] == "geometries_a@50")
-        introduced = next(row for row in rows if row["level"] == "4" and row["target"] == "numbers_b@50")
+        retained = next(row for row in rows if row["level"] == "4" and row["target"] == "geometries_a")
+        introduced = next(row for row in rows if row["level"] == "4" and row["target"] == "numbers_b")
         if damage == "missing_level_row":
             rows.remove(retained)
         elif damage == "missing_validation_target":

@@ -70,7 +70,7 @@ def build_split(cfg: ShapesConfig) -> ShapeSplit:
 
 @dataclass
 class ShapeIndex:
-    """Index en mémoire + écriture de outputs/shapes/index.csv (une ligne par forme et résolution).
+    """Index en mémoire + écriture de outputs/shapes/index.csv (une ligne par figure).
 
     L'identifiant de forme (`shape_id`) est l'index de la forme dans l'ordre stable de
     `build_sources` (geometries -> digits -> letters -> numbers) : partagé par le
@@ -78,7 +78,7 @@ class ShapeIndex:
     """
 
     rows: list[dict[str, object]]
-    point_clouds: dict[str, np.ndarray]  # clef "<identifiant>@<resolution>" -> points normalisés
+    point_clouds: dict[str, np.ndarray]  # identifiant de figure (letters_A) -> points de référence normalisés
     identifiers: list[str] = field(default_factory=list)
 
     @classmethod
@@ -88,25 +88,27 @@ class ShapeIndex:
         identifiers = {}
         clouds = {}
         for row in rows:
-            for column in ("shape_id", "resolution", "n_points"):
+            if "resolution" in row:
+                raise ValueError("catalogue de formes d'une ancienne version (une ligne par résolution) : relancer make shapes")
+            for column in ("shape_id", "n_points"):
                 row[column] = int(row[column])
             identifier = f"{row['type']}_{row['name']}"
+            if identifier in clouds:
+                raise ValueError(f"figure dupliquée dans l'index : {identifier}")
             identifiers[row["shape_id"]] = identifier
-            key = f"{identifier}@{row['resolution']}"
-            clouds[key] = np.load(directory / "point_clouds" / f"{key}.npy", allow_pickle=False)
+            clouds[identifier] = np.load(directory / "point_clouds" / f"{identifier}.npy", allow_pickle=False)
         if sorted(identifiers) != list(range(len(identifiers))):
             raise ValueError("identifiants de formes non contigus")
         return cls(rows, clouds, [identifiers[index] for index in range(len(identifiers))])
 
     def shape_id(self, key: str) -> int:
-        identifier = key.split("@")[0]
         try:
-            return self.identifiers.index(identifier)
+            return self.identifiers.index(key)
         except ValueError as exc:
             raise KeyError(f"forme absente de l'index : {key}") from exc
 
-    def point_cloud(self, source: ShapeSource, resolution: int) -> np.ndarray:
-        return self.point_cloud_by_key(f"{source.identifier}@{resolution}")
+    def point_cloud(self, source: ShapeSource) -> np.ndarray:
+        return self.point_cloud_by_key(source.identifier)
 
     def point_cloud_by_key(self, key: str) -> np.ndarray:
         try:
@@ -118,7 +120,7 @@ class ShapeIndex:
         path.parent.mkdir(parents=True, exist_ok=True)
         if not self.rows:
             raise ValueError("index vide")
-        columns = ["name", "type", "shape_id", "resolution", "split", "image_path", "n_points"]
+        columns = ["name", "type", "shape_id", "split", "image_path", "n_points"]
         with path.open("w", newline="", encoding="utf-8") as fh:
             writer = csv.DictWriter(fh, fieldnames=columns)
             writer.writeheader()
@@ -128,10 +130,12 @@ class ShapeIndex:
 def generate_index(
     cfg: ShapesConfig,
     output: Path,
-    resolutions: tuple[int, ...] | None = None,
 ) -> tuple[ShapeIndex, ShapeSplit]:
-    """Rend, échantillonne et normalise toutes les formes ; écrit images + index.csv + nuages .npy."""
-    resolutions = resolutions or tuple(cfg.resolutions)
+    """Rend, échantillonne et normalise toutes les formes ; écrit images + index.csv + nuages .npy.
+
+    Une figure = un nuage de `cfg.reference_points` points de référence, servant à mesurer la
+    distance essaim -> figure ; il n'existe pas plusieurs résolutions d'une même figure.
+    """
     split = build_split(cfg)
     sampler = ShapeSampler(SeedManager(cfg.sampler_seed))
     index = ShapeIndex(rows=[], point_clouds={})
@@ -147,23 +151,20 @@ def generate_index(
         mask = source.binarize(image)
         image_path = image_root / f"{source.identifier}.png"
         _write_png(str(image_path), mask.astype(np.uint8) * 255)
-        for resolution in resolutions:
-            image_points = sampler.sample(mask, resolution)
-            normalized = ShapeSampler.normalize(image_points, cfg.target_radius)
-            key = f"{source.identifier}@{resolution}"
-            index.point_clouds[key] = normalized
-            np.save(point_cloud_root / f"{key}.npy", normalized)
-            index.rows.append(
-                {
-                    "name": source.name,
-                    "type": source.shape_type,
-                    "shape_id": shape_identifier,
-                    "resolution": resolution,
-                    "split": split.split_of(source),
-                    "image_path": image_path.as_posix(),
-                    "n_points": len(normalized),
-                }
-            )
+        image_points = sampler.sample(mask, cfg.reference_points)
+        normalized = ShapeSampler.normalize(image_points, cfg.target_radius)
+        index.point_clouds[source.identifier] = normalized
+        np.save(point_cloud_root / f"{source.identifier}.npy", normalized)
+        index.rows.append(
+            {
+                "name": source.name,
+                "type": source.shape_type,
+                "shape_id": shape_identifier,
+                "split": split.split_of(source),
+                "image_path": image_path.as_posix(),
+                "n_points": len(normalized),
+            }
+        )
     index.write_csv(output / "index.csv")
     return index, split
 
