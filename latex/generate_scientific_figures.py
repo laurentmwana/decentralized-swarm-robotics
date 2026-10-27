@@ -1,4 +1,4 @@
-"""Génère six figures scientifiques déterministes, sans entraînement."""
+"""Génère sept figures scientifiques déterministes, sans entraînement."""
 
 from __future__ import annotations
 
@@ -14,11 +14,12 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.lines import Line2D
-from matplotlib.patches import Circle, FancyArrowPatch, FancyBboxPatch, Rectangle
+from matplotlib.patches import Circle, Ellipse, FancyArrowPatch, FancyBboxPatch, Rectangle
 
 ROOT = Path(__file__).resolve().parent
 OUTPUT_DIRECTORY = ROOT / "images"
 FIGURE_NAMES = (
+    "neuron_and_message_passing",
     "activation_functions",
     "gnn_current_architecture",
     "shape_loss_geometry",
@@ -27,6 +28,11 @@ FIGURE_NAMES = (
     "controller_information_matrix",
 )
 SOURCE_REFERENCES = {
+    "neuron_and_message_passing": (
+        "src/models/encoder.py", "src/models/message.py", "src/models/aggregator.py",
+        "src/models/gnn.py",
+        "Figure specification: conceptual schematic, no parameter values, no measured result",
+    ),
     "activation_functions": ("src/models/encoder.py", "src/models/decoder.py"),
     "gnn_current_architecture": (
         "src/models/encoder.py", "src/models/message.py", "src/models/aggregator.py",
@@ -194,6 +200,68 @@ def style_plot(ax: plt.Axes) -> None:
     ax.grid(True, color=GRID, linewidth=0.7, alpha=0.8)
     ax.set_axisbelow(True)
     ax.tick_params(length=3, colors=GRAY)
+
+
+def neuron_and_message_passing() -> plt.Figure:
+    height = 5.6
+    fig, ax = canvas(height)
+    header(fig, "Du neurone formel au tour de passage de messages")
+    ratio = WIDTH / height
+
+    def node(x: float, y: float, radius: float, text: str, color: str = PALE_BLUE,
+             edge: str = BLUE, fontsize: float = 15.5, weight: str = "normal") -> None:
+        ax.add_patch(Ellipse((x, y), 2 * radius, 2 * radius * ratio,
+                             facecolor=color, edgecolor=edge, linewidth=1.6, zorder=4))
+        ax.text(x, y, text, ha="center", va="center", fontsize=fontsize, weight=weight, zorder=5)
+
+    ax.text(0.255, 0.885, "(a) Un neurone formel", ha="center", va="top", weight="bold", fontsize=18)
+    hub_a = (0.248, 0.560)
+    for y, label, weight_label in ((0.700, "x₁", "w₁"), (0.560, "x₂", "w₂"), (0.420, "x₃", "w₃")):
+        node(0.072, y, 0.025, label)
+        arrow(ax, (0.098, y), (hub_a[0] - 0.031, hub_a[1]), color=GRAY, linewidth=1.5, mutation_scale=13)
+        ax.text(0.163, (y + hub_a[1]) / 2 + 0.020, weight_label, ha="center", fontsize=14, color=GRAY)
+    node(*hub_a, 0.029, "Σ", color="white", fontsize=19)
+    box(ax, 0.312, 0.505, 0.122, 0.110, "Activation f", color=PALE_TEAL, fontsize=14)
+    arrow(ax, (hub_a[0] + 0.030, hub_a[1]), (0.305, hub_a[1]), color=GRAY)
+    node(0.478, hub_a[1], 0.025, "y", color=PALE_ORANGE, edge=ORANGE)
+    arrow(ax, (0.437, hub_a[1]), (0.450, hub_a[1]), color=GRAY)
+    ax.text(0.255, 0.330, "z = w₁x₁ + w₂x₂ + w₃x₃ + b,   y = f(z)",
+            ha="center", va="top", fontsize=14.5)
+    ax.text(0.255, 0.258, "Chaque entrée agit par son poids.\nLes poids s'ajustent par descente de gradient.",
+            ha="center", va="top", fontsize=13.5, color=GRAY, linespacing=1.5)
+
+    ax.text(0.755, 0.885, "(b) Un tour de passage de messages", ha="center", va="top",
+            weight="bold", fontsize=18)
+    hub = (0.598, 0.560)
+    ax.add_patch(Ellipse(hub, 0.170, 0.170 * ratio, facecolor="white", edgecolor=GRAY,
+                         linewidth=1.3, linestyle="--", zorder=1))
+    ax.text(hub[0], 0.742, "portée de communication", ha="center", va="top", fontsize=13.5, color=GRAY)
+    node(*hub, 0.027, "i", color=PALE_BLUE, weight="bold", fontsize=17)
+    for angle, label in ((130, "j₁"), (200, "j₂"), (320, "j₃")):
+        rad = np.deg2rad(angle)
+        x = hub[0] + 0.062 * np.cos(rad)
+        y = hub[1] + 0.105 * np.sin(rad)
+        node(x, y, 0.021, label, color="white", edge=TEAL, fontsize=14)
+        arrow(ax, (x, y), hub, color=TEAL, linewidth=1.5, mutation_scale=12, shrink=22)
+    ax.text(0.505, 0.678, "m(i,j)", ha="center", fontsize=13, color=TEAL,
+            bbox={"facecolor": "white", "edgecolor": "none", "pad": 1.5})
+    rad = np.deg2rad(215)
+    kx, ky = hub[0] + 0.105 * np.cos(rad), hub[1] + 0.175 * np.sin(rad)
+    node(kx, ky, 0.021, "k", color="#f2f3f5", edge=GRAY, fontsize=14)
+    ax.text(kx, ky - 0.058, "hors portée", ha="center", va="top", fontsize=13.5, color=GRAY)
+    for index, (label, face) in enumerate((("Agrégation\nsymétrique", PALE_TEAL),
+                                           ("Mise à jour de hᵢ", PALE_BLUE),
+                                           ("Commande locale", PALE_ORANGE))):
+        bottom = 0.655 - index * 0.168
+        box(ax, 0.780, bottom, 0.190, 0.100, label, color=face, fontsize=14.5)
+        if index:
+            arrow(ax, (0.875, bottom + 0.132), (0.875, bottom + 0.106), color=GRAY, linewidth=1.6)
+    arrow(ax, (hub[0] + 0.030, hub[1] - 0.015), (0.773, 0.660), color=TEAL)
+    ax.text(0.755, 0.258, "Un message par arête du voisinage,\npuis une combinaison symétrique.",
+            ha="center", va="top", fontsize=13.5, color=GRAY, linespacing=1.5)
+    ax.text(0.50, 0.082, "Schéma conceptuel : le nombre de voisins change, les poids restent partagés entre les robots.",
+            ha="center", va="top", fontsize=14.5)
+    return fig
 
 
 def activation_functions() -> plt.Figure:
@@ -466,6 +534,7 @@ def main() -> None:
     preflight_assets()
     verify_mathematics()
     builders = (
+        neuron_and_message_passing,
         activation_functions,
         gnn_current_architecture,
         shape_loss_geometry,
@@ -475,7 +544,7 @@ def main() -> None:
     )
     for name, builder in zip(FIGURE_NAMES, builders, strict=True):
         save_figure(builder(), name)
-    print("DONE: six vector PDFs and six 300-dpi PNGs; no training, optimizer, model or random draws.")
+    print("DONE: seven vector PDFs and seven 300-dpi PNGs; no training, optimizer, model or random draws.")
 
 
 if __name__ == "__main__":

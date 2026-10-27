@@ -1,0 +1,65 @@
+\chapter{Concepts de base}
+\label{chap:concept}
+
+\section{Introduction}
+
+Ce chapitre pose le vocabulaire utilisé dans la suite du mémoire. Quatre notions reviennent sans cesse : l'essaim, le voisinage, le graphe sur lequel circulent les informations, et la manière dont la qualité d'une formation se mesure. Elles sont décrites ici à un niveau général. Les choix concrets, valeurs de paramètres, équations et conventions de mesure, appartiennent aux chapitres suivants, et rien dans ce chapitre ne décrit le résultat d'une expérience.
+
+Une précaution d'abord. Définir un mécanisme ne prouve pas qu'il fonctionne. Dire qu'un réseau à passage de messages accepte un nombre variable de voisins décrit une propriété de calcul, pas une performance. Cette distinction entre ce que le code permet et ce qu'une campagne montre traverse tout le mémoire.
+
+\section{Essaim, localité, décentralisation}
+
+La robotique en essaim fait dépendre un comportement collectif de décisions prises localement par plusieurs robots relativement simples, avec des échanges limités entre eux \cite{brambilla2013}. L'idée s'oppose à un pilotage unique qui connaîtrait tout du groupe. Elle distribue les tâches et tolère mieux la panne d'une unité ou l'arrivée de nouvelles unités, au prix d'une coordination plus difficile à obtenir.
+
+Trois niveaux de répartition méritent une attention distincte. Un contrôleur \emph{centralisé} lit toutes les positions et calcule toutes les commandes. Un contrôleur \emph{décentralisé} ne laisse à chaque robot que ses informations et celles de ses voisins. L'\emph{apprentissage}, lui, peut rester global : rien n'empêche d'ajuster des poids à partir d'une mesure calculée sur l'essaim entier, tant que l'exécution ne dépend plus que d'observations locales. C'est exactement le schéma retenu ici. Le caractère décentralisé du système porte donc sur la décision de mouvement, et non sur la procédure d'entraînement.
+
+Cette précision évite une confusion classique. Une politique exécutée localement peut avoir été entraînée avec une information que nul robot ne possède pendant l'exécution. Elle n'en devient pas centralisée, mais sa qualité dépend de l'écart entre les deux situations. Une comparaison entre contrôleurs ne vaut donc que si les deux reçoivent la même information. C'est une exigence méthodologique, pas un fait acquis : le pilote présenté au chapitre~\ref{chap:experiences} compare justement deux approches qui ne reçoivent pas la même consigne, et la discussion qui suit en fait une limite explicite.
+
+\section{Voisins, portée de communication et graphe de proximité}
+
+Dans un essaim, ce qu'un robot sait dépend de ce qu'il perçoit et de ce que ses voisins lui transmettent. Le voisinage n'est pas une liste fixe : il change à chaque pas, au fil des déplacements. On le décrit habituellement par une portée : deux robots échangent si leur distance ne dépasse pas une certaine valeur, et ne communiquent pas sinon. L'ensemble de ces liens forme un graphe dont les nœuds sont les robots et les arêtes sont les communications possibles. Le graphe est donc reconstruit en permanence, et un robot peut passer d'isolé à très connecté sans que le programme change.
+
+Deux conséquences intéressent directement notre sujet. La première tient à la portée de l'information. Un lien direct ne transporte que ce que le voisin immédiat transmet. Une information plus éloignée ne parvient à un robot qu'en traversant une chaîne d'arêtes, ce qui suppose plusieurs tours d'échange. Le rayon de l'information utile croît avec le nombre de tours, pas avec la portée de communication.
+
+La seconde tient à la connectivité. Si le graphe se fragmente, des groupes cessent de recevoir la même information et peuvent diverger. Les travaux sur la convergence distribuée montrent précisément qu'un accord entre agents dépend de l'évolution du graphe d'interaction \cite{jadbabaie2003}. Un contrôleur de formation n'hérite d'aucune garantie de ce type, mais l'avertissement reste valable : observer la connectivité fait partie du suivi d'une expérience.
+
+Enfin, un voisinage se présente sous forme d'un ensemble non ordonné, de taille variable. Un calcul qui dépendrait de l'ordre dans lequel les voisins sont énumérés produirait des commandes différentes pour une même configuration physique. Cette contrainte, l'invariance par permutation, revient souvent dans la suite.
+
+\section{Réseaux de neurones sur graphes}
+
+Un réseau de neurones sur graphe traite des données structurées en relations plutôt qu'en grille ou en liste fixe. Le modèle introduit par Scarselli et al. propage des états entre nœuds reliés jusqu'à converger vers un point fixe, qu'un décodeur transforme en sortie \cite{scarselli2009}. Les architectures utilisées aujourd'hui préfèrent un nombre fini d'étapes, entraîné par rétropropagation classique \cite{gilmer2017}.
+
+Le déroulement d'une étape se décrit en quatre temps. Chaque nœud encode son état courant et les informations dont il dispose. Chaque arête produit un message à partir des deux nœuds qu'elle relie et de la relation entre eux. Un nœud combine ensuite les messages reçus de ses voisins. Cette combinaison, appelée agrégation, doit rester symétrique puisque l'ordre des voisins n'a pas de signification ; les fonctions invariantes par permutation ont été étudiées dans ce but pour représenter des données non ordonnées \cite{zaheer2017}. Vient enfin une étape de mise à jour, puis un décodeur qui rend la commande attendue. La Figure~\ref{fig:neurone-message} pose ces deux briques, le neurone formel d'un côté, un tour d'échange entre voisins de l'autre.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{images/neuron_and_message_passing.png}
+  \caption{Du neurone formel au tour de passage de messages. À gauche, une somme pondérée suivie d'une fonction d'activation. À droite, un robot agrège les messages des voisins à portée, met à jour son état puis calcule sa commande, avec les mêmes poids pour tous les robots. Schéma original de l'auteur, sans valeur de paramètre ni résultat d'expérience.}
+  \label{fig:neurone-message}
+\end{figure}
+
+Dans un essaim, tous les robots exécutent la même fonction avec les mêmes poids. Ce partage a deux effets utiles. Il rend le calcul indépendant de l'effectif, et il force la politique à s'appuyer sur des quantités relatives, comme la position d'un voisin par rapport à soi, plutôt que sur une position absolue dans l'arène.
+
+Il faut en dire les limites. Un réseau à passage de messages reste borné par ce qu'il perçoit : un contrôleur qui ignore une information ne peut pas la reconstituer. L'agrégation choisie non plus n'est pas neutre, car moyenne, somme et attention n'ont pas la même capacité de représentation ; les réseaux à attention apprennent un poids propre à chaque voisin \cite{velickovic2018}, ce que la moyenne simple ne fait pas. Enfin, exécuter avec un effectif différent de celui de l'entraînement est possible du point de vue du calcul, mais l'écart réel entre les deux situations doit être mesuré, comme cela a été fait ailleurs sur une formation triangulaire \cite{jiang2023}.
+
+\section{Former une forme, et dire si elle est formée}
+
+Rassembler plusieurs robots dans une même zone ne donne ni un cercle, ni une lettre, ni un symbole. La formation de formes demande que les robots se répartissent sur les différentes parties d'une géométrie visée, tout en évitant de se rapprocher trop les uns des autres. Une règle qui attire tous les robots vers un point commun résout donc un autre problème que celui qui nous occupe.
+
+Représenter la cible se fait de plusieurs manières : une équation analytique, une affectation robot--point, une carte ou un nuage de points. Ces choix ne donnent pas la même information au contrôleur, et plusieurs travaux consacrés à la génération de formes par contrôle décentralisé l'ont montré \cite{hsieh2008,li2019}. Le nuage de points a une propriété pratique : il décrit une forme quelconque, y compris irrégulière, sans loi fermée. Il sert de base aux expériences de ce mémoire.
+
+La qualité d'une formation se juge alors sur deux registres distincts, qu'il serait faux de confondre. D'un côté, savoir si chaque robot actif est proche d'un point de la cible. De l'autre, savoir si chaque partie de la cible est effectivement couverte par un robot. Une politique peut réussir le premier point et échouer au second, en laissant une zone nue : tous les robots se tassent sur un seul arc d'un cercle, par exemple. Une mesure qui additionne ces deux directions, la proximité et la couverture, décrit couramment ce type de tâche. Les écarts entre robots, les collisions, la régularité du mouvement et la connectivité du graphe complètent le tableau, car une forme belle mais instable, ou obtenue au prix de rapprochements dangereux, ne constitue pas un résultat satisfaisant.
+
+Reste la question du seuil. Une distance moyenne et un taux de succès ne disent pas la même chose, et la convention retenue pour déclarer un épisode réussi change les pourcentages obtenus. Le chapitre~\ref{chap:methode} précise cette convention, parce qu'elle conditionne la lecture de tous les chiffres qui suivent.
+
+\section{Règle écrite et politique apprise}
+
+Deux façons de produire la commande reviennent dans ce mémoire. Écrire la loi de contrôle, c'est fixer soi-même les attractions, les répulsions et parfois les alignements, avec leurs gains et leurs distances d'action. Le résultat reste lisible : quand quelque chose déraille, on remonte à un terme et on le corrige. Le prix est celui de la conception : une forme plus complexe ou une contrainte nouvelle obligent à redériver la loi et à réajuster des paramètres à la main.
+
+Apprendre la loi, c'est déplacer la responsabilité du concepteur. Il ne choisit plus la réaction exacte à chaque configuration, mais ce que les robots perçoivent, la structure du réseau, les objectifs à optimiser et les épisodes sur lesquels entraîner. Les paramètres s'ajustent ensuite. Une observation mal choisie, une perte mal définie ou un entraînement trop court peuvent alors empêcher le modèle d'apprendre, même si le réseau est correctement implémenté.
+
+Il serait simpliste d'opposer une méthode explicable à une méthode opaque. Les deux reposent sur des hypothèses de modélisation. Une règle de flocking suppose que l'attraction, la répulsion et l'alignement suffisent à la mission. Une politique apprise suppose que les exemples vus à l'entraînement couvrent les situations utiles et que la perte favorise bien la formation voulue. Le mémoire ne tranche pas la supériorité d'une famille sur l'autre ; il cherche à savoir dans quelles conditions une règle apprise, exécutée localement, remplace raisonnablement une règle écrite à la main.
+
+\section{Conclusion partielle}
+
+Un essaim se pilote par décisions locales et échanges limités, et cette décentralisation porte sur l'exécution, jamais nécessairement sur l'apprentissage. Le voisinage, défini par une portée de communication, forme un graphe reconstruit à chaque pas, de sorte qu'une information ne circule qu'aussi loin que le permettent les tours d'échange et la connectivité. Un réseau de neurones sur graphes y applique une même fonction à tous les nœuds, à condition que l'agrégation reste invariante par permutation. Une formation de formes, enfin, se juge en deux directions, la proximité des robots à la cible et la couverture de la cible par les robots, et non par un regroupement. Le chapitre suivant confronte ces notions aux travaux existants, méthodes traditionnelles puis approches apprises, et examine trois études dont la comparabilité avec notre protocole n'allait pas de soi.

@@ -2,11 +2,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[french]{babel}
-\addto\captionsfrench{%
-  \renewcommand{\tablename}{Tableau}%
-  \renewcommand{\listfigurename}{Liste des figures}%
-  \renewcommand{\contentsname}{Table des matières}%
-}
+\addto\captionsfrench{\renewcommand{\tablename}{Tableau}}
 \usepackage{lmodern}
 \usepackage{microtype}
 \usepackage{setspace}
@@ -47,15 +43,16 @@
 \include{chapters/introduction}
 \renewcommand{\thefigure}{\thechapter.\arabic{figure}}
 \renewcommand{\theHfigure}{\thechapter.\arabic{figure}}
+\include{chapters/concept}
 \include{chapters/etat-art}
 \include{chapters/methode}
 \include{chapters/experiences}
 \setcounter{figure}{0}
-\renewcommand{\thefigure}{C.\arabic{figure}}
-\renewcommand{\theHfigure}{conclusion.\arabic{figure}}
+\renewcommand{\thefigure}{D.\arabic{figure}}
+\renewcommand{\theHfigure}{discussion.\arabic{figure}}
 \setcounter{table}{0}
-\renewcommand{\thetable}{C.\arabic{table}}
-\renewcommand{\theHtable}{conclusion.\arabic{table}}
+\renewcommand{\thetable}{D.\arabic{table}}
+\renewcommand{\theHtable}{discussion.\arabic{table}}
 \include{chapters/discussion}
 
 \printbibliography[heading=bibintoc]
