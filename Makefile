@@ -5,6 +5,7 @@ VARIANT ?= gnn_2_rounds
 SEED ?= 11
 TRAINING_OUTPUT ?= outputs/training
 EVALUATION_OUTPUT ?= outputs/evaluation
+PILOT_OUTPUT ?= outputs/evaluation_pilot
 CURRICULUM_VARIANT ?= gnn_3_rounds_geometry
 CURRICULUM_CONFIG ?= curriculum
 
@@ -13,7 +14,7 @@ SHELL := powershell.exe
 .SHELLFLAGS := -NoProfile -Command
 endif
 
-.PHONY: help install install-dev test test-all test-training shapes demo tuning baselines metrics train train-all train-complete train-smoke training-plan training-summary train-size-20 train-size-40 train-size-100 train-sizes campaign comparison size-transfer curriculum-plan train-curriculum train-curriculum-all curriculum-summary complex-shapes curriculum-comparison shape-transfer readability readability-score robustness web clean
+.PHONY: help install install-dev test test-all test-training shapes demo tuning baselines metrics train train-all train-complete train-smoke training-plan training-summary train-size-20 train-size-40 train-size-100 train-sizes campaign campaign-pilot comparison size-transfer curriculum-plan train-curriculum train-curriculum-all curriculum-summary complex-shapes curriculum-comparison shape-transfer readability readability-score robustness web clean
 .DEFAULT_GOAL := help
 
 help:
@@ -27,6 +28,7 @@ help:
 	@echo "make training-summary : courbes et synthese des entrainements complets"
 	@echo "make train-sizes / size-transfer : entrainer par taille, puis evaluer"
 	@echo "make campaign / comparison : evaluer les checkpoints, puis comparer"
+	@echo "make campaign-pilot : campagne sur les checkpoints reellement entraines, les autres sont consignes"
 	@echo "make train-curriculum / train-curriculum-all : un curriculum ou toute la campagne"
 	@echo "make curriculum-summary / complex-shapes / curriculum-comparison / shape-transfer : rapports et etudes"
 	@echo "make readability / readability-score : questionnaire aveugle, puis reponses humaines"
@@ -102,6 +104,9 @@ train-sizes:
 
 campaign:
 	$(PYTHON) -m src.evaluation.campaign --output "$(EVALUATION_OUTPUT)"
+
+campaign-pilot:
+	$(PYTHON) -m src.evaluation.campaign --config evaluation-pilot --allow-partial --output "$(PILOT_OUTPUT)"
 
 comparison:
 	$(PYTHON) -m src.reports.communication --config comparison

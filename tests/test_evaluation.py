@@ -183,6 +183,42 @@ class TestCampaignReproducibility:
         with pytest.raises(FileNotFoundError, match="run incomplet"):
             factory.versions("gnn_2_rounds")
 
+    def test_partial_mode_keeps_strict_mode_blocking(self, tmp_path, cfg_eval):
+        import json
+
+        from src.evaluation.factory import ControllerFactory
+
+        config = dict(cfg_eval, training_seeds=[11, 12])
+        ready = tmp_path / "gnn_2_rounds" / "seed_11"
+        ready.mkdir(parents=True)
+        for artifact in ("best.pt", "effective_config.yaml", "summary.json", "targets.json"):
+            (ready / artifact).write_bytes(b"x")
+        (ready / "status.json").write_text(json.dumps({"status": "completed"}), encoding="utf-8")
+        factory = ControllerFactory(evaluation_config=config, training_dir=tmp_path)
+        assert factory.inspect("gnn_2_rounds") == ([11], [("run incomplet", "variante gnn_2_rounds graine 12: run incomplet : " + str(tmp_path / "gnn_2_rounds" / "seed_12" / "best.pt"))])
+        with pytest.raises(FileNotFoundError, match="run incomplet"):
+            factory.versions("gnn_2_rounds")
+
+    def test_partial_campaign_records_reasons_instead_of_omitting_them(self, tmp_path, cfg_eval):
+        import json
+
+        from src.evaluation.campaign import Campaign
+        from src.evaluation.factory import ControllerFactory
+
+        config = dict(cfg_eval, training_seeds=[11, 12])
+        ready = tmp_path / "gnn_2_rounds" / "seed_11"
+        ready.mkdir(parents=True)
+        for artifact in ("best.pt", "effective_config.yaml", "summary.json", "targets.json"):
+            (ready / artifact).write_bytes(b"x")
+        (ready / "status.json").write_text(json.dumps({"status": "completed"}), encoding="utf-8")
+        campaign = Campaign.__new__(Campaign)
+        campaign.factory = ControllerFactory(evaluation_config=config, training_dir=tmp_path)
+        versions, skipped = campaign._resolve_versions(["gnn_2_rounds", "manual"], allow_partial=True)
+        assert versions == {"gnn_2_rounds": [11], "manual": [None]}
+        assert len(skipped) == 1 and "graine 12" in skipped[0]
+        with pytest.raises(FileNotFoundError, match="run incomplet"):
+            campaign._resolve_versions(["gnn_2_rounds"], allow_partial=False)
+
     def test_checkpoint_uses_saved_configuration_and_frozen_weights(self, tmp_path, monkeypatch, cfg_eval):
         import json
         from dataclasses import asdict, replace

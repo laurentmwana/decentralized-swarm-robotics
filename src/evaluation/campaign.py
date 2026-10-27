@@ -43,7 +43,7 @@ class Campaign:
         factory = ControllerFactory(loader, config)
         return cls(evaluator, factory, config, output, loader)
 
-    def run(self, controllers: list[str] | None = None) -> dict:
+    def run(self, controllers: list[str] | None = None, allow_partial: bool = False) -> dict:
         names = list(self.config["controllers"]) if controllers is None else controllers
         if not names or len(names) != len(set(names)):
             raise ValueError("la sélection des contrôleurs doit être non vide et sans doublons")
@@ -52,13 +52,17 @@ class Campaign:
             raise ValueError(f"contrôleurs inconnus : {sorted(unknown)}")
         if self.output.exists() and any(self.output.iterdir()):
             raise FileExistsError(f"dossier de campagne déjà occupé : {self.output}")
-        versions = {name: self.factory.versions(name) for name in names}
+        versions, skipped = self._resolve_versions(names, allow_partial)
+        if not versions:
+            raise FileNotFoundError("aucun checkpoint complet pour cette campagne : " + "; ".join(skipped))
+        names = list(versions)
         prepared = {(name, seed): self.factory.build(name, seed) for name, seeds in versions.items() for seed in seeds}
         scenarios = self.evaluator.grid.scenarios()
         for scenario in scenarios:
             self.evaluator.index.point_cloud_by_key(scenario.shape_key)
             self.evaluator.index.shape_id(scenario.shape_key)
         self.output.mkdir(parents=True, exist_ok=True)
+        self._write_provenance(names, versions, skipped, allow_partial)
         self._write_metadata(self.output, names, versions)
         all_rows = []
         for name in names:
@@ -79,9 +83,37 @@ class Campaign:
             raise ValueError(f"nombre de lignes brutes inattendu : {len(all_rows)} != {expected}")
         table = ResultsTable.read_csv(self.output / "episodes.csv")
         summary = self.build_reports(table, names, versions)
-        summary.update(rows=len(all_rows), expected_rows=expected, status="complete")
+        summary.update(rows=len(all_rows), expected_rows=expected, status="complete", skipped=skipped)
         (self.output / "summary.json").write_text(json.dumps(summary, indent=2, ensure_ascii=False), encoding="utf-8")
         return summary
+
+    def _resolve_versions(self, names: list[str], allow_partial: bool) -> tuple[dict, list[str]]:
+        """En mode strict, toute graine manquante bloque ; en mode partiel elle est consignée."""
+        if not allow_partial:
+            return {name: self.factory.versions(name) for name in names}, []
+        versions, skipped = {}, []
+        for name in names:
+            usable, blocked = self.factory.inspect(name)
+            versions[name] = usable
+            skipped.extend(reason for _, reason in blocked)
+            if not usable:
+                del versions[name]
+        return versions, skipped
+
+    def _write_provenance(self, names: list[str], versions: dict, skipped: list[str], allow_partial: bool) -> None:
+        provenance = {
+            "allow_partial": allow_partial,
+            "evaluated": {name: [seed if seed is not None else "baseline" for seed in versions[name]] for name in names},
+            "skipped": skipped,
+            "budget": {
+                "repetitions": self.evaluator.grid.repetitions,
+                "swarm_sizes": list(self.evaluator.grid.swarm_sizes),
+                "failure_fractions": list(self.evaluator.grid.failure_fractions),
+                "shapes": list(self.evaluator.grid.shapes),
+                "episodes_per_version": len(self.evaluator.grid.scenarios()),
+            },
+        }
+        (self.output / "provenance.json").write_text(json.dumps(provenance, indent=2, ensure_ascii=False), encoding="utf-8")
 
     def _write_metadata(self, directory: Path, names: list[str], versions: dict) -> None:
         snapshot = {
@@ -148,8 +180,8 @@ class Campaign:
         return {"variation_between_seeds": seed_variation, "pairings": pairings, "success_threshold": threshold}
 
 
-def run(controllers: list[str] | None = None, repetitions: int | None = None, output: Path = OUTPUT, config_name: str = "evaluation") -> dict:
-    return Campaign.from_config(output=output, config_name=config_name, repetitions=repetitions).run(controllers)
+def run(controllers: list[str] | None = None, repetitions: int | None = None, output: Path = OUTPUT, config_name: str = "evaluation", allow_partial: bool = False) -> dict:
+    return Campaign.from_config(output=output, config_name=config_name, repetitions=repetitions).run(controllers, allow_partial)
 
 
 def expected_row_count(config: dict, trained_seed_count: int | None = None) -> int:
@@ -165,8 +197,9 @@ def main() -> None:
     parser.add_argument("--repetitions", type=int, default=None)
     parser.add_argument("--output", type=Path, default=OUTPUT)
     parser.add_argument("--config", default="evaluation")
+    parser.add_argument("--allow-partial", action="store_true", help="évaluer les checkpoints complets disponibles et consigner les autres")
     args = parser.parse_args()
-    run(args.controllers, args.repetitions, args.output, args.config)
+    run(args.controllers, args.repetitions, args.output, args.config, args.allow_partial)
 
 
 if __name__ == "__main__":

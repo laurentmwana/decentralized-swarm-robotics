@@ -16,6 +16,11 @@ from src.controllers.manual_shape import ManualShapeController
 from src.training.checkpoint import CheckpointManager
 
 TRAINING_DIR = Path("outputs/training")
+REQUIRED_ARTIFACTS = ("best.pt", "effective_config.yaml", "summary.json", "status.json", "targets.json")
+
+RUN_INCOMPLETE = "run incomplet"
+TRAINING_UNFINISHED = "entraînement non terminé"
+_BLOCKER_ERRORS = {RUN_INCOMPLETE: FileNotFoundError, TRAINING_UNFINISHED: ValueError}
 
 
 class ControllerFactory:
@@ -25,23 +30,40 @@ class ControllerFactory:
         self.training_dir = Path(training_dir)
 
     def versions(self, name: str) -> list[int | None]:
+        usable, blocked = self.inspect(name)
+        if blocked:
+            kind, message = blocked[0]
+            raise _BLOCKER_ERRORS[kind](message)
+        return usable
+
+    def inspect(self, name: str) -> tuple[list[int | None], list[tuple[str, str]]]:
+        """Graines réellement exploitables, puis les motifs de rejet des autres."""
         settings = self.config["controllers"][name]
         if settings["type"] == "baseline":
-            return [None]
+            return [None], []
         if settings["type"] != "trained":
             raise ValueError(f"type de contrôleur inconnu : {settings['type']}")
         seeds = self.config["training_seeds"]
         if not seeds or len(seeds) != len(set(seeds)):
             raise ValueError("graines d'entraînement vides ou dupliquées")
+        usable, blocked = [], []
         for seed in seeds:
-            directory = self.run_directory(name, seed)
-            for artifact in ("best.pt", "effective_config.yaml", "summary.json", "status.json", "targets.json"):
-                if not (directory / artifact).is_file():
-                    raise FileNotFoundError(f"run incomplet : {directory / artifact}")
-            status = json.loads((directory / "status.json").read_text(encoding="utf-8"))
-            if status["status"] != "completed":
-                raise ValueError(f"entraînement non terminé : {directory}")
-        return list(seeds)
+            blocker = self._blocker(self.run_directory(name, seed))
+            if blocker is None:
+                usable.append(seed)
+            else:
+                blocked.append((blocker[0], f"variante {name} graine {seed}: {blocker[1]}"))
+        return usable, blocked
+
+    @staticmethod
+    def _blocker(directory: Path) -> tuple[str, str] | None:
+        missing = next((artifact for artifact in REQUIRED_ARTIFACTS if not (directory / artifact).is_file()), None)
+        if missing is not None:
+            return RUN_INCOMPLETE, f"run incomplet : {directory / missing}"
+        status = json.loads((directory / "status.json").read_text(encoding="utf-8"))
+        if status["status"] != "completed":
+            return TRAINING_UNFINISHED, f"entraînement non terminé : {directory}"
+        return None
 
     def run_directory(self, name: str, training_seed: int) -> Path:
         settings = self.config["controllers"][name]
