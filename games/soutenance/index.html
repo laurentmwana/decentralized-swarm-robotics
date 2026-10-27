@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entraînement à la soutenance — essaims et GNN</title>
+  <style>
+    :root {
+      --navy: #10243b;
+      --ink: #16243a;
+      --muted: #5b6b80;
+      --blue: #1f4e79;
+      --gold: #e3b341;
+      --card: #f1f4f8;
+      --line: #d4dce7;
+      --ok: #1c7a4b;
+      --ko: #a8332b;
+      --half: #b07d12;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: #fff;
+      color: var(--ink);
+      font: 16px/1.55 -apple-system, "Segoe UI", Roboto, Ubuntu, Cantarell, sans-serif
+    }
+
+    header {
+      background: var(--navy);
+      color: #fff;
+      padding: 14px 20px;
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      flex-wrap: wrap
+    }
+
+    header h1 {
+      font-size: 17px;
+      margin: 0;
+      font-weight: 650;
+      letter-spacing: .01em
+    }
+
+    header .sub {
+      color: var(--gold);
+      font-size: 12.5px
+    }
+
+    main {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 22px 20px 60px
+    }
+
+    h2 {
+      font-size: 20px;
+      margin: 0 0 6px
+    }
+
+    p.lead {
+      color: var(--muted);
+      margin: .2em 0 1.4em;
+      font-size: 14.5px
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer
+    }
+
+    .btn {
+      background: var(--blue);
+      color: #fff;
+      border: 0;
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 15px
+    }
+
+    .btn:hover {
+      filter: brightness(1.12)
+    }
+
+    button:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+      filter: none
+    }
+
+    .btn.ghost {
+      background: #fff;
+      color: var(--blue);
+      border: 1px solid var(--line)
+    }
+
+    .btn.gold {
+      background: var(--gold);
+      color: var(--navy);
+      font-weight: 650
+    }
+
+    .modes {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      margin-bottom: 26px
+    }
+
+    .mode {
+      text-align: left;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px 16px;
+      color: var(--ink)
+    }
+
+    .mode:hover {
+      border-color: var(--blue);
+      background: #e9eff6
+    }
+
+    .mode b {
+      display: block;
+      font-size: 15.5px;
+      margin-bottom: 3px
+    }
+
+    .mode span {
+      color: var(--muted);
+      font-size: 13px
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin: 4px 0 20px
+    }
+
+    .chip {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 5px 12px;
+      font-size: 13px;
+      color: var(--blue)
+    }
+
+    .chip:hover {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue)
+    }
+
+    .chip[aria-pressed=true] {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue)
+    }
+
+    .bar {
+      height: 5px;
+      background: var(--line);
+      border-radius: 3px;
+      overflow: hidden;
+      margin: 0 0 18px
+    }
+
+    .bar i {
+      display: block;
+      height: 100%;
+      background: var(--gold);
+      transition: width .25s
+    }
+
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 9px;
+      gap: 10px;
+      flex-wrap: wrap
+    }
+
+    .tag {
+      background: var(--navy);
+      color: #fff;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 11.5px;
+      letter-spacing: .03em;
+      text-transform: uppercase
+    }
+
+    .tag.open {
+      background: var(--gold);
+      color: var(--navy)
+    }
+
+    .q {
+      font-size: 19px;
+      line-height: 1.45;
+      margin: 2px 0 18px;
+      font-weight: 550
+    }
+
+    .opts {
+      display: grid;
+      gap: 9px
+    }
+
+    .opt {
+      display: flex;
+      gap: 11px;
+      align-items: flex-start;
+      text-align: left;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 11px 13px;
+      font-size: 15.5px;
+      color: var(--ink)
+    }
+
+    .opt:hover:not(:disabled) {
+      border-color: var(--blue);
+      background: var(--card)
+    }
+
+    .opt kbd {
+      flex: 0 0 auto;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 0 6px;
+      font: 12.5px/1.6 ui-monospace, monospace;
+      color: var(--muted)
+    }
+
+    .opt.right {
+      border-color: var(--ok);
+      background: #eaf6ef
+    }
+
+    .opt.wrong {
+      border-color: var(--ko);
+      background: #fbeceb
+    }
+
+    .opt:disabled {
+      cursor: default;
+      opacity: .95
+    }
+
+    .fb {
+      margin-top: 18px;
+      border-left: 3px solid var(--blue);
+      background: var(--card);
+      padding: 13px 15px;
+      border-radius: 0 6px 6px 0
+    }
+
+    .fb.ok {
+      border-color: var(--ok)
+    }
+
+    .fb.ko {
+      border-color: var(--ko)
+    }
+
+    .fb.half {
+      border-color: var(--half)
+    }
+
+    .fb h3 {
+      margin: 0 0 6px;
+      font-size: 14px;
+      letter-spacing: .02em;
+      text-transform: uppercase
+    }
+
+    .fb.ok h3 {
+      color: var(--ok)
+    }
+
+    .fb.ko h3 {
+      color: var(--ko)
+    }
+
+    .fb.half h3 {
+      color: var(--half)
+    }
+
+    .fb p {
+      margin: .35em 0;
+      font-size: 15px
+    }
+
+    .fb .model {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 11px 13px
+    }
+
+    .ref {
+      font: 12.5px/1.5 ui-monospace, SFMono-Regular, Consolas, monospace;
+      color: var(--muted);
+      margin-top: 9px;
+      word-break: break-all
+    }
+
+    .ref b {
+      color: var(--blue);
+      font-weight: 600
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 20px;
+      flex-wrap: wrap
+    }
+
+    .grades {
+      display: grid;
+      gap: 9px;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      margin-top: 14px
+    }
+
+    .grade {
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 7px;
+      padding: 10px;
+      font-size: 14.5px
+    }
+
+    .grade.a:hover {
+      border-color: var(--ok);
+      background: #eaf6ef
+    }
+
+    .grade.b:hover {
+      border-color: var(--half);
+      background: #fdf5e4
+    }
+
+    .grade.c:hover {
+      border-color: var(--ko);
+      background: #fbeceb
+    }
+
+    .score {
+      font-size: 15px;
+      color: #fff;
+      background: rgba(255, 255, 255, .11);
+      border-radius: 5px;
+      padding: 3px 10px
+    }
+
+    .big {
+      font-size: 44px;
+      font-weight: 700;
+      letter-spacing: -.02em;
+      margin: 0
+    }
+
+    .verdict {
+      display: inline-block;
+      border-radius: 6px;
+      padding: 6px 14px;
+      font-size: 14.5px;
+      font-weight: 600;
+      margin: 12px 0 4px
+    }
+
+    .verdict.pass {
+      background: #eaf6ef;
+      color: var(--ok);
+      border: 1px solid #bfe3cd
+    }
+
+    .verdict.fail {
+      background: #fbeceb;
+      color: var(--ko);
+      border: 1px solid #eecac6
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin: 18px 0;
+      font-size: 14px
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 7px 9px;
+      text-align: left
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 12.5px;
+      text-transform: uppercase;
+      letter-spacing: .03em
+    }
+
+    td.n {
+      text-align: right;
+      font-variant-numeric: tabular-nums
+    }
+
+    .miss {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 11px 13px;
+      margin-bottom: 9px;
+      font-size: 14.5px
+    }
+
+    .miss .ref {
+      margin-top: 5px
+    }
+
+    footer {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
+      color: var(--muted);
+      font-size: 12.5px
+    }
+
+    footer code {
+      background: var(--card);
+      padding: 1px 5px;
+      border-radius: 3px
+    }
+
+    [hidden] {
+      display: none !important
+    }
+
+    @media (max-width:600px) {
+      .q {
+        font-size: 17px
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Entraînement à la soutenance</h1>
+    <span class="sub">Essaims de robots &amp; réseaux de neurones sur graphe — questions tirées du manuscrit</span>
+    <span class="score" id="headscore" hidden></span>
+  </header>
+
+  <main>
+    <!-- ============ ACCUEIL ============ -->
+    <section id="screen-start">
+      <h2>Choisis une session</h2>
+      <p class="lead">Chaque question renvoie à la ligne du manuscrit qui la fonde. Une question ouverte se note
+        toi-même, après l'avoir dite à voix haute&nbsp;: c'est l'exercice de l'oral.</p>
+      <div class="modes">
+        <button class="mode" data-mode="exam"><b>Examen blanc</b><span>30 questions, tous chapitres. Score à
+            atteindre&nbsp;: 80&nbsp;%.</span></button>
+        <button class="mode" data-mode="oral"><b>Simulation d'oral</b><span>15 questions ouvertes, réponse modèle,
+            auto-évaluation.</span></button>
+        <button class="mode" data-mode="chapter"><b>Par chapitre</b><span>Cible un point faible précis, session non
+            notée.</span></button>
+        <button class="mode" data-mode="misses"><b>Revoir mes ratées</b><span id="misscount">Rien d'enregistré pour
+            l'instant.</span></button>
+      </div>
+      <div id="chippicker" hidden>
+        <p class="lead" style="margin-bottom:6px">Chapitre&nbsp;:</p>
+        <div class="chips" id="chips"></div>
+      </div>
+      <div id="bestline" class="meta"></div>
+    </section>
+
+    <!-- ============ QUESTION ============ -->
+    <section id="screen-quiz" hidden>
+      <div class="bar"><i id="progress" style="width:0%"></i></div>
+      <div class="meta">
+        <span><span class="tag" id="tagchapter"></span> <span class="tag open" id="tagtype"></span></span>
+        <span id="counter"></span>
+      </div>
+      <p class="q" id="qtext"></p>
+      <div class="opts" id="opts"></div>
+      <div id="revealwrap">
+        <div class="row"><button class="btn gold" id="reveal">Je l'ai dit à voix haute — afficher la réponse du
+            mémoire</button></div>
+      </div>
+      <div id="feedback" aria-live="polite"></div>
+    </section>
+
+    <!-- ============ RESULTAT ============ -->
+    <section id="screen-result" hidden>
+      <h2>Résultat de la session</h2>
+      <p class="big" id="finalpct"></p>
+      <div id="verdict"></div>
+      <p class="meta" id="finalraw" style="color:var(--muted)"></p>
+      <table id="bychapter">
+        <thead>
+          <tr>
+            <th>Chapitre</th>
+            <th class="n">Réussi</th>
+            <th class="n">Points</th>
+            <th class="n">Score</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+      <div id="misslist"></div>
+      <div class="row">
+        <button class="btn" id="again">Refaire la même session</button>
+        <button class="btn ghost" id="tomisses">Revoir mes ratées</button>
+        <button class="btn ghost" id="home">Changer de mode</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span id="footcount">Les questions</span>. Toutes les réponses sont prises dans <code>latex/chapters/*.tex</code>,
+    <code>config/*.yaml</code> ou <code>outputs/</code>&nbsp;; la référence sous chaque explication est
+    <code>fichier:ligne</code>. Pour retrouver une ligne&nbsp;:
+    <code>sed -n '203p' latex/chapters/experiences.tex</code>.
+    Pour en ajouter, complète le tableau <code>QUESTIONS</code> dans ce fichier&nbsp;— le tirage au sort des
+    options et la notation se règlent tout seuls.
+  </footer>
+
+  <script>
+    /* ==========================================================================
+       Banque de questions.  t:"qcm" -> o=4 options, a=indice de la bonne (mélangée à l'affichage)
+                             t:"open" -> m=réponse attendue du mémoire, auto-évaluation.
+       e = fichier:ligne où le manuscrit énonce le fait. x = justification.
+       ========================================================================== */
+    const QUESTIONS = [
+      /* ---------- Introduction ---------- */
+      { id: "i01", c: "intro", t: "qcm", q: "Comment le mémoire formule-t-il sa question de recherche principale ?", o: ["Un contrôleur centralisé peut-il reproduire des formes précises plus vite qu'un essaim décentralisé", "Un GNN peut-il reconnaître les symboles formés par les robots et les classer", "Un réseau de neurones sur graphes utilisant des informations locales et une consigne commune de forme peut-il apprendre à former des configurations spatiales et conserver un comportement utile lorsque des robots tombent en panne ou que la taille de l'essaim change", "Un simulateur différentiable permet-il d'entraîner directement des robots physiques sans environnement de simulation"], a: 2, e: "introduction.tex:54", x: "La citation placée sous la problématique énonce ces deux volets : former des configurations à partir d'informations locales et d'une consigne commune de forme, et conserver un comportement utile malgré les pannes et le changement de taille de l'essaim." },
+      { id: "i02", c: "intro", t: "qcm", q: "Dans le formalisme retenu par l'auteur, que représentent les arêtes du graphe ?", o: ["les distances mesurées entre robots éloignés", "les communications entre robots", "les points du nuage de la cible", "les positions initiales aléatoires des robots"], a: 1, e: "introduction.tex:33", x: "Les robots sont les nœuds d'un graphe et leurs communications en sont les arêtes ; tous partagent les mêmes paramètres et chacun traite ce que lui envoient ses voisins." },
+      { id: "i03", c: "intro", t: "qcm", q: "Combien d'hypothèses guident l'étude et quel statut l'auteur leur donne-t-il ?", o: ["Trois hypothèses, que des expériences contrôlées devront vérifier", "Quatre hypothèses, déjà établies par les résultats du prototype historique", "Deux hypothèses, la troisième étant écartée explicitement", "Cinq objectifs, à valider sur robots physiques"], a: 0, e: "introduction.tex:89", x: "La section Hypothèses annonce trois hypothèses qui guident l'étude et renvoie leur vérification à des expériences contrôlées ; quatre est le nombre de sous-questions de la problématique, et les cinq objectifs forment une liste distincte." },
+      { id: "i04", c: "intro", t: "qcm", q: "Le jury interroge le périmètre : que le pilote exclut-il explicitement ?", o: ["La position et la vitesse en deux dimensions de chaque robot", "Le retrait de la simulation active d'un robot déclaré hors service", "La portée en dessous de laquelle deux robots communiquent", "Le bruit dans les capteurs, les délais de communication, les obstacles, la dynamique réelle des actionneurs et la consommation d'énergie"], a: 3, e: "introduction.tex:116", x: "Le pilote ne prend pas en compte ces cinq éléments et aucun essai sur robots physiques ne figure dans cette validation ; les trois premières options appartiennent au contraire au modèle retenu." },
+      { id: "i05", c: "intro", t: "qcm", q: "Pourquoi l'auteur écarte-t-il le terme « réseaux de neurones cellulaires » figurant dans le titre déposé ?", o: ["Parce que le code implémente en réalité des réseaux cellulaires et non des GNN", "Parce que le voisinage des robots ne change jamais pendant la simulation", "Parce que ce mot décrivait une intention, la même règle partagée par tous avec des échanges limités aux voisins, et non l'architecture", "Parce que la section consacrée aux réseaux cellulaires déclare la formulation erronée"], a: 2, e: "introduction.tex:161", x: "Le texte distingue l'intention (règle partagée, échanges limités aux voisins) de l'architecture : les robots se déplacent, leur voisinage change à chaque pas et un réseau appris fabrique les messages." },
+      { id: "i06", c: "intro", t: "qcm", q: "Vos robots forment grossièrement une lettre : le système reconnaît-il un symbole ?", o: ["Oui, former grossièrement une lettre suffit à dire que le système la comprend", "Non, nous ne cherchons pas à reconnaître les symboles, seulement à voir si les robots peuvent en reproduire la géométrie", "Oui, la formation des chiffres valide une étape de reconnaissance optique", "Non, les lettres et les chiffres sont exclus de l'ensemble de formes"], a: 1, e: "introduction.tex:195", x: "Une lettre formée grossièrement ne signifie pas que le système la comprend ; chiffres et lettres servent à passer à des formes plus variées, avec angles, segments et contours moins réguliers." },
+      { id: "i07", c: "intro", t: "qcm", q: "Pourquoi représenter les cibles par des nuages de points plutôt que par une image ?", o: ["Parce que le nuage de points dispense de consigne de mission", "Parce que la cible doit être reconstruite pixel par pixel par chaque robot", "Parce que le nuage de points garantit l'absence de collisions pendant la formation", "Parce que la forme devient un ensemble de positions à couvrir au lieu d'une image, ce qui permet de comparer la distribution des robots avec celle du contour cible"], a: 3, e: "introduction.tex:208", x: "La deuxième étape de la configuration expérimentale transforme la forme en positions à couvrir précisément pour comparer distribution des robots et contour cible." },
+      { id: "i08", c: "intro", t: "open", q: "Pourquoi avoir choisi la formation de formes comme cas d'étude plutôt qu'un simple regroupement dans une zone ?", m: "Parce qu'à la différence du simple regroupement, la formation de formes demande aux robots de se répartir sur l'ensemble du contour cible : rassembler plusieurs robots dans une même zone ne donne ni un cercle, ni une lettre, ni un symbole. Le problème reste étudiable dans un simulateur bidimensionnel tout en présentant de vraies difficultés de coordination, notamment la couverture de la cible, les collisions et la connectivité.", e: "introduction.tex:172" },
+      { id: "i09", c: "intro", t: "open", q: "On vous projette une animation où l'essaim dessine un cercle : cela suffit-il à valider votre contrôleur ?", m: "Non. Il faut que les robots s'approchent du contour et en couvrent différentes parties, que les commandes soient limitées et les collisions rares, et que le scénario soit reproductible : même configuration et même graine aléatoire doivent donner le même scénario, et plusieurs graines sont nécessaires pour écarter une seule simulation favorable. La robustesse est testée séparément, car fonctionner avec plus de robots que pendant la formation ne vaut pas généralisation.", e: "introduction.tex:203" },
+      { id: "i10", c: "intro", t: "open", q: "Que revendiquez-vous réellement comme contribution, et d'où viennent les chiffres que vous montrez ?", m: "La contribution est un cadre expérimental reproductible : représentation de formes par des nuages de points, contrôleur GNN partagé et protocole pour reproduire des simulations et analyser les trajectoires enregistrées, sans prétendre à une supériorité générale des GNN sur d'autres méthodes. Les résultats numériques reportés proviennent uniquement du prototype historique ; l'implémentation actuelle a bien été entraînée et soumise à une campagne comparative, mais son analyse reste à écrire.", e: "introduction.tex:228" },
+      /* ---------- Concepts ---------- */
+      { id: "c01", c: "concept", t: "qcm", q: "On vous reproche un entraînement global : votre contrôle est-il encore décentralisé ?", o: ["Oui, car le caractère décentralisé porte sur l'exécution : rien n'empêche d'ajuster des poids à partir d'une mesure calculée sur l'essaim entier tant que l'exécution ne dépend plus que d'observations locales", "Non, car une perte globale rend le contrôleur centralisé pendant l'exécution", "Oui, mais seulement si chaque robot calcule sa propre perte sur son sous-graphe", "Non, sauf si la consigne de forme est elle aussi apprise en ligne"], a: 0, e: "concept.tex:14", x: "Le chapitre distingue trois niveaux, centralisé, décentralisé et apprentissage, et dit que l'apprentissage peut rester global : le caractère décentralisé porte sur la décision de mouvement, pas sur la procédure d'entraînement." },
+      { id: "c02", c: "concept", t: "qcm", q: "Quelle exigence méthodologique une comparaison entre deux contrôleurs doit-elle respecter ?", o: ["Que les deux contrôleurs tournent dans la même arène plane", "Que les deux contrôleurs reçoivent la même information", "Que les deux partagent exactement les mêmes poids", "Que les deux soient évalués sur une seule simulation favorable"], a: 1, e: "concept.tex:16", x: "Une comparaison entre contrôleurs ne vaut que si les deux reçoivent la même information ; le pilote compare justement deux approches qui ne reçoivent pas la même consigne, ce que la discussion inscrit au rang des limites." },
+      { id: "c03", c: "concept", t: "qcm", q: "De quoi dépend le rayon de l'information utile dans l'essaim ?", o: ["De la portée de communication", "Du nombre de formes cibles de la mission", "De la vitesse commandée aux robots", "Du nombre de tours d'échange"], a: 3, e: "concept.tex:22", x: "Un lien direct ne transporte que ce que le voisin immédiat transmet ; une information plus éloignée ne parvient à un robot qu'en traversant une chaîne d'arêtes, donc le rayon utile croît avec le nombre de tours." },
+      { id: "c04", c: "concept", t: "qcm", q: "Tous les robots se sont tassés sur un seul arc du cercle. Quel registre d'évaluation est en échec ?", o: ["La proximité à la cible, car les robots sont mal placés", "Les collisions, car les robots se touchent sur cet arc", "La couverture de la cible : chaque robot actif peut être proche d'un point de la cible alors qu'une zone reste nue", "Aucun, une mesure unique suffit pour juger une formation"], a: 2, e: "concept.tex:51", x: "Le chapitre sépare deux registres qu'il serait faux de confondre, la proximité de chaque robot à un point de la cible et la couverture effective de chaque partie de la cible." },
+      { id: "c05", c: "concept", t: "open", q: "Le fait que votre architecture accepte un nombre variable de voisins constitue-t-il un résultat ?", m: "Non : définir un mécanisme ne prouve pas qu'il fonctionne. Accepter un nombre variable de voisins décrit une propriété de calcul, pas une performance. Cette distinction entre ce que le code permet et ce qu'une campagne montre traverse tout le mémoire.", e: "concept.tex:8" },
+      { id: "c06", c: "concept", t: "open", q: "Pourquoi l'agrégation des messages doit-elle rester invariante par permutation ?", m: "Parce qu'un voisinage se présente comme un ensemble non ordonné, de taille variable, qui change à chaque pas au fil des déplacements. Un calcul qui dépendrait de l'ordre dans lequel les voisins sont énumérés produirait des commandes différentes pour une même configuration physique.", e: "concept.tex:26" },
+      { id: "c07", c: "concept", t: "open", q: "Quelles limites votre chapitre reconnaît-il lui-même à l'approche par réseau de neurones sur graphes ?", m: "Trois limites sont posées. Un réseau à passage de messages reste borné par ce qu'il perçoit : un contrôleur qui ignore une information ne peut pas la reconstituer. L'agrégation choisie n'est pas neutre, car moyenne, somme et attention n'ont pas la même capacité de représentation. Enfin, exécuter avec un effectif différent de celui de l'entraînement est possible du point de vue du calcul, mais l'écart réel entre les deux situations doit être mesuré.", e: "concept.tex:43" },
+      { id: "c08", c: "concept", t: "open", q: "Opposer une règle écrite explicable à une politique apprise opaque vous paraît-il défendable ?", m: "Non, le mémoire juge cette opposition simpliste : les deux approches reposent sur des hypothèses de modélisation. Une règle de flocking suppose que l'attraction, la répulsion et l'alignement suffisent à la mission ; une politique apprise suppose que les exemples vus à l'entraînement couvrent les situations utiles et que la perte favorise bien la formation voulue. Le mémoire ne tranche pas la supériorité d'une famille sur l'autre.", e: "concept.tex:61" },
+      /* ---------- État de l'art ---------- */
+      { id: "a01", c: "art", t: "qcm", q: "Les règles comportementales de Reynolds, telles que le chapitre les résume, en réunissent trois. Lequel de ces termes n'en fait pas partie ?", o: ["La cohésion", "La séparation", "L'alignement", "L'attraction vers un point de cible assigné"], a: 3, e: "etat-art.tex:12", x: "Le texte cite exactement cohésion, séparation et alignement, et ajoute qu'aucune de ces trois règles ne dit quel contour atteindre." },
+      { id: "a02", c: "art", t: "qcm", q: "À qui le manuscrit attribue-t-il le modèle initial de réseau de neurones sur graphe ?", o: ["Scarselli et al.", "Zaheer et al.", "Velickovic et al.", "Tolstaya et al."], a: 0, e: "etat-art.tex:27", x: "Le modèle initial est dû à Scarselli et al., avec propagation des états jusqu'à un point fixe avant décodage ; Zaheer concerne les fonctions invariantes aux permutations, Velickovic l'attention et Tolstaya les contrôleurs appris." },
+      { id: "a03", c: "art", t: "qcm", q: "Parmi les architectures GNN actuelles, quel élément pèse, selon le manuscrit, plus lourd que la famille du modèle ?", o: ["La façon de combiner les messages reçus", "La profondeur jusqu'à un point fixe", "Le choix de la fonction d'activation", "La taille du décodeur"], a: 0, e: "etat-art.tex:27", x: "Les architectures actuelles se distinguent surtout par la façon de combiner les messages reçus ; le point fixe caractérise au contraire le modèle initial." },
+      { id: "a04", c: "art", t: "qcm", q: "Pourquoi le prototype agrège-t-il les messages par une moyenne plutôt que par une somme non normalisée ?", o: ["Parce que la moyenne évite que l'échelle des valeurs grandisse mécaniquement avec le nombre de voisins", "Parce que la moyenne est plus expressive en capacité de représentation", "Parce que la moyenne rend le contrôleur robuste aux voisins défaillants", "Parce que la moyenne remplace avantageusement l'attention"], a: 0, e: "etat-art.tex:29", x: "C'est la raison donnée, et le texte affirme à l'inverse que la moyenne n'égale pas la somme en capacité de représentation ; il reconnaît par ailleurs qu'aucun voisin faussé n'est corrigé." },
+      { id: "a05", c: "art", t: "qcm", q: "Dans l'étude de Jiang, Huang et Guo, quels effectifs d'entraînement et de test sont rapportés pour le cas triangulaire ?", o: ["Entraînement avec cinq robots, tests avec des équipes de quatre à neuf robots", "Entraînement avec cinq robots, tests au seul effectif de cinq", "Entraînement avec vingt robots, tests de cinq à quinze robots", "Entraînement avec cent robots, tests de quarante à cent robots"], a: 0, e: "etat-art.tex:117", x: "La politique est entraînée avec cinq robots et testée de quatre à neuf ; ces effectifs décrivent le périmètre des essais rapportés, pas une performance du prototype." },
+      { id: "a06", c: "art", t: "qcm", q: "Sur les trois contrôles qu'exigerait une étude plus complète, lequel n'a encore fait l'objet d'aucune comparaison dans ce mémoire ?", o: ["La profondeur des messages", "Une règle manuelle recevant une description de cible comparable", "Un réseau sans communication entre voisins mais avec la même consigne", "Le retrait de la consigne géométrique"], a: 0, e: "etat-art.tex:133", x: "Deux des trois ablations ont depuis été entraînées et évaluées, la règle manuelle à consigne comparable et le réseau sans communication ; la troisième, la profondeur des messages, reste non comparée, et aucun résultat n'est reporté." },
+      { id: "a07", c: "art", t: "qcm", q: "Le formalisme des réseaux de neurones cellulaires, rappelé à propos de l'intitulé initial du mémoire, est introduit par qui ?", o: ["Chua et Yang", "Reynolds", "Zaheer et al.", "Hsieh, Kumar et Chaimowicz"], a: 0, e: "etat-art.tex:174", x: "Ce formalisme est attribué à Chua et Yang, chaque cellule n'interagissant qu'avec son voisinage immédiat ; le mémoire n'y voit qu'une inspiration, non une implémentation littérale." },
+      { id: "a08", c: "art", t: "open", q: "Les règles de flocking et les résultats sur l'accord distribué vous donnent-ils une garantie de convergence pour votre politique de formation ?", m: "Non. Le manuscrit leur reconnaît une utilité surtout analytique : elles rappellent qu'il faut surveiller la connectivité, l'accord entre agents dépendant de l'évolution du graphe d'interaction. Mais aucune garantie de convergence n'est offerte pour une politique de formation non linéaire, et aucune des trois règles de Reynolds ne désigne le contour à atteindre.", e: "etat-art.tex:12" },
+      { id: "a09", c: "art", t: "open", q: "Pourquoi ne pas s'en tenir à une loi potentielle explicitement écrite, plus lisible qu'un réseau appris ?", m: "La loi potentielle offre en effet une meilleure lisibilité : quand quelque chose ne va pas, on peut remonter à un terme et le corriger, puisqu'elle fixe les forces d'attraction, de répulsion et parfois d'alignement ainsi que leurs gains et distances d'action. Son inconvénient est que, pour des formes plus complexes ou une contrainte supplémentaire, la loi doit être redérivée plusieurs fois et de nombreux ajustements restent manuels.", e: "etat-art.tex:21" },
+      { id: "a10", c: "art", t: "open", q: "Que se passe-t-il si un robot voisin transmet une information faussée à votre agrégation par moyenne ?", m: "Rien ne la corrige : la contribution de ce voisin pèse exactement 1/|N(i)|, limite que le manuscrit assume. La moyenne respecte néanmoins l'invariance à la permutation qu'impose un voisinage dont la taille et l'ordre changent à chaque pas. Une étude de robustesse devra comparer la moyenne à une agrégation tronquée ou pondérée par l'attention ; avant cela, rien ne peut être conclu sur le comportement du contrôleur avec des capteurs défaillants.", e: "etat-art.tex:33" },
+      { id: "a11", c: "art", t: "open", q: "Avez-vous démontré que le gradient à travers un simulateur différentiable est supérieur à l'imitation ou au renforcement multi-agents ?", m: "Non. Le choix du gradient direct est motivé par le coût, la variance du gradient et la reproductibilité du prototype, et il ne repose sur aucune comparaison expérimentale entre ces paradigmes. Le manuscrit écrit explicitement que cette supériorité n'a pas été démontrée et que la question reste ouverte.", e: "etat-art.tex:53" },
+      { id: "a12", c: "art", t: "open", q: "Dans votre mémoire, que signifie au juste « décentralisé », et quelle hypothèse ferait tomber ce qualificatif ?", m: "Un contrôleur peut être décentralisé à l'exécution tout en ayant été entraîné de manière centralisée, et il peut utiliser une consigne commune sans recevoir les états distants de tous les robots. Ce qui contredirait l'hypothèse de travail serait de calculer à chaque pas une affectation globale des robots à la cible, puis de la transmettre à chacun. Le prototype évite cette opération à l'exécution, mais la consigne géométrique partagée demeure une hypothèse forte.", e: "etat-art.tex:141" },
+      /* ---------- Méthode ---------- */
+      { id: "m01", c: "methode", t: "qcm", q: "Le contrôleur affecte-t-il un robot précis à chaque point cible ?", o: ["Non, la formation répartit les robots actifs autour des points cibles sans lier définitivement un robot à un point", "Oui, chaque robot reçoit un point exclusif par une affectation bijective figée au départ", "Oui, mais seulement dans la variante à identifiant de forme seul", "Oui, l'affectation est recalculée à chaque pas et fait partie de la sortie du réseau"], a: 0, e: "methode.tex:14", x: "La ligne pose explicitement l'absence de lien définitif robot-point, ce qui est justement ce qui rend la distance de Chamfer utilisable sans affectation bijective." },
+      { id: "m02", c: "methode", t: "qcm", q: "Deux robots exactement superposés sont-ils reliés dans le graphe de communication ?", o: ["Non, la distance doit être strictement positive, l'arête propre d'un sommet vers lui-même est exclue", "Oui, une distance nulle reste inférieure à r_c donc l'arête existe", "Oui, mais uniquement pendant le premier tour de messages", "Non, car tout robot immobile est automatiquement exclu du graphe"], a: 0, e: "methode.tex:39", x: "Deux robots actifs sont reliés si leur distance est strictement positive et ne dépasse pas r_c, la diagonale étant exclue. Ces robots superposés comptent quand même dans la mesure de proximité dangereuse." },
+      { id: "m03", c: "methode", t: "qcm", q: "Les dix identifiants du découpage de test interviennent-ils dans le choix du meilleur modèle ?", o: ["Non, les formes de test n'interviennent ni dans la mise à jour des poids ni dans le choix du meilleur modèle", "Oui, elles servent de validation quand le pentagone échoue", "Oui, elles n'interviennent que dans la sélection du meilleur modèle", "Le texte ne le précise pas, la séparation est laissée à l'expérimentateur"], a: 0, e: "methode.tex:65", x: "Le partage entraînement, validation, test est de 45, neuf et dix identifiants, et les formes du test restent hors du réglage ; la sélection du meilleur état se fait sur la validation." },
+      { id: "m04", c: "methode", t: "qcm", q: "Que reçoit la variante géométrique en plus de la vitesse précédente et de l'identifiant de forme appris ?", o: ["Deux composantes, la direction unitaire vers le point cible le plus proche, sans la distance", "Le déplacement complet vers le point cible, longueur comprise", "La position absolue du robot dans l'arène", "La distance scalaire au point cible le plus proche, sans direction"], a: 0, e: "methode.tex:69", x: "Seulement la direction, et elle est nulle au point même. La règle manuelle, elle, travaille avec le déplacement complet : la comparaison règle manuelle contre GNN n'est donc pas faite à information strictement égale." },
+      { id: "m05", c: "methode", t: "qcm", q: "Pourquoi l'agrégation des messages se fait-elle par moyenne ?", o: ["Parce que la moyenne borne l'échelle de l'agrégat par le nombre de voisins, tout en restant invariante à l'ordre", "Parce que la somme est incompatible avec la tangente hyperbolique du décodeur", "Parce que la seule agrégation permutation-équivariante est la moyenne", "Parce que l'ancien prototype imposait la moyenne"], a: 0, e: "methode.tex:83", x: "L'équation normalise par le nombre de voisins. Les distracteurs sont faux : une somme reste permutation-équivariante, et la projection du décodeur est indépendante de l'agrégateur. config/model.yaml:7 garde mean comme valeur nominale et n'ouvre normalized_sum et attention que comme bonus non retenus." },
+      { id: "m06", c: "methode", t: "qcm", q: "Que devient l'état latent d'un robot sans voisin, et comment la mise à jour est-elle construite ?", o: ["L'agrégat est nul et l'état suivant ajoute à l'état précédent une correction apprise, la connexion résiduelle étant bien dans le modèle", "L'agrégat est nul et le robot est retiré des commandes actives", "Le message est remplacé par la vitesse précédente et la connexion résiduelle est coupée", "Le tour est sauté et le décodage utilise l'entrée brute du robot"], a: 0, e: "methode.tex:90", x: "Voisinage vide donne agrégat nul et mise à jour résiduelle, avec deux transformations affines séparées par une ReLU, paramètres communs aux robots mais propres à chaque tour." },
+      { id: "m07", c: "methode", t: "qcm", q: "En configuration nominale, combien de tours de messages et qu'autorisent-ils ?", o: ["Deux tours, donc accès aux informations situées à deux sauts au plus sur un graphe fixé pendant le calcul", "Un tour, donc uniquement les voisins directs", "Trois tours, donc accès à toute l'arène", "Six tours, donc agrégation globale du nuage"], a: 0, e: "methode.tex:92", x: "La nominale est à deux tours, les variantes préparées en prennent un, deux ou trois, et un tour n'est pas une simple couche : message, moyenne, correction résiduelle." },
+      { id: "m08", c: "methode", t: "qcm", q: "Qu'est-ce qui garantit que la norme euclidienne de la commande reste bornée par v_max ?", o: ["La projection radiale dans la boule de rayon v_max, appliquée après la tangente hyperbolique", "La tangente hyperbolique, qui borne directement la norme euclidienne", "La ReLU des couches internes", "Le terme de mouvement de la fonction de perte"], a: 0, e: "methode.tex:103", x: "La tangente hyperbolique borne chaque composante séparément ; c'est la projection qui garantit la borne euclidienne. Le terme de mouvement ne fait que décourager les vitesses élevées, il ne borne rien." },
+      { id: "m09", c: "methode", t: "qcm", q: "Quelle propriété géométrique le contrôleur ne revendique-t-il pas ?", o: ["L'invariance générale par rotation des positions", "L'équivariance au réordonnancement des robots", "L'indépendance de l'agrégat vis-à-vis de l'ordre des voisins", "L'invariance par translation lorsque robots et cible sont translatés ensemble"], a: 0, e: "methode.tex:105", x: "Aucune invariance générale par rotation n'est revendiquée ; la translation n'est neutre que pour les messages relatifs et, dans la variante géométrique, seulement si l'on déplace aussi la cible, hors effets de frontière." },
+      { id: "m10", c: "methode", t: "qcm", q: "Quelle réponse exacte donner quand le jury demande combien de pas dure un épisode ?", o: ["60 pas par défaut dans le simulateur, 40 pour le profil d'entraînement sur le cercle, 120 pour la campagne d'évaluation", "60 pas dans tous les cas, c'est la valeur unique", "20 pas, la valeur du prototype pilote", "120 pas dans tous les cas, l'évaluation faisant foi"], a: 0, e: "methode.tex:160", x: "La ligne énonce les trois horizons et met en garde contre la confusion avec les vingt pas du pilote. config/simulator.yaml:7 porte horizon à 60, config/training.yaml:34 descend à 40 pour les profils d'entraînement." },
+      { id: "m11", c: "methode", t: "open", q: "Pourquoi avoir appris à travers la simulation différentiable plutôt que par renforcement ou par imitation ?", m: "Les poids sont ajustés à partir d'une perte globale calculée sur la simulation déroulée, sans commandes d'expert et sans récompenses individuelles. Ce choix donne un signal dense le long de la trajectoire, là où une récompense unique en fin d'épisode serait éparse et où l'imitation exigerait un expert dont nous ne disposons pas. La réserve est honnête : la différentiabilité reste par morceaux, le gradient ne traverse ni l'apparition d'une arête ni le changement d'indice du point le plus proche.", e: "methode.tex:145" },
+      { id: "m12", c: "methode", t: "open", q: "Que démontre réellement votre variante sans communication ?", m: "Elle garde le modèle à deux tours et le même nombre de paramètres, mais fonctionne sur un graphe vide : les agrégats sont nuls tandis que les transformations locales et les connexions résiduelles restent actives. Ce n'est donc pas un réseau sans couches de messages, et l'ablation isole l'effet des échanges sans retirer des paramètres en même temps. Le réglage correspondant est no_comm dans config/training.yaml:64.", e: "methode.tex:107" },
+      { id: "m13", c: "methode", t: "open", q: "Comment définissez-vous un épisode réussi, et pourquoi cette convention est-elle plus sévère que celle du pilote ?", m: "Un épisode est réussi s'il existe un pas à partir duquel toutes les distances enregistrées restent inférieures ou égales à 0,15 jusqu'à la fin de l'horizon observé, et on rapporte le début de ce suffixe. Franchir le seuil puis le repasser ne suffit donc pas, alors que le pilote historique retenait le premier franchissement d'un seuil de 0,5 avant le dernier pas. Les pourcentages des deux conventions ne sont pas comparables, et un suffixe d'un seul état reste accepté : rien ne prouve une stabilité durable au-delà de l'horizon observé.", e: "methode.tex:220" },
+      { id: "m14", c: "methode", t: "open", q: "Parlez-vous vraiment de contrôle décentralisé ?", m: "La localité visée est la dépendance de la commande envers les autres robots : le programme calcule tout dans un simulateur unique, mais les messages des robots non voisins sont masqués, ce qui rend une exécution locale possible en principe. Cela reste loin d'un déploiement distribué sur du matériel ou un réseau radio, et les hypothèses nominales supposent un repère commun, des observations exactes et des échanges synchrones.", e: "methode.tex:75" },
+      { id: "m15", c: "methode", t: "open", q: "Votre architecture garantit-elle le passage à l'échelle ?", m: "Non, le coût de calcul reste une limite ouverte : la représentation matricielle des messages calcule toutes les paires avant le masquage, donc mémoire et temps peuvent croître de façon quadratique avec le nombre de robots alors même que l'agrégation finale reste locale. S'y ajoutent le déroulement temporel conservé jusqu'à la rétropropagation et des épisodes de lot exécutés l'un après l'autre. Le transfert de taille est préparé à poids gelés pour 20, 40 et 100 robots.", e: "methode.tex:264" },
+      /* ---------- Configuration et artefacts ---------- */
+      { id: "g01", c: "config", t: "qcm", q: "Quelle est la portée de communication r_c et dans quelle unité ?", o: ["1.5, en unités du cadre normalisé où le rayon de cible vaut 1", "0.1, la distance de sécurité entre robots", "1.8, le rayon du disque de départ", "4.0, le côté de l'arène"], a: 0, e: "config/simulator.yaml:6", x: "Valeur littérale r_c 1.5, sur une arène carrée de 4.0 de côté. Les distracteurs sont de vraies valeurs du projet mais d'autres réglages : 0.1 la distance de sécurité, 1.8 le spawn_radius, 4.0 l'arena_size." },
+      { id: "g02", c: "config", t: "qcm", q: "Quels poids sont configurés pour les pertes de collisions et de mouvement ?", o: ["0.5 pour les collisions et 0.02 pour le mouvement", "1.0 pour les collisions et 0.5 pour le mouvement", "0.02 pour les collisions et 0.5 pour le mouvement", "0.5 pour les collisions et 1.0 pour le mouvement"], a: 0, e: "config/training.yaml:18", x: "collisions vaut 0.5 et motion 0.02, forme et couverture valant 1.0 ; methode.tex:141 reprend ces valeurs et précise qu'aucune ablation n'a encore établi l'effet causal de chaque composante." },
+      { id: "g03", c: "config", t: "qcm", q: "Comment se répartissent les 64 identifiants de formes de la configuration ?", o: ["sept géométries, dix chiffres, 26 lettres et 21 nombres", "sept géométries, vingt chiffres, vingt lettres et dix-sept nombres", "trois géométries, trois chiffres, trois lettres et deux nombres", "dix géométries, dix chiffres, 26 lettres et 18 nombres"], a: 0, e: "methode.tex:54", x: "La configuration définit cette répartition sur une grille de 128x128 pixels. La deuxième option décrit le curriculum réduit historique : trois par niveau, onze cibles au dernier niveau." },
+      { id: "g04", c: "config", t: "open", q: "Quelle largeur de représentation utilisez-vous dans le contrôleur ?", m: "La largeur cachée est hidden_dim 64 et l'embedding de l'identifiant de forme vaut embedding_dim 16, ce qui correspond au texte : une entrée de 20 dimensions avec géométrie, 18 sans. La représentation de forme est apprise, pas fournie en dur, et aucun poids ne vit dans le code, tout vient de la configuration. Ces dimensions sont des choix configurés, non des résultats optimisés.", e: "config/model.yaml:3" },
+      { id: "g05", c: "config", t: "open", q: "Combien de tours de messages retenez-vous finalement, et comment justifier ce nombre ?", m: "La valeur nominale est message_rounds 2 dans config/model.yaml:5, ce qui correspond au texte de methode.tex:92. Mais config/training.yaml:61 à 64 prépare explicitement les variantes à un, deux et trois tours plus no_comm à deux tours sans communication. La réponse honnête est donc : deux tours par défaut comme hypothèse de conception, trois tours en variante, et le meilleur modèle se choisit sur la distance moyenne de validation, pas a priori.", e: "config/model.yaml:5" },
+      { id: "g06", c: "config", t: "open", q: "Arène, pas de temps, vitesse maximale : pourquoi l'horizon d'entraînement de 40 pas suffit-il ?", m: "L'arène est un carré de côté 4.0 centré sur l'origine, avec dt 0.1 et v_max 1.0. Le commentaire de config/training.yaml:34 fait le calcul : 40 pas fois v_max fois dt donnent 4 unités de déplacement cumulé, soit de quoi traverser l'arène. C'est un horizon de commodité de l'entraînement, pas une mesure de convergence : le simulateur garde 60 pas par défaut et l'évaluation 120, donc toute conclusion de stabilité vaut seulement sur l'horizon observé.", e: "config/training.yaml:34" },
+      { id: "d01", c: "data", t: "qcm", q: "On t'ouvre outputs/training/size_100/gnn_2_rounds/seed_11 : un best.pt y figure. Le mémoire affirme pourtant que le modèle à 100 robots reste inachevé. Qui a raison ?", o: ["Le mémoire : le dossier ne contient ni losses.csv, ni validation.csv, ni summary.json, et status.json porte running, trace d'un entraînement interrompu", "Le mémoire a tort : un best.pt prouve un entraînement terminé", "Les deux : le run est terminé mais ses métriques ont été effacées", "Le fichier best.pt vient d'un entraînement à 40 robots copié"], a: 0, e: "methode.tex:192", x: "methode.tex:192 annonce des modèles entraînés pour 20 et pour 40 et celui de 100 robots inachevé ; outputs/training/size_100/gnn_2_rounds/seed_11/status.json porte status running, et le dossier ne contient aucun fichier de métriques, contrairement à size_40 qui porte completed." },
+      { id: "d02", c: "data", t: "qcm", q: "Le provenance.json de la campagne d'évaluation liste des conditions sautées. Lesquelles ?", o: ["Quatre graines de la variante gnn_3_rounds, 12 à 15, signalées comme runs incomplets", "Toutes les variantes sans communication", "Les deux tailles d'essaim extrêmes", "Les formes du curriculum réduit"], a: 0, e: "outputs/evaluation_pilot/provenance.json", x: "Le champ skipped énumère les graines 12, 13, 14 et 15 de gnn_3_rounds pour run incomplet ; evaluated liste gnn_3_rounds à la graine 11 seule et no_comm de 11 à 15. C'est la preuve que la campagne est partielle et le dit." },
+      { id: "d03", c: "data", t: "qcm", q: "Dans le tableau de correspondance pilote / implémentation actuelle, que retient la colonne actuelle pour l'évaluation ?", o: ["50 répétitions par condition, cinq graines prévues et une seule entraînée pour le contrôleur avec messages", "Dix épisodes par condition et une graine unique", "Une seule exécution par forme, sans graine fixée", "Cent épisodes par condition et dix graines"], a: 0, e: "experiences.tex:30", x: "La ligne oppose dix épisodes par condition avec modèle fixe pour le pilote à 50 répétitions par condition et cinq graines prévues pour l'actuelle, une seule ayant été entraînée pour le contrôleur avec messages." },
+      /* ---------- Expériences ---------- */
+      { id: "e01", c: "exp", t: "qcm", q: "Selon le chapitre, que constitue en premier lieu le résultat du pilote ?", o: ["Un contrôle de bon fonctionnement de la chaîne expérimentale", "La validation du contrôleur de l'implémentation actuelle", "La preuve que la politique généralise aux lettres de l'alphabet", "L'établissement d'une robustesse générale aux pannes"], a: 0, e: "experiences.tex:287", x: "Le premier résultat du pilote est nommé contrôle de bon fonctionnement de la chaîne expérimentale, et la ligne 6 refuse ces résultats comme validation du contrôleur actuel." },
+      { id: "e02", c: "exp", t: "open", q: "Le jury : que retirons-nous vraiment de ce pilote, et que ne peut-il pas établir ?", m: "Le pilote a vérifié l'enchaînement complet des scripts, de la production des épisodes à l'agrégation et à la génération des graphiques sans intervention manuelle, et a fait apparaître un écart important entre le GNN conditionné par la cible et la règle de regroupement. Cet écart justifie de poursuivre les expériences, mais ne suffit ni à conclure à la supériorité générale d'une méthode ni à valider l'implémentation actuelle.", e: "experiences.tex:333" },
+      { id: "e03", c: "exp", t: "open", q: "Le jury : vos tableaux présentent-ils les performances du système que vous livrez aujourd'hui ?", m: "Non, tout ce que contient le chapitre, expériences, tableaux, courbes et valeurs, concerne le prototype pilote et rien d'autre. L'implémentation actuelle a bien été entraînée et évaluée avec ses références, mais ses chiffres ne figurent pas ici et ne peuvent être validés par les données du pilote. Le chapitre sert à documenter un protocole et ses limites, sans confondre une propriété implémentée ou testée avec une performance obtenue après apprentissage.", e: "experiences.tex:6" },
+      { id: "e04", c: "exp", t: "qcm", q: "Le tableau récapitulatif retient que le GNN atteint une Chamfer inférieure à celle de la règle de regroupement sur cible circulaire avec 20 robots et 10 graines. Que rappelle la colonne à confirmer ?", o: ["La comparaison reste limitée à une cible circulaire et à une baseline ne recevant pas la même consigne", "Le résultat s'étend à toutes les formes du curriculum réduit", "Le GNN domine toute règle décentralisée possible", "La comparaison a déjà été menée avec 50 répétitions par condition"], a: 0, e: "experiences.tex:355", x: "La même ligne inscrit en face que la comparaison reste limitée à une cible circulaire et à une baseline ne recevant pas la même consigne." },
+      { id: "e05", c: "exp", t: "open", q: "En quoi la convention de succès du pilote diffère-t-elle de celle de l'implémentation actuelle, et quel risque de confusion ce décalage crée-t-il ?", m: "Le prototype historique valide un franchissement de 0,5 avant le dernier pas, alors que l'implémentation actuelle exige un suffixe sous 0,15 jusqu'au dernier état en distance normalisée ; le tableau de correspondance les inscrit comme deux lignes distinctes, comme il distingue la Chamfer quadratique ancienne de la distance non carrée normalisée. Les pourcentages du chapitre gardent la convention historique et n'ont pas été recalculés. Un taux de succès de 0,10 affiché à 20 robots sans panne ne peut donc pas être lu comme un résultat de la version en cours.", e: "experiences.tex:28" },
+      { id: "e06", c: "exp", t: "qcm", q: "Comment la convention historique définit-elle le succès d'un épisode ?", o: ["Le premier franchissement de 0,5 avant le dernier pas, sans exiger que la distance reste ensuite sous le seuil", "Un suffixe de distance normalisée resté sous 0,15 jusqu'au dernier état", "Un franchissement du seuil accompli au seul dernier pas", "Une Chamfer moyenne des dix graines inférieure à 0,5"], a: 0, e: "experiences.tex:79", x: "Le texte définit ce franchissement avant le dernier pas, exclut le franchissement au seul dernier pas et n'exige aucune stabilité ultérieure ; la seconde option est la convention actuelle." },
+      { id: "e07", c: "exp", t: "qcm", q: "La graine 103 termine à 0,499, donc sous le seuil, et n'est pas comptée comme succès ; la graine 107 termine à 0,521, au-dessus du seuil, et compte comme succès. Pourquoi ?", o: ["Parce que la convention porte sur le franchissement avant la fin de l'épisode, pas sur la distance finale", "Parce que 0,499 est en réalité au-dessus du seuil de 0,5", "Parce que la graine 107 a le taux de succès stabilisé le plus élevé", "Parce que ces taux ont été recalculés avec la convention actuelle"], a: 0, e: "experiences.tex:203", x: "La graine 103 ne passe sous le seuil qu'au dernier pas et la graine 107 compte comme succès malgré 0,521 car le maintien sous le seuil n'est pas exigé. Le taux réagit fortement aux petits écarts, pouvant passer de 10 à 0 pour cent sans changement qualitatif." },
+      { id: "e08", c: "exp", t: "qcm", q: "Dans le passage à l'échelle sans panne du protocole pilote, quelle Chamfer moyenne le GNN obtient-il avec 100 robots ?", o: ["0,522", "0,428", "0,592", "3,507"], a: 1, e: "experiences.tex:135", x: "La ligne du tableau donne GNN, 100 robots, Chamfer 0,428 et taux de succès 1,00 ; 0,522 correspond à 40 robots, 0,592 à 20 robots et 3,507 au regroupement à 100 robots." },
+      { id: "e09", c: "exp", t: "qcm", q: "Le texte signale que les vingt points cibles sont répétés pour remplir le tableau à la bonne taille. Que permet d'affirmer cette précision ?", o: ["Que la duplication seule n'explique pas mécaniquement l'amélioration, répéter uniformément chaque point ne changeant pas la Chamfer moyennée à positions de robots fixées", "Que l'amélioration observée est un artefact de cette duplication", "Que la Chamfer moyennée change nécessairement quand on répète uniformément les points", "Que le gain de 0,592 à 0,428 est attribuable à la seule politique du GNN"], a: 0, e: "experiences.tex:121", x: "La ligne énonce la neutralité de la duplication uniforme à positions fixées puis refuse d'attribuer le gain à la seule politique, le succès passant de 10 à 100 pour cent." },
+      { id: "e10", c: "exp", t: "open", q: "La Chamfer baisse de 0,592 à 0,428 quand on passe de 20 à 100 robots : votre politique devient donc meilleure à grande échelle ?", m: "Non, le chapitre interdit cette lecture : la baisse peut venir d'une meilleure couverture quand les robots sont plus nombreux, mais aussi d'un changement de densité et de graphe. Le succès qui passe de 10 à 100 pour cent empêche justement d'attribuer le gain à la seule politique, et l'architecture ne s'effondre pas simplement parce que les paramètres sont partagés. Le tableau se lit comme un contrôle de bon fonctionnement à dix épisodes par condition, alors que l'entraînement de référence utilisait 20 robots.", e: "experiences.tex:121" },
+      { id: "e11", c: "exp", t: "qcm", q: "Que modélise précisément le retrait d'un robot dans le protocole de panne ?", o: ["Une déconnexion propre : robot figé, commandes annulées, exclu du graphe, du comptage des collisions et de la mesure finale", "Un robot devenu obstacle physique pour ses voisins", "Un robot immobile qui émet des mesures aberrantes", "Une perte de paquets qui retarde les messages des voisins"], a: 0, e: "experiences.tex:154", x: "Le texte décrit le figement, l'annulation des commandes et l'exclusion du graphe, du comptage et de la mesure, et dit explicitement que cela ne modélise ni un obstacle ni des mesures aberrantes ; les délais et pertes sont nuls dans la simulation." },
+      { id: "e12", c: "exp", t: "qcm", q: "Entre 0 et 20 pour cent de retrait, la distance de forme du GNN passe de 0,592 à 0,638. Comment le chapitre situe-t-il cette variation ?", o: ["Environ 8 pour cent de plus, la règle de regroupement variant de façon comparable en valeur absolue mais à un niveau de distance six fois plus élevé", "Environ 47 pour cent de plus, ce qui égale la dispersion entre graines", "Environ 8 pour cent de plus, mais le regroupement reste à un niveau six fois plus faible", "Environ 59 pour cent de plus, ce qui annule le gain du GNN"], a: 0, e: "experiences.tex:223", x: "La hausse est chiffrée à environ 8 pour cent avec le niveau six fois plus élevé du regroupement ; 47 pour cent désigne la dispersion entre graines et 59 pour cent la lecture normalisée de 0,592." },
+      { id: "e13", c: "exp", t: "open", q: "Votre taux de collisions tombe de 0,021 à 0,013 après retrait de 20 pour cent des robots : l'essaim devient donc plus sûr ?", m: "Non, c'est la première précaution de lecture du chapitre : le retrait change à la fois les paires actives considérées et leur nombre, qui sert justement à la normalisation, si bien que cette baisse ne suffit pas à établir un comportement plus sûr. La seconde précaution note que l'écart-type du regroupement est plus élevé à 20 pour cent de retrait sans croître régulièrement entre conditions, ce qui reste compatible avec une forte dépendance à la configuration initiale. Dix épisodes ne suffisent pas à dégager une tendance générale.", e: "experiences.tex:240" },
+      { id: "e14", c: "exp", t: "qcm", q: "Entre le meilleur et le moins bon épisode du pilote à 20 robots sans retrait, la distance de forme varie d'environ 47 pour cent. D'où vient cette dispersion ?", o: ["Uniquement des positions initiales, la graine d'entraînement et le modèle étant fixes", "De la diversité des graines d'entraînement employées pour ce pilote", "Du changement de largeur cachée du GNN entre épisodes", "De la fraction de robots retirés à mi-épisode"], a: 0, e: "experiences.tex:201", x: "L'étalement est attribué aux seules positions initiales puisque graine et modèle sont fixes ; le cas considéré est celui sans retrait, à 20 robots." },
+      { id: "e15", c: "exp", t: "qcm", q: "Comment le chapitre qualifie-t-il le faible écart du GNN entre 0 et 20 pour cent de pannes ?", o: ["Encourageant dans ce périmètre précis, mais l'échantillon reste trop petit pour en tirer un intervalle de confiance solide", "La démonstration d'une robustesse générale aux retraits", "Un résultat suffisant pour comparer des distributions entre conditions", "Un artefact de la normalisation des distances par le rayon de la cible"], a: 0, e: "experiences.tex:143", x: "Le qualificatif encourageant est associé dans ce périmètre précis à l'absence d'échantillon suffisant pour un intervalle de confiance solide, et le chapitre réclame au moins 50 répétitions pour la campagne finale." },
+      { id: "e16", c: "exp", t: "qcm", q: "Les pertes finales enregistrées du curriculum réduit sont 0,362, 0,251, 0,240 et 0,117. Pourquoi le chapitre refuse-t-il de les comparer d'un niveau à l'autre ?", o: ["Parce que les ensembles de cibles et l'état initial du modèle changent entre niveaux", "Parce qu'il s'agit en réalité de distances de Chamfer normalisées", "Parce que le niveau nombres n'a jamais été exécuté dans le prototype", "Parce que chaque valeur provient d'une graine d'entraînement différente"], a: 0, e: "experiences.tex:243", x: "La comparaison est déclarée inutile pour ces deux raisons ; le niveau nombres figure bien au tableau, la graine du curriculum reste 43 et la grandeur est une perte, pas une Chamfer." },
+      { id: "e17", c: "exp", t: "qcm", q: "La perte moyenne des cibles anciennes descend de 0,333 à 0,163 entre les deuxième et quatrième étapes. Que ne garantit pas cette série ?", o: ["Ni qu'aucune cible particulière se dégrade, ni l'absence d'oubli, car les ensembles de cibles anciennes changent d'une étape à l'autre", "L'absence d'oubli sur toutes les cibles déjà vues", "Que les symboles sont plus faciles à former que la géométrie", "Que le lot conserve un ensemble de cibles identique à chaque étape"], a: 0, e: "experiences.tex:271", x: "La ligne borne explicitement la lecture de 0,333 à 0,163 et interdit d'en conclure que les nouvelles cibles sont plus faciles, la géométrie, les espacements, l'ensemble d'entraînement et l'état des poids changeant ensemble." },
+      { id: "e18", c: "exp", t: "open", q: "Vous annoncez 0,117 comme perte finale du niveau nombres et le tableau des cibles indique 0,163 pour les anciennes avec 0,117 pour les nouvelles : n'y a-t-il pas contradiction ?", m: "Non, ce sont deux grandeurs différentes : la première série est la perte du lot enregistrée à la dernière itération de chaque étape, le tableau rapporte la perte réévaluée cible par cible à la fin de l'étape puis moyennée entre cibles déjà vues et cibles nouvellement introduites. Le chapitre dit explicitement que ces deux séries n'ont aucune raison d'être identiques et qu'elles se complètent sans se contredire. La coïncidence sur 0,117 au niveau nombres ne rend donc pas les deux grandeurs interchangeables.", e: "experiences.tex:245" },
+      { id: "e19", c: "exp", t: "qcm", q: "Le plan final prévoit de combiner trois tailles d'essaim, quatre fractions de retrait et cinquante graines. Quelle précaution de comparaison le texte impose-t-il ?", o: ["Fixer chaque condition avant de regarder les résultats et réutiliser les mêmes positions initiales pour comparer deux contrôleurs", "Sélectionner après coup les graines les plus favorables à chaque méthode", "Faire suivre aux deux contrôleurs des séries de départs distinctes pour élargir l'échantillon", "Ne conserver que le meilleur épisode par condition dans le tableau de synthèse"], a: 0, e: "experiences.tex:327", x: "Chaque condition doit être fixée avant observation et les mêmes positions initiales réutilisées afin que l'écart ne vienne pas d'une série de départs plus favorable ; ailleurs le texte exige au contraire d'afficher un exemple favorable et un défavorable." },
+      { id: "e20", c: "exp", t: "open", q: "Pourquoi aucun intervalle de confiance n'apparaît-il autour de 0,592 ni autour des pertes du curriculum ?", m: "Parce que dix épisodes par condition suffisent pour vérifier que les scripts fonctionnent et pour repérer un écart important entre deux méthodes, mais pas pour estimer précisément une moyenne, comparer des distributions ou établir un intervalle de confiance solide. Le chapitre retient cinquante répétitions par condition pour la suite, les agrégats devant alors éclairer sans remplacer une analyse statistique complète. Les écarts-types consignés au tableau des retraits décrivent la dispersion observée et ne constituent pas une inférence.", e: "experiences.tex:315" },
+      { id: "e21", c: "exp", t: "open", q: "Pouvez-vous affirmer que le modèle généralise à des symboles non vus à l'entraînement ?", m: "Non, et le chapitre en fait sa troisième menace de validité : les nombres et les lettres du curriculum réduit sont peu nombreux et servent pendant l'entraînement, donc savoir former A, B ou C ne prouve pas la généralisation à toutes les lettres. Une expérience dédiée devra réserver des formes entières avant l'entraînement puis mesurer la performance sur ces cibles inconnues sans toucher aux poids du modèle. En l'état, les lettres et les nombres restent des formations approximatives, peu lisibles.", e: "experiences.tex:319" },
+      { id: "e22", c: "exp", t: "open", q: "Votre GNN bat la règle de regroupement : n'est-ce pas la preuve de la supériorité d'un contrôleur appris sur une règle décentralisée ?", m: "Non : la règle de regroupement ne reçoit aucune consigne explicite de cercle et répond à un problème d'information différent, si bien que le tableau montre seulement que le contrôleur entraîné s'approche davantage du cercle dans le protocole retenu. Le texte refuse explicitement d'en conclure un meilleur résultat que n'importe quelle règle décentralisée disposant de la même consigne. Une comparaison juste exige une règle classique ayant accès à la même cible et une version apprise sans échange de messages.", e: "experiences.tex:115" },
+      { id: "e23", c: "exp", t: "open", q: "Votre tableau indique une largeur cachée de 32, votre code 64. Lequel est le vôtre ?", m: "Les deux, selon la version. Le prototype pilote a été entraîné avec une largeur cachée de 32 et deux tours, le curriculum réduit avec la graine 43 ; l'implémentation actuelle travaille avec 64 composantes et une représentation de forme de dimension 16. C'est justement l'une des raisons pour lesquelles les scores du pilote ne peuvent pas valider la version livrée.", e: "experiences.tex:60" },
+      /* ---------- Discussion ---------- */
+      { id: "s01", c: "disc", t: "qcm", q: "La discussion porte-t-elle sur l'implémentation actuelle du prototype ?", o: ["Non, elle porte sur le prototype initial, les entraînements et la campagne comparative de la version actuelle n'ayant pas encore été versés dans ce mémoire", "Oui, elle porte sur la version actuelle dont tous les entraînements sont documentés", "Oui, elle porte sur une version déjà déployée sur robots physiques", "Non, elle ne porte que sur la règle manuelle à consigne comparable"], a: 0, e: "discussion.tex:7", x: "Le chapitre précise d'emblée son périmètre : il est question du prototype initial, et non de la version actuelle dont les entraînements et la campagne comparative n'ont pas encore été versés dans le mémoire." },
+      { id: "s02", c: "disc", t: "qcm", q: "Que permet le volume de répétitions du pilote, dix essais par condition ?", o: ["Valider une chaîne de mesure et repérer de gros écarts, mais pas estimer finement une moyenne ni comparer des distributions", "Estimer finement des moyennes et publier des intervalles de confiance", "Comparer rigoureusement des distributions entre conditions", "Prouver la robustesse globale du contrôleur"], a: 0, e: "discussion.tex:39", x: "Le volume de répétitions est présenté comme la première limite de validité interne, le texte écartant explicitement l'estimation fine et la comparaison de distributions." },
+      { id: "s03", c: "disc", t: "qcm", q: "Qu'est-ce qui empêche d'imputer l'écart entre GNN avec messages et GNN sans communication aux seuls flux d'échanges ?", o: ["Le contrôleur avec messages ne dispose que d'un unique run d'entraînement, alors que son alter ego sans communication en cumule plusieurs", "La variante sans communication n'a jamais été entraînée ni évaluée", "Les deux variantes ne reçoivent pas la même consigne de forme", "La baseline de regroupement a été supprimée de l'étude"], a: 0, e: "discussion.tex:41", x: "La ligne lève le premier doute, la baseline apprise sans communication ayant bien été entraînée et évaluée, et reporte le point bloquant sur les graines : l'écart décrit un apprentissage singulier plutôt que la performance intrinsèque de l'architecture." },
+      { id: "s04", c: "disc", t: "qcm", q: "À quelle valeur le seuil de réussite a-t-il été fixé dans le pilote ?", o: ["0,5", "0,15", "1,0", "0,2"], a: 0, e: "discussion.tex:53", x: "La validité de construit rappelle que ce seuil, fixé à 0,5 dans le pilote, relève d'un choix opérationnel qui pilote directement le taux de succès." },
+      { id: "s05", c: "disc", t: "qcm", q: "Sur quel modèle le pilote évalue-t-il le cercle, et quelle ambiguïté cela introduit-il ?", o: ["Un modèle issu du dernier niveau d'un curriculum réduit, ce qui brasse l'effet de l'apprentissage progressif et celui de l'architecture", "Un agent formé exclusivement sur le cercle, sans aucun curriculum", "Un modèle entraîné sur des lettres puis transféré au cercle", "Une règle manuelle de déplacement vers le point le plus proche"], a: 0, e: "discussion.tex:16", x: "Le détail protocolaire est signalé, avec l'absence de registre conservé en attestation formelle et le fait qu'un seul jeu de poids documenté provient d'un entraînement sur cible circulaire ; une campagne rigoureuse devra découpler les facteurs." },
+      { id: "s06", c: "disc", t: "qcm", q: "Que prévoient les protocoles en cours de déploiement côté volume et graines ?", o: ["Au moins 50 exécutions par condition et cinq graines d'entraînement distinctes", "Dix exécutions par condition et une graine unique", "Trois exécutions par condition et deux graines", "Vingt exécutions par condition sans graines fixées"], a: 0, e: "discussion.tex:80", x: "Ces seuils sont annoncés avec une étanchéité entre sources de variabilité, plus bruit d'observation, ruptures aléatoires d'arêtes et réductions de portée." },
+      { id: "s07", c: "disc", t: "qcm", q: "D'après la matrice des contrôleurs, quelle comparaison le pilote a-t-il réellement évaluée ?", o: ["Seulement l'ancien GNN et le regroupement", "Le GNN avec géométrie et la règle manuelle à consigne comparable", "Le GNN sans communication et le GNN identifiant seul", "Les cinq contrôleurs listés dans la matrice"], a: 0, e: "discussion.tex:106", x: "Le pied de tableau précise que deux variantes, la règle manuelle à consigne comparable et la politique sans communication, ont depuis été entraînées et évaluées, et que le contrôleur avec messages n'a encore qu'un seul entraînement." },
+      { id: "s08", c: "disc", t: "open", q: "Votre essaim obtient une meilleure distance de Chamfer que la règle de regroupement : pouvez-vous en conclure la supériorité du GNN ?", m: "Non. La baseline de regroupement ne disposant ni de la même consigne que le GNN ni d'un apprentissage adapté à la tâche circulaire, l'écart de distance de Chamfer ne suffit pas à décréter la supériorité absolue du GNN à information égale. La question réellement tranchée est plus circonscrite : dans les conditions testées, la politique entraînée se rapproche nettement mieux du cercle qu'une simple règle d'agrégation brute.", e: "discussion.tex:14" },
+      { id: "s09", c: "disc", t: "open", q: "Quelles hypothèses de votre simulation bornent, selon vous, la portée externe des résultats ?", m: "Les robots partagent un repère commun, connaissent leurs positions exactes et communiquent sans le moindre délai ni perte de paquets ; les collisions se réduisent à une pénalité continue, exempte de dynamique de contact physique, et un agent en panne s'évapore proprement du graphe, loin des comportements erratiques d'un matériel défaillant. Les épisodes sont de plus extrêmement brefs, vingt pas dans le pilote. Ces hypothèses garantissent la contrôlabilité de l'étude mais n'attestent qu'une faisabilité en simulation 2D.", e: "discussion.tex:46" },
+      { id: "s10", c: "disc", t: "open", q: "La distance de Chamfer mesure-t-elle ce que vous visez, à savoir la lisibilité d'un symbole ?", m: "Non : elle met en balance deux nuages de points en faisant abstraction de la lisibilité visuelle, deux agencements pouvant afficher des scores voisins alors que l'un se déchiffrera clairement et l'autre non. S'y ajoutent un seuil de réussite de 0,5 qui pilote directement le taux de succès, un compteur de collisions qui recense des proximités sous un seuil de sécurité sans mesurer de chocs réels, et une régularité des voisinages qui repère des amas sans certitude que le contour soit intégralement couvert. La parade n'est pas le choix de l'indicateur le plus flatteur, mais la restitution conjointe de ces mesures accompagnée de leurs définitions.", e: "discussion.tex:53" },
+      { id: "s11", c: "disc", t: "open", q: "Le curriculum a-t-il tenu ses promesses dans ce travail ?", m: "Pas encore vérifié. Le curriculum est censé prémunir contre l'oubli catastrophique, mais le pilote n'isole pas son gain par rapport à un apprentissage direct. La simple conservation des anciennes cibles ne dispense pas de mesurer leur niveau de performance à chaque étape sur des épisodes appariés ; le tableau des pertes de curriculum du chapitre expériences constitue un premier jalon dans cette direction.", e: "discussion.tex:66" },
+      { id: "s12", c: "disc", t: "open", q: "Votre chaîne prouve-t-elle qu'elle engendre des lettres ou des chiffres lisibles et généralisables ?", m: "Non, et le manuscrit le dit tel quel : pour les motifs symboliques la couverture demeure approximative, et si la chaîne de traitement ingère divers contours, rien ne prouve formellement qu'elle engendre des lettres ou des chiffres lisibles et généralisables. La conclusion établie reste bornée au cercle simulé, avec dix épisodes par condition, une unique graine d'entraînement et une baseline privée d'une consigne équivalente.", e: "discussion.tex:132" }
+    ];
+
+    /* ==========================================================================
+       Moteur
+       ========================================================================== */
+    const CH = {
+      intro: "Introduction", concept: "Concepts", art: "État de l'art", methode: "Méthode",
+      config: "Configuration", data: "Artefacts", exp: "Expériences", disc: "Discussion"
+    };
+    const TARGET = 0.8, EXAM_N = 30, ORAL_N = 15, KEY = "soutenance.rev1";
+    const $ = s => document.querySelector(s);
+    const store = (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } })();
+    store.misses = store.misses || {}; store.best = store.best || {};
+    const persist = () => { try { localStorage.setItem(KEY, JSON.stringify(store)); } catch (e) { } };
+
+    /* mélange déterministe des options : la banque a souvent la bonne réponse en premier */
+    function hash(s) { let h = 2166136261 >>> 0; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h >>> 0; }
+    function prng(seed) { let x = seed || 1; return () => { x ^= x << 13; x >>>= 0; x ^= x >> 17; x ^= x << 5; x >>>= 0; return x / 4294967296; }; }
+    QUESTIONS.forEach(q => {
+      if (q.t !== "qcm") return;
+      const r = prng(hash(q.id)), idx = q.o.map((_, i) => i);
+      for (let i = idx.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1));[idx[i], idx[j]] = [idx[j], idx[i]]; }
+      q.ord = idx; q.right = idx.indexOf(q.a);
+    });
+
+    let S = null;
+    const byId = id => QUESTIONS.find(q => q.id === id);
+    function sample(list, n) {
+      const a = list.slice();
+      for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1));[a[i], a[j]] = [a[j], a[i]]; }
+      return a.slice(0, Math.min(n, a.length));
+    }
+
+    function start(mode, chapter, same) {
+      let deck, label;
+      if (same) { deck = same; label = S.label; }
+      else if (mode === "exam") { deck = sample(QUESTIONS, EXAM_N); label = "Examen blanc"; }
+      else if (mode === "oral") { deck = sample(QUESTIONS.filter(q => q.t === "open"), ORAL_N); label = "Simulation d'oral"; }
+      else if (mode === "misses") {
+        const ids = Object.keys(store.misses).filter(id => store.misses[id] > 0 && byId(id));
+        deck = sample(ids.length ? ids.map(byId) : QUESTIONS, 25); label = "Ratées à revoir";
+      } else {
+        deck = QUESTIONS.filter(q => q.c === chapter); label = CH[chapter];
+      }
+      S = { mode, chapter, deck, label, i: 0, pts: 0, log: [] };
+      $("#screen-start").hidden = true; $("#screen-result").hidden = true; $("#screen-quiz").hidden = false;
+      $("#headscore").hidden = false;
+      render();
+    }
+
+    function render() {
+      const q = S.deck[S.i];
+      $("#progress").style.width = (S.i / S.deck.length * 100) + "%";
+      $("#counter").textContent = (S.i + 1) + " / " + S.deck.length + " · " + S.label;
+      $("#tagchapter").textContent = CH[q.c];
+      $("#tagtype").textContent = q.t === "qcm" ? "Choix unique" : "Réponse orale";
+      $("#tagtype").hidden = q.t === "qcm";
+      $("#qtext").textContent = q.q;
+      $("#feedback").innerHTML = ""; $("#feedback").className = "";
+      $("#headscore").textContent = S.pts + " pt" + (S.pts === 1 ? "" : "s");
+      const opts = $("#opts"); opts.innerHTML = "";
+      if (q.t === "qcm") {
+        $("#revealwrap").hidden = true;
+        q.ord.forEach((oi, k) => {
+          const b = document.createElement("button");
+          b.className = "opt"; b.type = "button";
+          const kb = document.createElement("kbd"); kb.textContent = k + 1;
+          const tx = document.createElement("span"); tx.textContent = q.o[oi];
+          b.append(kb, tx);
+          b.onclick = () => answerQcm(q, k, b);
+          opts.appendChild(b);
+        });
+      } else {
+        opts.innerHTML = ""; $("#revealwrap").hidden = false;
+        $("#reveal").onclick = () => revealOpen(q);
+      }
+    }
+
+    function noteMiss(id, wrong) {
+      if (wrong) store.misses[id] = (store.misses[id] || 0) + 1;
+      else if (store.misses[id]) store.misses[id]--;
+      persist();
+    }
+
+    function feedback(cls, title, bodyNodes, ref) {
+      const fb = $("#feedback"); fb.className = "fb " + cls; fb.innerHTML = "";
+      const h = document.createElement("h3"); h.textContent = title; fb.appendChild(h);
+      bodyNodes.forEach(t => { const p = document.createElement("p"); p.textContent = t; fb.appendChild(p); });
+      if (ref) {
+        const r = document.createElement("div"); r.className = "ref";
+        const b = document.createElement("b"); b.textContent = "Source : "; r.appendChild(b);
+        r.appendChild(document.createTextNode(ref)); fb.appendChild(r);
+      }
+      const row = document.createElement("div"); row.className = "row";
+      const next = document.createElement("button"); next.className = "btn"; next.type = "button";
+      next.textContent = S.i + 1 < S.deck.length ? "Question suivante" : "Voir le résultat";
+      next.onclick = advance; row.appendChild(next); fb.appendChild(row);
+      next.focus();
+    }
+
+    function answerQcm(q, k, btn) {
+      const right = k === q.right;
+      document.querySelectorAll("#opts .opt").forEach((b, i) => {
+        b.disabled = true;
+        if (i === q.right) b.classList.add("right");
+        else if (i === k) b.classList.add("wrong");
+      });
+      S.pts += right ? 1 : 0;
+      S.log.push({ q, got: right ? 1 : 0 });
+      noteMiss(q.id, !right);
+      feedback(right ? "ok" : "ko", right ? "Exact" : "Faux", [q.x || ""], q.e);
+      $("#headscore").textContent = S.pts + " pt" + (S.pts === 1 ? "" : "s");
+    }
+
+    function revealOpen(q) {
+      $("#revealwrap").hidden = true;
+      const fb = $("#feedback"); fb.className = "fb"; fb.innerHTML = "";
+      const h = document.createElement("h3"); h.textContent = "Réponse attendue du mémoire"; h.style.color = "var(--blue)";
+      fb.appendChild(h);
+      const box = document.createElement("div"); box.className = "model";
+      const p = document.createElement("p"); p.textContent = q.m; box.appendChild(p);
+      const r = document.createElement("div"); r.className = "ref";
+      const b = document.createElement("b"); b.textContent = "Source : "; r.appendChild(b);
+      r.appendChild(document.createTextNode(q.e)); box.appendChild(r);
+      fb.appendChild(box);
+      const g = document.createElement("div"); g.className = "grades";
+      [["a", "Acquis — je l'ai dit", 1], ["b", "Partiel — idée juste, détail flou", 0.5], ["c", "À retravailler", 0]]
+        .forEach(([cls, label, val]) => {
+          const btn = document.createElement("button");
+          btn.className = "grade " + cls; btn.type = "button"; btn.textContent = label;
+          btn.onclick = () => gradeOpen(q, val); g.appendChild(btn);
+        });
+      fb.appendChild(g);
+    }
+
+    function gradeOpen(q, val) {
+      S.pts += val; S.log.push({ q, got: val }); noteMiss(q.id, val < 1);
+      feedback(val === 1 ? "ok" : val === 0.5 ? "half" : "ko",
+        val === 1 ? "Noté acquis" : val === 0.5 ? "Noté partiel" : "À revoir",
+        ["Note-toi sévèrement : le jury ne pardonne ni le seuil oublié ni le chiffre approché."], q.e);
+      $("#headscore").textContent = S.pts + " pt" + (S.pts === 1 ? "" : "s");
+    }
+
+    function advance() {
+      if (S.i + 1 < S.deck.length) { S.i++; render(); } else { finish(); }
+    }
+
+    function finish() {
+      $("#screen-quiz").hidden = true; $("#screen-result").hidden = false; $("#headscore").hidden = true;
+      const total = S.deck.length, pts = S.pts, pct = Math.round(pts / total * 100);
+      $("#finalpct").textContent = pct + " %";
+      $("#finalraw").textContent = pts + " point" + (pts === 1 ? "" : "s") + " sur " + total + " — " + S.label;
+      const graded = S.mode === "exam" || S.mode === "oral";
+      const pass = pct >= TARGET * 100;
+      const v = $("#verdict"); v.innerHTML = "";
+      if (graded) {
+        const span = document.createElement("span");
+        span.className = "verdict " + (pass ? "pass" : "fail");
+        span.textContent = pass ? "Seuil de " + TARGET * 100 + " % atteint — tu peux affronter le jury sur ce lot."
+          : "Sous le seuil de " + TARGET * 100 + " % (" + pct + " %). Reprends le chapitre le plus faible ci-dessous.";
+        v.appendChild(span);
+        const prev = store.best[S.mode];
+        if (!prev || pct > prev.pct) { store.best[S.mode] = { pct, pts, total, date: new Date().toISOString().slice(0, 10) }; }
+        persist();
+      } else {
+        const span = document.createElement("span"); span.className = "verdict pass";
+        span.textContent = "Session terminée. Score non classant, mais les ratées sont enregistrées.";
+        v.appendChild(span);
+      }
+      const tb = $("#bychapter tbody"); tb.innerHTML = "";
+      const agg = {};
+      S.log.forEach(l => {
+        const k = l.q.c; agg[k] = agg[k] || { n: 0, ok: 0, pts: 0 };
+        agg[k].n++; agg[k].pts += l.got; if (l.got === 1) agg[k].ok++;
+      });
+      Object.keys(agg).sort((x, y) => agg[x].pts / agg[x].n - agg[y].pts / agg[y].n).forEach(k => {
+        const a = agg[k], tr = document.createElement("tr");
+        [CH[k], a.ok + " / " + a.n, a.pts + " pt", Math.round(a.pts / a.n * 100) + " %"].forEach((txt, i) => {
+          const td = document.createElement("td"); if (i) td.className = "n"; td.textContent = txt; tr.appendChild(td);
+        });
+        tb.appendChild(tr);
+      });
+      const misses = S.log.filter(l => l.got < 1);
+      const list = $("#misslist"); list.innerHTML = "";
+      if (misses.length) {
+        const h = document.createElement("h2"); h.textContent = "À reprendre"; h.style.fontSize = "16px"; list.appendChild(h);
+        misses.forEach(l => {
+          const d = document.createElement("div"); d.className = "miss";
+          const p = document.createElement("div"); p.textContent = l.q.q; d.appendChild(p);
+          const r = document.createElement("div"); r.className = "ref";
+          const b = document.createElement("b"); b.textContent = "Source : "; r.appendChild(b);
+          r.appendChild(document.createTextNode(l.q.e)); d.appendChild(r);
+          list.appendChild(d);
+        });
+      }
+      $("#tomisses").disabled = !Object.keys(store.misses).some(k => store.misses[k] > 0);
+      refreshHome();
+    }
+
+    function refreshHome() {
+      const n = Object.keys(store.misses).filter(k => store.misses[k] > 0).length;
+      $("#misscount").textContent = n ? n + " question" + (n === 1 ? "" : "s") + " à revoir." : "Rien d'enregistré pour l'instant.";
+  document.querySelector('.mode[data-mode="misses"]').disabled = !n;
+      const b = store.best.exam, o = store.best.oral, bits = [];
+      if (b) bits.push("Examen blanc : meilleur score " + b.pct + " % (" + b.date + ")");
+      if (o) bits.push("Oral : meilleur score " + o.pct + " % (" + o.date + ")");
+      bits.push(QUESTIONS.length + " questions dans la banque");
+      $("#footcount").textContent = QUESTIONS.length + " questions";
+      $("#bestline").textContent = bits.join(" · ");
+    }
+
+    $("#chips").innerHTML = "";
+    Object.keys(CH).forEach(k => {
+      const n = QUESTIONS.filter(q => q.c === k).length;
+      if (!n) return;
+      const b = document.createElement("button");
+      b.className = "chip"; b.type = "button"; b.textContent = CH[k] + " (" + n + ")";
+      b.onclick = () => start("chapter", k);
+      $("#chips").appendChild(b);
+    });
+
+    document.querySelectorAll(".mode").forEach(b => b.onclick = () => {
+      const m = b.dataset.mode;
+      if (m === "chapter") { $("#chippicker").hidden = !$("#chippicker").hidden; return; }
+      start(m);
+    });
+    $("#home").onclick = () => {
+      $("#screen-result").hidden = true; $("#screen-quiz").hidden = true;
+      $("#screen-start").hidden = false; $("#headscore").hidden = true; refreshHome();
+    };
+    $("#again").onclick = () => start(S.mode, S.chapter, S.deck);
+    $("#tomisses").onclick = () => start("misses");
+
+    document.addEventListener("keydown", e => {
+      if ($("#screen-quiz").hidden) return;
+      const q = S.deck[S.i];
+      if (q.t === "qcm" && !$("#feedback").textContent && /^[1-4]$/.test(e.key)) {
+        const btns = document.querySelectorAll("#opts .opt"), k = +e.key - 1;
+        if (btns[k]) btns[k].click();
+      } else if (e.key === "Enter") {
+        if (!$("#revealwrap").hidden) $("#reveal").click();
+        else if ($("#feedback").textContent) { const n = $("#feedback .btn"); if (n) n.click(); }
+      }
+    });
+
+    refreshHome();
+  </script>
+</body>
+
+</html>
