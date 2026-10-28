@@ -1,0 +1,5 @@
+# Protocole fixé avant l'évaluation ; mètres, m/s et secondes.
+error_threshold: 0.1
+speed_threshold: 0.05
+hold_seconds: 1.0
+deadline_seconds: 10.0

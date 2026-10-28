@@ -10,8 +10,9 @@ Les modifications présentes avant cette migration sont préservées.
 |---|---|---|
 | 001 | Moteur à accélérations : inertie, bornes, rayon physique, murs ; tests unitaires | Validée, commit b3644eb, 34 tests réussis |
 | 002 | Épisodes du nouveau moteur, observations locales et trajectoires position/vitesse/commande ; tests de portée et reproductibilité | Validée, commit 219c9e5, 28 tests nouveaux réussis |
-| 003 | Consigne circulaire et professeur local : rayon, espacement, freinage et évitement ; tests de comportement | Validée, 23 tests nouveaux réussis |
-| 004 | Quatre métriques : erreur en mètres, stabilisation en secondes, contacts, réussite ; protocole et tests | À faire |
+| 003 | Consigne circulaire et professeur local : rayon, espacement, freinage et évitement ; tests de comportement | Validée, commit f60448d, 23 tests nouveaux réussis |
+| 004 | Quatre métriques : erreur en mètres, stabilisation en secondes, contacts, réussite ; protocole et tests | Validée, 32 tests nouveaux réussis |
+| 004b | Corriger le professeur depuis des positions dispersées sous le protocole 004 ; tests de régression et nouvelles graines | À faire avant 005 : pilote 0/10 réussite |
 | 005 | Collecte du professeur et séparation par épisodes entraînement/validation/test ; tests anti-fuite | À faire |
 | 006 | GAT partagé à une couche, prédiction d'accélérations et MSE supervisée ; tests sans optimisation réelle | À faire |
 | 007 | Intégration GAT, commandes d'entraînement à lancer par l'utilisateur, comparaison sur épisodes inédits | À faire |
