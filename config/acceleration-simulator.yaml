@@ -1,0 +1,10 @@
+# Nouveau parcours PLAN.md, unités SI. Indépendant du simulateur historique.
+physics:
+  arena_size: 10.0
+  dt: 0.1
+  max_speed: 1.0
+  max_acceleration: 2.0
+  robot_radius: 0.1
+horizon: 100
+communication_radius: 2.0
+spawn_radius: 4.0

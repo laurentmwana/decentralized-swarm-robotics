@@ -8,8 +8,8 @@ Les modifications présentes avant cette migration sont préservées.
 
 | Tâche | Livraison et critère de fin | État |
 |---|---|---|
-| 001 | Moteur à accélérations : inertie, bornes, rayon physique, murs ; tests unitaires | Validée, 34 tests réussis |
-| 002 | Épisodes du nouveau moteur, observations locales et trajectoires position/vitesse/commande ; tests de portée et reproductibilité | À faire |
+| 001 | Moteur à accélérations : inertie, bornes, rayon physique, murs ; tests unitaires | Validée, commit b3644eb, 34 tests réussis |
+| 002 | Épisodes du nouveau moteur, observations locales et trajectoires position/vitesse/commande ; tests de portée et reproductibilité | Validée, 28 tests nouveaux réussis |
 | 003 | Consigne circulaire et professeur local : rayon, espacement, freinage et évitement ; tests de comportement | À faire |
 | 004 | Quatre métriques : erreur en mètres, stabilisation en secondes, contacts, réussite ; protocole et tests | À faire |
 | 005 | Collecte du professeur et séparation par épisodes entraînement/validation/test ; tests anti-fuite | À faire |
