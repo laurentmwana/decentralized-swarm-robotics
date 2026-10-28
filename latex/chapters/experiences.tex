@@ -52,7 +52,7 @@ Avant les scores, il faut regarder comment les modèles évalués ont été obte
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{images/real_training_curves.png}
+  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_training_curves.png}
   \caption[Journaux d'entraînement réels]{Journaux d'entraînement : (a) termes de la perte du GNN à trois tours, graine 11 ; (b) distance de validation au fil des itérations. La ligne pointillée marque le seuil de succès 0,15. Données : \texttt{outputs/training/*/losses.csv} et \texttt{validation.csv}.}
   \label{fig:training-curves}
 \end{figure}
@@ -95,7 +95,7 @@ La Figure~\ref{fig:pilot-size} présente les mêmes valeurs sur une échelle log
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{images/real_pilot_by_size.png}
+  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_pilot_by_size.png}
   \caption[Distance finale selon le nombre de robots]{Distance finale selon le nombre de robots, sans panne, moyenne et écart-type entre épisodes. La ligne pointillée marque le seuil 0,15. Données : \texttt{outputs/evaluation\_pilot/episodes.csv}.}
   \label{fig:pilot-size}
 \end{figure}
@@ -106,13 +106,20 @@ Ensuite, la règle manuelle est la meilleure partout. Sur le cercle à 40 robots
 
 Enfin, toutes les méthodes s'améliorent quand le nombre de robots augmente. Ce n'est pas forcément un mérite des contrôleurs. Avec 50 points de référence, 20 robots ne peuvent pas couvrir toute la figure, et le terme de couverture garde un plancher. À 100 robots, chaque point peut avoir un robot proche. Le succès qui monte de 6 à 100\,\% pour le GNN à trois tours, sur le cercle, tient donc pour une bonne part à la géométrie de la mesure.
 
-La Figure~\ref{fig:final-states} montre l'état final d'un même épisode, avec 40 robots et la graine 555000, pour les quatre contrôleurs. On y voit ce que les moyennes cachent. La règle manuelle répartit les robots sur tout le contour. Les deux GNN laissent des arcs entiers vides : les robots se tassent sur une partie du cercle.
+Les Figures~\ref{fig:final-states} et~\ref{fig:final-states-star} montrent l'état final d'un même épisode, avec 40 robots et la graine 555000, pour les quatre contrôleurs. On y voit ce que les moyennes cachent. La règle manuelle répartit les robots sur tout le contour. Les deux GNN laissent des arcs entiers vides : les robots se tassent sur une partie du cercle.
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{images/real_final_states.png}
-  \caption[État final d'un même épisode]{État final au pas 120 d'un même épisode (40 robots, graine 555000) pour les quatre contrôleurs. Cercles verts : points de référence de la figure ; points pleins : robots. Positions lues dans les archives \texttt{.npz} de la campagne.}
+  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_final_states_circle.png}
+  \caption[État final d'un même épisode, cercle]{État final au pas 120 d'un même épisode sur le cercle (40 robots, graine 555000), pour les quatre contrôleurs. Cercles verts : points de référence de la figure ; points pleins : robots. Positions lues dans les archives \texttt{.npz} de la campagne.}
   \label{fig:final-states}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_final_states_star.png}
+  \caption[État final d'un même épisode, étoile]{État final au pas 120 du même épisode sur l'étoile, figure jamais vue à l'entraînement (40 robots, graine 555000). Mêmes conventions que la Figure~\ref{fig:final-states}.}
+  \label{fig:final-states-star}
 \end{figure}
 
 \section{Une figure jamais vue : l'étoile}
@@ -127,7 +134,7 @@ Au pas 60, une fraction des robots est retirée au hasard. Ils restent immobiles
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{images/real_pilot_failures.png}
+  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_pilot_failures.png}
   \caption[Distance finale selon la fraction de robots retirés]{Distance finale selon la fraction de robots retirés au pas 60, avec 40 robots, moyenne et écart-type entre épisodes. Données : \texttt{outputs/evaluation\_pilot/episodes.csv}.}
   \label{fig:pilot-failures}
 \end{figure}
@@ -142,7 +149,7 @@ Le GNN sans communication est le seul contrôleur appris dont on dispose de cinq
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{images/real_seed_dispersion.png}
+  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_seed_dispersion.png}
   \caption[Dispersion entre graines d'entraînement]{Distance finale moyenne sur le cercle pour chacune des cinq graines du GNN sans communication, comparée au GNN à trois tours (graine 11) et à la règle manuelle. Données : \texttt{outputs/evaluation\_pilot/episodes.csv}.}
   \label{fig:seed-dispersion}
 \end{figure}
@@ -157,8 +164,8 @@ Une moyenne ne dit pas comment l'essaim se comporte au fil du temps. La Figure~\
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{images/real_formation_sequence.png}
-  \caption[Un épisode réel du GNN à trois tours]{Un épisode réel du GNN à trois tours (40 robots, cercle, graine 555000) aux pas 0, 10 et 120. Positions lues dans \texttt{outputs/evaluation\_pilot/gnn\_3\_rounds/seed\_11/positions/}.}
+  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_formation_sequence.png}
+  \caption[Un épisode réel du GNN à trois tours]{Un épisode réel du GNN à trois tours (40 robots, cercle, graine 555000) : (a) à (c) positions aux pas 0, 10 et 120 ; (d) distance au fil des pas, les points marquant ces trois instants. Positions lues dans \texttt{outputs/evaluation\_pilot/gnn\_3\_rounds/seed\_11/positions/}.}
   \label{fig:formation-sequence}
 \end{figure}
 

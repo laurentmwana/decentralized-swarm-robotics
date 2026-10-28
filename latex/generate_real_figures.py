@@ -53,12 +53,19 @@ LABELS = {"flocking": "Regroupement", "manual": "Règle manuelle",
           "no_comm": "GNN sans communication", "gnn_3_rounds": "GNN 3 tours"}
 SHAPE_LABELS = {"circle": "Cercle (vu à l'entraînement)", "star": "Étoile (jamais vue)"}
 
+# Largeur de la zone de texte du mémoire (\textwidth = 455 pt = 6,3 po). Les figures sont dessinées
+# exactement à cette largeur : LaTeX les imprime à 100 %, sans réduction, et le texte des figures
+# garde la taille choisie ici (9,5 à 11 pt), lisible sur papier.
+PRINT_WIDTH = 6.3
+
 plt.rcParams.update({
     "font.family": "serif", "font.serif": ["CMU Serif", "Latin Modern Roman", "DejaVu Serif"],
-    "mathtext.fontset": "cm", "font.size": 11, "axes.titlesize": 11, "axes.labelsize": 11,
+    "mathtext.fontset": "cm", "font.size": 10.5, "axes.titlesize": 11, "axes.labelsize": 11,
+    "xtick.labelsize": 10, "ytick.labelsize": 10, "legend.fontsize": 9.5,
     "axes.edgecolor": "#6b7785", "axes.linewidth": 0.8, "axes.grid": True, "grid.color": GRID,
     "grid.linewidth": 0.7, "xtick.color": INK, "ytick.color": INK, "text.color": INK,
-    "axes.labelcolor": INK, "legend.frameon": False, "savefig.dpi": 300, "savefig.bbox": "tight",
+    "axes.labelcolor": INK, "legend.frameon": False, "savefig.dpi": 300,
+    "figure.constrained_layout.use": True, "lines.linewidth": 1.6,
 })
 
 
@@ -92,17 +99,16 @@ def arena(axis, limit: float = 2.05) -> None:
     axis.set_aspect("equal")
     axis.set_xticks([-2, -1, 0, 1, 2])
     axis.set_yticks([-2, -1, 0, 1, 2])
-    axis.tick_params(labelsize=9)
 
 
 def draw_state(axis, points, active, target, robot_color: str) -> None:
-    axis.scatter(target[:, 0], target[:, 1], s=22, facecolors="none", edgecolors=TARGET, linewidths=1.0, zorder=2)
-    axis.scatter(points[~active, 0], points[~active, 1], s=26, facecolors="white", edgecolors=INACTIVE, linewidths=1.0, zorder=3)
-    axis.scatter(points[active, 0], points[active, 1], s=26, color=robot_color, edgecolors="white", linewidths=0.6, zorder=4)
+    axis.scatter(target[:, 0], target[:, 1], s=30, facecolors="none", edgecolors=TARGET, linewidths=1.1, zorder=2)
+    axis.scatter(points[~active, 0], points[~active, 1], s=34, facecolors="white", edgecolors=INACTIVE, linewidths=1.1, zorder=3)
+    axis.scatter(points[active, 0], points[active, 1], s=34, color=robot_color, edgecolors="white", linewidths=0.6, zorder=4)
 
 
 def corner(axis, text: str) -> None:
-    axis.text(0.03, 0.97, text, transform=axis.transAxes, va="top", ha="left", fontsize=10,
+    axis.text(0.03, 0.97, text, transform=axis.transAxes, va="top", ha="left", fontsize=10.5,
               bbox={"boxstyle": "round,pad=0.25", "facecolor": "white", "edgecolor": GRID})
 
 
@@ -115,128 +121,10 @@ def plain_log(axis) -> None:
 
 
 def save(fig, name: str) -> None:
+    # Pas de recadrage : l'image garde exactement PRINT_WIDTH pouces de large.
     fig.savefig(OUTPUT / f"{name}.png")
     plt.close(fig)
     print("écrit", OUTPUT / f"{name}.png")
-
-
-# --- Figures --------------------------------------------------------------------------------
-
-def formation_sequence() -> None:
-    """Un épisode réel du GNN à trois tours : 40 robots, cercle, graine d'épisode 555000."""
-    positions, active, target = episode("gnn_3_rounds", 40, "circle", 555000)
-    curve = distance_curve(positions, active, target)
-    fig, axes = plt.subplots(1, 3, figsize=(11, 3.9), sharey=True)
-    for axis, step, letter in zip(axes, (0, 10, len(positions) - 1), "abc"):
-        draw_state(axis, positions[step], active[step], target, COLORS["gnn_3_rounds"])
-        arena(axis)
-        corner(axis, f"({letter}) pas {step} · distance {curve[step]:.2f}".replace(".", ","))
-        axis.set_xlabel("x")
-    axes[0].set_ylabel("y")
-    save(fig, "real_formation_sequence")
-
-
-def communication_graph() -> None:
-    """Graphe de communication recalculé (portée 1,5) sur le même épisode réel."""
-    positions, active, target = episode("gnn_3_rounds", 40, "circle", 555000)
-    fig, axes = plt.subplots(1, 2, figsize=(10, 4.9), sharey=True)
-    for axis, step, letter in zip(axes, (0, len(positions) - 1), "ab"):
-        p = positions[step]
-        d = np.linalg.norm(p[:, None] - p[None], axis=2)
-        adjacency = (d <= R_C) & (d > 0)
-        degree = adjacency.sum(axis=1)
-        focus = int(np.argsort(degree)[len(degree) // 2])
-        for i, j in zip(*np.nonzero(np.triu(adjacency, 1))):
-            axis.plot(*p[[i, j]].T, color=GRID, linewidth=0.6, zorder=1)
-        for j in np.flatnonzero(adjacency[focus]):
-            axis.plot(*p[[focus, j]].T, color=COLORS["gnn_3_rounds"], linewidth=1.1, zorder=2)
-        axis.add_patch(plt.Circle(p[focus], R_C, fill=False, linestyle="--", color=COLORS["gnn_3_rounds"], linewidth=0.9))
-        axis.scatter(p[:, 0], p[:, 1], s=22, color="#4f6070", zorder=3)
-        axis.scatter(*p[adjacency[focus]].T, s=30, color=COLORS["gnn_3_rounds"], zorder=4)
-        axis.scatter(*p[focus], s=80, marker="*", color=COLORS["manual"], zorder=5)
-        arena(axis, 2.6)
-        corner(axis, f"({letter}) pas {step} · robot marqué : {degree[focus]} voisins sur 39")
-        axis.set_xlabel("x")
-    axes[0].set_ylabel("y")
-    save(fig, "real_communication_graph")
-
-
-def reference_points() -> None:
-    """Rendu binaire et 50 points de référence, produits par le code du catalogue."""
-    config = ConfigLoader(REPOSITORY / "config").load_shapes()
-    names = ["geometries_circle", "geometries_star", "digits_8", "letters_A", "letters_K", "numbers_314"]
-    labels = ["Cercle", "Étoile", "Chiffre 8", "Lettre A", "Lettre K", "Nombre 314"]
-    sources = {source.identifier: source for source in build_sources(config)}
-    with tempfile.TemporaryDirectory() as directory:
-        index, _ = generate_index(config, Path(directory))
-        fig, axes = plt.subplots(2, len(names), figsize=(12, 4.6))
-        for column, (name, label) in enumerate(zip(names, labels)):
-            source = sources[name]
-            mask = source.binarize(source.render(config.render_size))
-            axes[0, column].imshow(~mask, cmap="gray", interpolation="nearest")
-            axes[0, column].set_title(label, fontsize=10)
-            points = index.point_cloud_by_key(name)
-            axes[1, column].scatter(points[:, 0], points[:, 1], s=9, color=TARGET)
-            axes[1, column].set_xlim(-1.15, 1.15)
-            axes[1, column].set_ylim(-1.15, 1.15)
-            axes[1, column].set_aspect("equal")
-            for axis in axes[:, column]:
-                axis.set_xticks([])
-                axis.set_yticks([])
-                axis.grid(False)
-        axes[0, 0].set_ylabel("rendu 128 × 128")
-        axes[1, 0].set_ylabel(f"{config.reference_points} points")
-    save(fig, "real_reference_points")
-
-
-def proximity_coverage() -> None:
-    """Les deux termes de la distance sur un épisode réel de la règle manuelle (étoile, 40 robots)."""
-    positions, active, target = episode("manual", 40, "star", 555000, training_seed=None)
-    terms = np.array([chamfer_terms(p[a], target) for p, a in zip(positions, active)])
-    fig, (left, right) = plt.subplots(1, 2, figsize=(11, 4.4), gridspec_kw={"width_ratios": [1, 1.35]})
-    final = positions[-1][active[-1]]
-    d = np.linalg.norm(target[:, None] - final[None], axis=2)
-    far = np.argsort(d.min(axis=1))[-6:]
-    for k in far:
-        j = int(d[k].argmin())
-        left.annotate("", xy=final[j], xytext=target[k], arrowprops={"arrowstyle": "->", "color": COLORS["manual"], "lw": 1.0})
-    draw_state(left, positions[-1], active[-1], target, COLORS["manual"])
-    arena(left, 1.4)
-    corner(left, "(a) pas 120 : points les moins couverts")
-    steps = np.arange(len(terms))
-    right.plot(steps, terms[:, 0], color=COLORS["gnn_3_rounds"], label="proximité (robot → cible)")
-    right.plot(steps, terms[:, 1], color=COLORS["manual"], label="couverture (cible → robot)")
-    right.plot(steps, terms.sum(axis=1), color=INK, linewidth=1.6, label="distance = somme des deux")
-    right.axhline(THRESHOLD, color=INK, linestyle="--", linewidth=0.9)
-    right.text(len(steps) - 1, THRESHOLD + 0.01, "seuil 0,15", ha="right", va="bottom", fontsize=9)
-    plain_log(right)
-    right.set_xlabel("pas de simulation")
-    right.set_ylabel("distance normalisée (échelle log)")
-    right.legend(fontsize=9, loc="upper right")
-    corner(right, "(b)")
-    save(fig, "real_proximity_coverage")
-
-
-def success_criterion() -> None:
-    """Courbes de distance de cinq épisodes enregistrés et début du suffixe sous le seuil."""
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.1), sharey=True)
-    for axis, shape, letter in zip(axes, ("circle", "star"), "ab"):
-        for seed in EPISODE_SEEDS:
-            positions, active, target = episode("gnn_3_rounds", 40, shape, seed)
-            curve = distance_curve(positions, active, target)
-            line, = axis.plot(curve, linewidth=1.2, color=COLORS["gnn_3_rounds"], alpha=0.85)
-            k = convergence_step(curve, THRESHOLD)
-            if k is not None:
-                axis.plot(k, curve[k], "o", color=COLORS["manual"], markersize=5, zorder=5)
-        axis.axhline(THRESHOLD, color=INK, linestyle="--", linewidth=0.9)
-        plain_log(axis)
-        axis.set_xlabel("pas de simulation")
-        corner(axis, f"({letter}) {SHAPE_LABELS[shape]}")
-    axes[0].set_ylabel("distance normalisée (échelle log)")
-    axes[1].plot([], [], "o", color=COLORS["manual"], label="début du maintien sous le seuil")
-    axes[1].plot([], [], "--", color=INK, label="seuil 0,15")
-    axes[1].legend(fontsize=9, loc="upper right")
-    save(fig, "real_success_criterion")
 
 
 def rolling(values: np.ndarray, window: int = 25) -> np.ndarray:
@@ -249,37 +137,6 @@ def read_csv(path: Path) -> list[dict]:
         return list(csv.DictReader(stream))
 
 
-def training_curves() -> None:
-    """Journaux réels : termes de perte (GNN 3 tours, graine 11) et distance de validation."""
-    losses = read_csv(TRAINING / "gnn_3_rounds" / "seed_11" / "losses.csv")
-    iterations = np.array([int(row["iteration"]) for row in losses])
-    fig, (left, right) = plt.subplots(1, 2, figsize=(11.5, 4.2))
-    styles = {"shape": ("proximité", COLORS["gnn_3_rounds"]), "coverage": ("couverture", COLORS["manual"]),
-              "collisions": ("collisions", COLORS["no_comm"]), "motion": ("mouvement", COLORS["flocking"])}
-    for key, (label, color) in styles.items():
-        values = np.array([float(row[key]) for row in losses])
-        left.plot(iterations[24:], rolling(values), color=color, label=label)
-    plain_log(left)
-    left.set_xlabel("itération")
-    left.set_ylabel("terme de perte (moyenne glissante, 25 it.)")
-    left.legend(fontsize=9, ncol=2, loc="upper center", bbox_to_anchor=(0.5, -0.17))
-    corner(left, "(a) GNN 3 tours, graine 11")
-    for seed in range(11, 16):
-        rows = read_csv(TRAINING / "no_comm" / f"seed_{seed}" / "validation.csv")
-        right.plot([int(r["iteration"]) for r in rows], [float(r["selection_score"]) for r in rows],
-                   color=COLORS["no_comm"], linewidth=1.0, alpha=0.75, label="GNN sans communication (5 graines)" if seed == 11 else None)
-    rows = read_csv(TRAINING / "gnn_3_rounds" / "seed_11" / "validation.csv")
-    right.plot([int(r["iteration"]) for r in rows], [float(r["selection_score"]) for r in rows],
-               color=COLORS["gnn_3_rounds"], linewidth=1.8, label="GNN 3 tours (graine 11)")
-    right.axhline(THRESHOLD, color=INK, linestyle="--", linewidth=0.9)
-    plain_log(right)
-    right.set_xlabel("itération")
-    right.set_ylabel("distance de validation")
-    right.legend(fontsize=9, ncol=1, loc="upper center", bbox_to_anchor=(0.5, -0.17))
-    corner(right, "(b) validation toutes les 50 itérations")
-    save(fig, "real_training_curves")
-
-
 def grouped(rows: list[dict]) -> dict:
     groups = defaultdict(list)
     for row in rows:
@@ -288,76 +145,216 @@ def grouped(rows: list[dict]) -> dict:
     return groups
 
 
-def pilot_by_size(groups: dict) -> None:
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.2), sharey=True)
-    sizes = [20, 40, 100]
+# --- Figures --------------------------------------------------------------------------------
+
+def formation_sequence() -> None:
+    """Un épisode réel du GNN à trois tours (40 robots, cercle, graine 555000), plus sa courbe de distance."""
+    positions, active, target = episode("gnn_3_rounds", 40, "circle", 555000)
+    curve = distance_curve(positions, active, target)
+    fig, axes = plt.subplots(2, 2, figsize=(PRINT_WIDTH, 6.5))
+    steps = (0, 10, len(positions) - 1)
+    for axis, step, letter in zip(axes.flat, steps, "abc"):
+        draw_state(axis, positions[step], active[step], target, COLORS["gnn_3_rounds"])
+        arena(axis)
+        corner(axis, f"({letter}) pas {step}")
+    curve_axis = axes[1, 1]
+    curve_axis.plot(curve, color=COLORS["gnn_3_rounds"])
+    for step in steps:
+        curve_axis.plot(step, curve[step], "o", color=COLORS["manual"], markersize=5)
+    curve_axis.axhline(THRESHOLD, color=INK, linestyle="--", linewidth=0.9)
+    plain_log(curve_axis)
+    curve_axis.set_xlabel("pas")
+    curve_axis.set_ylabel("distance")
+    corner(curve_axis, "(d) distance au fil des pas")
+    save(fig, "real_formation_sequence")
+
+
+def communication_graph() -> None:
+    """Graphe de communication recalculé (portée 1,5) sur le même épisode réel."""
+    positions, active, target = episode("gnn_3_rounds", 40, "circle", 555000)
+    fig, axes = plt.subplots(1, 2, figsize=(PRINT_WIDTH, 3.6), sharey=True)
+    for axis, step, letter in zip(axes, (0, len(positions) - 1), "ab"):
+        p = positions[step]
+        d = np.linalg.norm(p[:, None] - p[None], axis=2)
+        adjacency = (d <= R_C) & (d > 0)
+        degree = adjacency.sum(axis=1)
+        focus = int(np.argsort(degree)[len(degree) // 2])
+        for i, j in zip(*np.nonzero(np.triu(adjacency, 1))):
+            axis.plot(*p[[i, j]].T, color=GRID, linewidth=0.5, zorder=1)
+        for j in np.flatnonzero(adjacency[focus]):
+            axis.plot(*p[[focus, j]].T, color=COLORS["gnn_3_rounds"], linewidth=1.0, zorder=2)
+        axis.add_patch(plt.Circle(p[focus], R_C, fill=False, linestyle="--", color=COLORS["gnn_3_rounds"], linewidth=1.0))
+        axis.scatter(p[:, 0], p[:, 1], s=20, color="#4f6070", zorder=3)
+        axis.scatter(*p[adjacency[focus]].T, s=26, color=COLORS["gnn_3_rounds"], zorder=4)
+        axis.scatter(*p[focus], s=110, marker="*", color=COLORS["manual"], zorder=5)
+        arena(axis, 2.6)
+        corner(axis, f"({letter}) pas {step} : {degree[focus]} voisins")
+    save(fig, "real_communication_graph")
+
+
+def reference_points() -> None:
+    """Rendu binaire et 50 points de référence, produits par le code du catalogue."""
+    config = ConfigLoader(REPOSITORY / "config").load_shapes()
+    names = ["geometries_circle", "geometries_star", "digits_8", "letters_A", "letters_K", "numbers_314"]
+    labels = ["Cercle", "Étoile", "Chiffre 8", "Lettre A", "Lettre K", "Nombre 314"]
+    sources = {source.identifier: source for source in build_sources(config)}
+    with tempfile.TemporaryDirectory() as directory:
+        index, _ = generate_index(config, Path(directory))
+        # Quatre rangées de trois : rendu, points, rendu, points.
+        fig, axes = plt.subplots(4, 3, figsize=(PRINT_WIDTH, 8.0))
+        for k, (name, label) in enumerate(zip(names, labels)):
+            row, column = 2 * (k // 3), k % 3
+            source = sources[name]
+            mask = source.binarize(source.render(config.render_size))
+            axes[row, column].imshow(~mask, cmap="gray", interpolation="nearest")
+            axes[row, column].set_title(label)
+            points = index.point_cloud_by_key(name)
+            axes[row + 1, column].scatter(points[:, 0], points[:, 1], s=14, color=TARGET)
+            axes[row + 1, column].set_xlim(-1.15, 1.15)
+            axes[row + 1, column].set_ylim(-1.15, 1.15)
+            axes[row + 1, column].set_aspect("equal")
+        for axis in axes.flat:
+            axis.set_xticks([])
+            axis.set_yticks([])
+            axis.grid(False)
+        for row in (0, 2):
+            axes[row, 0].set_ylabel("rendu 128 × 128")
+            axes[row + 1, 0].set_ylabel(f"{config.reference_points} points")
+    save(fig, "real_reference_points")
+
+
+def proximity_coverage() -> None:
+    """Les deux termes de la distance sur un épisode réel de la règle manuelle (étoile, 40 robots)."""
+    positions, active, target = episode("manual", 40, "star", 555000, training_seed=None)
+    terms = np.array([chamfer_terms(p[a], target) for p, a in zip(positions, active)])
+    fig, (top, bottom) = plt.subplots(2, 1, figsize=(PRINT_WIDTH, 8.0), gridspec_kw={"height_ratios": [1.25, 1]})
+    final = positions[-1][active[-1]]
+    d = np.linalg.norm(target[:, None] - final[None], axis=2)
+    for k in np.argsort(d.min(axis=1))[-6:]:
+        j = int(d[k].argmin())
+        top.annotate("", xy=final[j], xytext=target[k], arrowprops={"arrowstyle": "->", "color": COLORS["manual"], "lw": 1.2})
+    draw_state(top, positions[-1], active[-1], target, COLORS["manual"])
+    arena(top, 1.25)
+    top.set_xticks([-1, 0, 1])
+    top.set_yticks([-1, 0, 1])
+    corner(top, "(a) pas 120 : points les moins couverts")
+    steps = np.arange(len(terms))
+    bottom.plot(steps, terms[:, 0], color=COLORS["gnn_3_rounds"], label="proximité (robot → cible)")
+    bottom.plot(steps, terms[:, 1], color=COLORS["manual"], label="couverture (cible → robot)")
+    bottom.plot(steps, terms.sum(axis=1), color=INK, linewidth=2, label="distance = somme des deux")
+    bottom.axhline(THRESHOLD, color=INK, linestyle="--", linewidth=0.9)
+    bottom.text(len(steps) - 1, THRESHOLD * 1.08, "seuil 0,15", ha="right", va="bottom")
+    plain_log(bottom)
+    bottom.set_xlabel("pas de simulation")
+    bottom.set_ylabel("distance normalisée")
+    bottom.legend(loc="center right")
+    corner(bottom, "(b)")
+    save(fig, "real_proximity_coverage")
+
+
+def success_criterion() -> None:
+    """Courbes de distance de cinq épisodes enregistrés et début du suffixe sous le seuil."""
+    fig, axes = plt.subplots(2, 1, figsize=(PRINT_WIDTH, 6.8), sharex=True, sharey=True)
     for axis, shape, letter in zip(axes, ("circle", "star"), "ab"):
-        for offset, controller in zip((-0.18, -0.06, 0.06, 0.18), COLORS):
-            means = [np.mean(groups[(controller, n, 0.0, shape)]) for n in sizes]
-            spreads = [np.std(groups[(controller, n, 0.0, shape)], ddof=1) for n in sizes]
-            axis.errorbar(np.arange(3) + offset, means, yerr=spreads, fmt="o", color=COLORS[controller],
-                          capsize=3, markersize=5, label=LABELS[controller])
+        for seed in EPISODE_SEEDS:
+            positions, active, target = episode("gnn_3_rounds", 40, shape, seed)
+            curve = distance_curve(positions, active, target)
+            axis.plot(curve, linewidth=1.3, color=COLORS["gnn_3_rounds"], alpha=0.85)
+            k = convergence_step(curve, THRESHOLD)
+            if k is not None:
+                axis.plot(k, curve[k], "o", color=COLORS["manual"], markersize=6, zorder=5)
         axis.axhline(THRESHOLD, color=INK, linestyle="--", linewidth=0.9)
-        axis.set_xticks(range(3), [str(n) for n in sizes])
-        axis.set_xlabel("nombre de robots")
+        plain_log(axis)
+        axis.set_ylabel("distance normalisée")
+        corner(axis, f"({letter}) {SHAPE_LABELS[shape]}")
+    axes[1].set_xlabel("pas de simulation")
+    axes[0].plot([], [], "o", color=COLORS["manual"], label="début du maintien sous le seuil")
+    axes[0].plot([], [], "--", color=INK, label="seuil 0,15")
+    axes[0].legend(loc="upper right")
+    save(fig, "real_success_criterion")
+
+
+def training_curves() -> None:
+    """Journaux réels : termes de perte (GNN 3 tours, graine 11) et distance de validation."""
+    losses = read_csv(TRAINING / "gnn_3_rounds" / "seed_11" / "losses.csv")
+    iterations = np.array([int(row["iteration"]) for row in losses])
+    fig, (top, bottom) = plt.subplots(2, 1, figsize=(PRINT_WIDTH, 8.0), sharex=True)
+    styles = {"shape": ("proximité", COLORS["gnn_3_rounds"]), "coverage": ("couverture", COLORS["manual"]),
+              "collisions": ("collisions", COLORS["no_comm"]), "motion": ("mouvement", COLORS["flocking"])}
+    for key, (label, color) in styles.items():
+        values = np.array([float(row[key]) for row in losses])
+        top.plot(iterations[24:], rolling(values), color=color, label=label)
+    plain_log(top)
+    top.set_ylabel("terme de perte (moyenne\nglissante sur 25 itérations)")
+    top.legend(ncol=4, loc="upper center", bbox_to_anchor=(0.5, -0.03))
+    corner(top, "(a) GNN 3 tours, graine 11")
+    for seed in range(11, 16):
+        rows = read_csv(TRAINING / "no_comm" / f"seed_{seed}" / "validation.csv")
+        bottom.plot([int(r["iteration"]) for r in rows], [float(r["selection_score"]) for r in rows],
+                    color=COLORS["no_comm"], linewidth=1.1, alpha=0.8, label="GNN sans communication (5 graines)" if seed == 11 else None)
+    rows = read_csv(TRAINING / "gnn_3_rounds" / "seed_11" / "validation.csv")
+    bottom.plot([int(r["iteration"]) for r in rows], [float(r["selection_score"]) for r in rows],
+                color=COLORS["gnn_3_rounds"], linewidth=2.2, label="GNN 3 tours (graine 11)")
+    bottom.axhline(THRESHOLD, color=INK, linestyle="--", linewidth=0.9)
+    plain_log(bottom)
+    bottom.set_xlabel("itération")
+    bottom.set_ylabel("distance de validation")
+    bottom.legend(loc="upper left", bbox_to_anchor=(0.0, 0.88))
+    corner(bottom, "(b) validation toutes les 50 itérations")
+    save(fig, "real_training_curves")
+
+
+def by_controller(groups: dict, x_values, key, xlabel: str, name: str, offsets=None, xticks=None) -> None:
+    """Deux panneaux empilés (cercle, étoile) : distance finale moyenne ± écart-type par contrôleur."""
+    fig, axes = plt.subplots(2, 1, figsize=(PRINT_WIDTH, 8.0), sharex=True, sharey=True)
+    for axis, shape, letter in zip(axes, ("circle", "star"), "ab"):
+        for index, controller in enumerate(COLORS):
+            means = [np.mean(groups[key(controller, x, shape)]) for x in x_values]
+            spreads = [np.std(groups[key(controller, x, shape)], ddof=1) for x in x_values]
+            positions = np.arange(len(x_values)) + (offsets[index] if offsets else 0.0)
+            axis.errorbar(positions, means, yerr=spreads, fmt="o" if offsets else "o-", color=COLORS[controller],
+                          capsize=3.5, markersize=6, linewidth=1.6, label=LABELS[controller])
+        axis.axhline(THRESHOLD, color=INK, linestyle="--", linewidth=0.9)
         plain_log(axis)
         axis.set_ylim(0.03, 0.8)
+        axis.set_ylabel("distance finale")
         corner(axis, f"({letter}) {SHAPE_LABELS[shape]}")
-    axes[0].set_ylabel("distance finale (moyenne ± écart-type)")
-    axes[1].legend(fontsize=9, loc="lower left")
-    save(fig, "real_pilot_by_size")
+    axes[1].set_xticks(range(len(x_values)), xticks)
+    axes[1].set_xlabel(xlabel)
+    fig.legend(*axes[0].get_legend_handles_labels(), loc="outside lower center", ncol=2)
+    save(fig, name)
 
 
-def pilot_failures(groups: dict) -> None:
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4.0), sharey=True)
-    fractions = [0.0, 0.05, 0.1, 0.2]
-    for axis, shape, letter in zip(axes, ("circle", "star"), "ab"):
-        for controller in COLORS:
-            means = [np.mean(groups[(controller, 40, f, shape)]) for f in fractions]
-            spreads = [np.std(groups[(controller, 40, f, shape)], ddof=1) for f in fractions]
-            axis.errorbar([100 * f for f in fractions], means, yerr=spreads, marker="o", color=COLORS[controller],
-                          capsize=3, markersize=4, label=LABELS[controller])
-        axis.axhline(THRESHOLD, color=INK, linestyle="--", linewidth=0.9)
-        axis.set_xticks([0, 5, 10, 20])
-        axis.set_xlabel("robots retirés au pas 60 (%)")
-        plain_log(axis)
-        corner(axis, f"({letter}) {SHAPE_LABELS[shape]}, 40 robots")
-    axes[0].set_ylabel("distance finale (moyenne ± écart-type)")
-    axes[1].legend(fontsize=9, loc="lower right")
-    save(fig, "real_pilot_failures")
-
-
-def final_states() -> None:
-    controllers = ["flocking", "manual", "no_comm", "gnn_3_rounds"]
-    fig, axes = plt.subplots(2, 4, figsize=(12, 6.3), sharex=True, sharey=True)
-    for row, shape in enumerate(("circle", "star")):
-        for column, controller in enumerate(controllers):
-            seed = None if controller in ("flocking", "manual") else 11
-            positions, active, target = episode(controller, 40, shape, 555000, training_seed=seed)
-            curve = distance_curve(positions, active, target)
-            draw_state(axes[row, column], positions[-1], active[-1], target, COLORS[controller])
-            arena(axes[row, column])
-            corner(axes[row, column], f"distance {curve[-1]:.3f}".replace(".", ","))
-            if row == 0:
-                axes[row, column].set_title(LABELS[controller], fontsize=10)
-        axes[row, 0].set_ylabel(SHAPE_LABELS[shape].split(" (")[0])
-    save(fig, "real_final_states")
+def final_states(shape: str) -> None:
+    """État final au pas 120 d'un même épisode (40 robots, graine 555000), quatre contrôleurs."""
+    fig, axes = plt.subplots(2, 2, figsize=(PRINT_WIDTH, 6.9), sharex=True, sharey=True)
+    for axis, controller in zip(axes.flat, ["flocking", "manual", "no_comm", "gnn_3_rounds"]):
+        seed = None if controller in ("flocking", "manual") else 11
+        positions, active, target = episode(controller, 40, shape, 555000, training_seed=seed)
+        curve = distance_curve(positions, active, target)
+        draw_state(axis, positions[-1], active[-1], target, COLORS[controller])
+        arena(axis, 1.3)
+        axis.set_xticks([-1, 0, 1])
+        axis.set_yticks([-1, 0, 1])
+        axis.set_title(LABELS[controller])
+        corner(axis, f"distance {curve[-1]:.3f}".replace(".", ","))
+    save(fig, f"real_final_states_{shape}")
 
 
 def seed_dispersion(rows: list[dict]) -> None:
-    fig, axis = plt.subplots(figsize=(8.5, 4.2))
+    fig, axis = plt.subplots(figsize=(PRINT_WIDTH, 5.2))
     sizes = [20, 40, 100]
     per_seed = defaultdict(list)
     for row in rows:
         if row["controller"] == "no_comm" and float(row["failure_fraction"]) == 0.0 and "circle" in row["shape"]:
             per_seed[(int(row["training_seed"]), int(row["n_robots"]))].append(float(row["final_distance"]))
     for seed, marker in zip(range(11, 16), "osD^v"):
-        axis.plot(sizes, [np.mean(per_seed[(seed, n)]) for n in sizes], marker=marker, color=COLORS["no_comm"],
-                  linewidth=0.9, alpha=0.85, label=f"sans communication, graine {seed}")
+        axis.plot(sizes, [np.mean(per_seed[(seed, n)]) for n in sizes], marker=marker, markersize=6, color=COLORS["no_comm"],
+                  linewidth=1.0, alpha=0.85, label=f"sans communication, graine {seed}")
     reference = grouped(rows)
     for controller in ("gnn_3_rounds", "manual"):
-        axis.plot(sizes, [np.mean(reference[(controller, n, 0.0, "circle")]) for n in sizes], marker="o",
-                  color=COLORS[controller], linewidth=1.8, label=LABELS[controller] + (" (graine 11)" if controller == "gnn_3_rounds" else ""))
+        axis.plot(sizes, [np.mean(reference[(controller, n, 0.0, "circle")]) for n in sizes], marker="o", markersize=7,
+                  color=COLORS[controller], linewidth=2.2, label=LABELS[controller] + (" (graine 11)" if controller == "gnn_3_rounds" else ""))
     axis.axhline(THRESHOLD, color=INK, linestyle="--", linewidth=0.9)
     axis.set_xscale("log")
     axis.set_xticks(sizes, [str(n) for n in sizes])
@@ -365,7 +362,7 @@ def seed_dispersion(rows: list[dict]) -> None:
     plain_log(axis)
     axis.set_xlabel("nombre de robots")
     axis.set_ylabel("distance finale moyenne, cercle")
-    axis.legend(fontsize=8.5, loc="center left", bbox_to_anchor=(1.01, 0.5))
+    fig.legend(*axis.get_legend_handles_labels(), loc="outside lower center", ncol=2)
     save(fig, "real_seed_dispersion")
 
 
@@ -379,9 +376,12 @@ def main() -> None:
     proximity_coverage()
     success_criterion()
     training_curves()
-    pilot_by_size(groups)
-    pilot_failures(groups)
-    final_states()
+    by_controller(groups, [20, 40, 100], lambda c, n, s: (c, n, 0.0, s), "nombre de robots", "real_pilot_by_size",
+                  offsets=(-0.2, -0.07, 0.07, 0.2), xticks=["20", "40", "100"])
+    by_controller(groups, [0.0, 0.05, 0.1, 0.2], lambda c, f, s: (c, 40, f, s), "robots retirés au pas 60 (40 robots)",
+                  "real_pilot_failures", xticks=["0 %", "5 %", "10 %", "20 %"])
+    final_states("circle")
+    final_states("star")
     seed_dispersion(rows)
 
 

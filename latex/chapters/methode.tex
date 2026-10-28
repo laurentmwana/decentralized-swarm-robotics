@@ -50,8 +50,8 @@ On recentre ensuite les points sur leur centroïde et on les met à l'échelle p
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{images/real_reference_points.png}
-  \caption[Rendu et points de référence de six figures]{Rendu binaire $128\times128$ (en haut) et 50 points de référence normalisés (en bas) pour six figures du catalogue. Images produites par \texttt{src/shapes/}, sans retouche.}
+  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_reference_points.png}
+  \caption[Rendu et points de référence de six figures]{Pour six figures du catalogue : rendu binaire $128\times128$ (rangées 1 et 3) et 50 points de référence normalisés (rangées 2 et 4). Images produites par \texttt{src/shapes/}, sans retouche.}
   \label{fig:reference-points}
 \end{figure}
 
@@ -129,7 +129,7 @@ La Figure~\ref{fig:proximity-coverage} sépare les deux termes sur un épisode r
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{images/real_proximity_coverage.png}
+  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_proximity_coverage.png}
   \caption[Proximité et couverture sur un épisode réel]{Proximité et couverture sur un épisode réel de la règle manuelle (étoile, 40 robots, graine 555000) : (a) état final, les flèches partent des points de référence les moins couverts vers le robot le plus proche ; (b) évolution des deux termes et de leur somme. Positions lues dans \texttt{outputs/evaluation\_pilot/manual/positions/}.}
   \label{fig:proximity-coverage}
 \end{figure}
@@ -226,7 +226,7 @@ La Figure~\ref{fig:success-criterion} applique cette règle à cinq épisodes r�
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\linewidth]{images/real_success_criterion.png}
+  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_success_criterion.png}
   \caption[Critère de succès sur des épisodes réels]{Distance au fil des pas pour cinq épisodes réels du GNN à trois tours (40 robots, graines 555000 à 555004). Le point marque le début du maintien sous le seuil 0,15. Courbes recalculées à partir des positions enregistrées.}
   \label{fig:success-criterion}
 \end{figure}
