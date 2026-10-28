@@ -102,7 +102,7 @@ La Figure~\ref{fig:pilot-size} présente les mêmes valeurs sur une échelle log
 
 Trois constats se dégagent. D'abord, la règle de regroupement ne forme rien : elle rassemble les robots sans jamais regarder la figure, et ne réussit aucun épisode. C'est le plancher attendu.
 
-Ensuite, la règle manuelle est la meilleure partout. Sur le cercle à 40 robots, elle obtient 0,065 contre 0,135 pour le GNN à trois tours, soit une distance deux fois plus faible. L'écart est le même sur l'étoile. Nous l'avions annoncé : cette règle reçoit le déplacement complet vers le point de référence, longueur comprise, alors que le GNN ne reçoit que la direction. Elle a donc un avantage d'information. Mais l'écart est grand, et il serait malhonnête de le réduire à cette seule cause.
+Ensuite, la règle manuelle est la meilleure dans toutes les conditions testées. Sur le cercle à 40 robots, elle obtient 0,065 contre 0,135 pour le GNN à trois tours, soit une distance deux fois plus faible. L'écart est le même sur l'étoile. Nous l'avions annoncé : cette règle reçoit le déplacement complet vers le point de référence, longueur comprise, alors que le GNN ne reçoit que la direction. Elle a donc un avantage d'information. Mais l'écart est grand, et il serait malhonnête de le réduire à cette seule cause.
 
 Enfin, toutes les méthodes s'améliorent quand le nombre de robots augmente. Ce n'est pas forcément un mérite des contrôleurs. Avec 50 points de référence, 20 robots ne peuvent pas couvrir toute la figure, et le terme de couverture garde un plancher. À 100 robots, chaque point peut avoir un robot proche. Le succès qui monte de 6 à 100\,\% pour le GNN à trois tours, sur le cercle, tient donc pour une bonne part à la géométrie de la mesure.
 
@@ -118,15 +118,15 @@ Les Figures~\ref{fig:final-states} et~\ref{fig:final-states-star} montrent l'ét
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_final_states_star.png}
-  \caption[État final d'un même épisode, étoile]{État final au pas 120 du même épisode sur l'étoile, figure jamais vue à l'entraînement (40 robots, graine 555000). Mêmes conventions que la Figure~\ref{fig:final-states}.}
+  \caption[État final d'un même épisode, étoile]{État final au pas 120 du même épisode sur l'étoile, figure absente de l'entraînement (40 robots, graine 555000). Mêmes conventions que la Figure~\ref{fig:final-states}.}
   \label{fig:final-states-star}
 \end{figure}
 
 \section{Une figure jamais vue : l'étoile}
 
-L'étoile n'a servi ni à l'entraînement ni au choix d'un modèle. Pourtant, les deux GNN la forment à peu près aussi bien que le cercle, relativement à la règle manuelle : 0,172 contre 0,141 à 40 robots, 0,121 contre 0,101 à 100 robots. À première vue, c'est une généralisation encourageante.
+L'étoile n'a servi ni à l'entraînement ni au choix d'un modèle. Pourtant, les deux GNN la forment, et leur écart avec la règle manuelle y est du même ordre que sur le cercle : 0,172 contre 0,141 à 40 robots, 0,121 contre 0,101 à 100 robots. À première vue, c'est un signe de généralisation, observé sur une seule figure.
 
-Il faut la lire avec prudence. Les deux GNN reçoivent à chaque pas la direction vers le point de référence le plus proche, calculée sur l'étoile elle-même. Une part importante de la réussite vient sans doute de cette consigne géométrique, et non de ce que le réseau aurait appris sur les formes. La règle manuelle, qui n'a rien appris du tout, fait d'ailleurs mieux. Ce résultat montre que la chaîne fonctionne sur une figure inconnue. Il ne prouve pas que le modèle a compris quoi que ce soit de l'étoile.
+Il faut la lire avec prudence. Les deux GNN reçoivent à chaque pas la direction vers le point de référence le plus proche, calculée sur l'étoile elle-même. Une part importante de la réussite vient sans doute de cette consigne géométrique, et non de ce que le réseau aurait appris sur les formes. La règle manuelle, qui n'a rien appris du tout, fait d'ailleurs mieux. Ce résultat montre que la chaîne fonctionne sur une figure inconnue. Il ne montre pas que le modèle ait acquis quelque chose de propre à l'étoile.
 
 \section{Effet des retraits de robots}
 
@@ -141,7 +141,7 @@ Au pas 60, une fraction des robots est retirée au hasard. Ils restent immobiles
 
 Toutes les courbes montent doucement. Sur le cercle, la règle manuelle passe de 0,065 à 0,081 et garde 100\,\% de succès même avec 20\,\% de retraits. Le GNN à trois tours passe de 0,135 à 0,152. Son taux de succès, lui, chute de 86 à 48\,\%. La hausse de distance est modeste, mais elle suffit à faire repasser beaucoup d'épisodes au-dessus du seuil, car ils en étaient proches.
 
-C'est un comportement raisonnable, et un peu trompeur. Retirer 20\,\% des robots laisse des trous sur la figure, ce qui fait monter le terme de couverture quel que soit le contrôleur. Une petite hausse ne prouve donc pas que l'essaim s'est réorganisé. Pour le savoir, il faudrait mesurer le temps de reformation après la panne, ce que le module de robustesse prévoit et que cette campagne ne fait pas.
+C'est un comportement raisonnable, et un peu trompeur. Retirer 20\,\% des robots laisse des trous sur la figure, ce qui fait monter le terme de couverture quel que soit le contrôleur. Une petite hausse ne montre donc pas que l'essaim s'est réorganisé. Pour le savoir, il faudrait mesurer le temps de reformation après la panne, ce que le module d'étude des perturbations prévoit et que cette campagne ne fait pas.
 
 \section{Dispersion entre graines d'entraînement}
 
@@ -225,4 +225,4 @@ Viendront après les études déjà implémentées : transfert de taille à poid
 
 \section{Conclusion partielle}
 
-La campagne pilote de l'implémentation actuelle donne un résultat net, et plutôt négatif. Les GNN forment le cercle et même une étoile jamais vue, mais la règle manuelle fait mieux partout, et rien ne montre encore que la communication entre robots améliore la formation : le seul modèle avec messages tombe dans l'intervalle des cinq modèles sans communication. Les journaux d'entraînement suggèrent pourquoi. La perte de collisions dominait, et la consigne géométrique faisait déjà l'essentiel du travail avant tout apprentissage. Ces observations ont conduit à corriger la perte, le catalogue et les intervalles de confiance. La discussion qui suit replace ces résultats dans la littérature et en tire les leçons pour la conception de contrôleurs décentralisés.
+La campagne pilote de l'implémentation actuelle donne un résultat net, et plutôt négatif. Les GNN forment le cercle et même une étoile absente de l'entraînement. Mais la règle manuelle fait mieux dans toutes les conditions testées, et rien n'indique encore que la communication entre robots améliore la formation : le seul modèle avec messages tombe dans l'intervalle des cinq modèles sans communication. Les journaux d'entraînement suggèrent pourquoi. La perte de collisions dominait, et la consigne géométrique semble avoir fait l'essentiel du travail avant tout apprentissage. Ces observations ont conduit à corriger la perte, le catalogue et les intervalles de confiance. La discussion qui suit replace ces résultats dans la littérature et en tire les leçons pour la conception de contrôleurs décentralisés.
