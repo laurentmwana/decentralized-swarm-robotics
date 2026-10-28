@@ -1,0 +1,7 @@
+# GAT à une tête et un échange direct, sans entraînement au chargement.
+hidden_dim: 64
+spatial_scale: 4.0
+speed_scale: 1.0
+count_scale: 12.0
+negative_slope: 0.2
+init_seed: 42

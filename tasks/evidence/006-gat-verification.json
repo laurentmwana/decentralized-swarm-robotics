@@ -1,0 +1,27 @@
+{
+  "model": {
+    "model_type": "AccelerationGAT",
+    "schema_version": 1,
+    "config": {
+      "hidden_dim": 64,
+      "spatial_scale": 4.0,
+      "speed_scale": 1.0,
+      "count_scale": 12.0,
+      "negative_slope": 0.2,
+      "init_seed": 42
+    },
+    "max_acceleration": 2.0,
+    "feature_count": 8
+  },
+  "parameters": 17282,
+  "torch_version": "2.15.0+cpu",
+  "trained": false,
+  "optimizer_steps": 0,
+  "verification": {
+    "passed": 203,
+    "new_model_tests": 36,
+    "historical_simulator_tests": 12,
+    "previous_migration_tests": 155
+  },
+  "data_quality": "review_required (episode 113)"
+}
