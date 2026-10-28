@@ -1,0 +1,7 @@
+# Épisodes complets ; graines distinctes des campagnes de réglage 0–29.
+splits:
+  train: [100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119]
+  validation: [200, 201, 202, 203, 204]
+  test: [300, 301, 302, 303, 304]
+minimum_distance: 0.4
+max_spawn_attempts: 20000

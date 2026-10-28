@@ -12,8 +12,8 @@ Les modifications présentes avant cette migration sont préservées.
 | 002 | Épisodes du nouveau moteur, observations locales et trajectoires position/vitesse/commande ; tests de portée et reproductibilité | Validée, commit 219c9e5, 28 tests nouveaux réussis |
 | 003 | Consigne circulaire et professeur local : rayon, espacement, freinage et évitement ; tests de comportement | Validée, commit f60448d, 23 tests nouveaux réussis |
 | 004 | Quatre métriques : erreur en mètres, stabilisation en secondes, contacts, réussite ; protocole et tests | Validée, commit 3e23a47, 32 tests nouveaux réussis |
-| 004b | Corriger le professeur depuis des positions dispersées sous le protocole 004 ; tests de régression et nouvelles graines | Validée ; pilote 9/10, validation 17/20 |
-| 005 | Collecte du professeur et séparation par épisodes entraînement/validation/test ; tests anti-fuite | À faire |
+| 004b | Corriger le professeur depuis des positions dispersées sous le protocole 004 ; tests de régression et nouvelles graines | Validée, commit 38b1941 ; pilote 9/10, validation 17/20 |
+| 005 | Collecte du professeur et séparation par épisodes entraînement/validation/test ; tests anti-fuite | Validée, 27 tests nouveaux réussis ; qualité des données à examiner |
 | 006 | GAT partagé à une couche, prédiction d'accélérations et MSE supervisée ; tests sans optimisation réelle | À faire |
 | 007 | Intégration GAT, commandes d'entraînement à lancer par l'utilisateur, comparaison sur épisodes inédits | À faire |
 | 008 | Ligne et V : affectation locale, collecte adaptée et transitions ; tests | À faire |
@@ -21,3 +21,5 @@ Les modifications présentes avant cette migration sont préservées.
 | 010 | Interface et exports adaptés, comparaisons reproductibles ; tests d'intégration | À faire |
 
 Les métriques sont préparées avant la collecte. Les formations suivantes ne sont entraînées qu'après validation de leur répartition. Les anciens modèles commandant des vitesses ne sont pas réutilisés comme modèles à accélérations.
+
+Point qualité avant tout entraînement : la collecte 005 conserve un échec avec collisions (graine 113) ; le manifeste review_required bloque son chargement normal. Traiter ce point avant 007.
