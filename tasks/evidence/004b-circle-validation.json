@@ -1,0 +1,208 @@
+{
+  "simulator": {
+    "physics": {
+      "arena_size": 10.0,
+      "dt": 0.1,
+      "max_speed": 1.0,
+      "max_acceleration": 2.0,
+      "robot_radius": 0.1
+    },
+    "horizon": 100,
+    "communication_radius": 2.0,
+    "spawn_radius": 4.0
+  },
+  "teacher": {
+    "mission": {
+      "center": [
+        0.0,
+        0.0
+      ],
+      "radius": 2.0,
+      "robot_count": 12
+    },
+    "gains": {
+      "radial": 12.0,
+      "damping": 6.0,
+      "spacing": 60.0,
+      "avoidance": 60.0,
+      "safety_distance": 0.4
+    }
+  },
+  "protocol": {
+    "error_threshold": 0.1,
+    "speed_threshold": 0.05,
+    "hold_seconds": 1.0,
+    "deadline_seconds": 10.0
+  },
+  "reports": [
+    {
+      "seed": 10,
+      "formation_error_m": 0.009963294688355218,
+      "stabilization_time_s": 6.7,
+      "collisions": 0,
+      "success": true,
+      "initial_collision": false
+    },
+    {
+      "seed": 11,
+      "formation_error_m": 0.011589399914493148,
+      "stabilization_time_s": 6.9,
+      "collisions": 0,
+      "success": true,
+      "initial_collision": false
+    },
+    {
+      "seed": 12,
+      "formation_error_m": 0.0027312799659540143,
+      "stabilization_time_s": null,
+      "collisions": 1,
+      "success": false,
+      "initial_collision": true
+    },
+    {
+      "seed": 13,
+      "formation_error_m": 0.004616048925081939,
+      "stabilization_time_s": 5.5,
+      "collisions": 0,
+      "success": true,
+      "initial_collision": false
+    },
+    {
+      "seed": 14,
+      "formation_error_m": 0.0034740314801549044,
+      "stabilization_time_s": 5.2,
+      "collisions": 0,
+      "success": true,
+      "initial_collision": false
+    },
+    {
+      "seed": 15,
+      "formation_error_m": 0.005745827506404622,
+      "stabilization_time_s": 5.9,
+      "collisions": 0,
+      "success": true,
+      "initial_collision": false
+    },
+    {
+      "seed": 16,
+      "formation_error_m": 0.012792524704837716,
+      "stabilization_time_s": 7.1000000000000005,
+      "collisions": 0,
+      "success": true,
+      "initial_collision": false
+    },
+    {
+      "seed": 17,
+      "formation_error_m": 0.016911636391345963,
+      "stabilization_time_s": 7.5,
+      "collisions": 0,
+      "success": true,
+      "initial_collision": false
+    },
+    {
+      "seed": 18,
+      "formation_error_m": 0.0071740703473774925,
+      "stabilization_time_s": 6.2,
+      "collisions": 0,
+      "success": true,
+      "initial_collision": false
+    },
+    {
+      "seed": 19,
+      "formation_error_m": 0.0032078337437713156,
+      "stabilization_time_s": 5.1000000000000005,
+      "collisions": 0,
+      "success": true,
+      "initial_collision": false
+    },
+    {
+      "seed": 20,
+      "formation_error_m": 0.005958562048025362,
+      "stabilization_time_s": null,
+      "collisions": 1,
+      "success": false,
+      "initial_collision": true
+    },
+    {
+      "seed": 21,
+      "formation_error_m": 0.014248398788965444,
+      "stabilization_time_s": 7.2,
+      "collisions": 0,
+      "success": true,
+      "initial_collision": false
+    },
+    {
+      "seed": 22,
+      "formation_error_m": 0.014179257548031954,
+      "stabilization_time_s": null,
+      "collisions": 1,
+      "success": false,
+      "initial_collision": true
+    },
+    {
+      "seed": 23,
+      "formation_error_m": 0.005351861564301563,
+      "stabilization_time_s": 5.800000000000001,
+      "collisions": 0,
+      "success": true,
+      "initial_collision": false
+    },
+    {
+      "seed": 24,
+      "formation_error_m": 0.006103464741248343,
+      "stabilization_time_s": 6.0,
+      "collisions": 0,
+      "success": true,
+      "initial_collision": false
+    },
+    {
+      "seed": 25,
+      "formation_error_m": 0.011334986021340976,
+      "stabilization_time_s": 6.9,
+      "collisions": 0,
+      "success": true,
+      "initial_collision": false
+    },
+    {
+      "seed": 26,
+      "formation_error_m": 0.019644150683396644,
+      "stabilization_time_s": 7.7,
+      "collisions": 0,
+      "success": true,
+      "initial_collision": false
+    },
+    {
+      "seed": 27,
+      "formation_error_m": 0.0020612631469185683,
+      "stabilization_time_s": 4.4,
+      "collisions": 0,
+      "success": true,
+      "initial_collision": false
+    },
+    {
+      "seed": 28,
+      "formation_error_m": 0.0011490030470937551,
+      "stabilization_time_s": 4.1000000000000005,
+      "collisions": 0,
+      "success": true,
+      "initial_collision": false
+    },
+    {
+      "seed": 29,
+      "formation_error_m": 0.030016999021001523,
+      "stabilization_time_s": 8.3,
+      "collisions": 0,
+      "success": true,
+      "initial_collision": false
+    }
+  ],
+  "summary": {
+    "episodes": 20,
+    "success_rate_percent": 85.0,
+    "formation_error_mean_m": 0.009412694713905023,
+    "formation_error_std_m": 0.006976019729275876,
+    "collisions_total": 3,
+    "stabilization_time_mean_s": 6.264705882352942,
+    "stabilization_successful_episodes": 17
+  }
+}

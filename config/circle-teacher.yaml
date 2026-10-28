@@ -4,8 +4,8 @@ mission:
   radius: 2.0
   robot_count: 12
 gains:
-  radial: 2.0
-  damping: 3.0
-  spacing: 2.0
-  avoidance: 12.0
+  radial: 12.0
+  damping: 6.0
+  spacing: 60.0
+  avoidance: 60.0
   safety_distance: 0.4

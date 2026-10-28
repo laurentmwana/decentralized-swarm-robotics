@@ -27,6 +27,7 @@ def test_radial_restoring_force_and_equilibrium():
 
 def test_braking_and_center_are_finite():
     _, teacher = setup()
+    teacher = replace(teacher, gains=replace(teacher.gains, damping=3.))
     np.testing.assert_allclose(teacher(obs([2, 0], [0, 1])), [0, -3])
     assert np.isfinite(teacher(obs([0, 0]))).all()
     assert teacher(obs([0, 0]))[0] > 0
@@ -115,7 +116,7 @@ def test_demo_exports_trajectory_and_mission(tmp_path):
         assert data['positions'].shape == (101, 12, 2)
     metadata = json.loads((tmp_path / 'teacher.json').read_text())
     assert metadata['mission']['radius'] == 2
-    assert metadata['gains']['damping'] == 3
+    assert metadata['gains']['damping'] == 6
 
 
 def test_close_pair_separates_from_rest():
