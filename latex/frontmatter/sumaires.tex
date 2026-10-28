@@ -11,28 +11,28 @@
 \chapter*{Résumé}
 \addcontentsline{toc}{chapter}{Résumé}
 
-La robotique en essaim vise à faire émerger des comportements collectifs à partir de règles locales suivies par une multitude d'agents. Lorsqu'il s'agit d'amener ces robots à former une figure géométrique précise, toute la difficulté repose sur l'absence de vue d'ensemble : chaque unité ne perçoit que son environnement immédiat, mais doit pourtant contribuer à un objectif global. Aujourd'hui, les travaux du domaine s'appuient soit sur des règles conçues manuellement, soit sur des contrôleurs issus de l'apprentissage. Il reste toutefois complexe d'opposer directement ces deux choix, faute d'hypothèses et de cadres d'évaluation communs.
+La robotique en essaim cherche à obtenir un comportement collectif à partir de décisions locales. Demander à des robots de dessiner une figure est un bon test : chacun ne voit que ses voisins, mais tous doivent couvrir la même forme. Ces dernières années, plusieurs travaux ont proposé des lois écrites à la main ou des contrôleurs appris, souvent des réseaux de neurones sur graphes. La plupart ne comparent pourtant pas les deux approches à information égale, et rares sont ceux qui isolent l'apport réel de la communication entre robots.
 
-Ce travail étudie un contrôleur décentralisé reposant sur un réseau de neurones sur graphes (GNN) partagé par l'ensemble des robots. En pratique, chaque agent s'appuie sur son état propre, les émanations de son voisinage direct et une consigne globale décrivant la forme cible. Nous avons mis en place un environnement de simulation en deux dimensions ainsi qu'un protocole d'évaluation pensé pour éprouver la formation de motifs, la perte soudaine de composants et les variations d'effectif au sein de l'essaim.
+Dans ce mémoire, nous proposons un cadre expérimental complet pour poser cette question. Il réunit un simulateur en deux dimensions, un catalogue de 64 figures décrites par 50 points de référence, un contrôleur GNN dont tous les robots partagent les poids, entraîné à travers le simulateur, et deux règles de référence réglées sous budget fixe. Les comparaisons sont appariées : tous les contrôleurs partent des mêmes positions et subissent les mêmes pannes.
 
-Des essais menés sur une première version du prototype montrent un meilleur suivi de contour circulaire par rapport à une règle de regroupement classique. La portée de ce constat reste néanmoins nuancée, les deux méthodes n'ayant pas disposé du même niveau d'information. L'architecture actuelle a depuis fait l'objet d'un entraînement complet et d'une campagne de tests comparatifs, dont l'analyse détaillée fera l'objet de publications ultérieures et n'est pas intégrée dans ce document.
+Une campagne pilote de 9\,600 épisodes montre que le GNN amène l'essaim sur un cercle et sur une étoile jamais vue, avec 20, 40 ou 100 robots. Une règle manuelle simple fait pourtant mieux dans toutes les conditions, et le seul modèle avec messages ne se distingue pas des cinq modèles sans communication. L'analyse de l'entraînement suggère pourquoi : la perte de collisions dominait, et la consigne géométrique faisait déjà l'essentiel du travail.
 
-Nous mettons ainsi à disposition un cadre expérimental standardisé pour mesurer l'apport réel des GNN dans la commande décentralisée d'essaims, accompagné d'un protocole scrupuleusement documenté pour en garantir la reproductibilité.
+Ce travail fournit un banc d'essai reproductible, où chaque chiffre se retrouve dans un fichier brut, un résultat négatif documenté et les corrections qu'il a permis d'apporter au code.
 
-\noindent\textbf{Mots-clés :} robotique en essaim, contrôle décentralisé, réseaux de neurones sur graphes, formation de formes, apprentissage différentiable, simulation robotique, apprentissage multi-agents, distance de Chamfer.
+\noindent\textbf{Mots-clés :} robotique en essaim, contrôle décentralisé, réseaux de neurones sur graphes, formation de formes, apprentissage différentiable, simulation robotique, distance de Chamfer, reproductibilité.
 
 \chapter*{Abstract}
 \addcontentsline{toc}{chapter}{Abstract}
 
-Swarm robotics explores how collective behaviors emerge from simple local interactions among numerous robots. Pattern and shape formation presents a distinct challenge: individual agents operate without global vision, yet their local actions must converge toward a unified spatial structure. Current approaches generally rely either on hand-crafted heuristics or learned controllers. Direct comparisons between the two remain difficult due to fragmented assumptions and disparate testing frameworks.
+Swarm robotics aims to obtain collective behaviour from local decisions. Asking robots to draw a figure is a good test: each one only sees its neighbours, yet all of them must cover the same shape. In recent years, several works have proposed hand-written control laws or learned controllers, often graph neural networks. Most of them, however, do not compare both approaches with the same information, and few isolate what communication between robots actually brings.
 
-This thesis investigates a decentralized controller built upon a shared Graph Neural Network (GNN) architecture across all agents. Each robot makes movement decisions using only its local state, messages from immediate neighbors, and a shared target shape descriptor. We evaluate this approach using a custom two-dimensional simulation platform under a structured protocol designed to test shape formation, fault tolerance via robot removal, and scalability across varying swarm sizes.
+In this thesis, we propose a complete experimental framework to address this question. It combines a two-dimensional simulator, a catalogue of 64 figures described by 50 reference points, a GNN controller whose weights are shared by all robots and trained through the simulator, and two baseline rules tuned under a fixed budget. Comparisons are paired: every controller starts from the same positions and suffers the same failures.
 
-Preliminary runs with an early prototype demonstrated tighter compliance to circular contours than traditional aggregation rules. However, these initial insights remain bounded, as the baseline models did not share identical input representations. The expanded system has since undergone full training and benchmark execution; detailed statistical analysis of these runs remains ongoing and lies beyond the scope of this text.
+A pilot campaign of 9,600 episodes shows that the GNN brings the swarm onto a circle and onto a star it never saw, with 20, 40 or 100 robots. A simple hand-written rule nevertheless performs better in every condition, and the only model with messages does not stand out from the five models without communication. The training logs suggest why: the collision loss dominated, and the geometric instruction already did most of the work.
 
-Ultimately, this work delivers an open experimental methodology to systematically measure how graph neural networks enhance decentralized swarm coordination, backed by a fully reproducible evaluation suite.
+This work provides a reproducible test bench, where every number can be traced to a raw file, a documented negative result, and the code corrections it led to.
 
-\noindent\textbf{Keywords:} swarm robotics, decentralized control, graph neural networks, shape formation, differentiable learning, robot simulation, multi-agent learning, Chamfer distance.
+\noindent\textbf{Keywords:} swarm robotics, decentralized control, graph neural networks, shape formation, differentiable learning, robot simulation, Chamfer distance, reproducibility.
 
 \cleardoublepage
 \tableofcontents

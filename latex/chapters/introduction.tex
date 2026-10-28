@@ -62,7 +62,7 @@ Le caractère décentralisé porte sur la décision de mouvement.
 Chaque robot utilise le même contrôleur et ne communique qu'avec
 les voisins à sa portée. La forme à réaliser est définie avant
 l'exécution et transmise à l'essaim comme une consigne de mission.
-Les robots ne la trouvent pas eux-mêmes. C'est soit un identifiant de cible (selon la configuration) soit des informations géométriques locales sur le contour (dans ce cas, l'entraînement est centralisé). Mais l'entraînement se fait toujours sur un simulateur différentiable où une perte globale peut être utilisée pour ajuster les poids du réseau et pendant l'exécution, chaque robot décide en fonction de ses informations locales sans accès aux positions des robots éloignés. Ce problème est divisé en quatre questions :
+Les robots ne la trouvent pas eux-mêmes. Ils reçoivent un identifiant de figure et, selon la variante, la direction vers le point de la figure le plus proche. L'entraînement, lui, se fait dans un simulateur différentiable, avec une perte calculée sur tout l'essaim. Pendant l'exécution, en revanche, chaque robot décide à partir de ses seules informations locales. Il ne voit jamais la position d'un robot éloigné. Ce problème se divise en quatre questions :
 
 \begin{enumerate}
     \item Le contrôleur appris rapproche-t-il la configuration
@@ -106,14 +106,14 @@ devront les vérifier.
 
 \subsection*{Hypothèses de modélisation et périmètre}
 
-Les expériences du prototype historique se déroulent dans une
+Les expériences se déroulent dans une
 arène plane, sans obstacle fixe. Chaque robot a une position et une
 vitesse en deux dimensions, et se déplace selon une dynamique
 simplifiée où la vitesse est directement commandée. Deux robots
 communiquent quand leur distance est inférieure à une portée donnée.
 Les mesures et les messages sont supposés précis, instantanés et sans perte. Un robot déclaré hors service est retiré de la simulation active et du graphe de communication.
 
-Ces hypothèses simplifient l'étude au détriment de son étendue. Le pilote ne prend pas en compte le bruit dans les capteurs, les délais de communication, les obstacles, la dynamique réelle des actionneurs ou la consommation d'énergie. Aucun essai sur robots
+Ces hypothèses simplifient l'étude au détriment de son étendue. Le simulateur ignore le bruit des capteurs, les délais de communication, les obstacles, la dynamique réelle des actionneurs et la consommation d'énergie. Aucun essai sur robots
 physiques ne figure non plus dans cette validation.
 L'implémentation actuelle prévoit d'étudier certaines perturbations,
 en particulier le bruit des observations et la réduction de la portée
@@ -161,19 +161,18 @@ difficultés de coordination. À la différence du simple regroupement,
 elle demande aux robots de se répartir sur l'ensemble du contour
 cible. On y observe donc plusieurs aspects du contrôle décentralisé,
 notamment la couverture de la cible, les collisions et les problèmes de
-connectivité. La Figure~\ref{fig:schema-formation} présente les
-principales étapes d'une telle formation.
+connectivité. La Figure~\ref{fig:schema-formation} montre un épisode
+réel : 40 robots pilotés par le GNN partent de positions tirées au
+hasard et rejoignent un cercle en une dizaine de pas.
 
 \begin{figure}[htbp]
     \centering
-    \includegraphics[width=\linewidth,height=.72\textheight,
-    keepaspectratio]{images/formation_principle.png}
-    \caption[Illustration conceptuelle d'une formation de forme]
-    {Illustration conceptuelle d'une formation de forme. À gauche,
-    les robots sont répartis aléatoirement. Au centre, ils commencent
-    à s'organiser. À droite, ils se rapprochent du contour cible.
-    Cette illustration présente le principe général et ne constitue
-    pas un résultat du contrôleur appris.}
+    \includegraphics[width=\linewidth]{images/real_formation_sequence.png}
+    \caption[Un essaim de 40 robots dessine un cercle]
+    {Un essaim de 40 robots dessine un cercle, aux pas 0, 10 et 120.
+    Épisode réel du GNN à trois tours, enregistré par la campagne pilote
+    du chapitre~\ref{chap:experiences}. Cercles verts : points de
+    référence de la figure ; points bleus : robots.}
     \label{fig:schema-formation}
 \end{figure}
 
@@ -185,16 +184,16 @@ Nous ne cherchons pas à reconnaître les symboles, seulement à voir si
 les robots peuvent en reproduire la géométrie. Qu'une lettre soit formée grossièrement ne signifie pas que le système la comprend.
 
 L'instruction commune joue également un rôle important. 
-La forme cible est connue avant le début de la simulation, mais chaque robot décide de son mouvement en fonction de ses propres informations et de celles de ses voisins — aucun système central n'envoie toutes les positions de l'essaim à celui-ci. Cette distinction clarifie ce qui est véritablement décentralisé dans le fonctionnement du contrôleur.
+La forme cible est connue avant le début de la simulation. Mais chaque robot décide de son mouvement avec ses propres informations et celles de ses voisins. Aucun système central ne lui envoie les positions de tout l'essaim. C'est là, et seulement là, que se situe la décentralisation.
 
 \subsection*{Critères de réussite}
 L'animation ne suffit pas à dire que la formation a été réussie. 
-Les robots doivent s'approcher du contour de la cible et en couvrir différentes parties, leurs commandes doivent être limitées et les collisions rares. La reproductibilité compte aussi : même configuration et même graine aléatoire doivent donner le même scénario ; plusieurs graines sont nécessaires pour que les résultats ne proviennent pas d'une seule simulation favorable. La robustesse est testée séparément — ce n'est pas parce que le modèle fonctionne avec plus de robots que pendant la formation qu'il se généralise bien ; retirer des robots est un scénario d'échec simplifié et les capteurs défectueux (robots immobilisés laissés dans l'environnement) nécessiteront des études supplémentaires.
+Les robots doivent s'approcher de la figure et en couvrir toutes les parties. Leurs commandes doivent rester bornées, et les collisions rares. La reproductibilité compte aussi : même configuration et même graine aléatoire doivent donner le même épisode, au bit près. Il faut plusieurs graines pour qu'un résultat ne vienne pas d'une seule simulation favorable. La robustesse se teste à part. Qu'un modèle tourne avec plus de robots qu'à l'entraînement ne prouve pas qu'il généralise. Et retirer des robots reste une panne simplifiée.
 
 \section*{Méthodes et techniques utilisées}
 \addcontentsline{toc}{section}{Méthodes et techniques utilisées}
 
-La configuration expérimentale commence par un simulateur stable (les distances entre les robots, les communications et l'évolution des positions doivent être correctement modélisées sinon les résultats seront biaisés indépendamment de la qualité du modèle appris). Une règle de regroupement local est la première référence pour vérifier que la simulation se comporte comme prévu. La deuxième étape consiste à représenter les formes cibles par des nuages de points : la forme devient un ensemble de positions à couvrir au lieu d'une image à reconstruire pixel par pixel afin que nous puissions comparer la distribution des robots avec celle du contour cible.
+Tout commence par un simulateur fiable. Si les distances, les communications ou les déplacements sont mal modélisés, les résultats seront faussés, quelle que soit la qualité du modèle appris. Une règle de regroupement sert de premier contrôle : elle doit rassembler les robots, sans plus. Vient ensuite la représentation des figures. Chaque figure est décrite par 50 points de référence posés sur son tracé. On ne cherche pas à reconstruire une image pixel par pixel. On compare la répartition des robots à celle de ces points.
 
 Le nombre de robots disponibles limite néanmoins le niveau de détail
 qu'on peut reproduire.
@@ -214,7 +213,9 @@ pas prendre une belle animation pour une validation expérimentale.
 \section*{Contribution de l'étude}
 \addcontentsline{toc}{section}{Contribution de l'étude}
 
-Dans ce travail, nous avons mis en place un cadre expérimental (représentation de formes par des nuages de points, contrôleur GNN partagé et protocole pour reproduire des simulations et analyser les trajectoires enregistrées) pour étudier le contrôle décentralisé, mais sans prétendre à une supériorité générale des GNN par rapport à d'autres méthodes. Les résultats numériques reportés ici proviennent uniquement du prototype historique ; l'implémentation actuelle a bien été entraînée et soumise à une campagne comparative, mais son analyse reste à écrire dans ce mémoire, et aucune conclusion plus générale ne peut encore en être tirée.
+Ce travail apporte d'abord un cadre expérimental complet : un catalogue de 64 figures, un contrôleur GNN partagé, des règles de référence réglées sous budget fixe, un protocole d'évaluation apparié et une démonstration web en lecture seule. Chaque chiffre du mémoire peut être retrouvé dans un fichier brut.
+
+Il apporte ensuite un résultat, plutôt négatif. Sur une campagne pilote de 9\,600 épisodes, le GNN forme le cercle et même une étoile jamais vue, mais une règle manuelle simple fait mieux partout. Et rien ne montre encore que la communication entre robots améliore la formation. L'analyse de l'entraînement suggère pourquoi, et elle a conduit à corriger plusieurs défauts du code. Nous ne prétendons donc à aucune supériorité des GNN.
 
 \section*{Plan sommaire et subdivision du travail}
 \addcontentsline{toc}{section}{Plan sommaire et subdivision du travail}
@@ -225,22 +226,10 @@ et du contrôle local. Le deuxième examine les méthodes existantes et
 les travaux liés à la formation de formes. Le troisième décrit la
 méthodologie, le simulateur, les formes cibles, le contrôleur et la
 procédure d'apprentissage. Le quatrième présente l'implémentation et
-les résultats du prototype historique, avec leurs limites. Une
+les résultats de la campagne pilote, avec leurs limites. Une
 discussion et une conclusion générale complètent le travail.
 
-La Figure~\ref{fig:experimental-pipeline} résume le fonctionnement
-de la chaîne expérimentale. L'apprentissage utilise une perte globale
-dans le simulateur. Ensuite, chaque robot applique la politique
-partagée à partir de ses observations locales, des informations de ses
-voisins et de la consigne de mission.
-
-\begin{figure}[htbp]
-    \centering
-    \includegraphics[width=\linewidth]{images/experimental_chain.png}
-    \caption[Vue d'ensemble de la chaîne expérimentale]
-    {Vue d'ensemble de la chaîne expérimentale. L'apprentissage
-    repose sur une perte globale. Pendant l'exécution, chaque robot
-    utilise la politique partagée à partir de ses informations
-    locales, de ses voisins et de la consigne de mission.}
-    \label{fig:experimental-pipeline}
-\end{figure}
+En résumé, la chaîne fonctionne en deux temps. L'apprentissage
+utilise une perte calculée sur tout l'essaim, dans le simulateur.
+Ensuite, chaque robot applique seul la politique partagée, avec ses
+observations, les messages de ses voisins et la consigne de mission.

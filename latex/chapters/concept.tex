@@ -13,11 +13,20 @@ La robotique en essaim fait dépendre un comportement collectif de décisions pr
 
 Trois niveaux de répartition méritent une attention distincte. Un contrôleur \emph{centralisé} lit toutes les positions et calcule toutes les commandes. Un contrôleur \emph{décentralisé} ne laisse à chaque robot que ses informations et celles de ses voisins. L'\emph{apprentissage}, lui, peut rester global : rien n'empêche d'ajuster des poids à partir d'une mesure calculée sur l'essaim entier, tant que l'exécution ne dépend plus que d'observations locales. C'est exactement le schéma retenu ici. Le caractère décentralisé du système porte donc sur la décision de mouvement, et non sur la procédure d'entraînement.
 
-Cette précision évite une confusion classique. Une politique exécutée localement peut avoir été entraînée avec une information que nul robot ne possède pendant l'exécution. Elle n'en devient pas centralisée, mais sa qualité dépend de l'écart entre les deux situations. Une comparaison entre contrôleurs ne vaut donc que si les deux reçoivent la même information. C'est une exigence méthodologique, pas un fait acquis : le pilote présenté au chapitre~\ref{chap:experiences} compare justement deux approches qui ne reçoivent pas la même consigne, et la discussion qui suit en fait une limite explicite.
+Cette précision évite une confusion classique. Une politique exécutée localement peut avoir été entraînée avec une information que nul robot ne possède pendant l'exécution. Elle n'en devient pas centralisée, mais sa qualité dépend de l'écart entre les deux situations. Une comparaison entre contrôleurs ne vaut donc que si les deux reçoivent la même information. C'est une exigence méthodologique, pas un fait acquis. Au chapitre~\ref{chap:experiences}, la règle manuelle reçoit d'ailleurs un peu plus d'information que le GNN, et nous en tenons compte dans la lecture des résultats.
 
 \section{Voisins, portée de communication et graphe de proximité}
 
 Dans un essaim, ce qu'un robot sait dépend de ce qu'il perçoit et de ce que ses voisins lui transmettent. Le voisinage n'est pas une liste fixe : il change à chaque pas, au fil des déplacements. On le décrit habituellement par une portée : deux robots échangent si leur distance ne dépasse pas une certaine valeur, et ne communiquent pas sinon. L'ensemble de ces liens forme un graphe dont les nœuds sont les robots et les arêtes sont les communications possibles. Le graphe est donc reconstruit en permanence, et un robot peut passer d'isolé à très connecté sans que le programme change.
+
+La Figure~\ref{fig:communication-graph} montre ce graphe sur un épisode réel, au départ et à la fin. Le robot marqué d'une étoile échange avec tous les robots situés dans le cercle pointillé, et avec eux seulement. Au départ, il a 22 voisins sur 39. À la fin, quand l'essaim s'est resserré sur la figure, il en a 26.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\linewidth]{images/real_communication_graph.png}
+  \caption[Graphe de communication d'un essaim réel]{Graphe de communication de 40 robots aux pas 0 et 120 (portée 1,5). Le robot étoilé est relié aux robots en bleu, situés dans sa portée (cercle pointillé). Positions lues dans un épisode enregistré de la campagne pilote ; arêtes recalculées à partir de ces positions.}
+  \label{fig:communication-graph}
+\end{figure}
 
 Deux conséquences intéressent directement notre sujet. La première tient à la portée de l'information. Un lien direct ne transporte que ce que le voisin immédiat transmet. Une information plus éloignée ne parvient à un robot qu'en traversant une chaîne d'arêtes, ce qui suppose plusieurs tours d'échange. Le rayon de l'information utile croît avec le nombre de tours, pas avec la portée de communication.
 
@@ -29,14 +38,7 @@ Enfin, un voisinage se présente sous forme d'un ensemble non ordonné, de taill
 
 Un réseau de neurones sur graphe traite des données structurées en relations plutôt qu'en grille ou en liste fixe. Le modèle introduit par Scarselli et al. propage des états entre nœuds reliés jusqu'à converger vers un point fixe, qu'un décodeur transforme en sortie \cite{scarselli2009}. Les architectures utilisées aujourd'hui préfèrent un nombre fini d'étapes, entraîné par rétropropagation classique \cite{gilmer2017}.
 
-Le déroulement d'une étape se décrit en quatre temps. Chaque nœud encode son état courant et les informations dont il dispose. Chaque arête produit un message à partir des deux nœuds qu'elle relie et de la relation entre eux. Un nœud combine ensuite les messages reçus de ses voisins. Cette combinaison, appelée agrégation, doit rester symétrique puisque l'ordre des voisins n'a pas de signification ; les fonctions invariantes par permutation ont été étudiées dans ce but pour représenter des données non ordonnées \cite{zaheer2017}. Vient enfin une étape de mise à jour, puis un décodeur qui rend la commande attendue. La Figure~\ref{fig:neurone-message} montre les deux objets que ces quatre temps relient. À gauche, des neurones rangés en couches : chaque connexion porte un poids, et un neurone additionne ce qu'il reçoit avant de le transmettre. À droite, un robot $i$ et les voisins situés à sa portée de communication, qui lui transmettent chacun un message ; le robot $k$, hors portée, n'échange rien. Les tailles de couches et le nombre de voisins dessinés sont purement illustratifs et ne décrivent pas le modèle du chapitre~\ref{chap:methode}.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\linewidth]{images/neuron_and_message_passing.png}
-  \caption{Un réseau de neurones en couches et un voisinage de robots. Schéma original de l'auteur, sans valeur de paramètre ni résultat d'expérience.}
-  \label{fig:neurone-message}
-\end{figure}
+Le déroulement d'une étape se décrit en quatre temps. Chaque nœud encode son état courant et les informations dont il dispose. Chaque arête produit un message à partir des deux nœuds qu'elle relie et de la relation entre eux. Un nœud combine ensuite les messages reçus de ses voisins. Cette combinaison, appelée agrégation, doit rester symétrique puisque l'ordre des voisins n'a pas de signification ; les fonctions invariantes par permutation ont été étudiées dans ce but pour représenter des données non ordonnées \cite{zaheer2017}. Vient enfin une étape de mise à jour, puis un décodeur qui rend la commande attendue. Dans un essaim, les nœuds sont les robots et les messages ne circulent que le long des arêtes du graphe de voisinage. Le chapitre~\ref{chap:methode} détaille les couches du modèle utilisé.
 
 Dans un essaim, tous les robots exécutent la même fonction avec les mêmes poids. Ce partage a deux effets utiles. Il rend le calcul indépendant de l'effectif, et il force la politique à s'appuyer sur des quantités relatives, comme la position d'un voisin par rapport à soi, plutôt que sur une position absolue dans l'arène.
 
