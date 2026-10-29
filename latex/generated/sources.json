@@ -1,0 +1,12 @@
+{
+  "description": "Sources des figures et tableaux du mémoire",
+  "sha256": {
+    "tasks/evidence/008d-local-target-expanded-test.json": "5b04a6ef4483e33ef20a65ea99f66d67b349477952a3813b56abf5f5c8126427",
+    "tasks/evidence/014-vector-fresh-test.json": "5d1cf928d5b93d27aeb014f28e4e5a494ab6f92c6cbac2c2748e42236663b223",
+    "tasks/evidence/019-near-targets-evaluation.json": "7c38dee6fe782fec40959284a72a723e4711cb8455ae352d9d36ac0ef08878c5",
+    "outputs/imitation/training-multiform-expanded-v1/run.json": "a56f949ed5d5a63e805d3973ddb9396959d8d0de75732b21679c3811254d598a",
+    "outputs/imitation/training-vector-gat-v2/run.json": "c555acaf1321895a4b1f347e9a6adcc3f419bb0a1508b5ad92f4907bc79d17a7",
+    "outputs/imitation/vector-fresh-test-v2/raw-24-geometries_rectangle-8500.npz": "3e4f98128d555e24c12e18b82b6f2d3260f305f7833f49e21fc22d3128094303",
+    "outputs/navigation-near-targets/validation-8901-8902/obstacles-10-seed-8901/guarded.npz": "75b025a48a1256f2e8e88e1982fadd71ef6169030b72801fb57c6cf1a2dfd370"
+  }
+}

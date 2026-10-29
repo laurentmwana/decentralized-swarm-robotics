@@ -1,38 +1,33 @@
 \cleardoublepage
-\phantomsection
-\addcontentsline{toc}{chapter}{Liste des figures}
+\phantomsection\addcontentsline{toc}{chapter}{Liste des figures}
 \listoffigures
-
 \cleardoublepage
-\phantomsection
-\addcontentsline{toc}{chapter}{Liste des tableaux}
+\phantomsection\addcontentsline{toc}{chapter}{Liste des tableaux}
 \listoftables
 
 \chapter*{Résumé}
 \addcontentsline{toc}{chapter}{Résumé}
+Ce mémoire étudie la formation et le déplacement d'un essaim de robots dans un simulateur en deux dimensions. Chaque robot calcule une accélération à partir de son état, de sa cible et de ses voisins directs. Les places sont attribuées par un protocole classique d'échanges locaux ; leur attribution est distincte de la commande apprise. Le catalogue comprend 56 noms de lettres, de nombres et de figures, correspondant à 54 géométries différentes.
 
-La robotique en essaim cherche à obtenir un comportement collectif à partir de décisions locales. Demander à des robots de dessiner une figure est un bon test : chacun ne voit que ses voisins, mais tous doivent couvrir la même forme. Ces dernières années, plusieurs travaux ont proposé des lois écrites à la main ou des contrôleurs appris, souvent des réseaux de neurones sur graphes. La plupart ne comparent pourtant pas les deux approches à information égale, et rares sont ceux qui isolent l'apport réel de la communication entre robots.
+Les données d'entraînement sont produites par un contrôleur professeur dans le simulateur. L'apprentissage supervisé consiste à reproduire ses accélérations. Un premier réseau à attention sur graphe, entraîné à douze robots, réussit les neuf cas réservés lorsqu'il est protégé par un filtre classique. Sans ce filtre pendant le mouvement, il échoue dans ces neuf cas et provoque 54 contacts. Une collecte de correction réduit les contacts d'une campagne ultérieure sans rendre le mouvement brut suffisamment fiable.
 
-Dans ce mémoire, nous proposons un cadre expérimental complet pour poser cette question. Il réunit un simulateur en deux dimensions, un catalogue de 64 figures décrites par 50 points de référence et deux règles de référence réglées avec un budget fixé à l'avance. Le contrôleur étudié est un GNN dont tous les robots partagent les poids, entraîné à travers le simulateur. Les comparaisons sont appariées : tous les contrôleurs partent des mêmes positions et subissent les mêmes pannes.
+Une seconde architecture associe un mouvement explicite vers la cible et des corrections apprises à partir des voisins. Elle réussit 18 cas réservés à 12, 24 et 64 robots sans contact ni filtre pendant les phases de mouvement apprises. Ces essais couvrent trois formes et deux départs par effectif, près d'un cercle de préparation. La navigation avec obstacles est évaluée séparément : elle repose sur un trajet classique calculé sur une carte connue et sur une commande protégée. Les huit cas de la campagne finale réussissent pour chacun des deux contrôleurs comparés.
 
-Une campagne pilote de 9\,600 épisodes montre que le GNN amène l'essaim sur un cercle et sur une étoile absente de l'entraînement, avec 20, 40 ou 100 robots. Une règle manuelle simple fait pourtant mieux dans toutes les conditions, et le seul modèle avec messages ne se distingue pas des cinq modèles sans communication. L'analyse de l'entraînement suggère pourquoi : la perte de collisions dominait, et la consigne géométrique semble avoir fait l'essentiel du travail.
+Les résultats montrent l'intérêt d'une architecture structurée dans les conditions étudiées. Ils ne démontrent pas une réussite générale sur tous les départs, toutes les formes ou des robots réels. Le mémoire distingue les erreurs d'imitation, les mesures de trajectoire et les apports des composants classiques afin de rendre cette portée explicite.
 
-Ce travail fournit un banc d'essai reproductible, où chaque chiffre se retrouve dans un fichier brut, un résultat négatif documenté et les corrections qu'il a permis d'apporter au code.
-
-\noindent\textbf{Mots-clés :} robotique en essaim, contrôle décentralisé, réseaux de neurones sur graphes, formation de formes, apprentissage différentiable, simulation robotique, distance de Chamfer, reproductibilité.
+\noindent\textbf{Mots-clés :} robotique en essaim, réseaux sur graphes, imitation supervisée, formation, simulation, évaluation.
 
 \chapter*{Abstract}
 \addcontentsline{toc}{chapter}{Abstract}
+This thesis studies swarm formation and motion in a two-dimensional simulator. Each robot computes an acceleration from its own state, its assigned target and its direct neighbours. Target allocation follows a separate classical protocol based on local exchanges. The catalogue contains 56 names for letters, numbers and shapes, representing 54 distinct geometries.
 
-Swarm robotics aims to obtain collective behaviour from local decisions. Asking robots to draw a figure is a good test: each one only sees its neighbours, yet all of them must cover the same shape. In recent years, several works have proposed hand-written control laws or learned controllers, often graph neural networks. Most of them, however, do not compare both approaches with the same information, and few isolate what communication between robots actually brings.
+Training examples are generated by a teacher controller in simulation. Supervised learning is used to imitate its accelerations. A first graph attention model, trained with twelve robots, succeeds in nine reserved cases when protected by a classical filter. Without that filter during motion, it fails in all nine cases and produces 54 contact events. Additional corrective data reduce contacts in a later campaign but do not make the unfiltered policy reliable.
 
-In this thesis, we propose a complete experimental framework to address this question. It combines a two-dimensional simulator, a catalogue of 64 figures described by 50 reference points, a GNN controller whose weights are shared by all robots and trained through the simulator, and two baseline rules tuned under a fixed budget. Comparisons are paired: every controller starts from the same positions and suffers the same failures.
+A second architecture combines an explicit motion towards the target with learned corrections from neighbours. It succeeds in 18 reserved cases with 12, 24 and 64 robots, without contact or a safety filter during learned motion phases. These cases cover three shapes and two initial configurations per swarm size, close to a preparation ring. Obstacle navigation is evaluated separately and uses classical planning on a known map together with protected motion control. All eight cases in the final navigation campaign succeed for both compared controllers.
 
-A pilot campaign of 9,600 episodes shows that the GNN brings the swarm onto a circle and onto a star absent from training, with 20, 40 or 100 robots. A simple hand-written rule nevertheless performs better in every condition, and the only model with messages does not stand out from the five models without communication. The training logs suggest why: the collision loss dominated, and the geometric instruction seems to have done most of the work.
+These results support the structured architecture within the evaluated conditions. They do not establish general success across arbitrary initial states, all catalogue shapes or physical robots. The thesis separates imitation error, trajectory metrics and the contributions of classical components to make the scope of its conclusions clear.
 
-This work provides a reproducible test bench, where every number can be traced to a raw file, a documented negative result, and the code corrections it led to.
-
-\noindent\textbf{Keywords:} swarm robotics, decentralized control, graph neural networks, shape formation, differentiable learning, robot simulation, Chamfer distance, reproducibility.
+\noindent\textbf{Keywords:} swarm robotics, graph neural networks, supervised imitation, formation, simulation, evaluation.
 
 \cleardoublepage
 \tableofcontents

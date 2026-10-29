@@ -36,6 +36,7 @@ Le 29 octobre 2026, l'utilisateur a demandé explicitement de mettre à jour tâ
 | 018 | Adapter les dimensions et prévenir densité, déconnexion et dépassement | Terminé : aperçu avant lancement, largeur adaptée, options incompatibles désactivées ; 336 combinaisons examinées, deux régressions classiques réussies sans contact, 634 tests |
 | 019 | Clarifier profils et cercle initial, rapprocher les obstacles et documenter chaque commande | Terminé : guide Markdown, messages explicites vérifiés, nouvelle scène proche des cibles ; 8/8 par contrôleur sans contact, audits de 16 trajectoires, 634 tests |
 | 020 | Rendre l’animation visible sur petit écran et permettre l’accès direct au résultat | Terminé : défilement et lecture automatiques, index de lecture sécurisé, résultat final visible à 64 robots ; 17 tests ciblés réussis |
+| 021 | Reprendre le mémoire sur les résultats actuels, en français simple et avec des figures issues du programme | Terminée : rédaction alignée, cinq figures de données, contrôle documentaire et relecture du PDF de 45 pages ; français simple et résultats limités au domaine testé |
 
 Les métriques sont préparées avant la collecte. Les formations suivantes ne sont entraînées qu'après validation de leur répartition. Les anciens modèles commandant des vitesses ne sont pas réutilisés comme modèles à accélérations.
 

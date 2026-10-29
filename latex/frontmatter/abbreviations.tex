@@ -1,15 +1,16 @@
-\chapter*{Liste des abréviations}
-\addcontentsline{toc}{chapter}{Liste des abréviations}
-
-\vspace{1cm}
-
-\begin{center}
-    \renewcommand{\arraystretch}{1.6}
-    \begin{tabular}{@{}ll@{}}
-        \textbf{GNN}    & : Graph Neural Network \\
-        \textbf{LiDAR}  & : Light Detection and Ranging \\
-        \textbf{ReLU}   & : Rectified Linear Unit \\
-    \end{tabular}
-\end{center}
-
-\vfill
+\chapter*{Sigles et notations}
+\addcontentsline{toc}{chapter}{Sigles et notations}
+\noindent\begin{tabularx}{\textwidth}{lX}
+GNN & Réseau de neurones sur graphe (\textit{Graph Neural Network})\\
+GAT & Réseau à attention sur graphe (\textit{Graph Attention Network})\\
+MSE & Erreur quadratique moyenne (\textit{Mean Squared Error})\\
+QP & Problème d'optimisation quadratique\\
+ReLU & Fonction d'activation $\max(0,x)$\\
+SiLU & Fonction d'activation $x/(1+\exp(-x))$\\
+$N$ & Nombre de robots\\
+$p_i,v_i,a_i$ & Position, vitesse et accélération du robot $i$\\
+$g_i$ & Cible attribuée au robot $i$\\
+$\mathcal{N}_i$ & Ensemble des voisins directs du robot $i$\\
+$r_c$ & Portée de communication\\
+$\Delta t$ & Pas de temps du simulateur\\
+\end{tabularx}

@@ -1,181 +1,59 @@
-\chapter{État de l'art}
-\label{chap:etat-art}
+\chapter{Travaux liés et positionnement}
+\label{chap:etatart}
 
 \section{Introduction}
+Les travaux présentés ici éclairent trois choix du mémoire : coordonner les robots localement, représenter leurs relations par un graphe et apprendre une commande à partir d’un professeur. Le but est de préciser ces liens sans assimiler des systèmes dont les hypothèses diffèrent.
 
-Où se situe la formation de formes décentralisée dans la littérature sur la robotique en essaim ? Voilà la question de ce chapitre, qui repart des notions posées au chapitre~\ref{chap:concept}. Nous passons d'abord en revue les méthodes traditionnelles de contrôle local et de formation géométrique, puis les approches plus récentes, fondées sur les réseaux de neurones sur graphes et l'apprentissage. Trois études sont ensuite examinées en détail : leur contexte, leur méthode, leurs résultats et leurs limites. Le chapitre se termine par le positionnement de ce travail. Une précaution, dès maintenant. Un argument théorique ou bibliographique ne vaut pas validation : seuls les résultats du chapitre~\ref{chap:experiences} disent ce que fait notre contrôleur.
+\section{Coordonner un groupe par des règles locales}
+La coordination locale consiste à produire une décision à partir d'informations proches plutôt qu'à commander tous les robots depuis un même poste. Le modèle de Reynolds en donne une illustration connue : des règles de séparation, d'alignement et de regroupement permettent de représenter un déplacement collectif \cite{reynolds1987}. Ces règles expliquent comment un groupe peut se déplacer de manière organisée, mais elles ne résolvent pas directement l'attribution des places d'une lettre ou d'un polygone.
 
-\section{Méthodes traditionnelles}
+La revue de Brambilla et de ses coauteurs insiste sur le lien entre conception du comportement et vérification du système \cite{brambilla2013}. Cette distinction est utile ici. Une animation convaincante fournit un exemple de comportement ; elle ne remplace pas une campagne d'essais avec des critères annoncés. Nous retenons donc des trajectoires enregistrées, des positions de départ reproductibles et des règles identiques pour déclarer une réussite.
 
-\subsection{Règles locales et consensus distribué}
+Pour la génération de formes, Hsieh et ses coauteurs proposent des contrôleurs décentralisés fondés sur des informations de proximité \cite{hsieh2008}. Leur travail montre qu'une organisation géométrique peut être obtenue sans qu'un robot dispose nécessairement d'une vue complète du groupe. Les résultats de convergence de ce type d'approche dépendent toutefois du modèle et des hypothèses retenus. Ils ne peuvent pas être transférés directement à notre réseau appris, à notre intégration par pas de temps ou à nos procédures d'attribution.
 
-Pour organiser un déplacement collectif à partir d'interactions purement locales, on repart souvent de deux familles. La première vient des règles comportementales de Reynolds : cohésion, séparation et alignement \cite{reynolds1987}. Le comportement reste facile à interpréter, mais aucune de ces trois règles ne dit quel contour atteindre. La seconde famille étudie le consensus entre agents, et montre qu'il dépend de la connectivité du graphe d'interaction au fil du temps \cite{jadbabaie2003}. Ces travaux nous servent surtout de cadre d'analyse. Ils rappellent qu'il faut surveiller la connectivité, mais n'apportent aucune garantie de convergence pour une politique de formation non linéaire.
+Notre choix conserve une base classique lisible : attraction vers une cible, freinage et prise en compte des voisins. Elle sert de professeur et de point de comparaison. Cette base évite d'attribuer au réseau un comportement qui serait déjà fourni par une consigne géométrique ou par un filtre de protection.
 
-\subsection{Formation de formes par contrôle décentralisé}
+\section{Représenter les interactions avec un réseau sur graphe}
+Le modèle de réseau sur graphe décrit par Scarselli et ses coauteurs permet de travailler sur des données dont les relations ne forment pas une grille régulière \cite{scarselli2009}. Le cadre de passage de messages présenté par Gilmer et ses coauteurs rassemble plusieurs manières de calculer une représentation à partir des voisins \cite{gilmer2017}. Ce dernier travail porte sur les molécules ; nous utilisons ici l'idée de représentation relationnelle, sans reprendre son application ni ses résultats.
 
-Hsieh, Kumar et Chaimowicz ont étudié des contrôleurs décentralisés pour générer des formes avec un essaim, et montré le rôle que joue l'information géométrique disponible localement \cite{hsieh2008}. Li et al. proposent une approche progressive, où la cible se construit pas à pas, à partir de décisions distribuées \cite{li2019}. Un point commun à ces travaux : la forme doit être représentée d'une manière que les agents exploitent avec leurs seules observations. Une équation analytique, une affectation robot--point, une carte ou un nuage de points ne donnent pas la même information au contrôleur.
+Pour un essaim, cette représentation est naturelle : le nombre de voisins d'un robot varie et leur ordre dans une liste ne devrait pas changer la commande. Les fonctions sur ensembles étudiées dans Deep Sets éclairent cette exigence \cite{zaheer2017}. Notre agrégation pondérée conserve cette propriété à l'égard de l'ordre des voisins. Les identifiants gardent en revanche une utilité dans le protocole classique d'attribution, où ils servent à départager des demandes concurrentes.
 
-\subsection{Conception explicite de la loi de contrôle}
+Les réseaux à attention sur graphe proposent d'apprendre le poids des contributions voisines \cite{velickovic2018}. Cela permet, dans notre architecture, de calculer des corrections différentes selon la situation relative d'un voisin. Il serait néanmoins excessif d'en déduire que l'attention améliore nécessairement toutes les trajectoires : cette affirmation demanderait des comparaisons où l'on retire uniquement les messages, en conservant le reste du modèle et du protocole.
 
-Entre méthodes classiques et GNN, la différence tient surtout à la place du concepteur. Avec une loi fondée sur des champs de potentiel, c'est lui qui fixe les forces d'attraction, de répulsion et parfois d'alignement, avec leurs gains et leurs distances d'action. La loi reste lisible : quand le système se comporte mal, on remonte à un terme et on le corrige. En revanche, une forme plus complexe ou une contrainte nouvelle obligent à reprendre la loi et à réajuster ses paramètres à la main.
+\section{Apprendre par imitation pour commander des robots}
+Tolstaya et ses coauteurs apprennent des contrôleurs décentralisés à partir d'un expert et étudient les échanges sur le graphe pour la coordination de robots \cite{tolstaya2020}. Leur expert peut exploiter des informations globales pendant l'apprentissage. Dans notre collecte, le professeur de mouvement utilise l'état propre du robot, sa cible et ses voisins directs. Cette différence compte : le réseau ne cherche pas à deviner une commande dont la construction exigerait nécessairement une information physique éloignée qui lui serait cachée.
 
-\section{Méthodes avancées}
+Jiang, Huang et Guo associent également apprentissage et représentation des interactions pour le contrôle de formation \cite{jiang2023}. Leur approche traite notamment des observations locales issues d'une représentation de type LiDAR et utilise des exemples d'un expert. Notre système reste plus simple sur la perception : les positions et les vitesses relatives sont fournies directement par le simulateur. Il ne comporte pas de chaîne de traitement LiDAR ou d'images à laquelle on pourrait attribuer les résultats obtenus.
 
-\subsection{Variantes des GNN et justification de l'agrégation}
+L'imitation présente une difficulté pratique. Le professeur produit ses exemples sur les états qu'il visite. Une fois utilisé, le réseau peut commettre de petites erreurs, atteindre d'autres états et recevoir des observations moins bien représentées dans les données. Ross et ses coauteurs étudient ce décalage et proposent une méthode de collecte sur les états rencontrés par la politique apprise \cite{ross2011}. Notre campagne de correction s'inspire de ce principe : le professeur est interrogé sur des états visités par le réseau. Elle ne constitue pas une démonstration des garanties théoriques de leur méthode.
 
-Le premier modèle de réseau de neurones sur graphe est dû à Scarselli et al. : les états s'y propagent jusqu'à un point fixe, puis une fonction de sortie produit le résultat \cite{scarselli2009}. Les architectures actuelles se limitent à un nombre fini d'étapes, entraînées par rétropropagation. Elles se distinguent notamment par la façon de combiner les messages reçus.
+\section{Apprentissage, structure du modèle et protection}
+Une commande entièrement libre laisse au réseau le soin d'apprendre à la fois l'attraction, le freinage et l'interaction avec les voisins. Une commande structurée inscrit une partie de ces relations dans son calcul. Nous avons retenu cette seconde option après les échecs du premier modèle sans protection. Le mouvement nominal vers la cible est écrit sous une forme simple ; les coefficients sont appris, puis les interactions voisines sont représentées par des corrections vectorielles.
 
-Dans un essaim, cette fonction d'agrégation subit une contrainte forte : le nombre de voisins et leur ordre changent d'un robot à l'autre, d'un pas de temps à l'autre. Elle doit donc être invariante par permutation des messages reçus. Zaheer et al. ont étudié les fonctions invariantes aux permutations pour représenter des données non ordonnées, notamment sous forme de somme sur l'ensemble \cite{zaheer2017}. La moyenne que nous employons respecte cette invariance. Contrairement à une somme non normalisée, elle évite aussi que l'échelle des valeurs grandisse avec le nombre de voisins. Elle est en revanche moins expressive que la somme : elle ne distingue pas deux voisinages qui ne diffèrent que par leur taille.
+Cette structure est une hypothèse de conception. Elle réduit ce que le modèle doit découvrir à partir des exemples. Elle impose aussi de rester prudent sur l'interprétation : une réussite ne signifie pas que le réseau aurait inventé seul les principes d'attraction et de freinage. Les équations de ces mouvements font partie de l'architecture choisie.
 
-Reste le cas des agrégations apprises. Les réseaux à attention apprennent un poids propre à chaque voisin \cite{velickovic2018}. L'attention est intéressante pour notre sujet, puisqu'elle pourrait réduire l'influence d'un voisin aberrant, un robot défaillant qui transmettrait une information incohérente par exemple, même si cette robustesse n'a rien d'automatique. Elle a un coût : des paramètres en plus, des poids d'attention à interpréter et un calcul plus lourd. La moyenne, plus sobre, laisse au réseau le soin d'apprendre les bonnes transformations à partir des états.
+La protection classique a un autre rôle. Elle modifie une accélération proposée lorsque des contraintes locales le demandent. Le contrôleur protégé associe alors un réseau et une règle de correction. Il est évalué comme un système hybride. Les expériences du modèle brut permettent d'observer ce qui se passe lorsque cette correction est retirée pendant les phases de mouvement apprises.
 
-Ce choix suit la logique de notre contrôleur, qui cherche d'abord à isoler l'apport du passage de messages avant d'ajouter des mécanismes plus riches. Il a une limite, que nous assumons. Si un voisin transmet une information faussée, sa contribution pèse exactement $1/|\mathcal{N}(i)|$ et rien ne la corrige. Une étude de robustesse au bruit devra donc comparer la moyenne à une agrégation robuste, tronquée ou pondérée par l'attention. Avant cela, on ne peut rien conclure sur le comportement du contrôleur avec des capteurs défaillants.
-
-\subsection{Apprentissage de contrôleurs décentralisés par GNN}
-
-Des travaux ont utilisé les GNN comme politiques de contrôle, les agents communiquant sur un graphe. Tolstaya et al. montrent qu'on peut entraîner un contrôleur GNN pour des tâches d'essaim tout en gardant une exécution locale sur un graphe de communication mobile \cite{tolstaya2020}. Ce résultat justifie le recours à une architecture relationnelle, plutôt qu'à un réseau dense dont l'entrée supposerait une liste fixe de robots.
-
-Une propriété d'architecture, pourtant, ne vaut pas validation expérimentale. Le partage des paramètres autorise une exécution sur un effectif différent de celui de l'entraînement, et l'écart réel entre les deux situations a été mesuré ailleurs, notamment sur une formation triangulaire \cite{jiang2023}. Nous y revenons dans la section des travaux connexes. Ces résultats motivent l'étude du passage à l'échelle, mais ils ne dispensent pas d'un protocole propre à nos formes et à nos hypothèses.
-
-Les approches diffèrent par les capteurs disponibles, la forme à produire, le mode d'apprentissage et la façon de communiquer la cible. Savoir que plusieurs méthodes utilisent un GNN ne suffit donc pas à les comparer. Regardons ce que chaque robot sait réellement au moment d'agir.
-
-Deux stratégies d'apprentissage dominent. La première imite un contrôleur expert ou centralisé. Le signal d'entraînement est riche, mais la politique finale doit être évaluée sans l'information centrale dont l'expert disposait. La seconde optimise directement le comportement, dans un simulateur différentiable ou par renforcement. Nous retenons l'apprentissage direct à travers un simulateur différentiable, pour optimiser une mesure de proximité à la forme et des contraintes de sécurité. Ce choix favorise la reproductibilité et la simplicité de la chaîne. Il ne repose sur aucune comparaison expérimentale entre ces paradigmes.
-
-\subsection{Imitation, simulation différentiable et apprentissage multi-agents}
-
-Savoir qui écrit la loi de contrôle est aussi une question d'apprentissage. Apprendre directement la fonction qui va de l'observation à la commande, plutôt que de l'écrire à la main, est une idée ancienne. On l'a appliquée très tôt à la conduite de véhicules, par imitation de conducteurs humains. Ross, Gordon et Bagnell ont ensuite mis le doigt sur une faiblesse de l'imitation. Si la politique apprise conduit à des états différents de ceux de l'expert, les données de départ ne couvrent plus forcément les situations qui comptent, et l'écart peut s'accumuler \cite{ross2011}. L'entraînement doit donc tenir compte des états que la politique visite réellement.
-
-Notre choix s'éclaire là. La politique n'imite aucune trajectoire, elle s'entraîne dans l'épisode qu'elle produit elle-même. On évite ainsi le décalage entre trajectoires de démonstration et trajectoires de la politique décrit par ces auteurs, sans écarter les autres changements de distribution possibles. Le signal d'apprentissage vient d'une mesure de qualité de la forme, calculée sur les derniers pas de l'épisode puis rétropropagée à travers la simulation. Cette idée prolonge les travaux de physique différentiable appliqués au contrôle \cite{belbute2018}. Elle suppose une dynamique assez simple pour être dérivable. On calcule alors les dérivées directement à travers la simulation, au lieu de les estimer en échantillonnant des actions.
-
-Les méthodes multi-agents rencontrent une autre difficulté : attribuer à chaque agent sa part du résultat collectif. Lowe et al. associent à chaque agent un acteur décentralisé et un critique centralisé, qui voit l'information de tous les agents pendant l'entraînement \cite{lowe2017}. Chez nous, le partage des paramètres simplifie l'optimisation, puisqu'un seul jeu de poids décrit tous les robots et qu'il suffit d'optimiser une unique politique partagée. La question de l'attribution du mérite, elle, reste entière. Et la simplification a un prix. Le contrôleur ne peut pas, à partir de paramètres distincts, donner un rôle différent aux robots du bord et à ceux du centre. Toute différence de comportement doit donc naître des observations locales.
-
-Si nous retenons le gradient direct à travers un simulateur différentiable, c'est pour le coût, la variance du gradient et la reproductibilité. Sa supériorité sur l'imitation ou le renforcement n'est pas établie : ces approches ne sont pas comparées expérimentalement dans ce mémoire. Notre campagne montre d'ailleurs que ce choix a ses propres pièges. Un terme de perte mal équilibré peut étouffer tous les autres, et le gradient n'apprend alors presque rien au réseau.
-
-\subsection{De la règle écrite à la règle apprise}
-
-Avec une approche apprise, le concepteur ne choisit plus la réaction exacte à chaque configuration. Il choisit ce que les robots perçoivent, la structure du réseau, les objectifs à optimiser et les scénarios d'entraînement ; les paramètres s'ajustent ensuite sur des épisodes simulés. La responsabilité se déplace. Une observation locale mal choisie, une perte mal définie ou un entraînement trop court peuvent empêcher le modèle d'apprendre, même si le GNN est correctement implémenté.
-
-Il serait pourtant simpliste d'opposer une méthode explicable à une méthode opaque, car les deux reposent sur des hypothèses de modélisation. Une règle de flocking suppose que l'attraction, la répulsion et l'alignement suffisent à la mission. Le GNN suppose que les exemples vus à l'entraînement couvrent les situations utiles et que la perte favorise bien la formation voulue. Déclarer une famille meilleure que l'autre n'aurait donc pas de sens. La question posée est plus précise : dans quelles conditions une règle apprise, exécutée localement, peut-elle remplacer une règle écrite à la main ?
-
-\section{Quelques travaux connexes}
-
-Les trois études qui suivent éclairent chacune un aspect différent, la génération de formes par contrôle décentralisé, l'apprentissage de contrôleurs d'essaim par GNN et la formation de groupe de bout en bout. Nous les comparons selon la tâche, l'information accessible aux robots et la structure du contrôleur. La comparaison reste qualitative : classer par des chiffres des protocoles différents n'aurait pas de sens.
-
-\subsection{Decentralized controllers for shape generation with robotic swarms}
-
-Hsieh, Kumar et Chaimowicz étudient la génération de formes avec des contrôleurs décentralisés pour essaims robotiques \cite{hsieh2008}.
-
-\subsubsection{Contexte de l'étude et questions de recherche}
-
-Il s'agit de passer d'interactions entre robots à une structure spatiale donnée. Pour nous, la question importante est celle de l'information géométrique nécessaire à chaque agent. Une loi locale doit disposer d'une description de la cible compatible avec ses observations, sans quoi les déplacements mènent à un simple regroupement plutôt qu'à une forme.
-
-\newpage
-
-\subsubsection{Méthodologie adoptée}
-
-L'étude s'appuie sur des contrôleurs décentralisés. L'information géométrique accessible localement y est centrale, car les décisions de mouvement doivent être reliées à la description de la forme souhaitée \cite{hsieh2008}.
-
-\subsubsection{Aperçu sur les résultats}
-
-L'apport retenu est la génération de formes par contrôle décentralisé, avec la mise en évidence du rôle de l'information géométrique locale. La formation de formes trouve ainsi sa place parmi les tâches du contrôle distribué. Ce résultat ne permet pas, à lui seul, de comparer avec une politique GNN conditionnée par un nuage de points.
-
-\subsubsection{Critique}
-
-C'est une référence directe pour la tâche, mais elle ne permet pas d'isoler l'apport d'un contrôleur appris par passage de messages. Pour la comparer à notre contrôleur, il faudrait préciser l'information de cible disponible à l'exécution et la rendre équivalente. Il s'agit d'une limite de notre comparaison, pas d'un défaut démontré dans l'article.
-
-\subsection[Learning Decentralized Controllers for Robot Swarms with Graph Neural Networks]{Learning Decentralized Controllers for Robot Swarms with Graph Neural Networks}
-
-Tolstaya et al. étudient l'apprentissage de contrôleurs décentralisés pour essaims robotiques à l'aide de GNN \cite{tolstaya2020}.
-
-\subsubsection{Contexte de l'étude et questions de recherche}
-
-L'enjeu est d'apprendre des décisions coordonnées en gardant des échanges locaux sur un graphe de communication mobile. Pour nous, la question est de savoir comment une politique relationnelle peut exploiter les états du voisinage sans supposer, à l'exécution, une liste fixe de tous les robots.
-
-\subsubsection{Méthodologie adoptée}
-
-Le contrôleur est un GNN qui opère sur le graphe de communication des agents, pour une tâche de \emph{flocking}. Il est entraîné par imitation d'un contrôleur centralisé, qui connaît l'état de tout l'essaim. À l'exécution, chaque agent ne dispose plus que des messages de ses voisins \cite{tolstaya2020}.
-
-\subsubsection{Aperçu sur les résultats}
-
-L'étude montre qu'on peut entraîner un contrôleur GNN pour une tâche d'essaim tout en gardant une exécution locale sur un graphe mobile. Ce résultat soutient le choix d'une architecture relationnelle. Il ne dit rien, en revanche, de la formation de contours symboliques.
-
-\subsubsection{Critique}
-
-La proximité d'architecture avec notre contrôleur rend ce travail pertinent. Elle ne garantit pas qu'un contrôleur semblable formera les figures de ce mémoire. Le mode d'apprentissage diffère aussi : l'imitation d'un expert centralisé chez eux, l'optimisation directe à travers le simulateur chez nous. Avant toute comparaison, il faut examiner les observations disponibles, la consigne et l'objectif d'apprentissage. Une exécution locale est une propriété de fonctionnement. Elle ne valide ni la robustesse, ni le changement d'échelle dans notre scénario.
-
-\subsection{End-to-end decentralized formation control using a graph neural network-based learning method}
-
-Jiang, Huang et Guo proposent une méthode de formation décentralisée de bout en bout, fondée sur un GNN \cite{jiang2023}.
-
-\subsubsection{Contexte de l'étude et questions de recherche}
-
-Cette étude est la plus proche de notre problème. Le contrôleur doit transformer des observations locales et des informations de voisinage en actions coordonnées pour une formation de groupe. La formation triangulaire étudiée soulève une question qui nous concerne aussi, celle de l'application d'une politique à une taille d'équipe différente de celle de l'entraînement.
-
-\subsubsection{Méthodologie adoptée}
-
-La méthode combine un GNN et des observations LiDAR transformées en cartes locales. Dans le cas triangulaire, la politique est entraînée avec cinq robots puis testée avec des équipes de quatre à neuf robots \cite{jiang2023}. Ces effectifs décrivent le périmètre des essais rapportés, pas une performance de notre contrôleur.
-
-\subsubsection{Aperçu sur les résultats}
-
-La politique est évaluée sur des tailles d'équipe différentes de celle de l'entraînement, ce qui motive l'étude du transfert entre tailles d'essaim. Mais le périmètre triangulaire ne permet pas de conclure sur des lettres, des nombres ou d'autres contours.
-
-\subsubsection{Critique}
-
-Les cartes locales issues du LiDAR distinguent cette étude de notre contrôleur, qui utilise des états simulés plus simples et une consigne géométrique partagée. Avec une telle différence d'information, impossible d'attribuer un écart de comportement à la seule architecture GNN. Tester plusieurs effectifs est un bon point de méthode, mais la généralisation à nos formes et à nos hypothèses devra être évaluée séparément.
-
-\section{Positionnement}
-
-\subsection{Lecture critique des comparaisons}
-
-Comparer avec une méthode classique n'a de sens que si les deux reçoivent une information comparable. Une règle de cohésion et de répulsion qui ne connaît que ses voisins fait une bonne référence pour le regroupement. Mais elle n'a pas la même information qu'un GNN auquel on donne une consigne de forme. Si ce GNN forme mieux un cercle, cela montre surtout que la consigne et la politique entraînée conviennent à la tâche. L'effet propre du GNN n'est pas isolé pour autant.
-
-Une étude plus complète demanderait au moins trois contrôles. Le premier ? Une règle manuelle recevant une description de cible comparable. Le deuxième ? Un réseau sans communication entre voisins, mais avec la même consigne de forme et une taille de modèle similaire. Le troisième ? Une variante de profondeur différente, un ou trois tours de messages par exemple. Ces ablations ne sont pas accessoires : elles touchent à la question qui nous intéresse, l'apport de la communication et de l'architecture relationnelle. Les deux premières sont évaluées au chapitre~\ref{chap:experiences}. La troisième, la profondeur des messages, n'a pas encore été comparée.
-
-\subsection{Consigne, perception et déploiement}
-
-Les publications sur le contrôle décentralisé ne font pas toutes les mêmes hypothèses sur les capteurs. Certaines utilisent les positions absolues des robots, d'autres des mesures de distance et d'angle, d'autres encore des cartes d'occupation issues de capteurs embarqués. Jiang et al., vus plus haut, travaillent avec des observations LiDAR transformées en cartes locales, alors que notre contrôleur utilise des états simulés plus simples \cite{jiang2023}. L'écart est à prendre au sérieux. Une architecture qui fonctionne avec une position exacte ne fonctionnera pas forcément avec un capteur bruité.
-
-Notre choix est intermédiaire. La communication entre robots est locale, mais la forme cible est donnée comme consigne partagée. L'hypothèse se défend pour une mission préparée à l'avance, comme une formation lumineuse ou une distribution planifiée. Elle conviendrait mal à une tâche où la forme doit être découverte dans l'environnement, et il faudrait alors ajouter une perception locale, une carte distribuée ou un mécanisme de consensus sur la cible.
-
-Précisons au passage ce que « décentralisé » veut dire ici. Un contrôleur peut être décentralisé à l'exécution tout en ayant été entraîné de manière centralisée. Il peut aussi utiliser une consigne commune sans recevoir les états distants de tous les robots. Ce qui contredirait notre hypothèse de travail, ce serait de calculer à chaque pas une affectation globale des robots à la cible, puis de la transmettre à chacun. Notre contrôleur évite cette opération pendant l'exécution, mais la consigne géométrique reste une hypothèse forte, à rediscuter pour toute extension vers le réel.
-
-\subsection{Synthèse comparative}
-
-Le Tableau~\ref{tab:comparatif-familles} rassemble les familles d'approches vues jusqu'ici. Nous l'avons organisé selon l'information disponible à l'exécution, parce que c'est elle qui détermine la nature de la décentralisation revendiquée. Le passage à l'échelle est dit \emph{structurel} lorsqu'il découle de l'organisation locale ou de l'architecture ; sa qualité réelle doit quand même être mesurée. Enfin, les évaluations publiées de transfert ne valent pas validation de notre contrôleur : il faut mesurer le sien.
+\section{Position du présent travail}
+Le mémoire ne cherche pas à comparer numériquement ses scores à ceux d'articles qui utilisent d'autres robots, d'autres distances et d'autres scènes. Il compare des contrôleurs dans un même simulateur et conserve l'information nécessaire pour comprendre ces comparaisons.
 
 \begin{table}[htbp]
-  \centering
-  \small
-  \setlength{\tabcolsep}{4pt}
-  \caption{Familles d'approches pour la formation de formes décentralisée, comparées d'après l'information disponible à l'exécution. Synthèse de l'auteur.}
-  \label{tab:comparatif-familles}
-  \begin{tabular}{@{}>{\raggedright\arraybackslash}p{.20\linewidth}>{\raggedright\arraybackslash}p{.18\linewidth}>{\raggedright\arraybackslash}p{.17\linewidth}>{\raggedright\arraybackslash}p{.15\linewidth}>{\raggedright\arraybackslash}p{.22\linewidth}@{}}
-    \toprule
-    Famille & Information à l'exécution & Apprentissage & Passage à l'échelle & Limite principale \\
-    \midrule
-    Règles locales (flocking, cohésion--répulsion) & Voisins à portée & Aucun & Structurel, à mesurer & Sans terme de cible, pas de géométrie \\
-    Contrôle centralisé & État complet de l'essaim & Planification, affectation & Limité par la communication & Point unique de défaillance \\
-    Affectation robot--point de cible & Cible et affectation & Souvent aucun & Sensible au nombre d'agents & Association fragile aux pannes \\
-    GNN décentralisé + imitation & Voisins, expert absent & Imitation & Transfert mesuré ailleurs & Qualité de l'expert \\
-    Renforcement multi-agents & Observations locales, récompense globale & Renforcement & Variable & Coût d'échantillonnage, non-stationnarité \cite{lowe2017} \\
-    Contrôleur de ce mémoire & Voisins et consigne géométrique & Gradient à travers le simulateur & Forme le cercle et l'étoile ; moins bon qu'une règle manuelle & Consigne forte, simulation simple \\
-    \bottomrule
-  \end{tabular}
+\centering\small
+\begin{tabularx}{\textwidth}{p{3.1cm}XX}
+\toprule
+Élément & Choix retenu & Limite à garder en vue\\\midrule
+Perception & État propre et voisins à portée & Mesures idéales, sans bruit\\
+Attribution & Demandes locales et priorité par identifiant & Préparation classique, durée croissante\\
+Apprentissage & Imitation de commandes d'accélération & Dépendance aux exemples du professeur\\
+Formation apprise & Réseau partagé, puis version structurée & Validation sur des départs contrôlés\\
+Navigation & Carte connue, détour et filtre classiques & Contournement non appris par le réseau\\
+Évaluation & Trajectoires appariées et contacts conservés & Peu de départs distincts dans les tests finaux\\
+\bottomrule
+\end{tabularx}
+\caption{Choix du système étudié et portée de leur validation.}
 \end{table}
 
-Le positionnement du mémoire se lit sur la dernière ligne. Nous ne proposons ni une nouvelle théorie de la formation distribuée, ni une architecture de GNN inédite. L'apport consiste à relier un simulateur avec graphe de voisinage, un catalogue de figures, une politique partagée, un apprentissage par simulation différentiable et un protocole d'évaluation qui examine les pannes et les changements d'échelle. Les travaux antérieurs, eux, n'en couvrent chacun qu'une partie : la formation de formes par contrôle décentralisé \cite{hsieh2008,li2019}, les contrôleurs GNN appris \cite{tolstaya2020}, la formation de groupe de bout en bout \cite{jiang2023}. Notre point d'appui est de les assembler dans une même chaîne, en rendant chaque hypothèse (consigne, portée, taille d'essaim, seuil de succès) explicite et rejouable. Une campagne pilote en a déjà testé une partie ; le reste attend de nouveaux entraînements.
-
-Une exigence de comparaison en découle. Les méthodes de référence doivent recevoir une information de consigne comparable ; sinon l'écart mesuré tiendrait à l'information, non au contrôleur. Au chapitre~\ref{chap:experiences}, la règle manuelle reçoit la distance au point de référence en plus de sa direction. Elle garde donc un léger avantage d'information sur le GNN, dont nous tenons compte.
-
-\subsection{Réseaux cellulaires et portée de la contribution}
-\label{sec:reseaux-cellulaires}
-
-L'intitulé initial du mémoire parlait des réseaux de neurones cellulaires, un formalisme introduit par Chua et Yang où chaque cellule n'interagit qu'avec son voisinage immédiat \cite{chua1988}. L'idée commune est locale. Des unités identiques évoluent selon leurs interactions avec un voisinage limité. Dans notre essaim, le voisinage n'est pas une grille fixe, il dépend des positions et de la portée de communication. Et ces messages, un réseau appris les produit. L'implémentation se décrit donc plus justement comme un GNN à passage de messages. La référence aux réseaux cellulaires est une inspiration (un contrôle local homogène) et non l'implémentation littérale d'un réseau cellulaire classique.
-
-Le positionnement de ce mémoire est expérimental. Nous ne revendiquons ni nouvelle théorie de la formation distribuée, ni supériorité générale du GNN. Nous décrivons une chaîne reproductible qui relie un simulateur en deux dimensions, des figures cibles, une politique partagée, un apprentissage par simulation différentiable et un protocole de mesure de la tolérance aux pannes. La contribution visée est double. Il s'agit de vérifier qu'une telle politique peut former des cibles dans un cadre contrôlé, puis d'identifier les conditions qui limitent cette capacité. C'est l'objectif du protocole, pas l'affirmation que toutes ces vérifications ont déjà été faites.
-
-Cette prudence se traduit par deux exigences pour les expériences. D'abord, les méthodes de référence doivent recevoir une consigne comparable à celle du GNN. Une simple règle de regroupement est un contrôle utile du simulateur, mais elle ne suffit pas à établir un gain dû à l'apprentissage de la forme. Ensuite, les résultats visuels doivent être complétés par des métriques, plusieurs graines et une analyse des échecs. Les chapitres suivants décrivent la méthode, puis séparent les résultats obtenus des évaluations restant à conduire.
+La contribution est donc un ensemble cohérent de simulation, d'apprentissage et d'évaluation. Elle comprend aussi des résultats négatifs : une faible erreur de commande peut accompagner des contacts, et le passage à un plus grand effectif peut échouer malgré une architecture capable de recevoir davantage de voisins. Le chapitre suivant décrit les choix qui ont permis d'étudier ces difficultés.
 
 \section{Conclusion partielle}
-
-Nous avons comparé les méthodes traditionnelles de contrôle local et de génération de formes aux méthodes avancées fondées sur les GNN, puis examiné trois études connexes sous l'angle de leur comparabilité avec notre contrôleur. Les architectures à paramètres partagés et à agrégation invariante conviennent à un voisinage variable. Elles ne garantissent ni la qualité des formes, ni le passage à l'échelle. Trois hypothèses comptent sans doute autant que le choix de l'architecture : la consigne partagée, l'absence de bruit en simulation et la comparabilité de l'information entre contrôleurs. Le positionnement retenu en découle. Une chaîne expérimentale, une campagne pilote, plusieurs comparaisons encore ouvertes, et aucune prétention à démontrer la supériorité du GNN. Le chapitre suivant décrit le simulateur, les figures, le contrôleur GNN, l'apprentissage et l'organisation logicielle retenus pour explorer cette piste.
+Les méthodes classiques apportent une base de commande explicite. Les réseaux sur graphes offrent une représentation adaptée aux voisins variables, et l’imitation fournit une manière de les entraîner. Notre étude associe ces éléments et évalue séparément la commande brute et la chaîne protégée.

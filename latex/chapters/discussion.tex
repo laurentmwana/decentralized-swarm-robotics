@@ -1,130 +1,43 @@
-\chapter*{Discussion}
-\addcontentsline{toc}{chapter}{Discussion}
+\chapter*{Discussion et conclusion générale}
+\addcontentsline{toc}{chapter}{Discussion et conclusion générale}
 
-\section*{Introduction}
-\addcontentsline{toc}{section}{Introduction}
+\section*{Ce que le système permet de montrer}
+Ce travail a construit une chaîne complète pour étudier la formation d'un essaim dans un simulateur. Une consigne géométrique est transformée en places distinctes. Les robots préparent leurs échanges, se répartissent ces places et appliquent une commande locale. Les trajectoires enregistrées permettent ensuite de vérifier la forme, le temps de stabilisation et les contacts. Cette chaîne relie la décision d'un robot au résultat collectif sans confondre les rôles des différents composants.
 
-Le chapitre précédent a livré des chiffres. Il reste à dire ce qu'ils signifient. Nous revenons d'abord sur les résultats de la campagne pilote, puis nous les confrontons aux travaux du chapitre~\ref{chap:etat-art}. Viennent ensuite les menaces qui pèsent sur leur validité, les leçons pour concevoir un contrôleur décentralisé et la suite expérimentale.
+L'apprentissage utilise des exemples produits par un professeur programmé. Il s'agit d'une régression supervisée sur les accélérations, et non d'un apprentissage par renforcement. Le réseau apprend une commande ; la géométrie de la cible, l'attribution et les règles du simulateur restent définies dans le code. Cette précision permet de répondre concrètement à la question de l'origine des données : le jeu de données est synthétique, mais il contient des observations et des réponses attendues issues de trajectoires identifiables.
 
-\section*{Interprétation des résultats}
-\addcontentsline{toc}{section}{Interprétation des résultats}
+Le premier modèle a mis en évidence une limite importante. Une formation finale correcte et une erreur d'imitation raisonnable peuvent accompagner de nombreux contacts. La protection classique apporte alors une part déterminante de la réussite. La collecte de correction réduit les contacts sans suffire à supprimer les échecs. Ces résultats expliquent le passage à une commande plus structurée, plutôt qu'un simple prolongement de l'entraînement initial.
 
-Commençons par ce qui marche. La chaîne complète fonctionne : un GNN partagé, entraîné dans un simulateur différentiable, amène 40 robots sur un cercle en une dizaine de pas. Il forme aussi une étoile absente de son entraînement. Le même modèle tourne avec 20, 40 ou 100 robots sans changer un seul paramètre. Sur ces trois points, la campagne confirme ce que l'architecture promettait.
+La seconde architecture conserve explicitement l'attraction vers la cible et le freinage. Le réseau apprend les interactions voisines sous forme de corrections vectorielles. Dans le test réservé, elle réalise les dix-huit cas à 12, 24 et 64 robots sans contact et sans filtre pendant les phases de mouvement apprises. Ce résultat est encourageant pour ce choix de conception. Il ne démontre pas qu'un réseau libre aurait appris le même comportement, ni que l'attention serait seule responsable du progrès.
 
-Le reste est moins flatteur. La règle manuelle, une loi de quelques lignes réglée en 27 essais, fait mieux que le GNN dans toutes les conditions. Sur le cercle à 40 robots, sa distance finale est deux fois plus faible. Il serait tentant de tout mettre sur le compte de l'information : cette règle connaît la distance au point de référence, le GNN seulement la direction. L'argument est réel. Il n'explique sans doute pas un écart de cette taille.
+\section*{Ce que les résultats ne permettent pas d'affirmer}
+Le nombre de cas ne doit pas être confondu avec le nombre de départs indépendants. Le test final du modèle structuré utilise trois formes et deux départs par effectif. Il ne couvre donc que six configurations initiales distinctes. Les robots commencent près d'un anneau prévu par le protocole. Nous n'avons pas validé le même résultat à partir de positions générales très dispersées.
 
-La question centrale du mémoire porte sur la communication. Ici, la réponse est claire, même si elle n'est pas définitive : les données ne montrent aucun gain. Le seul GNN avec messages obtient 0,135 sur le cercle à 40 robots. Les cinq GNN sans communication donnent entre 0,124 et 0,271, avec un intervalle de confiance de 0,090 à 0,252. Le modèle avec messages tombe dedans. Trois des cinq modèles sans communication font même un peu mieux que lui.
+Le catalogue est plus vaste que l'ensemble testé avec le modèle structuré. Disposer de 56 noms dans le programme ne signifie pas avoir établi une réussite du modèle sur chacun d'eux, à chaque taille et à chaque effectif. De même, l'adaptation automatique des dimensions évite certaines impossibilités géométriques ; elle ne prouve pas la qualité de la commande apprise dans la nouvelle configuration.
 
-Pourquoi ? Les journaux d'entraînement donnent une piste sérieuse. La perte de collisions, additionnée sur toutes les paires, représentait environ 97\,\% de la perte totale. Le gradient poussait donc à écarter les robots, beaucoup plus qu'à mieux dessiner la figure. En même temps, la direction vers la figure, ajoutée au décodeur, faisait sans doute déjà l'essentiel du travail avant tout apprentissage. Il restait peu à apprendre, et presque aucun signal pour l'apprendre. Dans ces conditions, que les messages n'apportent pas de gain mesurable n'a rien d'étonnant.
+Les observations sont exactes et les communications ne subissent pas de pertes aléatoires. Les robots partagent les mêmes paramètres physiques. Aucune expérience actuelle n'établit la robustesse aux capteurs bruités, aux retards, à une panne de robot ou à des actionneurs différents. Les très petites erreurs finales résultent aussi de cet environnement idéal. Elles ne sont pas une estimation de la précision d'une plateforme réelle.
 
-Un dernier point mérite d'être noté. Les deux GNN laissent des arcs vides sur la figure, là où la règle manuelle répartit mieux les robots. Le défaut se voit sur les images bien mieux que dans les moyennes. Il tient sans doute à la consigne elle-même : chaque robot vise le point de référence le plus proche de lui, et plusieurs robots visent la même zone.
+La navigation réussie repose sur une carte connue, un trajet classique et une protection locale. Elle concerne un carré à douze robots dans les scènes finales proches des cibles. Elle ne constitue pas une validation de la navigation du modèle structuré brut, ni de la navigation de toutes les formes à soixante-quatre robots. Les composants communs doivent rester visibles dans l'explication des résultats.
 
-\section*{Comparaison avec les travaux antérieurs}
-\addcontentsline{toc}{section}{Comparaison avec les travaux antérieurs}
+\section*{Fiabilité des mesures et limites des comparaisons}
+Le protocole impose une stabilisation maintenue et aucun contact pendant toute l'expérience. Cette règle évite de retenir uniquement une image finale favorable. Elle explique aussi pourquoi un épisode peut être déclaré raté même lorsque les robots semblent proches de leurs cibles. Une erreur finale faible, une vitesse faible et une absence de contact sont des informations différentes.
 
-Tolstaya et al. ont montré qu'un GNN pouvait piloter un essaim sur un graphe de communication mobile \cite{tolstaya2020}. Leur tâche était le flocking, et leur entraînement imitait un contrôleur centralisé qui voyait tout. Notre tâche est différente : il faut couvrir une figure, pas seulement s'aligner. Notre entraînement l'est aussi, puisque le signal vient d'une perte calculée à travers le simulateur, sans expert à imiter. Nos résultats suggèrent que ce second choix est plus fragile qu'il n'y paraît. Sans un signal bien équilibré entre ses termes, la perte n'apprend presque rien au réseau.
+Les comparaisons appariées rendent les écarts plus lisibles à l'intérieur d'une campagne. En revanche, les campagnes successives changent parfois à la fois les données, la structure du réseau, les dimensions et les phases de préparation. On ne peut donc pas mesurer l'effet propre d'une modification en soustrayant directement leurs taux de réussite.
 
-Jiang, Huang et Guo ont étudié une formation décentralisée de bout en bout avec un GNN \cite{jiang2023}. Leurs robots perçoivent leur environnement par des cartes locales construites à partir de capteurs. Les nôtres reçoivent une consigne géométrique précise. Cette consigne rend la tâche plus facile, et elle explique peut-être pourquoi la communication compte si peu chez nous. Quand la consigne indique déjà à chaque robot où aller, l'information transmise par ses voisins compte moins.
+Les entraînements n'ont pas été répétés avec un grand ensemble d'initialisations aléatoires des poids. Le test réservé ne fournit pas, à lui seul, une estimation robuste d'un taux de réussite dans un domaine large. Les audits et les empreintes de fichiers permettent de vérifier ce qui a été exécuté, mais ils n'augmentent pas le nombre de situations couvertes.
 
-Les lois écrites pour la formation de figures \cite{hsieh2008,li2019} restent une référence solide. Notre campagne le confirme à sa façon : une règle simple, bien réglée et bien informée, est difficile à battre. Ce n'est pas un échec du projet. C'est une information utile, et il fallait une comparaison équitable pour l'obtenir.
+Le temps de mission demande lui aussi une lecture précise. À soixante-quatre robots, l'attente d'attribution représente la plus grande partie de la durée. La comparaison des temps ne mesure donc pas seulement la vitesse de convergence du réseau. Elle inclut un choix de protocole classique qui pourrait être amélioré indépendamment de l'apprentissage.
 
-\section*{Menaces à la validité}
-\addcontentsline{toc}{section}{Menaces à la validité}
+\section*{Prolongements}
+La première suite utile serait d'élargir les départs tout en gardant les poids et les critères fixes. Il faudrait réserver davantage de graines, varier les formes et annoncer à l'avance les combinaisons évaluées. Les résultats actuels fournissent un point de départ, mais ils ne doivent pas servir à choisir ensuite uniquement les scènes favorables.
 
-\subsection*{Validité interne}
-\addcontentsline{toc}{subsection}{Validité interne}
+Une deuxième étude devrait isoler l'apport des messages. On pourrait comparer le modèle structuré complet à une version privée d'information voisine, en gardant le même mouvement nominal, les mêmes données et des budgets d'entraînement comparables. Plusieurs initialisations des poids aideraient à distinguer un effet régulier d'un entraînement particulier.
 
-La menace principale est le nombre de modèles avec messages : un seul. Quatre entraînements sur cinq sont restés inachevés, et celui qui a abouti a divergé après l'itération 700. Le modèle évalué est son meilleur état, à l'itération 450. Comparer ce modèle unique à cinq graines sans communication ne permet pas d'isoler l'effet des messages, seulement de constater qu'on ne le voit pas.
+Le protocole d'attribution mérite également d'être raccourci. Une condition d'arrêt fondée sur un accord effectivement vérifié pourrait remplacer une partie de l'attente fixe en $N^2$ tours. Cette modification demanderait de nouveaux tests sur les échanges et sur la continuité des missions. Il faudrait conserver une détection explicite des cas non résolus.
 
-Les modèles ont aussi été entraînés avec deux réglages corrigés depuis : la perte de collisions additionnée sur les paires, et un horizon de 40 pas alors que l'évaluation en compte 120. Ils n'ont jamais vu de panne. Ces choix pèsent sur tous les modèles appris de la même façon, ce qui préserve la comparaison entre eux. Ils peuvent en revanche expliquer une partie de l'écart avec la règle manuelle.
+Enfin, le passage à des robots réels nécessiterait d'introduire progressivement des erreurs de mesure, des délais et un modèle de déplacement adapté au matériel. Pour la navigation, une étude distincte pourrait examiner une carte partielle ou des obstacles mobiles. Ces prolongements changeraient les hypothèses de départ ; ils devraient être évalués comme de nouvelles étapes plutôt que supposés acquis.
 
-\subsection*{Validité externe}
-\addcontentsline{toc}{subsection}{Validité externe}
+\section*{Conclusion}
+Le mémoire montre comment apprendre et évaluer une commande locale de formation sans lui attribuer les fonctions assurées par les autres parties du système. Les données synthétiques rendent les exemples reproductibles. Les mesures de trajectoire révèlent des échecs que la seule perte d'entraînement ne suffit pas à voir. La commande structurée atteint l'objectif dans les dix-huit cas réservés, tandis que la navigation hybride réussit les huit cas de sa campagne finale pour chacun des contrôleurs comparés.
 
-Les robots partagent un repère commun, connaissent leur position exacte et échangent des messages sans délai ni perte. Les collisions ne sont qu'une distance sous un seuil, sans contact physique. Un robot en panne sort proprement du graphe, alors qu'un vrai robot défaillant peut rester sur place, gêner ses voisins ou envoyer des données fausses. Enfin, seules deux figures ont été évaluées : un cercle et une étoile. Les lettres et les nombres restent à tester.
-
-Ces hypothèses rendent l'étude contrôlable. Elles bornent aussi sa portée : les résultats valent pour la simulation, pas pour des robots réels.
-
-\subsection*{Validité de construit}
-\addcontentsline{toc}{subsection}{Validité de construit}
-
-La distance de Chamfer mesure l'écart entre deux nuages de points. Elle ne dit pas si un humain reconnaît la figure. Le seuil de 0,15 est un choix, fixé avant les résultats, qui fait basculer le taux de succès pour de petits écarts. Avec 50 points de référence, 20 robots ne peuvent pas tout couvrir, ce qui rend les scores à 20 robots pessimistes pour tous. Le taux de collisions compte des rapprochements, pas des chocs.
-
-Aucune de ces mesures ne suffit seule. Nous les rapportons ensemble, avec leurs définitions, et c'est leur lecture croisée qui fonde les conclusions.
-
-\section*{Implications pour la conception de contrôleurs décentralisés}
-\addcontentsline{toc}{section}{Implications pour la conception de contrôleurs décentralisés}
-
-Première leçon : une consigne trop riche peut masquer ce que le réseau apprend. Ajouter la direction vers la figure à la sortie du décodeur donne un bon départ. Mais elle rend aussi l'apprentissage presque inutile. L'ablation sans cette direction est indispensable pour savoir ce que les couches apportent.
-
-Deuxième leçon : les termes d'une perte composite doivent rester comparables. Une somme sur les paires grandit comme le carré du nombre de robots et finit par écraser le reste. Normaliser chaque terme, puis vérifier leur poids réel dans le gradient, devrait précéder tout réglage.
-
-Troisième leçon : il faut regarder les trajectoires, pas seulement les moyennes. Les arcs vides laissés par le GNN se voient au premier coup d'œil sur une image, alors qu'ils se perdent dans une distance moyenne. Une figure réelle, tirée d'un épisode fixé à l'avance, vaut souvent mieux qu'un tableau de plus.
-
-\section*{Considérations pratiques et sociales}
-\addcontentsline{toc}{section}{Considérations pratiques et sociales}
-
-L'intérêt des essaims tient à leur faible coût unitaire et à leur redondance. Les Kilobot permettent de déployer des centaines de robots simples \cite{rubenstein2014}. À cette échelle, un contrôleur qui dépend d'hypothèses fragiles, comme un repère commun parfait, coûterait cher à calibrer.
-
-La simulation réduit cette facture. Entraîner et tester en simulation avant tout essai physique évite de casser du matériel. La reproductibilité aide aussi : rejouer une campagne consomme du temps de calcul, environ une heure par entraînement ici, mais pas de matière.
-
-Enfin, un essaim qui dessine une figure dans un espace public ne laisse personne indifférent. Une extension vers des robots réels devra tenir compte du bruit, de l'occupation de l'espace, de l'avis des personnes présentes et des usages possibles d'un tel dispositif. Ce mémoire n'aborde pas ces questions de façon expérimentale.
-
-\section*{Suite expérimentale}
-\addcontentsline{toc}{section}{Suite expérimentale}
-
-La priorité est claire. Il faut réentraîner les modèles avec la perte corrigée, régler de nouveau le poids des collisions et obtenir cinq graines complètes pour chaque variante avec messages. L'ablation de la direction ajoutée au décodeur viendra juste après. Ensuite seulement, les études déjà implémentées pourront tourner : transfert de taille, formes réservées, perturbations, curriculum et lisibilité. Le Tableau~\ref{tab:controller-matrix} rappelle ce que reçoit chaque contrôleur, pour que ces comparaisons restent lisibles.
-
-\begin{table}[htbp]
-\centering
-\small
-\caption[Information reçue par les contrôleurs]{Information reçue par chaque contrôleur. Cette matrice décrit des entrées, pas des performances.}
-\label{tab:controller-matrix}
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.25}
-\begin{tabularx}{\linewidth}{@{}>{\raggedright\arraybackslash}p{3.1cm} c c >{\raggedright\arraybackslash}X c@{}}
-\toprule
-\textbf{Contrôleur} & \textbf{Voisins} & \textbf{ID forme} & \textbf{Géométrie de la cible} & \textbf{Poids appris} \\
-\midrule
-Regroupement & Oui & Non & Aucune & Non \\
-Règle manuelle & Oui & Non & Déplacement vers le point le plus proche (direction et distance) & Non \\
-GNN identifiant seul & Oui & Oui & Aucune & Oui \\
-GNN avec géométrie & Oui & Oui & Direction unitaire vers le point le plus proche & Oui \\
-GNN sans communication & Non & Oui & Direction unitaire vers le point le plus proche & Oui \\
-\bottomrule
-\end{tabularx}
-
-\vspace{0.6em}
-\begin{minipage}{\linewidth}
-\footnotesize\raggedright
-La campagne pilote a évalué le regroupement, la règle manuelle, le GNN avec géométrie à trois tours (une graine) et le GNN sans communication (cinq graines). La variante à identifiant seul n'a pas encore été entraînée.
-\end{minipage}
-\end{table}
-
-D'autres questions suivront. Comparer la moyenne à une agrégation pondérée dira si le contrôleur résiste à un voisin défaillant. Comparer un, deux et trois tours à budget égal dira si la portée de l'information compte, une fois les messages rendus utiles. À plus long terme, il faudra se passer du repère global, puis adopter une dynamique plus réaliste avant tout essai sur du matériel.
-
-\section*{Conclusion partielle}
-\addcontentsline{toc}{section}{Conclusion partielle}
-
-Cette discussion a replacé les résultats de la campagne pilote dans la littérature et en a posé les limites : un seul modèle avec messages, une perte déséquilibrée, une consigne géométrique très informative et une simulation simplifiée. Elle en tire trois leçons de conception, sur la consigne, sur l'équilibre de la perte et sur la lecture des trajectoires. La conclusion générale qui suit reprend les apports du travail et les chantiers restants.
-
-\setcounter{figure}{0}
-\renewcommand{\thefigure}{C.\arabic{figure}}
-\renewcommand{\theHfigure}{conclusion.\arabic{figure}}
-\setcounter{table}{0}
-\renewcommand{\thetable}{C.\arabic{table}}
-\renewcommand{\theHtable}{conclusion.\arabic{table}}
-\chapter*{Conclusion générale et perspectives}
-\addcontentsline{toc}{chapter}{Conclusion générale et perspectives}
-
-Ce travail a construit une chaîne expérimentale complète pour étudier un essaim de robots qui dessine une figure. Elle réunit un simulateur en deux dimensions, un catalogue de 64 figures décrites par 50 points de référence, un GNN dont tous les robots partagent les poids, un apprentissage à travers le simulateur, des règles de référence et une démonstration web. Chaque étape lit et écrit des fichiers. Chaque chiffre du mémoire peut donc être retrouvé et recalculé.
-
-La campagne pilote, 9\,600 épisodes, répond en partie à la question de départ. Oui, un GNN local à poids partagés peut amener un essaim sur une figure, y compris une figure absente de l'entraînement, et il fonctionne avec 20, 40 ou 100 robots sans modification. Non, il ne fait pas mieux qu'une règle manuelle simple. Et non, les données ne montrent pas que la communication entre robots améliore la formation.
-
-Ce résultat négatif a sa valeur. L'analyse des journaux d'entraînement a montré que la perte était dominée par les collisions et que la consigne géométrique semblait faire l'essentiel du travail. Ces constats, avec une relecture du code, ont conduit à corriger plusieurs défauts : le rendu des nombres, une fuite entre formes d'entraînement et de test, la normalisation de la perte de collisions et le calcul des intervalles de confiance.
-
-Les perspectives immédiates en découlent. Il faut réentraîner les modèles avec la perte corrigée, sur cinq graines par variante, puis mesurer ce que les couches apprennent sans la direction ajoutée au décodeur. Les études déjà implémentées pourront ensuite tourner : transfert de taille, formes réservées, perturbations, curriculum et questionnaire de lisibilité, dont une matrice de confusion dira quelles figures se confondent.
-
-Plus loin, il faudra rendre la simulation plus réaliste : bruit de mesure, délais de communication, obstacles, robots à roues. La consigne pourrait venir d'une perception locale plutôt que d'un repère partagé. Le passage à des robots réels demandera enfin une estimation de position, des garde-fous de sécurité et une montée en charge progressive.
-
-La réponse de ce mémoire est donc nuancée. Un contrôleur GNN local parvient à dessiner des figures en simulation. Il ne fait pas encore mieux qu'une règle écrite à la main, et il reste à montrer que ses messages servent à quelque chose. Le cadre construit ici permet maintenant de le vérifier proprement.
+La réponse à la question de départ est donc limitée mais concrète : un contrôleur appris peut produire un mouvement de formation sans contact dans le domaine testé, à condition de préciser la structure choisie, les données utilisées et la préparation du groupe. La généralisation à des départs variés, l'effet propre de la communication et le passage au matériel restent à établir. Ce sont ces limites, autant que les réussites, qui définissent la suite du travail.

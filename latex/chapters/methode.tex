@@ -1,264 +1,195 @@
-\chapter{Méthodologie et solution proposée}
+\chapter{Méthode et implémentation}
 \label{chap:methode}
 
 \section{Introduction}
+Ce chapitre décrit ce qui est réellement exécuté par le programme : physique, observations, formes, attribution, modèles et entraînement. Il précise aussi les critères utilisés pour déclarer une réussite.
 
-Ce chapitre décrit la solution telle qu'elle est codée aujourd'hui : un simulateur en deux dimensions, un catalogue de figures, un contrôleur GNN dont tous les robots partagent les poids, un apprentissage mené à travers la simulation et des protocoles d'évaluation. L'architecture et les valeurs citées sont celles des modules et des fichiers de configuration. Une option présente dans le code ne dit pourtant rien de ce qu'elle donnera après entraînement.
+\section{Organisation du système}
+Le système suit quatre opérations principales : construire les places de la forme, préparer le groupe, attribuer les places puis commander le déplacement. Le simulateur enregistre les états et calcule les indicateurs. Les mêmes fonctions de mesure servent aux contrôleurs classiques et appris. Cette organisation permet de changer le contrôleur sans changer la définition d'une réussite.
 
-Une règle vaut pour tout le mémoire. Les figures de ce chapitre ne sont pas dessinées à la main : elles viennent du code ou de trajectoires réellement enregistrées par la campagne pilote du chapitre~\ref{chap:experiences}. Ce chapitre s'en sert pour illustrer un mécanisme, pas pour juger un contrôleur. Les résultats, eux, sont discutés au chapitre suivant.
+Le code distingue le moteur physique, les observations locales, les références géométriques, les modèles d'imitation et les expériences. L'interface permet de sélectionner un cas et de lire sa trajectoire. Elle ne constitue pas une preuve supplémentaire de performance : les résultats discutés dans ce mémoire proviennent des archives d'expériences.
 
-\section{Problème et hypothèses de simulation}
+\section{Modèle physique}
+Chaque robot est représenté par un disque de rayon $r_b=0{,}1$ m. Sa position $p_i$ et sa vitesse $v_i$ sont des vecteurs à deux composantes. La commande demandée est une accélération. Pour limiter un vecteur à une norme $b$, on définit :
+\begin{equation}
+\operatorname{sat}_{b}(z)=\frac{z}{\max(1,\|z\|/b)}.
+\end{equation}
+Avec un pas de temps $\Delta t=0{,}1$ s, le moteur applique :
+\begin{align}
+a_i^t&=\operatorname{sat}_{2}(a_{i,\text{demandée}}^t),\\
+v_i^{t+1}&=\operatorname{sat}_{1}(v_i^t+\Delta t\,a_i^t),\\
+\widetilde p_i^{t+1}&=p_i^t+\Delta t\,v_i^{t+1}.
+\end{align}
+Les accélérations sont exprimées en m/s$^2$ et les vitesses en m/s. La vitesse maximale est de 1 m/s ; l'accélération maximale est de 2 m/s$^2$. Cette mise à jour utilise la nouvelle vitesse pour calculer la position suivante.
 
-\subsection{Objectif de formation}
-
-Il faut répartir les robots actifs sur une figure, décrite par un ensemble de points de référence, sans attribuer à chaque robot un point précis. Réussir la formation, c'est garder les robots près de la figure, ne laisser aucune partie découverte et éviter les rapprochements dangereux. Les notations utilisées sont réunies dans le Tableau~\ref{tab:notation}.
+L'espace est un carré délimité. Si le disque atteint un mur, sa position est ramenée à la limite admissible et sa vitesse dirigée vers l'extérieur est annulée. Ce traitement empêche de sortir de l'espace simulé. Il n'efface pas le contact du bilan : un épisode avec contact n'est pas déclaré réussi.
 
 \begin{table}[htbp]
-  \centering
-  \caption{Notations utiles à la description de la méthode.}
-  \label{tab:notation}
-  \begin{tabularx}{\linewidth}{l>{\raggedright\arraybackslash}X}
-    \toprule
-    Symbole & Signification \\
-    \midrule
-    $N$, $T$ & nombre de robots et nombre de pas de l'épisode \\
-    $p_i^t$, $u_i^t$ & position et commande de vitesse du robot $i$ au pas $t$ \\
-    $\Delta t$, $v_{\max}$ & pas de temps et borne de norme de la commande \\
-    $r_c$, $\mathcal{N}(i)$ & portée de communication et voisinage du robot $i$ \\
-    $h_i^{\ell}$, $m_{ij}^{\ell}$ & état latent et message reçu au tour $\ell$ \\
-    $P^t$, $Q$, $R$ & positions des robots actifs, points de référence de la figure et rayon de normalisation \\
-    $\theta$, $\tau$ & poids partagés du réseau et seuil de succès \\
-    \bottomrule
-  \end{tabularx}
+\centering
+\begin{tabular}{lll}\toprule
+Paramètre & Valeur & Rôle\\\midrule
+Pas de temps & 0,1 s & Mise à jour physique\\
+Rayon d'un robot & 0,1 m & Détection des contacts\\
+Vitesse maximale & 1 m/s & Borne physique\\
+Accélération maximale & 2 m/s$^2$ & Borne physique\\
+Portée principale & 3 m & Voisins directs\\
+Seuil de formation & 0,1 m & Critère de stabilisation\\
+Seuil de vitesse & 0,05 m/s & Critère de stabilisation\\
+Maintien demandé & 1 s & Écarter un passage fugitif\\\bottomrule
+\end{tabular}
+\caption{Paramètres communs aux principales campagnes décrites. Les dimensions de l'espace et de la forme varient selon l'effectif.}
 \end{table}
 
-\subsection{Dynamique et communication}
+\section{Représentation des formes}
+Le catalogue contient les 26 lettres de A à Z, les dix nombres de 1 à 10 et vingt géométries : cercle, ellipse, carré, rectangle, triangle, pentagone, hexagone, heptagone, octogone, décagone, losange, trapèze, parallélogramme, étoile, croix, flèche, demi-cercle, cœur, ligne et V. Les noms O et cercle partagent un tracé ; les noms V et géométrie en V en partagent un autre. Le décompte est donc de 56 noms pour 54 géométries différentes.
 
-L'arène est un carré centré sur l'origine. Le contrôleur produit une commande de vitesse à deux composantes, dont la norme est d'abord plafonnée à $v_{\max}$. La position est alors mise à jour par $p_i^{t+1}=p_i^t+\Delta t\,u_i^t$, puis ramenée sur le bord si elle sort de l'arène. Le modèle reste volontairement simple : vitesse directe, pas d'inertie, ni roues ni contacts mécaniques.
+Les formes sont construites par des segments et des courbes. Pour un tracé unique, les places sont réparties le long de sa longueur. Pour plusieurs traits, un échantillonnage qui favorise des points éloignés permet de couvrir l'ensemble. Le nombre de places est égal au nombre de robots. Le système ne demande pas au réseau de reconnaître une image : il lui fournit une cible issue de cette construction.
 
-À chaque pas, le graphe est recalculé à partir des distances entre robots. Deux robots actifs sont reliés si leur distance est strictement positive et ne dépasse pas $r_c$ ; un robot n'est pas son propre voisin. Conséquence un peu surprenante, deux robots exactement superposés ne sont pas reliés, alors qu'ils comptent bien dans la mesure de proximité dangereuse. Les échanges passent uniquement par ce graphe, dont la Figure~\ref{fig:communication-graph} du chapitre~\ref{chap:concept} montre deux états réels. Avec une portée de 1,5 dans une arène de côté 4, un robot a souvent plus de la moitié de l'essaim dans son voisinage. Le graphe est donc dense, et ce détail compte pour lire l'effet des messages.
+Avant le lancement, la géométrie doit respecter trois conditions : des places suffisamment espacées, un graphe de cibles connecté à la portée choisie et une forme qui tient dans l'espace. L'écart minimal de référence entre places est de 0,4 m. L'interface peut adapter uniformément les dimensions lorsqu'une combinaison est trop dense. Pour examiner la connexité, elle utilise notamment la plus longue arête d'un arbre reliant les cibles avec une longueur totale minimale. Si aucune échelle ne satisfait les contraintes, la combinaison est refusée. Cette adaptation géométrique ne constitue pas un nouvel entraînement du réseau.
 
-En conditions nominales, les robots partagent un repère commun, observent sans erreur et échangent de façon synchrone. Dans les scénarios de retrait, un robot défaillant reste immobile à sa dernière position enregistrée, mais il sort du graphe, des commandes actives et des métriques. Il ne sert pas d'obstacle. Les perturbations relèvent d'études séparées, distinctes de l'entraînement nominal. Le déroulement différentiable qui sert à apprendre ne contient aucun retrait de robots.
+\section{Préparation et attribution des places}
+\subsection{Pourquoi une étape circulaire ?}
+Le cercle visible au début est une consigne de préparation prévue par le programme. Il sert à organiser les échanges avant l'attribution finale. Pour un espacement de 0,6 m entre voisins sur l'anneau, le rayon est :
+\begin{equation}
+R_N=\frac{0{,}6}{2\sin(\pi/N)}.
+\end{equation}
+Chaque identifiant correspond à une place sur cet anneau. Une phase de freinage suit le rassemblement. Les robots échangent ensuite leurs demandes en restant immobiles, puis commencent le mouvement vers la forme demandée.
 
-\section{Cibles et information réellement disponible}
+Pour les expériences du modèle structuré, les départs sont déjà proches de ces positions circulaires, avec une petite perturbation de position et une rotation commune limitée. Le résultat ne doit donc pas être interprété comme une organisation réussie à partir de positions quelconques. Les profils utilisent respectivement 8, 15 et 30 s de rassemblement à 12, 24 et 64 robots, suivies de 2 s de freinage.
 
-\subsection{Représentation et échantillonnage}
+\subsection{Réservation locale et conflits}
+Un robot classe les places par distance à sa position. Il annonce celle qu'il souhaite réserver et transmet les annonces connues à ses voisins. Une annonce contient un propriétaire, une version et une place. Si deux robots demandent la même place, le plus petit identifiant est prioritaire. L'autre choisit sa prochaine place disponible d'après les annonces reçues. L'identifiant sert à départager ; le réseau de neurones ne prend pas cette décision.
 
-La configuration définit sept géométries, dix chiffres, 26 lettres et 21 nombres, soit 64 figures. Une figure est désignée par son nom, \texttt{letters\_A} par exemple, et rien d'autre. On demande aux robots de la dessiner. Pour mesurer s'ils y parviennent, chaque figure est rendue sur une grille de $128\times128$ pixels, puis un échantillonnage par point le plus éloigné retient 50 pixels du trait, tous distincts. Ces 50 points de référence sont les mêmes dans tout le projet, à l'entraînement comme à l'évaluation. Une cible n'est jamais complétée avec des doublons, et un masque trop pauvre est refusé. La méthode répartit bien les points. Elle n'assure en revanche ni une densité régulière le long du trait, ni la conservation de chaque détail.
+Une présence physique temporaire sur une cible ne vaut pas réservation. Un robot peut traverser une place attribuée à un autre sans en devenir propriétaire. La commande locale doit alors limiter le risque de contact pendant le passage.
 
-On recentre ensuite les points sur leur centroïde et on les met à l'échelle pour que leur rayon maximal soit $R=1$. Les distances deviennent sans dimension. Cette échelle commune ne rend pas pour autant les formes également difficiles, ni leurs traits également longs. La Figure~\ref{fig:reference-points} montre le résultat pour six figures, tel que le produit le code du catalogue. On le voit sur le 8 et sur la lettre A : un glyphe a un trait épais, et les points tombent alors dans ce trait, pas seulement sur son contour extérieur.
+Les annonces se propagent d'un voisin à l'autre au cours de tours successifs. Le budget actuel est de $N^2$ tours, à raison de 0,1 s par tour. Il représente 14,4 s à douze robots et 409,6 s à soixante-quatre robots. Ce choix est conservateur et coûteux. Il décrit le protocole implémenté ; il n'est pas présenté comme une complexité minimale nécessaire à toute attribution décentralisée. La résolution est vérifiée avant la libération du mouvement. Lors d'un changement de mission, un nouveau numéro de mission permet d'écarter les anciennes annonces.
+
+\section{Le professeur et la protection classique}
+Le professeur associe attraction, freinage et répulsion de proximité. Avant protection, sa commande s'écrit :
+\begin{equation}
+a_i^{\mathrm{nom}}=6(g_i-p_i)-4v_i
+-60\sum_{j\in\mathcal{N}_i}\max(0,0{,}4-d_{ij})\frac{p_j-p_i}{d_{ij}},
+\end{equation}
+où $g_i$ est la cible attribuée et $d_{ij}$ la distance entre les centres. Le premier terme rapproche le robot de sa cible, le deuxième freine son mouvement et le troisième l'éloigne des voisins trop proches.
+
+La protection cherche ensuite une accélération proche de cette proposition, tout en respectant des inégalités locales et la borne physique. Avec $r=p_i-p_j$, $w=v_i-v_j$, une distance de sécurité $d_s=0{,}4$ m et $\alpha=3$, la contrainte réciproque utilisée entre deux robots est :
+\begin{equation}
+r^\top a_i\geq-\tfrac12\|w\|^2-\alpha r^\top w
+-\tfrac14\alpha^2(\|r\|^2-d_s^2).
+\label{eq:contrainte}
+\end{equation}
+Chaque robot reçoit une moitié de la contrainte symétrique. Une petite composante de détour peut aussi être ajoutée pour départager un face-à-face. Le programme résout en deux dimensions une projection sous contraintes :
+\begin{equation}
+\min_a\|a-a_i^{\text{proposé}}\|^2
+\quad\text{sous}\quad n_k^\top a\geq b_k,\qquad\|a\|\leq2.
+\end{equation}
+Lorsqu'aucune accélération admissible n'est trouvée, une commande bornée de freinage est appliquée et ce cas est compté. La présence du filtre ne justifie donc pas une garantie générale de sécurité. Les contacts sont toujours mesurés sur la trajectoire produite.
+
+Dans la navigation, des contraintes supplémentaires tiennent compte des obstacles et des murs. Pour un obstacle immobile, toute la responsabilité de la correction revient au robot mobile. La carte sert à préparer le trajet ; les contraintes de proximité protègent l'exécution locale.
+
+\section{Premier modèle à attention sur graphe}
+\subsection{Entrées et calcul de la commande}
+Le premier modèle, nommé GAT de référence dans la suite, reçoit huit valeurs propres : la position, la vitesse, la cible, la phase et l'effectif. Le prétraitement utilise six valeurs : l'écart à la cible ramené à une largeur de 6 m, la vitesse, la phase divisée par trois et l'effectif divisé par douze. Chaque voisin apporte sa position et sa vitesse relatives. Leur distance complète ces quatre composantes pour former cinq caractéristiques d'arête.
+
+Deux couches linéaires avec activation ReLU encodent l'état propre ; deux autres encodent les arêtes. Les représentations ont une largeur de 64. Des projections de requête et de clé donnent les scores d'attention. La somme pondérée des représentations voisines est combinée avec l'état propre, l'écart à la cible, la vitesse et le degré du robot. Deux couches de sortie donnent l'accélération, ramenée à la norme maximale si nécessaire.
+
+Le modèle contient ainsi huit modules linéaires et une seule agrégation de voisinage par décision. Aucun objectif privé d'un voisin ne lui est fourni. Les poids sont partagés entre tous les robots.
+
+\subsection{Modes brut et protégé}
+Le mode protégé applique le filtre classique à l'accélération du réseau. Le mode brut retire cette projection pendant le rassemblement et le mouvement vers la forme, c'est-à-dire les phases apprises. Les bornes physiques restent appliquées par le simulateur. Le freinage et l'attribution restent des étapes classiques communes. Le mot « brut » porte donc sur la commande des phases de mouvement ; il ne signifie pas que toute la mission serait réalisée par le réseau.
+
+\section{Données et entraînement du modèle de référence}
+\subsection{Origine et séparation des données}
+Le jeu de données est produit par le professeur. Une trajectoire fournit plusieurs observations robot par robot et instant par instant. Seuls les exemples des phases de mouvement apprises sont retenus pour l'imitation. La séparation est faite avant l'optimisation et tient compte des formes équivalentes : deux noms du même tracé restent dans la même partition.
+
+La collecte élargie contient 214 épisodes du professeur : 185 fichiers d'entraînement, 20 de validation et 9 de test. Après regroupement des tracés identiques, cela représente 180 trajectoires d'entraînement, 18 de validation et 9 de test distinctes. Les géométries uniques sont réparties en 36 pour l'entraînement, 9 pour la validation et 9 pour le test. Les observations retenues comprennent 531\,360 exemples d'entraînement distincts et 53\,136 de validation.
+
+Ces nombres doivent être lus avec leur unité. Un exemple est une observation locale, pas une nouvelle mission indépendante. Cinq graines de départ sont réutilisées entre les formes d'entraînement, deux entre celles de validation et une entre celles de test : la collecte contient donc huit configurations initiales distinctes, répétées pour différentes consignes. Cette réutilisation facilite les comparaisons mais limite la diversité des départs.
+
+\subsection{Optimisation et sélection}
+L'optimiseur Adam utilise un taux d'apprentissage de $5\times10^{-4}$ et des lots de 1\,024 exemples. La graine d'initialisation vaut 42. Le budget maximal est de 80 époques, avec arrêt après douze époques sans amélioration en validation. La MSE est définie par l'Équation~\eqref{eq:mse}. Son unité est le m$^2$/s$^4$, puisqu'elle porte sur des écarts d'accélération au carré.
+
+L'entraînement s'arrête après 23 époques. Les poids retenus correspondent à l'époque 11, avec une MSE de validation de 0,112516. Le test réservé est ensuite exécuté avec ces poids fixes. Les exemples de test ne servent ni à ajuster les paramètres ni à choisir l'époque retenue.
+
+\section{Corrections et modèle structuré}
+\subsection{Collecter sur les états rencontrés par le réseau}
+Les contacts du premier modèle brut ont motivé une collecte de correction. Le professeur est interrogé sur des états visités par le modèle, uniquement pour construire les données d'apprentissage prévues. Les situations proches d'un voisin reçoivent un poids plus élevé. Les trajectoires ratées restent conservées ; les demandes pour lesquelles le professeur ne trouve pas de correction admissible sont comptées et exclues des étiquettes utilisables.
+
+Cette opération réduit une partie du décalage entre les exemples initiaux et les états rencontrés pendant l'exécution. Elle n'a cependant pas suffi à rendre le premier réseau brut fiable. Un pilote entraîné avec plusieurs effectifs a également montré que la capacité à recevoir un nombre variable de voisins ne garantissait pas la réussite à 24 ou 64 robots. Ces observations ont conduit à revoir la structure de la commande.
+
+\subsection{Mouvement nominal et corrections vectorielles}
+Le second modèle, appelé GAT structuré, contient une commande explicite vers la cible :
+\begin{equation}
+a_i^{\mathrm{base}}=\operatorname{sat}_{2}\big(k_p(g_i-p_i)-k_dv_i\big),
+\qquad k_p>0,\quad k_d>0.
+\end{equation}
+Les deux gains positifs sont appris sur 8\,192 exemples synthétiques sans voisin, puis fixés pour la suite. Ils retrouvent les valeurs 6 et 4. Le réseau apprend alors des corrections liées au voisinage au lieu de devoir réapprendre seul le mouvement nominal.
+
+Pour une arête, on note $r_{ij}=p_j-p_i$, $w_{ij}=v_j-v_i$, $u_{ij}=r_{ij}/\|r_{ij}\|$ et $\tau_{ij}$ le vecteur obtenu par une rotation de $-u_{ij}$ d'un quart de tour. Le message vectoriel prend la forme :
+\begin{equation}
+m_{ij}=\rho_{ij}\left(c_{ij}^{(1)}(-u_{ij})+
+c_{ij}^{(2)}\tau_{ij}+c_{ij}^{(3)}w_{ij}\right).
+\end{equation}
+Les trois coefficients sont calculés par le réseau. Le facteur d'activité
+$\rho_{ij}=\tanh(\|g_i-p_i\|+\|v_i\|+\|w_{ij}\|)$ annule cette correction lorsque le robot est à sa cible et que le voisinage est immobile. La commande finale est :
+\begin{equation}
+\widehat a_i=\operatorname{sat}_{2}\left(a_i^{\mathrm{base}}+
+\sqrt{|\mathcal{N}_i|}\sum_{j\in\mathcal{N}_i}\alpha_{ij}m_{ij}\right).
+\end{equation}
+Si le robot n'a pas de voisin, la somme est nulle.
+
+Le réseau calcule ses coefficients à partir de distances, de normes et de projections sur les directions radiale et tangente. Son encodage propre comporte quatre valeurs et son encodage d'arête huit valeurs. Il utilise une largeur de 48, l'activation SiLU, huit modules linéaires et deux gains positifs appris. Cette construction suit les translations et les rotations du plan : si la scène tourne, les vecteurs de commande tournent avec elle. Le choix d'un sens de détour empêche d'étendre cette affirmation sans précaution aux réflexions.
+
+\subsection{Préparation des exemples et coût d'apprentissage}
+Les données locales issues du pilote multi-effectifs sont complétées par des voisinages synthétiques. Les effectifs représentés sont 12, 24 et 64, avec différents nombres de voisins et des situations de proximité. Après sélection, le jeu utilisé contient 30\,000 exemples d'entraînement et 21\,000 de validation, dont respectivement 12\,000 et 3\,000 voisinages ajoutés. Les candidats dont la commande du professeur n'est pas admissible sont comptés avant exclusion : 100 en entraînement et 28 en validation pour cette augmentation.
+
+L'objectif combine une erreur d'imitation pondérée et une pénalité lorsque la commande viole les inégalités locales de séparation. Une écriture du principe est :
+\begin{equation}
+\mathcal{L}=\mathcal{L}_{\text{imitation,pondérée}}+
+\lambda\,\mathcal{L}_{\text{séparation}}.
+\end{equation}
+La seconde partie pénalise les valeurs positives de $b_{ij}-r_{ij}^{\top}\widehat a_i$, avec une normalisation par la distance. Elle guide l'apprentissage ; elle n'est pas un filtre appliqué aux mouvements du modèle brut.
+
+Une première version réussit six des neuf cas de validation. La seconde repart de ses poids, augmente le poids de séparation à 200 et utilise une distance d'apprentissage de 0,5 m. Le taux d'apprentissage est de $3\times10^{-4}$, la taille des lots de 512 et le budget maximal de 60 époques, avec une patience de douze. L'entraînement s'arrête à l'époque 53 ; l'époque 41 est retenue. La valeur de validation est de 0,239340 pour cet objectif composite. Elle ne peut pas être comparée directement à la MSE du premier modèle, ni à une valeur calculée avec une autre pénalité.
 
 \begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_reference_points.png}
-  \caption[Rendu et points de référence de six figures]{Pour six figures du catalogue : rendu binaire $128\times128$ (rangées 1 et 3) et 50 points de référence normalisés (rangées 2 et 4). Images produites par \texttt{src/shapes/}, sans retouche.}
-  \label{fig:reference-points}
+\centering\includegraphics[width=\textwidth]{images/current_training.pdf}
+\caption{Courbes extraites des journaux d'entraînement. À gauche, l'imitation du modèle de référence est mesurée par une MSE. À droite, le modèle structuré v2 utilise un coût composite. Les deux ordonnées n'ont pas la même signification.}
+\label{fig:entrainement}
 \end{figure}
 
-Avant tout apprentissage, les figures sont partagées entre entraînement, validation et test, avec respectivement 44, neuf et onze figures. Le nombre 9 est rangé en test, avec le chiffre 9 : c'est le même glyphe, et le placer en entraînement aurait laissé fuir une forme de test. Les figures de test n'interviennent ni dans la mise à jour des poids, ni dans le choix du meilleur modèle. Qu'une forme soit dans le catalogue ne veut pas dire que le modèle l'a vue.
+\section{Navigation avec une carte connue}
+Le déplacement d'une formation entière utilise un centre de référence mobile. Le contrôleur reçoit l'état dans le repère de ce centre : position et vitesse de référence sont soustraites à l'état propre. L'accélération de référence est ensuite ajoutée à la commande locale. Les positions relatives entre voisins restent celles de la scène physique.
 
-\subsection{Identifiant et direction géométrique}
+Le trajet est calculé par une recherche classique sur une grille de 0,1 m, puis simplifié en segments libres. Le planificateur tient compte de toutes les places de la formation : un passage libre pour le seul centre peut rester trop étroit pour les robots situés sur les côtés. Pour chaque obstacle, il examine donc les positions interdites du centre de translation en fonction des décalages des cibles. Une marge de planification de 0,35 m s'ajoute aux rayons physiques.
 
-Le réseau reçoit la vitesse précédente du robot et un plongement appris, de dimension 16, de l'identifiant de figure. La variante géométrique y ajoute deux composantes : la direction \emph{unitaire} vers le point de référence le plus proche. Les points de référence jouent le rôle d'une carte de mission commune, que chaque robot consulte depuis sa position. Cette variante ne reçoit pas la distance au point, seulement sa direction. Sur le point lui-même, la direction calculée est nulle.
+Chaque segment est parcouru avec une progression polynomiale $f(s)=10s^3-15s^4+6s^5$, où $s$ va de zéro à un. La durée est réglée pour limiter la vitesse de référence à 0,2 m/s et ne descend pas sous quatre secondes. Une période de stabilisation complète le transport. La forme n'est pas tournée ou déformée par cette recherche. Une cible finale occupée par un obstacle est refusée avant le calcul, plutôt que déplacée silencieusement.
 
-La règle manuelle, elle, utilise le déplacement complet vers le point de référence, longueur comprise. Comparer cette règle au GNN ne se fait donc pas à information strictement égale. L'ablation principale oppose plutôt les variantes neuronales avec et sans messages, qui gardent la même consigne géométrique.
+Dans les scènes finales à plusieurs obstacles, la préparation est classique pour les deux contrôleurs comparés. Le transport utilise ensuite soit le professeur, soit le GAT de référence protégé. Le GAT structuré brut n'est pas évalué dans ces scènes. Le réseau ne reçoit pas la carte complète et n'apprend pas le planificateur.
 
-La variante à identifiant seul ne reçoit ni position absolue ni direction vers la figure. Rien ne lui indique où se trouve la figure dans l'arène : elle ne dispose que des vitesses, des positions relatives de ses voisins et de l'identifiant. Elle ne peut donc placer la figure au bon endroit que si le centre de l'essaim, au départ, coïncide avec celui de la figure. Elle sert à mesurer ce que la consigne géométrique apporte.
-
-Quand nous parlons de localité, nous parlons des robots dont dépend la commande d'un robot donné. Le programme calcule tout dans un simulateur unique, mais les messages des robots non voisins sont masqués. Une exécution locale est donc possible en principe. Cela reste loin d'un déploiement distribué sur du matériel ou un réseau radio.
-
-\section{Architecture du contrôleur GNN}
-
-\subsection{Encodage et tours de messages}
-
-Chaque robot porte un état caché de 64 composantes. Avec la géométrie, l'entrée compte 20 dimensions (deux pour la vitesse, deux pour la direction, 16 pour l'identifiant) ; sans la géométrie, elle en compte 18. Une transformation affine suivie d'une ReLU donne l'état initial de chaque robot.
-
-À chaque tour, on calcule un message à partir des états des deux robots concernés et de leur position relative, puis on moyenne les messages reçus. L'Équation~\eqref{eq:local-message-aggregation} décrit cette opération, qui fixe à la fois la localité et le traitement d'un nombre variable de voisins :
+\section{Critères d'évaluation}
+\subsection{Erreur de formation et maintien}
+Pour les positions $P=\{p_i\}$ et les cibles $Q=\{q_j\}$, l'erreur de couverture est :
 \begin{equation}
-  m_{ij}^{\ell}=\phi_{\ell}(h_i^{\ell},h_j^{\ell},p_j-p_i),
-  \qquad
-  \bar m_i^{\ell}=\frac{1}{|\mathcal{N}(i)|}\sum_{j\in\mathcal{N}(i)}m_{ij}^{\ell}.
-  \label{eq:local-message-aggregation}
+E(P,Q)=\max\left(\max_i\min_j\|p_i-q_j\|,
+\max_j\min_i\|q_j-p_i\|\right).
+\label{eq:formation}
 \end{equation}
-Un voisinage vide donne un agrégat nul. La mise à jour ajoute à l'état précédent une correction apprise, $h_i^{\ell+1}=h_i^{\ell}+\psi_{\ell}(h_i^{\ell},\bar m_i^{\ell})$ : c'est une connexion résiduelle. Les fonctions de message et de mise à jour comprennent chacune deux transformations affines séparées par une ReLU. Les paramètres sont communs à tous les robots, mais chaque tour a les siens.
+Elle mesure la plus grande distance non couverte entre les deux ensembles. Contrairement à une moyenne, elle ne masque pas un robot très éloigné parce que les autres seraient bien placés. Elle ne dépend pas de l'ordre des robots dans les tableaux.
 
-La configuration nominale prend deux tours, et les variantes préparées en prennent un, deux ou trois. Un tour n'est pas une simple couche, car il combine plusieurs transformations et une agrégation. Sur un graphe fixé pendant le calcul, $L$ tours donnent accès aux informations situées à $L$ sauts au plus. D'un pas de simulation au suivant, les déplacements et les vitesses mémorisées peuvent en plus faire circuler une influence plus ancienne.
+La stabilisation demande simultanément $E(P,Q)\leq0{,}1$ m et une vitesse maximale de 0,05 m/s pendant une seconde. Avec le pas retenu, cette fenêtre inclut onze états échantillonnés. Le temps de stabilisation correspond à la première fenêtre admissible selon le protocole. L'erreur finale est mesurée au dernier état : ces deux indicateurs ne décrivent donc pas exactement le même moment.
 
-Le Tableau~\ref{tab:gnn-layers} détaille les couches du modèle à deux tours, telles que les affiche PyTorch. On compte onze couches linéaires et une table de plongement des figures, dans le cadre général du passage de messages \cite{gilmer2017}. Chaque tour ajoute quatre couches, si bien que les variantes à un, deux et trois tours ont 31\,618, 56\,578 et 81\,538 paramètres. Ce nombre ne dépend pas de l'effectif, puisque tous les robots partagent les mêmes poids.
+\subsection{Contacts et réussite}
+Les contacts entre disques sont recherchés aussi entre deux états successifs, en examinant le déplacement interpolé des centres. Un contact prolongé n'est pas recompté comme un nouvel événement à chaque image. Les contacts initiaux et les nouvelles entrées en contact sont conservés. Pour la navigation, les obstacles et les murs font également partie du bilan.
 
-\begin{table}[htbp]
-  \centering
-  \small
-  \caption{Couches du GNN à deux tours avec direction géométrique (56\,578 paramètres).}
-  \label{tab:gnn-layers}
-  \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{.27\linewidth}>{\raggedright\arraybackslash}p{.27\linewidth}>{\raggedright\arraybackslash}X}
-    \toprule
-    Bloc & Couches & Dimensions \\
-    \midrule
-    Encodeur & plongement + 1 linéaire & identifiant $\to$ 16 ; $2+2+16=20 \to 64$ \\
-    Tour 1 : message & 2 linéaires & $64+64+2=130 \to 64 \to 64$ \\
-    Tour 1 : mise à jour & 2 linéaires & $64+64=128 \to 64 \to 64$ \\
-    Tour 2 & 4 linéaires & identiques, poids propres \\
-    Décodeur & 2 linéaires & $64 \to 64 \to 2$, puis tangente hyperbolique et bornage \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
+Un épisode de formation réussit si l'attribution est résolue, si la stabilisation est atteinte avant la fin et si aucun contact n'a eu lieu pendant toute l'expérience. Une bonne forme finale après un contact reste donc un échec. Lorsque la stabilisation manque, le temps correspondant reste absent ; on ne lui substitue pas une valeur de réussite.
 
-\subsection{Sortie bornée et propriétés structurelles}
+La navigation demande aussi une erreur de destination inférieure à 0,1 m et une déformation maximale pendant le transport inférieure à 0,2 m. La mesure de forme est recentrée sur la formation, tandis que l'erreur de destination mesure le placement du groupe. Cela distingue un groupe bien formé au mauvais endroit d'un groupe arrivé mais déformé.
 
-Le décodeur transforme l'état final en deux composantes, leur applique une tangente hyperbolique, les multiplie par $v_{\max}$, puis projette radialement la commande dans le disque de rayon $v_{\max}$ si elle en sort. Dans la variante géométrique, la direction unitaire vers le point de référence le plus proche est d'abord ajoutée aux deux composantes issues du réseau, avant la tangente hyperbolique, avec un poids de 1 par défaut. Avant tout apprentissage, la commande pointe donc déjà, pour une large part, vers la figure ; le réseau apprend une correction autour de cette direction. Le bornage tient toujours. Ce poids est un choix de conception, pas un résultat ; à zéro, le décodeur redevient purement appris. La tangente hyperbolique borne chaque composante séparément, et c'est la projection qui garantit la borne euclidienne. Quant à la ReLU des couches internes, elle ne joue aucun rôle de sécurité.
+\section{Reproductibilité et lecture des résultats}
+Une graine permet de reproduire un tirage de positions initiales. À configuration identique, changer de contrôleur sans changer cette graine donne une comparaison appariée. Une graine n'est ni une donnée à apprendre ni un indicateur de qualité. Si plusieurs formes utilisent le même départ, elles ne deviennent pas pour autant plusieurs départs indépendants.
 
-L'agrégat ne dépend pas de l'ordre des voisins, et le contrôleur est \emph{équivariant} par permutation des robots : si l'on renumérote les robots, les commandes sont renumérotées de la même façon. Translater toutes les positions ne change pas les positions relatives, donc pas les messages. Dans la variante géométrique, il faut cependant translater les robots et la figure ensemble, hors effets de bord. Déplacer les robots seuls devant une figure fixe modifierait la commande. Nous ne revendiquons aucune invariance générale par rotation.
-
-La variante sans communication garde le modèle à deux tours et le même nombre de paramètres, mais fonctionne sur un graphe vide. Les agrégats sont nuls, tandis que les transformations locales et les connexions résiduelles restent actives. Ce n'est donc pas un réseau sans couches de messages. L'ablation isole l'effet des échanges sans retirer de paramètres en même temps.
-
-\section{Apprentissage et fonction de perte}
-
-\subsection{Proximité et couverture : deux directions distinctes}
-
-La distance de Chamfer compare deux ensembles sans imposer de bijection. Pour les positions actives $P$ et la cible $Q$, l'Équation~\eqref{eq:chamfer} donne la mesure utilisée par l'évaluation actuelle, avec des distances euclidiennes \emph{non carrées} :
-\begin{equation}
-  d_C(P,Q)=\frac{1}{R}\left[
-  \frac{1}{|P|}\sum_{p\in P}\min_{q\in Q}\lVert p-q\rVert+
-  \frac{1}{|Q|}\sum_{q\in Q}\min_{p\in P}\lVert q-p\rVert\right].
-  \label{eq:chamfer}
-\end{equation}
-Le premier terme mesure la proximité : la distance moyenne de chaque robot à la figure. Le second mesure la couverture. Une partie de la figure éloignée de tous les robots le fait grimper, même si les robots présents sont tout près d'un petit arc. Plusieurs points de référence peuvent avoir le même robot pour plus proche voisin : la mesure n'impose aucune affectation un à un.
-
-La Figure~\ref{fig:proximity-coverage} sépare les deux termes sur un épisode réel de la règle manuelle, sur l'étoile. La proximité tombe sous 0,01 : chaque robot est posé sur la figure. La couverture, elle, reste vers 0,11, parce que des branches de l'étoile n'ont pas de robot. C'est elle qui décide si l'épisode passe le seuil.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_proximity_coverage.png}
-  \caption[Proximité et couverture sur un épisode réel]{Proximité et couverture sur un épisode réel de la règle manuelle (étoile, 40 robots, graine 555000) : (a) état final, les flèches partent des points de référence les moins couverts vers le robot le plus proche ; (b) évolution des deux termes et de leur somme. Positions lues dans \texttt{outputs/evaluation\_pilot/manual/positions/}.}
-  \label{fig:proximity-coverage}
-\end{figure}
-
-La perte d'entraînement garde ces deux termes séparés, tous deux non quadratiques et normalisés par $R$, chacun avec son propre poids. Dans le profil nominal, on les moyenne sur les dix derniers états de la trajectoire, pas seulement sur l'état final. Le terme de couverture ne compare pas les espacements entre voisins. La Chamfer symétrique pénalise déjà les zones découvertes, sans garantir une distribution uniforme ni la lisibilité d'une lettre.
-
-\subsection{Sécurité et régularisation du mouvement}
-
-L'Équation~\eqref{eq:perte-totale} garde le strict nécessaire pour savoir ce qui est optimisé :
-\begin{equation}
-  \mathcal{L}=\lambda_f\mathcal{L}_{forme}+\lambda_r\mathcal{L}_{couverture}
-  +\lambda_c\mathcal{L}_{collisions}+\lambda_u\mathcal{L}_{mouvement}.
-  \label{eq:perte-totale}
-\end{equation}
-La pénalité de collisions est nulle au-delà de la distance de sécurité et quadratique en deçà, après normalisation par cette distance. On la moyenne sur les paires, puis sur les états, l'état final compris. Sa valeur reste donc entre 0 et 1, quel que soit le nombre de robots. Les dix premiers états sont écartés, car le chevauchement qui sort du tirage initial ne vient d'aucune commande et son gradient ne serait que du bruit.
-
-Ce n'était pas le cas des modèles évalués au chapitre~\ref{chap:experiences}. Leur perte additionnait les pénalités sur toutes les paires, et ce terme valait à lui seul environ 97\,\% de la perte totale en début d'entraînement. Nous l'avons corrigé le 28 octobre 2026, après avoir lu les journaux d'entraînement.
-
-La pénalité de mouvement moyenne la norme carrée des commandes sur tous les pas et tous les robots, divisée par $v_{\max}^2$. Elle décourage les vitesses élevées. Elle ne punit pas explicitement les variations dans le temps, l'accélération ou les oscillations, et elle ne représente pas une énergie physique mesurée. Les poids configurés valent 1 pour la forme, 1 pour la couverture, 0,5 pour les collisions et 0,02 pour le mouvement. Avec la nouvelle perte de collisions, le poids de 0,5 pèse beaucoup moins qu'avant et devra être réglé de nouveau, avec le même budget pour toutes les variantes. Sans ablation, on ne peut affirmer aucun effet causal d'une composante.
-
-\subsection{Déroulement de l'optimisation}
-
-Les poids sont ajustés à partir d'une perte globale calculée sur la simulation, sans commandes d'expert ni récompenses individuelles. Les épisodes d'un lot sont déroulés l'un après l'autre, leurs pertes sont moyennées, puis Adam met à jour les poids. Le meilleur modèle est choisi sur la distance moyenne de validation, pas sur la dernière perte d'entraînement, et le dernier état est gardé à part. Ce choix a compté en pratique : le GNN à trois tours a divergé vers l'itération 700, et c'est son état de l'itération 450 qui a été évalué (Figure~\ref{fig:training-curves}).
-
-PyTorch garde la trace des opérations qui relient positions et commandes aux poids partagés. Deux décisions restent pourtant discrètes, le graphe booléen de voisinage et le choix du point cible le plus proche. Le gradient ne traverse ni l'apparition d'une arête ni le changement d'indice sélectionné. Les ReLU, les minimums et les écrêtages ajoutent des points non lisses ou des zones saturées. La simulation est donc différentiable par morceaux, le long des chemins enregistrés, et non une fonction lisse de toute la topologie.
-
-\section{Configurations actuelles et curriculum}
-
-\subsection{Valeurs de configuration}
-
-Les valeurs du profil standard sont rassemblées dans le Tableau~\ref{tab:hyperparametres}. Ce sont des réglages choisis, pas des valeurs optimisées : rien n'indique qu'elles soient les meilleures. Le simulateur général a un horizon par défaut de 60 pas. Le profil d'entraînement sur le cercle le ramène à 40 et la campagne d'évaluation le porte à 120. Cet écart n'est pas anodin : un modèle n'a jamais été optimisé sur ce qui se passe après le pas 40.
-
-\begin{table}[htbp]
-  \centering
-  \small
-  \caption{Hyperparamètres et réglages de l'entraînement standard et de l'évaluation.}
-  \label{tab:hyperparametres}
-  \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{.53\linewidth}>{\raggedright\arraybackslash}X}
-    \toprule
-    Réglage & Valeur configurée \\
-    \midrule
-    Arène ; rayon de cible ; rayon de départ & $4\times4$ ; 1 ; 1,8 \\
-    Pas de temps ; vitesse maximale & 0,1 ; 1 \\
-    Portée ; distance de sécurité & 1,5 ; 0,1 \\
-    Robots ; points de référence par figure & 40 ; 50 \\
-    Largeur cachée ; représentation de forme & 64 ; 16 \\
-    Tours de messages ; agrégation nominale & 1, 2 ou 3 ; moyenne \\
-    Horizon cercle ; horizon d'évaluation & 40 ; 120 \\
-    Itérations ; épisodes par lot & 1\,200 ; 8 \\
-    Taux d'apprentissage initial ; décroissance & 0,001 ; facteur 0,999 par itération \\
-    Borne de norme du gradient & 1 \\
-    Fenêtre de proximité et de couverture & 10 derniers états \\
-    États initiaux exclus des collisions & 10 premiers \\
-    Poids de la direction dans le décodeur & 1 \\
-    Graines d'entraînement & 11, 12, 13, 14, 15 \\
-    Graines de validation & 9001, 9002, 9003 \\
-    Validation ; répétitions d'évaluation & toutes les 50 itérations ; 50 par condition \\
-    Seuil actuel de succès & 0,15 sur la Chamfer normalisée \\
-    \bottomrule
-  \end{tabularx}
-\end{table}
-
-L'entraînement initial porte sur le cercle. La validation combine de nouveaux départs sur cette cible et une forme du découpage de validation, le pentagone. On retient le meilleur état d'après la moyenne des distances sur les cibles et les graines de validation. Les profils de transfert de taille prévoient séparément 20, 40 et 100 robots. Des modèles entraînés existent pour 20 et pour 40, et celui de 100 robots reste inachevé.
-
-\subsection{Progression cumulative et oubli}
-
-Le curriculum actuel distingue deux variantes à trois tours, l'une avec l'identifiant seul et l'autre avec l'identifiant et la géométrie. Chaque niveau garde les formes des niveaux précédents. Le Tableau~\ref{tab:current-curriculum} donne le nombre de figures à chaque niveau ; ce sont des figures disponibles, pas des figures maîtrisées. Aucun entraînement par curriculum n'a encore été lancé.
-
-\begin{table}[htbp]
-  \centering
-  \caption{Figures cumulées par niveau du curriculum actuel.}
-  \label{tab:current-curriculum}
-  \begin{tabular}{lrr}
-    \toprule
-    Niveau & Cibles d'entraînement & Cibles de validation \\
-    \midrule
-    Géométries & 5 & 1 \\
-    Ajout des chiffres & 11 & 3 \\
-    Ajout des lettres & 31 & 6 \\
-    Ajout des nombres & 44 & 9 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-Le profil standard prévoit 50 robots, 120 pas et 1\,200 itérations par niveau. Le meilleur état d'un niveau initialise les poids du suivant, après un contrôle de compatibilité. L'empreinte du fichier transféré est calculée, puis notée dans la configuration effective. L'état de l'optimiseur, lui, ne passe pas d'un niveau à l'autre. Les mêmes cibles et graines de validation sont réévaluées pour mesurer la variation de distance. Une hausse supérieure à 0,05 est signalée comme un oubli notable ; cette tolérance est une convention, pas une valeur justifiée. Garder les figures précédentes vise à limiter l'oubli, mais l'efficacité de ce choix reste à mesurer \cite{kirkpatrick2017}.
-
-\section{Évaluation : définition et limites des mesures}
-
-\subsection{Succès et franchissement stabilisé}
-
-La mesure actuelle repose sur la Chamfer normalisée de l'Équation~\eqref{eq:chamfer}. Un épisode est réussi s'il existe un pas à partir duquel toutes les distances enregistrées restent inférieures ou égales à 0,15 jusqu'à la fin. On rapporte le début de ce suffixe. Passer sous le seuil puis le dépasser de nouveau ne suffit donc pas. Si seul l'état final est sous le seuil, le suffixe compte un seul état et l'épisode est accepté. Cette convention ne prouve pas une stabilité durable au-delà de l'horizon observé, et encore moins une convergence asymptotique.
-
-La Figure~\ref{fig:success-criterion} applique cette règle à cinq épisodes réels du GNN à trois tours. Sur le cercle, les courbes descendent vite sous le seuil et y restent ; le point marque le pas retenu. Sur l'étoile, elles se stabilisent juste au-dessus. Aucun de ces cinq épisodes n'est compté comme réussi, alors que leurs distances diffèrent à peine de celles du cercle. Le seuil tranche net là où les distances varient peu.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_success_criterion.png}
-  \caption[Critère de succès sur des épisodes réels]{Distance au fil des pas pour cinq épisodes réels du GNN à trois tours (40 robots, graines 555000 à 555004). Le point marque le début du maintien sous le seuil 0,15. Courbes recalculées à partir des positions enregistrées.}
-  \label{fig:success-criterion}
-\end{figure}
-
-\subsection{Collisions, régularité et connectivité}
-
-Le taux de collisions rapporte le nombre de paires actives à distance inférieure ou égale à 0,1 au nombre total de paires actives disponibles sur les pas considérés. L'implémentation évalue les états qui précèdent chaque commande et laisse de côté l'état final, à la différence de la perte de collisions. C'est une fréquence de proximité dangereuse, pas un décompte d'impacts mécaniques. Retirer des robots change à la fois les paires observées et le dénominateur.
-
-La régularité est l'écart-type des distances au plus proche voisin entre robots actifs, à l'état final. Sa version normalisée prend par défaut l'espacement du cercle unité, $2\pi/N$, et non le périmètre propre à chaque lettre ou nombre. Rappel utile dès qu'on compare des formes entre elles. Une valeur faible traduit des espacements homogènes. Elle ne montre pas que les robots couvrent la bonne cible.
-
-Pour la connectivité, on recalcule le graphe à partir des positions enregistrées et on compte ses composantes connexes parmi les robots actifs. Un robot isolé forme une composante à lui seul. Trajectoires, masques actifs, cibles et rayons sont sauvegardés : on peut donc recalculer les mesures sans toucher aux poids.
-
-\subsection{Comparaisons et lisibilité}
-
-La campagne d'évaluation croise les tailles 20, 40 et 100 avec quatre fractions de retrait, de 0 à 20\,\%. Chaque condition est répétée 50 fois, et chaque variante apprise prévoit cinq graines d'entraînement. Les comparaisons appariées partagent les mêmes graines d'épisode. La variabilité entre entraînements est rapportée à part de celle entre épisodes, et les intervalles de confiance entre graines utilisent la loi de Student : avec cinq graines, le facteur vaut 2,776, et non 1,96. Réutiliser les mêmes départs sur plusieurs formes ne donne pas autant d'échantillons indépendants en plus.
-
-Les modules disponibles prévoient la comparaison avec et sans communication, le transfert de taille à poids gelés, les formes réservées, la réduction de portée et le bruit d'observation. Ce bruit perturbe ce que reçoit le contrôleur, pas les positions physiques qui servent à mesurer la trajectoire. Ces protocoles sont implémentés, et leurs résultats restent à produire.
-
-Pour les caractères, être géométriquement proche d'une forme ne revient pas à la faire reconnaître. Un questionnaire en aveugle sépare les images présentées de l'identité attendue, conservée dans une vérité terrain privée. Aucune réponse n'a encore été recueillie, et aucun score de lisibilité n'est donc avancé. Quand elles le seront, une matrice de confusion entre figures montrées et figures reconnues dira quelles formes se confondent, le O et le 0 par exemple.
-
-\section{Organisation logicielle et niveau de preuve}
-
-Les responsabilités restent séparées entre formes, simulateur, modèle, entraînement, métriques, évaluation et restitution. Chaque module lit des fichiers et en écrit d'autres. Aucun ne dépend d'un objet gardé en mémoire par un autre, si bien qu'une étude peut être rejouée sans relancer ce qui la précède.
-
-Chaque expérience doit s'accompagner de sa configuration effective, de ses graines, de ses cibles et de la version du programme. Les campagnes chargent les poids avec leur configuration sauvegardée, vérifient la cohérence des modèles et refusent les ensembles de résultats incomplets. Un mode explicite autorise malgré tout un bilan partiel, à la condition d'en consigner chaque exclusion avec sa raison. Les rapports se construisent à partir des fichiers enregistrés, sans chiffres recopiés à la main et sans relancer d'optimisation. La reproductibilité reste conditionnelle. Elle dépend de la version, des dépendances et des données, et une même graine ne garantit pas les mêmes trajectoires d'une implémentation à l'autre.
-
-Les tests vérifient les propriétés de permutation, de translation (sous leurs hypothèses), de bornage, de voisinage, de cibles distinctes et de cohérence des mesures. Les tests de gradient et d'orchestration simulée contrôlent la chaîne de traitement. Aucun ne montre que l'entraînement produit une politique utile. Quatre niveaux de preuve sont donc à tenir séparés : le composant implémenté, la propriété testée, le modèle réellement entraîné et la qualité mesurée sur une campagne d'évaluation.
-
-Pour la démonstration locale, on choisit une figure, un contrôleur, un nombre de robots et une graine. Le serveur calcule l'épisode ; le navigateur affiche la trajectoire, la courbe de distance et les métriques, sans jamais exécuter de règle de contrôle. Un panneau indique pour chaque contrôleur s'il est disponible et, sinon, pourquoi. Une animation reste une illustration : l'argument scientifique du mémoire n'en dépend pas.
-
-Reste le coût de calcul. La représentation matricielle des messages calcule toutes les paires avant le masquage. La mémoire et le temps de calcul croissent donc comme le carré du nombre de robots, même si l'agrégation reste locale. S'y ajoute le déroulement temporel, qui conserve les opérations de chaque épisode jusqu'à la rétropropagation. Les épisodes d'un lot s'exécutent l'un après l'autre, avec accumulation des pertes, au lieu d'une unique dynamique vectorisée. Les journaux donnent l'ordre de grandeur. Un entraînement de 1\,200 itérations à 40 robots a pris entre 53 et 65 minutes pour le GNN sans communication, et deux heures pour le GNN à trois tours, sur un processeur de bureau.
+Les archives conservent les positions, les vitesses, les commandes, les instants et les paramètres. Les rapports donnent les métriques et les empreintes des poids utilisés. Les tableaux et les figures du chapitre suivant sont reconstruits à partir de ces fichiers. Les tests logiciels vérifient les fonctions du programme ; les campagnes de trajectoires évaluent les comportements. Cette distinction reste valable même lorsque tous les tests logiciels réussissent.
 
 \section{Conclusion partielle}
-
-Nous avons décrit la méthode à partir de ce qui est réellement implémenté : des figures décrites par des points de référence distincts et normalisés, une consigne de mission explicite, un GNN avec connexions résiduelles et une sortie bornée en norme. S'y ajoutent deux termes de forme tenus séparés, la proximité et la couverture, un apprentissage à travers une simulation différentiable par morceaux et une sélection du modèle sur validation. Les mesures et les comparaisons prévues complètent le tableau, avec une règle constante : un test logiciel réussi ne dit rien de la qualité d'un modèle entraîné. Le chapitre~\ref{chap:experiences} présente ce que cette implémentation a réellement produit : une campagne pilote de 9\,600 épisodes, ses résultats et les défauts qu'elle a permis de corriger.
+La méthode sépare la forme demandée, l’attribution des places et le mouvement. Deux modèles apprennent à partir de commandes synthétiques, avec des structures différentes. Les critères restent fondés sur la trajectoire complète, afin que l’apprentissage et la réussite de la mission ne soient pas confondus.

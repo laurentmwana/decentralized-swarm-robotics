@@ -1,228 +1,154 @@
-\chapter{Implémentation, expérimentations et résultats}
+\chapter{Expériences et résultats}
 \label{chap:experiences}
 
 \section{Introduction}
+Ce chapitre rassemble les résultats enregistrés pendant le développement. Les cas ratés sont présentés avec les cas réussis, car ils expliquent les changements apportés au modèle et les limites de la solution finale.
 
-Ce chapitre rapporte ce que l'implémentation actuelle a réellement produit. Pas de schéma construit, pas de chiffres hérités d'une version antérieure : chaque tableau et chaque figure vient d'un fichier enregistré par le code, dans le dossier \texttt{outputs/} du dépôt. Les figures sont recalculées par un script unique, \texttt{latex/generate\_real\_figures.py}, qui ne fait que lire ces fichiers.
+\section{Questions et organisation des essais}
+Les expériences répondent à trois questions. Le premier modèle peut-il reproduire les commandes du professeur tout en réalisant une formation sans contact ? Le changement de structure du modèle permet-il d'utiliser une commande brute avec plusieurs effectifs ? Enfin, la chaîne hybride de navigation peut-elle déplacer une formation autour d'obstacles proches de ses cibles ?
 
-Les données proviennent d'une campagne pilote lancée le 26 octobre 2026 sur la version du code identifiée par le commit \texttt{2c86290}. Elle compare quatre contrôleurs sur 9\,600 épisodes. Nous l'appelons pilote pour une raison simple : elle a été conduite avec les modèles disponibles à ce moment-là, dont un seul entraînement complet pour le GNN avec messages. Plusieurs défauts ont été trouvés et corrigés ensuite, les 27 et 28 octobre. Nous les décrivons à la fin du chapitre, parce qu'ils changent la lecture de certains résultats.
+Les campagnes sont présentées dans leur ordre de développement, car leurs échecs expliquent les choix suivants. Elles n'utilisent pas toutes les mêmes données ni les mêmes conditions. Une amélioration entre deux campagnes ne suffit donc pas à attribuer un gain à un seul composant. À l'intérieur d'une campagne, les contrôleurs comparés partent des mêmes états et utilisent les mêmes critères de réussite.
 
-\section{Ce que fait l'application}
-
-Le code est organisé en modules séparés : formes, simulateur, contrôleurs, modèle, entraînement, métriques, évaluation et rapports. Chaque expérience lit ses paramètres dans un fichier de configuration versionné et refuse une clé absente ou inconnue. Un dossier de résultats contient toujours la configuration réellement utilisée, les graines, l'identifiant du code et les données brutes. Rien n'est écrasé : un dossier déjà occupé bloque l'exécution.
-
-Le catalogue compte 64 figures. Une figure est désignée par son nom, par exemple \texttt{letters\_A} ou \texttt{numbers\_314}, et elle est décrite par 50 points de référence qui servent à mesurer la distance entre l'essaim et la figure. L'utilisateur ne choisit jamais ce nombre de points. Il est fixé une fois pour tout le projet, pour que les mesures restent comparables d'une expérience à l'autre.
-
-Une démonstration web locale complète la chaîne. On y choisit une figure, un contrôleur, un nombre de robots et une graine. Le serveur calcule l'épisode et la page se contente de le rejouer : elle dessine les positions reçues, la courbe de distance au cours du temps et les métriques de l'épisode. Elle n'exécute aucune règle de contrôle. Quand un contrôleur appris n'est pas utilisable, par exemple parce que son modèle a été entraîné avec un autre catalogue de formes, la page l'indique avant tout calcul et affiche les étapes pour le rendre de nouveau disponible.
-
-Le Tableau~\ref{tab:implemented-status} sépare ce qui a été exécuté de ce qui reste seulement implémenté.
+Les valeurs proviennent des rapports conservés dans le dépôt. Les figures montrent des trajectoires enregistrées et des courbes issues des journaux d'entraînement. Leurs légendes précisent la campagne, le contrôleur et le cas représenté.
 
 \begin{table}[htbp]
-  \centering
-  \small
-  \caption{État des expériences au 28 octobre 2026.}
-  \label{tab:implemented-status}
-  \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{.36\linewidth}>{\raggedright\arraybackslash}X}
-    \toprule
-    Élément & État \\
-    \midrule
-    Règles écrites (regroupement, règle manuelle) & réglées sous budget fixe (27 essais chacune), évaluées \\
-    GNN sans communication & cinq graines entraînées (11 à 15), évaluées \\
-    GNN à trois tours & une graine complète (11) ; les quatre autres inachevées \\
-    GNN à deux tours, 20 et 40 robots & cinq graines entraînées chacun ; pas encore évalués \\
-    GNN à deux tours, 100 robots & entraînement inachevé \\
-    Curriculum, formes réservées, lisibilité, robustesse & implémentés et testés, non exécutés \\
-    \bottomrule
-  \end{tabularx}
+\centering\small
+\begin{tabularx}{\textwidth}{p{2.5cm}p{3.5cm}X}
+\toprule
+Campagne & Question principale & Ensemble évalué\\\midrule
+Référence multi-formes & Effet du filtre classique & 9 formes réservées, 12 robots\\
+Correction & Effet d'exemples sur les états du réseau & 18 cas frais, 12 robots\\
+Pilote multi-effectifs & Passage à 24 et 64 robots & 3 formes par effectif\\
+Modèle structuré v2 & Mouvement appris sans filtre & 18 cas réservés, 12/24/64 robots\\
+Navigation finale & Transport près des obstacles & 8 cas par contrôleur, carré à 12 robots\\
+\bottomrule
+\end{tabularx}
+\caption{Principales campagnes discutées. « Cas » désigne une combinaison de forme, de départ et d'effectif ou de scène ; il ne signifie pas toujours un départ distinct.}
 \end{table}
 
-\section{Protocole de la campagne pilote}
-
-Quatre contrôleurs sont évalués : la règle de regroupement, la règle manuelle, le GNN à trois tours et le GNN sans communication. Les deux GNN reçoivent l'identifiant de forme et la direction vers le point de référence le plus proche. Le GNN sans communication garde exactement les mêmes couches, mais son graphe est vide.
-
-Les conditions croisent trois tailles d'essaim (20, 40 et 100 robots), quatre fractions de robots retirés au pas 60 (0, 5, 10 et 20\,\%) et deux figures. Le cercle a servi à l'entraînement. L'étoile appartient au jeu de test : aucun modèle ne l'a vue. Chaque condition est répétée 50 fois, avec les mêmes graines d'épisode pour tous les contrôleurs. Les robots partent donc des mêmes positions et perdent les mêmes unités, ce qui rend les comparaisons appariées.
-
-Un épisode dure 120 pas de 0,1. On retient sa distance finale, le succès, le taux de collisions, la régularité et la connectivité du graphe. Le succès suit la convention du chapitre~\ref{chap:methode} : la distance doit passer sous 0,15 et y rester jusqu'au dernier pas. Pour 5 épisodes par condition, les positions complètes sont archivées. C'est d'elles que viennent les figures de trajectoires.
-
-Au total, la campagne compte 9\,600 épisodes : 960 pour chacune des deux règles, 960 pour le GNN à trois tours et 4\,800 pour les cinq graines du GNN sans communication. Le nombre de lignes brutes a été vérifié par le code avant toute agrégation.
-
-\section{Ce que montre l'entraînement}
-
-Avant les scores, il faut regarder comment les modèles évalués ont été obtenus. La Figure~\ref{fig:training-curves} reprend les journaux d'entraînement. À gauche, les quatre termes de la perte du GNN à trois tours. À droite, la distance mesurée sur les épisodes de validation toutes les 50 itérations, pour ce modèle et pour les cinq graines sans communication.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_training_curves.png}
-  \caption[Journaux d'entraînement réels]{Journaux d'entraînement : (a) termes de la perte du GNN à trois tours, graine 11 ; (b) distance de validation au fil des itérations. La ligne pointillée marque le seuil de succès 0,15. Données : \texttt{outputs/training/*/losses.csv} et \texttt{validation.csv}.}
-  \label{fig:training-curves}
-\end{figure}
-
-Le panneau (a) appelle une remarque gênante. Pendant 700 itérations, le terme de proximité reste à 0,042 et celui de couverture autour de 0,08. Ils ne bougent presque pas. Le terme de collisions, lui, vaut 7 à 8, et avec son poids de 0,5 il représente environ 97\,\% de la perte totale au départ. Le gradient pousse donc surtout à écarter les robots. Il ne pousse guère à mieux dessiner la figure.
-
-Une explication semble probable. La direction vers le point de référence le plus proche est ajoutée à la sortie du décodeur avant la tangente hyperbolique. Un réseau qui vient d'être initialisé dirige donc déjà chaque robot vers la figure. La forme est presque atteinte avant tout apprentissage, et il reste peu à gagner sur ces deux termes. Le panneau (b) le confirme à sa manière : plusieurs modèles atteignent leur meilleure validation dès l'itération 50 ou 100.
-
-Vers l'itération 700, le GNN à trois tours diverge. Sa distance de validation passe d'environ 0,13 à plus de 2. Le modèle évalué est le meilleur état enregistré, celui de l'itération 450, avant la rupture. Deux graines sans communication oscillent elles aussi entre 0,2 et 2. L'entraînement n'est donc pas stable, et le meilleur état retenu dépend beaucoup du hasard de la graine.
-
-Cette lecture a conduit à normaliser la perte de collisions par le nombre de paires (section~\ref{sec:corrections}). Elle impose aussi une ablation que nous n'avons pas encore faite : le même modèle sans cette direction ajoutée au décodeur.
-
-\section{Résultats selon la taille de l'essaim}
-
-Le Tableau~\ref{tab:pilot-size} donne la distance finale et le taux de succès sans panne. Les écarts-types portent sur les épisodes. Pour le GNN sans communication, les 250 épisodes regroupent les cinq graines.
+\section{Premier modèle : une imitation correcte ne suffit pas}
+Le GAT de référence est entraîné avec douze robots à partir des commandes du professeur. Après sélection des poids sur la validation, neuf formes sont évaluées dans une partition réservée. Les résultats sont présentés dans le Tableau~\ref{tab:reference}. La même configuration initiale est utilisée pour ces formes ; les neuf épisodes ne représentent donc pas neuf tirages de départ indépendants.
 
 \begin{table}[htbp]
-  \centering
-  \small
-  \caption[Campagne pilote sans panne]{Campagne pilote sans panne : distance finale moyenne (écart-type) et taux de succès, 50 épisodes par condition (250 pour le GNN sans communication).}
-  \label{tab:pilot-size}
-  \begin{tabular}{llrrr}
-    \toprule
-    Figure & Contrôleur & 20 robots & 40 robots & 100 robots \\
-    \midrule
-    Cercle & Regroupement & 0,572 (0,049) ; 0\,\% & 0,413 (0,032) ; 0\,\% & 0,456 (0,013) ; 0\,\% \\
-     & Règle manuelle & 0,121 (0,026) ; 92\,\% & 0,065 (0,009) ; 100\,\% & 0,039 (0,005) ; 100\,\% \\
-     & GNN sans comm. & 0,232 (0,084) ; 2\,\% & 0,171 (0,067) ; 58\,\% & 0,121 (0,043) ; 70\,\% \\
-     & GNN 3 tours & 0,191 (0,034) ; 6\,\% & 0,135 (0,013) ; 86\,\% & 0,097 (0,008) ; 100\,\% \\
-    \midrule
-    Étoile & Regroupement & 0,379 (0,071) ; 0\,\% & 0,308 (0,022) ; 0\,\% & 0,430 (0,009) ; 0\,\% \\
-     & Règle manuelle & 0,194 (0,041) ; 6\,\% & 0,141 (0,031) ; 74\,\% & 0,101 (0,017) ; 100\,\% \\
-     & GNN sans comm. & 0,228 (0,033) ; 0\,\% & 0,174 (0,021) ; 10\,\% & 0,123 (0,011) ; 99\,\% \\
-     & GNN 3 tours & 0,226 (0,030) ; 0\,\% & 0,172 (0,021) ; 12\,\% & 0,121 (0,011) ; 100\,\% \\
-    \bottomrule
-  \end{tabular}
+\centering\small
+\input{generated/reference_rows}
+\caption{Campagne réservée du modèle de référence. Les erreurs et temps sont des moyennes ; le temps porte sur les épisodes réussis. Le tiret indique qu'aucun épisode n'a réussi. Source : rapport 008d.}
+\label{tab:reference}
 \end{table}
 
-La Figure~\ref{fig:pilot-size} présente les mêmes valeurs sur une échelle logarithmique, avec le seuil de succès.
+Le professeur réussit les neuf cas sans contact. Le réseau protégé réussit également les neuf, avec une erreur finale moyenne d'environ 1,27 cm. Son temps moyen de stabilisation est de 30,43 s, contre 29,83 s pour le professeur. Ces temps comprennent la préparation et l'attribution.
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_pilot_by_size.png}
-  \caption[Distance finale selon le nombre de robots]{Distance finale selon le nombre de robots, sans panne, moyenne et écart-type entre épisodes. La ligne pointillée marque le seuil 0,15. Données : \texttt{outputs/evaluation\_pilot/episodes.csv}.}
-  \label{fig:pilot-size}
-\end{figure}
+Le réseau brut atteint presque la même erreur finale moyenne, mais provoque 54 événements de contact et ne réussit aucun cas. Cet écart est le résultat principal de la campagne : observer uniquement la dernière image aurait conduit à une conclusion trompeuse. Les robots peuvent finir près des places demandées après s'être touchés pendant le mouvement. Le filtre classique a donc une contribution importante à la réussite du système protégé.
 
-Trois constats se dégagent. D'abord, la règle de regroupement ne forme rien : elle rassemble les robots sans jamais regarder la figure, et ne réussit aucun épisode. C'est le plancher attendu.
+La MSE de validation, égale à 0,112516 pour les poids retenus, mesure l'imitation de commandes sur des exemples. Elle ne remplace pas cette évaluation du déplacement. Les états rencontrés par le réseau peuvent aussi s'éloigner progressivement de ceux du professeur, même si les premières erreurs de commande sont modestes.
 
-Ensuite, la règle manuelle est la meilleure dans toutes les conditions testées. Sur le cercle à 40 robots, elle obtient 0,065 contre 0,135 pour le GNN à trois tours, soit une distance deux fois plus faible. L'écart est le même sur l'étoile. Nous l'avions annoncé : cette règle reçoit le déplacement complet vers le point de référence, longueur comprise, alors que le GNN ne reçoit que la direction. Elle a donc un avantage d'information. Mais l'écart est grand, et il serait malhonnête de le réduire à cette seule cause.
+\section{Collecte de correction : moins de contacts, mais toujours des échecs}
+Une collecte complémentaire interroge le professeur sur des états rencontrés par le modèle. Le nouvel entraînement donne davantage de poids aux situations proches d'un voisin. L'évaluation suivante utilise neuf formes et deux graines fraîches, soit 18 cas.
 
-Enfin, toutes les méthodes s'améliorent quand le nombre de robots augmente. Ce n'est pas forcément un mérite des contrôleurs. Avec 50 points de référence, 20 robots ne peuvent pas couvrir toute la figure, et le terme de couverture garde un plancher. À 100 robots, chaque point peut avoir un robot proche. Le succès qui monte de 6 à 100\,\% pour le GNN à trois tours, sur le cercle, tient donc pour une bonne part à la géométrie de la mesure.
+Sur ces mêmes cas, le modèle brut initial provoque 102 contacts. Le modèle corrigé en provoque 65, soit une baisse d'environ 36,3\,\%. Les deux restent à zéro réussite sur dix-huit. La version corrigée avec protection réussit les dix-huit cas sans contact.
 
-Les Figures~\ref{fig:final-states} et~\ref{fig:final-states-star} montrent l'état final d'un même épisode, avec 40 robots et la graine 555000, pour les quatre contrôleurs. On y voit ce que les moyennes cachent. La règle manuelle répartit les robots sur tout le contour. Les deux GNN laissent des arcs entiers vides : les robots se tassent sur une partie du cercle.
+La correction a donc un effet mesurable, mais elle n'atteint pas l'objectif d'un mouvement brut sans contact. Nous ne la présentons pas comme un modèle sûr. Les poids corrigés et les trajectoires ratées sont conservés pour expliquer cette conclusion, tandis que le modèle de référence protégé reste disponible pour la démonstration hybride.
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_final_states_circle.png}
-  \caption[État final d'un même épisode, cercle]{État final au pas 120 d'un même épisode sur le cercle (40 robots, graine 555000), pour les quatre contrôleurs. Cercles verts : points de référence de la figure ; points pleins : robots. Positions lues dans les archives \texttt{.npz} de la campagne.}
-  \label{fig:final-states}
-\end{figure}
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_final_states_star.png}
-  \caption[État final d'un même épisode, étoile]{État final au pas 120 du même épisode sur l'étoile, figure absente de l'entraînement (40 robots, graine 555000). Mêmes conventions que la Figure~\ref{fig:final-states}.}
-  \label{fig:final-states-star}
-\end{figure}
-
-\section{Une figure jamais vue : l'étoile}
-
-L'étoile n'a servi ni à l'entraînement ni au choix d'un modèle. Pourtant, les deux GNN la forment, et leur écart avec la règle manuelle y est du même ordre que sur le cercle : 0,172 contre 0,141 à 40 robots, 0,121 contre 0,101 à 100 robots. À première vue, c'est un signe de généralisation, observé sur une seule figure.
-
-Il faut la lire avec prudence. Les deux GNN reçoivent à chaque pas la direction vers le point de référence le plus proche, calculée sur l'étoile elle-même. Une part importante de la réussite vient sans doute de cette consigne géométrique, et non de ce que le réseau aurait appris sur les formes. La règle manuelle, qui n'a rien appris du tout, fait d'ailleurs mieux. Ce résultat montre que la chaîne fonctionne sur une figure inconnue. Il ne montre pas que le modèle ait acquis quelque chose de propre à l'étoile.
-
-\section{Effet des retraits de robots}
-
-Au pas 60, une fraction des robots est retirée au hasard. Ils restent immobiles, sortent du graphe et ne comptent plus dans les mesures. La Figure~\ref{fig:pilot-failures} suit la distance finale à 40 robots quand cette fraction augmente.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_pilot_failures.png}
-  \caption[Distance finale selon la fraction de robots retirés]{Distance finale selon la fraction de robots retirés au pas 60, avec 40 robots, moyenne et écart-type entre épisodes. Données : \texttt{outputs/evaluation\_pilot/episodes.csv}.}
-  \label{fig:pilot-failures}
-\end{figure}
-
-Toutes les courbes montent doucement. Sur le cercle, la règle manuelle passe de 0,065 à 0,081 et garde 100\,\% de succès même avec 20\,\% de retraits. Le GNN à trois tours passe de 0,135 à 0,152. Son taux de succès, lui, chute de 86 à 48\,\%. La hausse de distance est modeste, mais elle suffit à faire repasser beaucoup d'épisodes au-dessus du seuil, car ils en étaient proches.
-
-C'est un comportement raisonnable, et un peu trompeur. Retirer 20\,\% des robots laisse des trous sur la figure, ce qui fait monter le terme de couverture quel que soit le contrôleur. Une petite hausse ne montre donc pas que l'essaim s'est réorganisé. Pour le savoir, il faudrait mesurer le temps de reformation après la panne, ce que le module d'étude des perturbations prévoit et que cette campagne ne fait pas.
-
-\section{Dispersion entre graines d'entraînement}
-
-Le GNN sans communication est le seul contrôleur appris dont on dispose de cinq entraînements. La Figure~\ref{fig:seed-dispersion} montre la distance moyenne de chacun sur le cercle, à côté du GNN à trois tours et de la règle manuelle.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_seed_dispersion.png}
-  \caption[Dispersion entre graines d'entraînement]{Distance finale moyenne sur le cercle pour chacune des cinq graines du GNN sans communication, comparée au GNN à trois tours (graine 11) et à la règle manuelle. Données : \texttt{outputs/evaluation\_pilot/episodes.csv}.}
-  \label{fig:seed-dispersion}
-\end{figure}
-
-Les graines ne se valent pas. À 40 robots, trois d'entre elles (12, 13 et 15) donnent entre 0,124 et 0,130. Les deux autres donnent 0,205 et 0,271. Ce sont justement celles dont le meilleur état a été retenu à l'itération 50, c'est-à-dire presque à l'initialisation. La moyenne entre graines vaut 0,171 et l'écart-type 0,065. Avec cinq graines, l'intervalle de confiance à 95\,\% calculé avec la loi de Student va de 0,090 à 0,252.
-
-Le GNN à trois tours obtient 0,135. Cette valeur tombe dans l'intervalle, et elle est même un peu moins bonne que les trois meilleures graines sans communication. \textbf{Avec les données actuelles, rien ne montre que la communication entre robots améliore la formation.} Un seul entraînement avec messages ne permet pas de conclure dans un sens ou dans l'autre. Sur l'étoile, le constat est le même, avec une dispersion bien plus faible : les cinq graines sans communication donnent toutes entre 0,170 et 0,179, et le GNN à trois tours 0,172.
-
-\section{Exemples, résultats négatifs et limites de lecture}
-
-Une moyenne ne dit pas comment l'essaim se comporte au fil du temps. La Figure~\ref{fig:formation-sequence} suit un épisode du GNN à trois tours sur le cercle. En dix pas, la distance passe de 0,74 à 0,15. Ensuite, presque plus rien ne change jusqu'au pas 120.
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\linewidth,height=.82\textheight,keepaspectratio]{images/real_formation_sequence.png}
-  \caption[Un épisode réel du GNN à trois tours]{Un épisode réel du GNN à trois tours (40 robots, cercle, graine 555000) : (a) à (c) positions aux pas 0, 10 et 120 ; (d) distance au fil des pas, les points marquant ces trois instants. Positions lues dans \texttt{outputs/evaluation\_pilot/gnn\_3\_rounds/seed\_11/positions/}.}
-  \label{fig:formation-sequence}
-\end{figure}
-
-Ce plateau est instructif. Les robots atteignent vite la figure, puis ils s'arrêtent là où ils sont arrivés, sans se redistribuer vers les arcs vides. On retrouve le défaut visible sur la Figure~\ref{fig:final-states}. Une hypothèse plausible : chaque robot va vers le point de référence le plus proche de lui, et plusieurs robots partis du même côté visent la même zone. Rien dans la perte, telle qu'elle était, ne les poussait assez fort à s'étaler.
-
-Les figures de trajectoires ne sont pas choisies parmi les meilleurs épisodes. La graine 555000 est la première graine de la campagne. Elle est utilisée pour tous les contrôleurs, ce qui rend les images comparables entre elles.
-
-\section{Défauts trouvés et corrections apportées}
-\label{sec:corrections}
-
-L'analyse de cette campagne et une relecture du code ont fait apparaître plusieurs défauts, corrigés les 27 et 28 octobre 2026. Le Tableau~\ref{tab:corrections} les résume.
+\section{Premier essai avec plusieurs effectifs}
+Le pilote multi-effectifs utilise 12, 24 et 64 robots. Les dimensions de l'espace, de la forme et de la préparation sont adaptées à chaque profil. Trois formes sont réservées au test pour chaque effectif. Les résultats sont :
 
 \begin{table}[htbp]
-  \centering
-  \small
-  \caption{Défauts trouvés après la campagne pilote et corrections.}
-  \label{tab:corrections}
-  \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{.34\linewidth}>{\raggedright\arraybackslash}X}
-    \toprule
-    Défaut & Correction \\
-    \midrule
-    Les nombres à trois chiffres étaient tronqués au rendu (« 314 » devenait « 31 ») & canevas dimensionné sur le texte ; test de non-régression \\
-    Le nombre 9, en entraînement, était le même glyphe que le chiffre 9, en test & nombre 9 placé en test ; le chargeur de configuration refuse ce cas \\
-    La perte de collisions était une somme sur les paires, qui dominait la perte totale & moyenne par paire, comprise entre 0 et 1 \\
-    Plusieurs résolutions d'une même figure (20, 40, 50 points) & une figure par nom, 50 points de référence partout \\
-    Intervalles de confiance calculés avec 1,96 même pour cinq graines & quantiles de la loi de Student \\
-    Sortie du décodeur plafonnée à $\sqrt{2}$ quelle que soit la vitesse maximale & mise à l'échelle par $v_{\max}$ (sans effet tant que $v_{\max}=1$) \\
-    \bottomrule
-  \end{tabularx}
+\centering
+\begin{tabular}{rrrrr}
+\toprule
+Robots & Brut : réussites & Brut : contacts & Protégé : réussites & Protégé : contacts\\\midrule
+12 & 2/3 & 1 & 3/3 & 0\\
+24 & 0/3 & 65 & 0/3 & 0\\
+64 & 0/3 & 127 & 0/3 & 0\\\bottomrule
+\end{tabular}
+\caption{Pilote multi-effectifs avant le modèle structuré. Source : rapport 012.}
+\label{tab:pilote}
 \end{table}
 
-Ces corrections ne touchent pas la campagne pilote de la même manière. Le cercle et l'étoile ne sont pas concernés par le défaut de rendu, et la campagne utilisait déjà 50 points de référence. En revanche, les modèles évalués ont été entraînés avec l'ancienne perte de collisions et un cercle d'entraînement à 40 points. Ils ne sont plus compatibles avec le catalogue corrigé : la démonstration web les signale comme indisponibles. Il faudra les réentraîner avant toute nouvelle campagne.
+À 24 et 64 robots, le système protégé évite les contacts dans ces cas mais ne termine pas correctement le protocole. Le rassemblement ne permet pas d'aboutir à l'attribution attendue. Une absence de collision n'est donc pas suffisante pour déclarer une réussite.
 
-\section{Analyse des métriques}
+Ce pilote montre aussi qu'un réseau qui accepte un nombre variable de voisins n'est pas automatiquement performant avec un effectif plus grand. Les interactions, les dimensions et la durée des phases changent. La bonne valeur de la perte de validation du pilote ne résout pas ces difficultés en exécution.
 
-La distance de Chamfer reste la mesure principale, et la Figure~\ref{fig:proximity-coverage} du chapitre~\ref{chap:methode} montre pourquoi il faut en garder les deux termes. Dans la campagne, le terme de proximité tombe très bas pour tous les contrôleurs qui reçoivent la figure. C'est la couverture qui fait la différence : la règle manuelle gagne surtout parce qu'elle laisse moins d'arcs vides.
+\section{Modèle structuré : formation à 12, 24 et 64 robots}
+\subsection{Validation avant le test réservé}
+La première version structurée réussit six des neuf cas de validation, avec six contacts dans les trois cas restants. Ces échecs ne sont pas écartés du bilan. L'entraînement de la seconde version renforce la pénalité de séparation et utilise une marge plus grande. Cette seconde version réussit ensuite les neuf cas de validation, portant sur le triangle, la lettre B et le nombre 7 aux trois effectifs.
 
-Le taux de collisions va dans le même sens. Sur le cercle à 40 robots, il vaut 0,028 pour la règle manuelle, 0,038 pour le GNN à trois tours et 0,049 pour le GNN sans communication. Le regroupement est presque à zéro, mais seulement parce que ses robots restent éloignés les uns des autres sans former de figure. Une faible valeur ne vaut rien seule.
+Les poids sont alors fixés avant l'exécution du test réservé. Ce test utilise le rectangle, la lettre C et le nombre 3, avec les graines 8500 et 8501 à chacun des effectifs 12, 24 et 64. Cela donne dix-huit cas, mais seulement six configurations de départ distinctes : deux par effectif, réutilisées pour trois formes. La conclusion statistique doit rester proportionnée à cette diversité.
 
-Le succès est la mesure la plus fragile. Il bascule pour de petits écarts autour de 0,15. Entre 40 et 100 robots, le GNN à trois tours passe sur le cercle de 86 à 100\,\% de succès alors que sa distance ne baisse que de 0,038. Nous le rapportons toujours avec la distance et son seuil.
+\subsection{Résultats du test réservé}
+Le Tableau~\ref{tab:vector} rassemble les résultats du GAT structuré brut. Dans les dix-huit cas, aucun contact n'est observé et aucun filtre de sécurité n'intervient pendant les phases de mouvement apprises. Le professeur, évalué sur les mêmes départs, réussit lui aussi les dix-huit cas sans contact.
 
-\section{Menaces à la validité}
+\begin{table}[htbp]
+\centering\small
+\input{generated/vector_rows}
+\caption{Test réservé du GAT structuré v2. Les erreurs et temps sont des moyennes sur six cas par effectif. Les temps incluent toutes les phases de préparation. Source : rapport 014.}
+\label{tab:vector}
+\end{table}
 
-La première menace est le nombre de modèles. Le GNN avec messages repose sur un seul entraînement, dont l'apprentissage a de plus divergé après l'itération 700. Comparer ce modèle unique à cinq graines sans communication ne permet pas d'isoler l'effet des messages.
+Les erreurs finales sont très faibles, de l'ordre de $10^{-7}$ à $10^{-6}$ m. Elles sont obtenues après une longue stabilisation dans une simulation sans bruit. Elles ne doivent pas être lues comme une précision atteignable par des robots physiques. Pour la mission, le critère utile reste le respect du seuil de 0,1 m, du seuil de vitesse, du maintien et de l'absence de contact.
 
-La deuxième tient à l'entraînement lui-même. Les modèles ont appris sur 40 pas et sont évalués sur 120. Leur comportement après le pas 40 n'a jamais été optimisé, et les pannes du pas 60 ne figuraient pas à l'entraînement. Le plateau observé sur la Figure~\ref{fig:formation-sequence} vient peut-être en partie de là.
+L'audit des 36 trajectoires, dix-huit pour chaque contrôleur, vérifie les mises à jour physiques, les bornes, les contacts, l'attribution, la fenêtre de stabilisation et l'identité des départs comparés. Il vérifie aussi que les fichiers utilisent les poids retenus. La plus petite distance entre centres observée pendant le déplacement interpolé est d'environ 0,546 m à douze robots, 0,516 m à vingt-quatre et 0,411 m à soixante-quatre. La distance de 0,5 m choisie pendant l'apprentissage n'est donc pas toujours maintenue. L'absence de contact dans ces cas ne constitue pas une garantie générale sur cette marge.
 
-La troisième concerne la mesure. Avec 50 points de référence pour 20 robots, une couverture parfaite est impossible. Les scores à 20 robots sont donc pessimistes pour tous les contrôleurs, et la comparaison entre tailles mêle l'effet du contrôleur et celui de la mesure.
+\begin{figure}[htbp]
+\centering\includegraphics[width=\textwidth]{images/current_sequence.pdf}
+\caption{Quatre états d'une trajectoire enregistrée du rectangle à 24 robots, graine 8500, GAT structuré brut. Les cercles vides indiquent les positions finales enregistrées, les points pleins les robots à l'instant indiqué. Le cercle initial est une étape du protocole.}
+\label{fig:sequence}
+\end{figure}
 
-Reste la simulation : repère commun, positions exactes, messages sans délai ni perte, pas de dynamique de contact. Ces hypothèses rendent l'étude contrôlable. Elles en limitent aussi la portée.
+\subsection{Pourquoi le temps augmente-t-il autant ?}
+Le temps moyen atteint 465,8 s à 64 robots. Il s'agit du temps simulé depuis le début de la mission, et non du temps de calcul d'une décision du réseau. Le budget d'attribution vaut à lui seul 409,6 s à cet effectif. Les phases de rassemblement et de freinage ajoutent 32 s, et le mouvement vers la forme commence à 441,6 s. À 24 robots, il commence à 74,6 s ; à 12 robots, à 24,4 s.
 
-\section{Plan pour la campagne finale}
+\begin{figure}[htbp]
+\centering\includegraphics[width=.88\textwidth]{images/current_timing.pdf}
+\caption{Temps de stabilisation décomposé à partir du protocole et des moyennes mesurées du GAT structuré. L'allocation domine à 64 robots. La dernière partie couvre le temps entre la libération du mouvement et la stabilisation.}
+\label{fig:temps}
+\end{figure}
 
-La suite découle directement de ce qui précède. Il faut d'abord réentraîner les variantes avec la perte corrigée et un horizon d'entraînement plus proche de celui de l'évaluation. Il faut ensuite cinq graines complètes pour chaque variante avec messages, puis l'ablation de la direction ajoutée au décodeur. Sans elle, on ne saura pas ce que les couches apprises apportent vraiment.
+Cette lecture change l'interprétation du résultat. Le réseau ne met pas plus de quatre cents secondes à calculer une accélération. Le protocole attend de nombreux tours d'échanges avant de lancer le mouvement final. Réduire ce budget demanderait un travail sur l'attribution et sa condition d'arrêt, puis une nouvelle vérification des trajectoires.
 
-Viendront après les études déjà implémentées : transfert de taille à poids gelés, formes réservées, perturbations de portée et de bruit, curriculum de formes et questionnaire de lisibilité. Chacune produira ses fichiers bruts, et les figures du mémoire seront régénérées à partir d'eux par le même script.
+\section{Transitions entre formes}
+Une mission peut demander plusieurs formes successives. Le système conserve alors les positions et les vitesses entre les étapes. Il ne replace pas les robots directement sur la forme suivante. Les annonces d'attribution sont renouvelées pour la nouvelle mission, et l'enregistrement permet de vérifier cette continuité.
+
+Les campagnes de transitions du GAT de référence protégé et du professeur comprennent un pilote de six séquences puis une validation de deux séquences par contrôleur. Les séquences validées réussissent sans contact. Les huit étapes présentes dans les deux séquences de validation ne sont pas huit expériences indépendantes : l'état de chaque étape dépend de la précédente. Ces résultats concernent les contrôleurs évalués dans cette campagne, et non une validation supplémentaire du GAT structuré brut.
+
+\section{Navigation et obstacles proches des cibles}
+\subsection{Difficulté et correction du trajet}
+Les premières expériences de navigation ont rencontré des cas sans stabilisation malgré l'absence de contact. Le déplacement du seul centre ne tenait pas suffisamment compte de la largeur de la formation. Un autre cas demandait de placer un robot sur une cible occupée par un obstacle. Ces deux situations appelaient des réponses différentes : préparer un détour pour la première, refuser la destination impossible pour la seconde.
+
+Le planificateur corrigé vérifie le déplacement de toutes les places autour des obstacles. Une campagne ultérieure sur trois formes et des parcours complémentaires réussit huit cas par contrôleur, sans contact. Une dernière campagne rapproche ensuite les obstacles des cibles et conserve les mêmes exigences de réussite. Les résultats de cette dernière campagne sont détaillés ci-dessous ; ils ne remplacent pas rétroactivement les échecs des scènes antérieures.
+
+\subsection{Campagne finale}
+Les essais finaux portent sur un carré de largeur 6 m à douze robots. Le centre de référence se déplace de $(-1,0)$ à $(1,0)$ m. Les scènes à plusieurs obstacles contiennent de cinq à dix disques. Les centres des obstacles sont situés à au plus un mètre d'une place finale du carré. Leur disposition est définie dans le programme ; il ne s'agit pas de cartes tirées au hasard dans un environnement inconnu.
+
+La campagne comporte les six nombres d'obstacles, de cinq à dix, avec la graine 8901 ; elle ajoute dix obstacles avec la graine 8902 et un cas à un obstacle avec cette même graine. Cela représente huit cas pour le professeur et huit pour le GAT de référence protégé. Pour les sept cas à plusieurs obstacles, la préparation est classique et commune ; la différence de contrôleur concerne le transport. Le cas à un obstacle vérifie également le comportement de la chaîne déjà disponible.
+
+\begin{table}[htbp]
+\centering\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
+\toprule
+Contrôleur & Réussites & Contacts & Déformation max. (m) & Destination max. (m)\\\midrule
+Professeur classique & 8/8 & 0 & $3{,}06\times10^{-11}$ & $1{,}11\times10^{-16}$\\
+GAT de référence protégé & 8/8 & 0 & 0,010388 & 0,005550\\\bottomrule
+\end{tabular}
+\caption{Campagne finale avec obstacles proches des cibles. Les deux dernières colonnes sont les maxima entre les cas, et non des moyennes. La déformation est mesurée pendant le transport. Source : rapport 019.}
+\label{tab:navigation}
+\end{table}
+
+Les huit cas réussissent pour chacun des deux contrôleurs. L'audit de seize trajectoires confirme la physique et les métriques. Le GAT protégé reste à environ 1,04 cm de déformation maximale et 0,56 cm d'erreur maximale de destination. Ces résultats évaluent une chaîne hybride : planification classique sur carte connue, préparation classique dans les scènes multiples, commande locale et filtre. Ils ne démontrent pas que le réseau a appris à contourner dix obstacles.
+
+\begin{figure}[htbp]
+\centering\includegraphics[width=.92\textwidth]{images/current_navigation.pdf}
+\caption{Trajectoires enregistrées pendant le transport du carré avec dix obstacles, graine 8901, GAT de référence protégé. Les disques noirs représentent les obstacles à leur rayon physique. Les traits gris suivent les centres des robots ; les cercles vides indiquent leur état final. Le trait discontinu suit le centre de référence. La préparation n'est pas tracée.}
+\label{fig:navigation}
+\end{figure}
+
+\section{Lecture d'ensemble}
+Trois constats ressortent des expériences. D'abord, la qualité de l'imitation mesurée par une MSE n'assure pas la réussite d'une trajectoire : le premier modèle peut finir près de la forme après plusieurs contacts. Ensuite, la structure de la commande et les données de proximité jouent un rôle important dans le développement du modèle brut. La seconde version atteint l'objectif sur les dix-huit cas réservés, mais dans des conditions contrôlées. Enfin, les réussites de navigation dépendent explicitement du planificateur et du filtre classiques.
+
+Les expériences ne suffisent pas à isoler l'effet de l'attention. Plusieurs éléments ont changé entre le premier réseau et le modèle structuré : la représentation, la commande nominale, les données et la fonction de coût. Une comparaison qui retire uniquement les messages, répétée avec plusieurs entraînements et de nouveaux départs, reste nécessaire pour mesurer cet apport séparément.
+
+Les résultats actuels ne valident pas non plus toutes les combinaisons proposées dans l'interface. Les effectifs 8 et 16, certaines formes ou certaines dimensions peuvent être exécutés à titre exploratoire, mais ils ne disposent pas de la même campagne réservée que les profils 12/24/64. De même, un résultat classique à 64 robots ne prouve rien sur un réseau si aucun réseau n'a été utilisé. Le nom du contrôleur et le domaine de validation doivent accompagner chaque démonstration.
 
 \section{Conclusion partielle}
-
-La campagne pilote de l'implémentation actuelle donne un résultat net, et plutôt négatif. Les GNN forment le cercle et même une étoile absente de l'entraînement. Mais la règle manuelle fait mieux dans toutes les conditions testées, et rien n'indique encore que la communication entre robots améliore la formation : le seul modèle avec messages tombe dans l'intervalle des cinq modèles sans communication. Les journaux d'entraînement suggèrent pourquoi. La perte de collisions dominait, et la consigne géométrique semble avoir fait l'essentiel du travail avant tout apprentissage. Ces observations ont conduit à corriger la perte, le catalogue et les intervalles de confiance. La discussion qui suit replace ces résultats dans la littérature et en tire les leçons pour la conception de contrôleurs décentralisés.
+Les essais établissent une réussite du modèle structuré dans son domaine contrôlé et une réussite de la navigation hybride dans les scènes finales. Ils montrent aussi les limites du premier modèle brut et du pilote multi-effectifs. La discussion suivante examine la portée de ces constats.

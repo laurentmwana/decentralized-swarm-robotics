@@ -1,0 +1,3 @@
+# Préserver les PDF du mémoire comme des documents binaires.
+/latex/images/*.pdf binary
+/output/pdf/*.pdf binary

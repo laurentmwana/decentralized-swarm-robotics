@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "compiler": "MiKTeX pdfLaTeX + Biber",
+  "pages": 45,
+  "scientific_figures": 5,
+  "tables": 7,
+  "cited_references": 10,
+  "overfull_boxes": 0,
+  "undefined_references": 0,
+  "math_accent_warnings": 0,
+  "visual_review": "45 pages rendues ; planches de contrôle et pages de résultats examinées",
+  "pdf": "output/pdf/memoire-swarm-gnn-redaction.pdf",
+  "sha256": "7a25ba3a41ccdace1fd6c0c74dff3f0ae2a203e79be84f97841edd7e4face701",
+  "built_in_compiler": "premier essai expiré pendant le téléchargement initial ; compilation locale réussie",
+  "note": "Mise en page personnelle conservée, y compris la substitution de petites capitales grasses de la page de garde."
+}

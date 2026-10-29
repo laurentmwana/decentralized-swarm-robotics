@@ -1,32 +1,35 @@
 # Mémoire LaTeX
 
-Le point d'entrée est `main.tex`. Il inclut les chapitres depuis `chapters/` et les références depuis `references.bib`.
+Le point d’entrée est `main.tex`. La version révisée décrit le simulateur à accélérations et l’apprentissage supervisé par imitation utilisés dans l’application actuelle.
 
-Structure à cinq chapitres :
+## Organisation
 
-1. `chapters/introduction.tex`
-2. `chapters/etat-art.tex`
-3. `chapters/methode.tex` — méthodologie **et** architecture logicielle
-4. `chapters/experiences.tex`
-5. `chapters/discussion.tex` — discussion **et** conclusion
+L’introduction générale est suivie de quatre chapitres : notions de base, travaux liés, méthode et implémentation, expériences et résultats. La discussion et la conclusion générale précèdent la bibliographie. Les pages personnelles et les réglages de présentation existants sont conservés.
 
-La compilation nécessite pdflatex et Biber :
+Chaque chapitre numéroté comporte une introduction et une conclusion partielle. La rédaction privilégie des phrases simples, avec les termes techniques expliqués. Les figures ajoutées sont des tracés scientifiques des données du programme, lisibles en noir et blanc.
 
-```bash
-cd latex
+Le détail de la reprise, les sources des chiffres et les commandes de reconstruction sont dans [REDACTION.md](REDACTION.md). Les anciens fichiers d’images restent conservés, mais les anciens résultats à commande de vitesse ne sont plus utilisés comme résultats de la version actuelle.
+
+## Compilation
+
+Avec une installation LaTeX disposant de pdfLaTeX et Biber, depuis ce dossier :
+
+```powershell
 pdflatex -interaction=nonstopmode -halt-on-error main.tex
 biber main
 pdflatex -interaction=nonstopmode -halt-on-error main.tex
-pdflatex -interaction=nonstopmode main.tex
+pdflatex -interaction=nonstopmode -halt-on-error main.tex
 ```
 
-## Illustrations
+Le dossier peut également être ouvert dans l’éditeur LaTeX de Codex pour consulter les sources et l’aperçu. La réussite de la compilation et les contrôles visuels de cette reprise sont consignés dans la tâche 021.
 
-- `images/` — jeu de figures unique du mémoire (29 PNG, rendu matplotlib 300 dpi, police Latin Modern, nommés par chapitre, `fig_extra_*` pour les figures transversales), dont 27 référencés dans les chapitres. Les 4 figures de données (perte et configuration du cercle, pertes et planche du curriculum) sont régénérées depuis les résultats versionnés par `python scripts/generate_data_figures.py`.
-- L'ancien répertoire `figures/` a été supprimé (18 octobre 2026) ; `python scripts/generate_thesis_figures.py` n'est plus rattaché à aucune figure du PDF (sources historiques conservées pour traçabilité).
+## Vérification des données
 
-## État actuel
+Depuis la racine du dépôt :
 
-Le document compile sans erreur à **84 pages** (21 octobre 2026) : 5 chapitres, 27 figures, 12 tableaux, 35 références citées sur 37 (`references.bib`), aucune figure manquante ni référence indéfinie. Les consignes de rédaction du directeur sont appliquées : page de garde avec les mentions exactes (faculté, section Mathématiques, grade, filière, directeur), pages liminaires dans l'ordre imposé (Épigraphe, Dédicace, Remerciements, abréviations, listes, résumés), signatures de l'auteur sous la Dédicace et les Remerciements, résumé structuré avec 6 mots clés, chaque chapitre ouvert par une section *Introduction* et fermé par une *Conclusion partielle*, figures et tableaux annoncés avant insertion et renvois en majuscule (Figure, Tableau, Équation, Algorithme).
+```powershell
+python latex/tools/prepare_current_results.py
+python latex/tools/check_manuscript.py
+```
 
-Les chiffres pilote sont clairement signalés comme tels ; ils devront être actualisés après l'étude complète à 50 graines.
+La première commande nécessite NumPy et Matplotlib. Les deux commandes utilisent les archives existantes sans entraîner de modèle. Elles ne remplacent pas la lecture du document ni les recommandations du directeur.
