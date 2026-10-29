@@ -35,6 +35,8 @@ Le dossier de sortie d’un rapport doit être nouveau. Le modèle validé est a
 
 ## Organisation conservée
 
+Les dimensions des formes sont vérifiées avant le lancement et adaptées si nécessaire pour conserver l'espacement de sécurité, les communications et les limites de l'arène. L'interface affiche la largeur retenue et désactive les combinaisons irréalisables. Une forme agrandie dispose d'un temps de construction adapté. Voir la [décision 34](docs/decisions/34-compatibilite-geometrique.md).
+
 Pour cinq à dix obstacles, choisissez **Naviguer avec plusieurs obstacles**, puis **Nombre d’obstacles**. Le parcours utilise une préparation classique puis le contrôleur choisi pour le transport, avec planification sur carte connue et protection des murs. Les six comptes ont été évalués avec le carré à 12 robots ; les autres combinaisons restent expérimentales. Voir la [décision 33](docs/decisions/33-obstacles-multiples.md).
 
 Le **GAT de référence protégé** a été entraîné avec 12 robots. Le **GAT structuré brut · 12/24/64** utilise d’autres poids, entraînés avec les trois effectifs et validés en formation contrôlée seulement. Choisir 24 robots ne change pas automatiquement de modèle.

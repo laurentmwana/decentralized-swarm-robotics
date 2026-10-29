@@ -135,6 +135,10 @@ def test_http_job_lifecycle_and_origin_guard(tmp_path):
     base=f'http://127.0.0.1:{server.server_port}'
     try:
         with urlopen(base+'/api/catalog') as response:assert len(json.load(response)['shapes'])==56
+        with urlopen(Request(base+'/api/geometry',data=b'{"robots":24,"shape":"geometries_arrow","controller":"teacher"}')) as response:
+            preview=json.load(response)['options']['geometries_arrow']
+            assert preview['compatible'] and preview['adjusted'] and preview['width_m']>6
+        assert service.submitted==0 and not service.jobs
         with pytest.raises(HTTPError) as error:
             urlopen(Request(base+'/api/jobs',data=b'{}',headers={'Origin':'https://foreign.example'}))
         assert error.value.code==403

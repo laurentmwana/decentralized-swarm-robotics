@@ -25,6 +25,7 @@ from src.reference.shape_control import ShapeGains,execute_shape,evaluate_shape,
 from src.reference.shapes import named_shape
 from src.reference.transitions import FormationStage,execute_sequence,evaluate_sequence
 from src.simulator.acceleration_episode import AccelerationEpisodeConfig
+from demo.geometry import fit_geometry
 
 ROOT=Path(__file__).resolve().parents[1]
 MODEL_RUN=ROOT/'outputs/imitation/training-multiform-expanded-v1'
@@ -196,19 +197,33 @@ class ReferenceService:
             self.controller=LocalTargetController(model);self.model_hash=digest
         return self.controller
 
-    def submit(self,raw):
+    def geometry_options(self,raw):
         request=validate_request(raw)
-        gains=ShapeGains(detour_only_on_constraint=True)
         multi=request['controller'] in ('multisize','comparison_multisize') or request['robots']==64
         if multi:
             from src.imitation.multisize import PROFILES
             profile=PROFILES[request['robots']];config=profile.config;width=profile.width
         else:config=self.config;width=6.
+        navigation=request['scenario'] not in ('formation','transition')
+        reference,world,_=navigation_scene(request['scenario'],request['obstacle_count']) if navigation else (None,None,None)
+        options={identifier:fit_geometry(identifier,request['robots'],config,width,
+            reference_points=reference.points if navigation else ((0.,0.),),navigation=navigation) for identifier in sorted(SHAPES)}
+        selected=options[request['shape']]
+        if navigation and selected['compatible']:
+            try:plan_formation_route(named_shape(request['shape'],request['robots'],width=selected['width_m']),reference,world,config)
+            except ValueError as exc:options[request['shape']]=dict(selected,compatible=False,message=str(exc))
+        return dict(arena_size_m=config.physics.arena_size,options=options)
+
+    def submit(self,raw):
+        request=validate_request(raw)
+        geometry=self.geometry_options(request)
         for key in ('shape','next_shape') if request['scenario']=='transition' else ('shape',):
-            named_shape(request[key],request['robots'],width=width).validate_environment(config,gains.safety_distance)
+            if not geometry['options'][request[key]]['compatible']:
+                raise ValueError(geometry['options'][request[key]]['message'])
         if request['scenario'] not in ('formation','transition'):
             reference,world,_=navigation_scene(request['scenario'],request['obstacle_count'])
-            plan_formation_route(named_shape(request['shape'],request['robots'],width=width),reference,world,config)
+            width=geometry['options'][request['shape']]['width_m']
+            plan_formation_route(named_shape(request['shape'],request['robots'],width=width),reference,world,self.config)
         with self.lock:
             if self.submitted>=20:raise ValueError('Cette session contient déjà 20 calculs. Relancez le serveur pour une nouvelle session ; les exports sont conservés.')
             if sum(j['status'] in ('queued','running') for j in self.jobs.values())>=2:
@@ -245,6 +260,13 @@ class ReferenceService:
         if multi:
             from src.imitation.multisize import PROFILES,controlled_start
             profile=PROFILES[n];cfg=profile.config;preparation_steps=cfg.horizon;reconnection=profile.reconnection;width=profile.width
+        geometry=self.geometry_options(request)
+        for key in ('shape','next_shape') if request['scenario']=='transition' else ('shape',):
+            if not geometry['options'][request[key]]['compatible']:raise ValueError(geometry['options'][request[key]]['message'])
+        width=geometry['options'][request['shape']]['width_m']
+        if not multi and width>6.+1e-9:
+            preparation_steps=max(preparation_steps,90+n*n+400)
+            cfg=replace(cfg,horizon=preparation_steps)
         shape=named_shape(request['shape'],n,width=width)
         policy=(None if request['controller']=='teacher' else self._multisize_controller() if multi else self._controller())
         learned_mode='raw' if multi else 'guarded'
@@ -263,6 +285,7 @@ class ReferenceService:
             experimental_model=multi,domain='controlled_near_rendezvous' if multi else 'dispersed_spawn_disk',width_m=width,
             experimental_robot_count=n!=12,guard='shared_braking_allocation_only' if multi and policy is not None else 'classical_safety_filter',
             playback='full_calculation_then_replay',reports={},files={})
+        manifest['geometry']={key:geometry['options'][request[key]] for key in (('shape','next_shape') if request['scenario']=='transition' else ('shape',))}
         if navigation:
             manifest['navigation_planner']=dict(kind='classical_static_map_translation',
                 requested_reference=asdict(requested_reference),planned_reference=asdict(reference),
@@ -278,7 +301,7 @@ class ReferenceService:
                 metrics=evaluate_navigation(result);targets=result.local_targets
                 route=[list(point) for point in reference.points]
             elif request['scenario']=='transition':
-                second=named_shape(request['next_shape'],n,width=6.)
+                second=named_shape(request['next_shape'],n,width=geometry['options'][request['next_shape']]['width_m'])
                 result=execute_sequence((FormationStage(shape,preparation_steps),FormationStage(second,preparation_steps)),
                     cfg,initial,gains=gains,reconnection=ReconnectionConfig(),safety_filter=True,
                     motion_policy=controller,guard_motion=True,seed=seed)
@@ -361,7 +384,7 @@ def handler_for(service):
             return self.send(404,dict(error='Page introuvable.'))
 
         def do_POST(self):
-            if self.path!='/api/jobs':return self.send(404,dict(error='Page introuvable.'))
+            if self.path not in ('/api/jobs','/api/geometry'):return self.send(404,dict(error='Page introuvable.'))
             # Local page only: foreign web pages cannot enqueue computations.
             origin=self.headers.get('Origin')
             if origin is not None and origin!=f'http://{self.headers.get("Host")}':
@@ -369,7 +392,9 @@ def handler_for(service):
             try:
                 length=int(self.headers.get('Content-Length','0'))
                 if not 0<length<=4096:raise ValueError('Requête trop grande ou vide.')
-                identifier=service.submit(json.loads(self.rfile.read(length)))
+                payload=json.loads(self.rfile.read(length))
+                if self.path=='/api/geometry':return self.send(200,service.geometry_options(payload))
+                identifier=service.submit(payload)
                 return self.send(202,dict(id=identifier))
             except (ValueError,TypeError) as exc:return self.send(400,dict(error=str(exc)))
 

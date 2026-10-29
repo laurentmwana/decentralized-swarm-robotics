@@ -1,0 +1,2921 @@
+{
+  "kind": "demo_geometry_compatibility",
+  "geometries_checked": 336,
+  "options": {
+    "teacher-8": {
+      "geometries_arrow": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.875244864403171,
+        "communication_link_m": 2.610468635614927,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_circle": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 2.296100594190537,
+        "communication_link_m": 2.296100594190539,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_cross": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 2.2272853431924693,
+        "communication_link_m": 2.2545953073667127,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_decagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 2.2088438535345336,
+        "communication_link_m": 2.245690641487913,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_diamond": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 2.1213203435596406,
+        "communication_link_m": 2.121320343559643,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_ellipse": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.8151735066948143,
+        "communication_link_m": 1.898693675317387,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_heart": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 2.2517251087755037,
+        "communication_link_m": 2.4968558151029865,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_heptagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 2.0571586339730317,
+        "communication_link_m": 2.2778896303671803,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_hexagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.984313483298443,
+        "communication_link_m": 2.25,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_line": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8571428571428568,
+        "communication_link_m": 0.8571428571428574,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_octagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 2.2961005941905364,
+        "communication_link_m": 2.2961005941905395,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_parallelogram": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 2.2926857201568507,
+        "communication_link_m": 2.7297058540778356,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_pentagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.8019586977341548,
+        "communication_link_m": 2.204194696096774,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_rectangle": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.8027756377319943,
+        "communication_link_m": 2.5,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_semicircle": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.6409402553689034,
+        "communication_link_m": 1.9279789690997902,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_square": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 3.0,
+        "communication_link_m": 3.0,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_star": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.0834727405593616,
+        "communication_link_m": 2.355388039235222,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_trapezoid": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 2.1213203435596424,
+        "communication_link_m": 2.729705854077836,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_triangle": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1249999999999996,
+        "communication_link_m": 1.9485571585149875,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_v": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8571428571428572,
+        "communication_link_m": 1.9166296949998203,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_A": {
+        "compatible": true,
+        "width_m": 5.665283574177325,
+        "adjusted": true,
+        "minimum_spacing_m": 1.4908640984677173,
+        "communication_link_m": 2.97,
+        "message": "Largeur adaptée à 5.67 m pour garder au moins 0,40 m entre les places."
+      },
+      "letters_B": {
+        "compatible": true,
+        "width_m": 5.713281784835704,
+        "adjusted": true,
+        "minimum_spacing_m": 2.060608483449412,
+        "communication_link_m": 2.9699999999999998,
+        "message": "Largeur adaptée à 5.71 m pour garder au moins 0,40 m entre les places."
+      },
+      "letters_C": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.9803721524885756,
+        "communication_link_m": 1.9813293220629724,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_D": {
+        "compatible": true,
+        "width_m": 5.860262484936999,
+        "adjusted": true,
+        "minimum_spacing_m": 1.8782026583670577,
+        "communication_link_m": 2.97,
+        "message": "Largeur adaptée à 5.86 m pour garder au moins 0,40 m entre les places."
+      },
+      "letters_E": {
+        "compatible": true,
+        "width_m": 5.8471874999999995,
+        "adjusted": true,
+        "minimum_spacing_m": 2.8771875,
+        "communication_link_m": 2.9699999999999998,
+        "message": "Largeur adaptée à 5.85 m pour garder au moins 0,40 m entre les places."
+      },
+      "letters_F": {
+        "compatible": true,
+        "width_m": 5.870930232558139,
+        "adjusted": true,
+        "minimum_spacing_m": 1.4504651162790698,
+        "communication_link_m": 2.9699999999999998,
+        "message": "Largeur adaptée à 5.87 m pour garder au moins 0,40 m entre les places."
+      },
+      "letters_G": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.9702843681475297,
+        "communication_link_m": 2.9981377183856384,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_H": {
+        "compatible": true,
+        "width_m": 5.870930232558139,
+        "adjusted": true,
+        "minimum_spacing_m": 1.4504651162790698,
+        "communication_link_m": 2.9699999999999998,
+        "message": "Largeur adaptée à 5.87 m pour garder au moins 0,40 m entre les places."
+      },
+      "letters_I": {
+        "compatible": true,
+        "width_m": 5.870930232558139,
+        "adjusted": true,
+        "minimum_spacing_m": 1.4504651162790698,
+        "communication_link_m": 2.9699999999999998,
+        "message": "Largeur adaptée à 5.87 m pour garder au moins 0,40 m entre les places."
+      },
+      "letters_J": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.5218610630762415,
+        "communication_link_m": 2.887767070896448,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_K": {
+        "compatible": true,
+        "width_m": 5.3128975145395,
+        "adjusted": true,
+        "minimum_spacing_m": 1.5524999999999998,
+        "communication_link_m": 2.97,
+        "message": "Largeur adaptée à 5.31 m pour garder au moins 0,40 m entre les places."
+      },
+      "letters_L": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.2121830534626528,
+        "communication_link_m": 1.7142857142857149,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_M": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 2.0693259106055106,
+        "communication_link_m": 2.926468767748368,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_N": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 2.2562455665526815,
+        "communication_link_m": 2.926468767748368,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_O": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 2.296100594190537,
+        "communication_link_m": 2.296100594190539,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_P": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.703703703703704,
+        "communication_link_m": 2.55590517590978,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_Q": {
+        "compatible": true,
+        "width_m": 5.581193833852734,
+        "adjusted": true,
+        "minimum_spacing_m": 1.7906530565467977,
+        "communication_link_m": 2.97,
+        "message": "Largeur adaptée à 5.58 m pour garder au moins 0,40 m entre les places."
+      },
+      "letters_R": {
+        "compatible": true,
+        "width_m": 5.379403928995355,
+        "adjusted": true,
+        "minimum_spacing_m": 2.1543963337903995,
+        "communication_link_m": 2.9699999999999998,
+        "message": "Largeur adaptée à 5.38 m pour garder au moins 0,40 m entre les places."
+      },
+      "letters_S": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 2.2720275240930206,
+        "communication_link_m": 2.926468767748368,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_T": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.2056504083629775,
+        "communication_link_m": 2.3149606299212597,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_U": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.5094971714264505,
+        "communication_link_m": 2.945087232196958,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_V": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8571428571428572,
+        "communication_link_m": 1.9166296949998203,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_W": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.2188180963393904,
+        "communication_link_m": 2.725360115621765,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_X": {
+        "compatible": true,
+        "width_m": 4.233549314218315,
+        "adjusted": true,
+        "minimum_spacing_m": 1.4851870630479171,
+        "communication_link_m": 2.9699999999999998,
+        "message": "Largeur adaptée à 4.23 m pour garder au moins 0,40 m entre les places."
+      },
+      "letters_Y": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1223917161691228,
+        "communication_link_m": 2.19988776369148,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_Z": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 2.2562455665526815,
+        "communication_link_m": 2.926468767748368,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_1": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.0858736349076805,
+        "communication_link_m": 1.8051361821352372,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_10": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.7800086348557866,
+        "communication_link_m": 2.6791367893062112,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_2": {
+        "compatible": true,
+        "width_m": 5.815155636618357,
+        "adjusted": true,
+        "minimum_spacing_m": 1.3861990846166585,
+        "communication_link_m": 2.97,
+        "message": "Largeur adaptée à 5.82 m pour garder au moins 0,40 m entre les places."
+      },
+      "numbers_3": {
+        "compatible": true,
+        "width_m": 5.681141908992833,
+        "adjusted": true,
+        "minimum_spacing_m": 2.032694281750405,
+        "communication_link_m": 2.9699999999999998,
+        "message": "Largeur adaptée à 5.68 m pour garder au moins 0,40 m entre les places."
+      },
+      "numbers_4": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.835294117647059,
+        "communication_link_m": 2.683281572999748,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_5": {
+        "compatible": true,
+        "width_m": 5.608147061074314,
+        "adjusted": true,
+        "minimum_spacing_m": 2.5197116501317267,
+        "communication_link_m": 2.9699999999999998,
+        "message": "Largeur adaptée à 5.61 m pour garder au moins 0,40 m entre les places."
+      },
+      "numbers_6": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 2.21046810327569,
+        "communication_link_m": 2.978722858315611,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_7": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.5949537770795776,
+        "communication_link_m": 1.9285714285714304,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_8": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 2.299415449212815,
+        "communication_link_m": 2.5678134410230404,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_9": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.5342669497722476,
+        "communication_link_m": 2.8495385691081268,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      }
+    },
+    "teacher-12": {
+      "geometries_arrow": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1199462264025728,
+        "communication_link_m": 1.7403124237432843,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_circle": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.5513193530501042,
+        "communication_link_m": 1.552052209396725,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_cross": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.9604081207748552,
+        "communication_link_m": 1.9999999999999996,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_decagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4725625690230209,
+        "communication_link_m": 1.5450849718747381,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_diamond": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4142135623730938,
+        "communication_link_m": 1.4142135623730951,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_ellipse": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.232861773911989,
+        "communication_link_m": 1.2718633941418485,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_heart": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.5899377479584795,
+        "communication_link_m": 1.690527526177934,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_heptagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.3714390893153543,
+        "communication_link_m": 1.5185930869114537,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_hexagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4999999999999996,
+        "communication_link_m": 1.5,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_line": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.545454545454545,
+        "communication_link_m": 0.5454545454545456,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_octagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4142135623730947,
+        "communication_link_m": 1.5307337294603593,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_parallelogram": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.442726808445801,
+        "communication_link_m": 1.819803902718557,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_pentagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.2013057984894364,
+        "communication_link_m": 1.4694631307311834,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_rectangle": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.201850425154663,
+        "communication_link_m": 1.666666666666668,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_semicircle": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.93087099297616,
+        "communication_link_m": 1.2853193127331943,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_square": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.9999999999999982,
+        "communication_link_m": 2.000000000000001,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_star": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7223151603729089,
+        "communication_link_m": 1.7350523136026155,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_trapezoid": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.2873959366948298,
+        "communication_link_m": 1.8198039027185575,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_triangle": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.2990381056766556,
+        "communication_link_m": 1.299038105676659,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_v": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.545454545454545,
+        "communication_link_m": 1.219673442272613,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_A": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8666100774042249,
+        "communication_link_m": 1.6850751505082147,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_B": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4982657434173545,
+        "communication_link_m": 2.2469112906304707,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_C": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.27454653986874,
+        "communication_link_m": 1.2751536587989913,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_D": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4594594594594597,
+        "communication_link_m": 2.145899102488488,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_E": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.5238095238095237,
+        "communication_link_m": 3.0,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_F": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4823529411764707,
+        "communication_link_m": 3.0,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_G": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.377347040121707,
+        "communication_link_m": 2.0429731727823173,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_H": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4823529411764707,
+        "communication_link_m": 3.0,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_I": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4823529411764707,
+        "communication_link_m": 3.0,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_J": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.3255813953488373,
+        "communication_link_m": 2.3720930232558137,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_K": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.481012658227848,
+        "communication_link_m": 2.714672597947971,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_L": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7713892158398692,
+        "communication_link_m": 1.0909090909090913,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_M": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1933863073898257,
+        "communication_link_m": 1.8622983067489614,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_N": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.193386307389826,
+        "communication_link_m": 1.8622983067489614,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_O": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.5513193530501042,
+        "communication_link_m": 1.552052209396725,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_P": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.259259259259259,
+        "communication_link_m": 1.982450590510557,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_Q": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.3793115909330307,
+        "communication_link_m": 2.305182623742993,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_R": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4017142545521073,
+        "communication_link_m": 2.6,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_S": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.32491866449407,
+        "communication_link_m": 1.8622983067489614,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_T": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8976377952755903,
+        "communication_link_m": 1.8425196850393701,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_U": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.092857142857143,
+        "communication_link_m": 2.25,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_V": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.545454545454545,
+        "communication_link_m": 1.219673442272613,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_W": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6389219914264321,
+        "communication_link_m": 1.734320073577488,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_X": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.069011826675725,
+        "communication_link_m": 2.1380236533514507,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_Y": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8636363636363638,
+        "communication_link_m": 1.7509310772238322,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_Z": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.193386307389826,
+        "communication_link_m": 1.8622983067489614,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_1": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7704775956918315,
+        "communication_link_m": 1.528205440992406,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_10": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.323225918601396,
+        "communication_link_m": 2.6791367893062112,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_2": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.9423014578480788,
+        "communication_link_m": 1.9500767836016957,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_3": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.435713022090355,
+        "communication_link_m": 2.2989378354310106,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_4": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1294117647058823,
+        "communication_link_m": 1.835294117647059,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_5": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4366856651136208,
+        "communication_link_m": 2.0220582442835733,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_6": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.51123997882649,
+        "communication_link_m": 2.323618927503217,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_7": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.014970585414276,
+        "communication_link_m": 1.227272727272728,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_8": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.3566240087345087,
+        "communication_link_m": 2.5445345927297045,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_9": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.3745454545454538,
+        "communication_link_m": 1.9090485176891971,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      }
+    },
+    "teacher-16": {
+      "geometries_arrow": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.875244864403171,
+        "communication_link_m": 1.305234317807464,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_circle": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.170541932096768,
+        "communication_link_m": 1.170541932096771,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_cross": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.101453585041149,
+        "communication_link_m": 1.5,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_decagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.104421926767266,
+        "communication_link_m": 1.1588137289060534,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_diamond": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.060660171779819,
+        "communication_link_m": 1.0606601717798223,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_ellipse": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.9354286159320482,
+        "communication_link_m": 0.9552732836222799,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_heart": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1615055131239298,
+        "communication_link_m": 1.2676636668722336,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_heptagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.028579316986515,
+        "communication_link_m": 1.1389448151835915,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_hexagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.9921567416492214,
+        "communication_link_m": 1.125,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_line": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.3999999999999999,
+        "communication_link_m": 0.4000000000000006,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_octagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1480502970952675,
+        "communication_link_m": 1.1480502970952704,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_parallelogram": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.055901619859685,
+        "communication_link_m": 1.3648529270389185,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_pentagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.9009793488670772,
+        "communication_link_m": 1.1020973480483875,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_rectangle": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.030776406404414,
+        "communication_link_m": 1.2500000000000009,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_semicircle": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7503629011375337,
+        "communication_link_m": 0.9639894845498951,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_square": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.5,
+        "communication_link_m": 1.5,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_star": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5417363702796815,
+        "communication_link_m": 1.3012892352019618,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_trapezoid": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8926779773971799,
+        "communication_link_m": 1.364852927038919,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_triangle": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5624999999999991,
+        "communication_link_m": 0.9742785792574937,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_v": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.3999999999999999,
+        "communication_link_m": 0.8944271909999173,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_A": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7826086956521738,
+        "communication_link_m": 1.6048334766744907,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_B": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.126483440037095,
+        "communication_link_m": 2.2469112906304707,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_C": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.9380429178420122,
+        "communication_link_m": 0.9383413778775225,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_D": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.9628154816730088,
+        "communication_link_m": 1.5446827847080937,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_E": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4285714285714288,
+        "communication_link_m": 2.9523809523809526,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_F": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.776470588235294,
+        "communication_link_m": 1.4827730497129417,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_G": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.9990235439243118,
+        "communication_link_m": 1.9992371296103455,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_H": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7411764705882353,
+        "communication_link_m": 1.5176470588235293,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_I": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7411764705882353,
+        "communication_link_m": 1.5176470588235293,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_J": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7668903535794682,
+        "communication_link_m": 1.4625705053332059,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_K": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8385254915624212,
+        "communication_link_m": 1.6770509831248424,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_L": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5656854249492379,
+        "communication_link_m": 0.8000000000000012,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_M": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5877931018899833,
+        "communication_link_m": 1.3656854249492385,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_N": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5877931018899833,
+        "communication_link_m": 1.365685424949239,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_O": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.170541932096768,
+        "communication_link_m": 1.170541932096771,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_P": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8148148148148151,
+        "communication_link_m": 1.6257113569780297,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_Q": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.9366314720368112,
+        "communication_link_m": 1.6812066888473813,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_R": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.201469361044663,
+        "communication_link_m": 1.9074012971008272,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_S": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1769442181328926,
+        "communication_link_m": 1.3656854249492385,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_T": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5669291338582677,
+        "communication_link_m": 1.0146487367676156,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_U": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7624051202283795,
+        "communication_link_m": 1.4614164551907005,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_V": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.3999999999999999,
+        "communication_link_m": 0.8944271909999173,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_W": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.568781778291716,
+        "communication_link_m": 1.2718347206234908,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_X": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.036143883439117,
+        "communication_link_m": 2.071210414184219,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_Y": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.538748023761179,
+        "communication_link_m": 1.077496047522358,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_Z": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5877931018899833,
+        "communication_link_m": 1.365685424949239,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_1": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.523956151197396,
+        "communication_link_m": 1.0869565217391304,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_10": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.115317999852671,
+        "communication_link_m": 2.532712868261033,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_2": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8534483968287581,
+        "communication_link_m": 1.4300563079745787,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_3": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1186981528845648,
+        "communication_link_m": 2.2548668044091857,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_4": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.776470588235294,
+        "communication_link_m": 1.4293028280929356,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_5": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.0510518351839995,
+        "communication_link_m": 1.4828427124746204,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_6": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.136244190667428,
+        "communication_link_m": 2.21046810327569,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_7": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.4837354648979134,
+        "communication_link_m": 0.900000000000001,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_8": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.2355858302735527,
+        "communication_link_m": 2.3111917290820267,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_9": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7680448606884802,
+        "communication_link_m": 1.5118652170274345,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      }
+    },
+    "teacher-24": {
+      "geometries_arrow": {
+        "compatible": true,
+        "width_m": 9.376203613405519,
+        "adjusted": true,
+        "minimum_spacing_m": 0.5,
+        "communication_link_m": 1.3597936363296936,
+        "message": "Largeur adaptée à 9.38 m pour garder au moins 0,40 m entre les places."
+      },
+      "geometries_circle": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7822492053504982,
+        "communication_link_m": 0.7827791485999733,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_cross": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.960832971957145,
+        "communication_link_m": 1.000000000000001,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_decagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.73628128451151,
+        "communication_link_m": 0.7725424859373694,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_diamond": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7071067811865465,
+        "communication_link_m": 0.7071067811865482,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_ellipse": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6299530686124087,
+        "communication_link_m": 0.6374690909203092,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_heart": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5979623019649124,
+        "communication_link_m": 0.845365213106516,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_heptagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6857195446576758,
+        "communication_link_m": 0.7592965434557277,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_hexagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7499999999999996,
+        "communication_link_m": 0.7500000000000002,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_line": {
+        "compatible": true,
+        "width_m": 9.405,
+        "adjusted": true,
+        "minimum_spacing_m": 0.4089130434782606,
+        "communication_link_m": 0.40891304347826163,
+        "message": "Largeur adaptée à 9.40 m pour garder au moins 0,40 m entre les places."
+      },
+      "geometries_octagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7653668647301781,
+        "communication_link_m": 0.765366864730181,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_parallelogram": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7499043928262572,
+        "communication_link_m": 0.9099019513592799,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_pentagon": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.600652899244718,
+        "communication_link_m": 0.7347315653655919,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_rectangle": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.687184270936275,
+        "communication_link_m": 0.833333333333335,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_semicircle": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.4638440209172781,
+        "communication_link_m": 0.6426596563665985,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_square": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.9999999999999991,
+        "communication_link_m": 1.0000000000000018,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_star": {
+        "compatible": true,
+        "width_m": 8.306623381547734,
+        "adjusted": true,
+        "minimum_spacing_m": 0.5,
+        "communication_link_m": 1.2010355096983327,
+        "message": "Largeur adaptée à 8.31 m pour garder au moins 0,40 m entre les places."
+      },
+      "geometries_trapezoid": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5918787252344798,
+        "communication_link_m": 0.9099019513592799,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_triangle": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6495190528383274,
+        "communication_link_m": 0.6495190528383304,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "geometries_v": {
+        "compatible": true,
+        "width_m": 9.405,
+        "adjusted": true,
+        "minimum_spacing_m": 0.4089130434782613,
+        "communication_link_m": 0.9143573621037211,
+        "message": "Largeur adaptée à 9.40 m pour garder au moins 0,40 m entre les places."
+      },
+      "letters_A": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.42863922891369804,
+        "communication_link_m": 0.8572784578273954,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_B": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.746814458063509,
+        "communication_link_m": 1.4924879756520673,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_C": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6131682157809395,
+        "communication_link_m": 0.6134640727186662,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_D": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.75,
+        "communication_link_m": 1.1447941812115703,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_E": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.757894736842105,
+        "communication_link_m": 1.5157894736842106,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_F": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7086614173228347,
+        "communication_link_m": 1.4645669291338583,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_G": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6040132109861733,
+        "communication_link_m": 1.1956098353650655,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_H": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7090550088096206,
+        "communication_link_m": 1.4645669291338583,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_I": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7090550088096206,
+        "communication_link_m": 1.4645669291338583,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_J": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6046511627906974,
+        "communication_link_m": 1.1627906976744187,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_K": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7118644067796611,
+        "communication_link_m": 1.3382151920404666,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_L": {
+        "compatible": true,
+        "width_m": 8.131727983645302,
+        "adjusted": true,
+        "minimum_spacing_m": 0.49999999999999994,
+        "communication_link_m": 0.7071067811865493,
+        "message": "Largeur adaptée à 8.13 m pour garder au moins 0,40 m entre les places."
+      },
+      "letters_M": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.51741574950042,
+        "communication_link_m": 0.8906644075755921,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_N": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5174157495004197,
+        "communication_link_m": 0.8906644075755921,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_O": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7822492053504982,
+        "communication_link_m": 0.7827791485999733,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_P": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.639344262295082,
+        "communication_link_m": 1.0485981192825604,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_Q": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6794630050048134,
+        "communication_link_m": 1.4047515739694425,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_R": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7980541573355662,
+        "communication_link_m": 1.410090278422808,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_S": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6352355242855984,
+        "communication_link_m": 0.8906644075755921,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_T": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.4397905759162305,
+        "communication_link_m": 0.9109947643979057,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_U": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5518867924528299,
+        "communication_link_m": 1.1462264150943395,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_V": {
+        "compatible": true,
+        "width_m": 9.405,
+        "adjusted": true,
+        "minimum_spacing_m": 0.4089130434782613,
+        "communication_link_m": 0.9143573621037211,
+        "message": "Largeur adaptée à 9.40 m pour garder au moins 0,40 m entre les places."
+      },
+      "letters_W": {
+        "compatible": true,
+        "width_m": 9.405,
+        "adjusted": true,
+        "minimum_spacing_m": 0.4635267651842595,
+        "communication_link_m": 1.3001745160286904,
+        "message": "Largeur adaptée à 9.40 m pour garder au moins 0,40 m entre les places."
+      },
+      "letters_X": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5331066831982344,
+        "communication_link_m": 1.06621336639647,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_Y": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.4197665697503181,
+        "communication_link_m": 0.869516465911373,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "letters_Z": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5174157495004197,
+        "communication_link_m": 0.8906644075755921,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_1": {
+        "compatible": true,
+        "width_m": 7.956265961928939,
+        "adjusted": true,
+        "minimum_spacing_m": 0.5,
+        "communication_link_m": 0.9999999999999996,
+        "message": "Largeur adaptée à 7.96 m pour garder au moins 0,40 m entre les places."
+      },
+      "numbers_10": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6967111813483815,
+        "communication_link_m": 2.5191164299776427,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_2": {
+        "compatible": false,
+        "width_m": null,
+        "adjusted": false,
+        "message": "Cette forme ne peut pas accueillir 24 robots dans cette arène tout en gardant les distances de sécurité et les communications. Réduisez l’effectif ou choisissez une autre forme.",
+        "minimum_width_m": 9.751644395688313,
+        "maximum_width_m": 9.5
+      },
+      "numbers_3": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7236326074634771,
+        "communication_link_m": 1.2461407672554552,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_4": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.564705882352941,
+        "communication_link_m": 0.9411764705882356,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_5": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7332696958555209,
+        "communication_link_m": 0.9670713342225783,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_6": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7602989592222593,
+        "communication_link_m": 1.2574632062431412,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_7": {
+        "compatible": true,
+        "width_m": 7.645458696117123,
+        "adjusted": true,
+        "minimum_spacing_m": 0.5,
+        "communication_link_m": 0.7479253072288512,
+        "message": "Largeur adaptée à 7.65 m pour garder au moins 0,40 m entre les places."
+      },
+      "numbers_8": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7288812079010049,
+        "communication_link_m": 1.3682383230607864,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      },
+      "numbers_9": {
+        "compatible": true,
+        "width_m": 6.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6658536585365853,
+        "communication_link_m": 1.006887900878791,
+        "message": "Largeur : 6.00 m. Espacement et communications compatibles."
+      }
+    },
+    "multisize-24": {
+      "geometries_arrow": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6399178438724997,
+        "communication_link_m": 1.740312423743287,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_circle": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.5644984107009965,
+        "communication_link_m": 1.5655582971999467,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_cross": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.92166594391429,
+        "communication_link_m": 2.000000000000002,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_decagon": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.47256256902302,
+        "communication_link_m": 1.5450849718747388,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_diamond": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.414213562373093,
+        "communication_link_m": 1.4142135623730965,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_ellipse": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.2599061372248175,
+        "communication_link_m": 1.2749381818406185,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_heart": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1959246039298248,
+        "communication_link_m": 1.690730426213032,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_heptagon": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.3714390893153516,
+        "communication_link_m": 1.5185930869114554,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_hexagon": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4999999999999991,
+        "communication_link_m": 1.5000000000000004,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_line": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5217391304347823,
+        "communication_link_m": 0.5217391304347836,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_octagon": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.5307337294603562,
+        "communication_link_m": 1.530733729460362,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_parallelogram": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4998087856525144,
+        "communication_link_m": 1.8198039027185597,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_pentagon": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.201305798489436,
+        "communication_link_m": 1.4694631307311838,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_rectangle": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.37436854187255,
+        "communication_link_m": 1.66666666666667,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_semicircle": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.9276880418345562,
+        "communication_link_m": 1.285319312733197,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_square": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.9999999999999982,
+        "communication_link_m": 2.0000000000000036,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_star": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7223151603729081,
+        "communication_link_m": 1.7350523136026172,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_trapezoid": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1837574504689596,
+        "communication_link_m": 1.8198039027185597,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_triangle": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.299038105676655,
+        "communication_link_m": 1.299038105676661,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "geometries_v": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5217391304347831,
+        "communication_link_m": 1.166644162173807,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_A": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8572784578273961,
+        "communication_link_m": 1.7145569156547908,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_B": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.493628916127018,
+        "communication_link_m": 2.9849759513041345,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_C": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.226336431561879,
+        "communication_link_m": 1.2269281454373324,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_D": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.5,
+        "communication_link_m": 2.2895883624231406,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_E": {
+        "compatible": true,
+        "width_m": 11.75625,
+        "adjusted": true,
+        "minimum_spacing_m": 1.4849999999999994,
+        "communication_link_m": 2.97,
+        "message": "Largeur adaptée à 11.76 m pour garder au moins 0,40 m entre les places."
+      },
+      "letters_F": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4173228346456694,
+        "communication_link_m": 2.9291338582677167,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_G": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.2080264219723467,
+        "communication_link_m": 2.391219670730131,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_H": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4181100176192412,
+        "communication_link_m": 2.9291338582677167,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_I": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4181100176192412,
+        "communication_link_m": 2.9291338582677167,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_J": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.2093023255813948,
+        "communication_link_m": 2.3255813953488373,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_K": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4237288135593222,
+        "communication_link_m": 2.676430384080933,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_L": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7378505542816143,
+        "communication_link_m": 1.0434782608695672,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_M": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.03483149900084,
+        "communication_link_m": 1.7813288151511841,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_N": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.0348314990008394,
+        "communication_link_m": 1.7813288151511841,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_O": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.5644984107009965,
+        "communication_link_m": 1.5655582971999467,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_P": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.278688524590164,
+        "communication_link_m": 2.097196238565121,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_Q": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.3589260100096268,
+        "communication_link_m": 2.809503147938885,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_R": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.5961083146711323,
+        "communication_link_m": 2.820180556845616,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_S": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.2704710485711967,
+        "communication_link_m": 1.7813288151511841,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_T": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.879581151832461,
+        "communication_link_m": 1.8219895287958114,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_U": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1037735849056598,
+        "communication_link_m": 2.292452830188679,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_V": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5217391304347831,
+        "communication_link_m": 1.166644162173807,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_W": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5914217099639676,
+        "communication_link_m": 1.6589148529871651,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_X": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.0662133663964688,
+        "communication_link_m": 2.13242673279294,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_Y": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8395331395006362,
+        "communication_link_m": 1.739032931822746,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "letters_Z": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.0348314990008394,
+        "communication_link_m": 1.7813288151511841,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "numbers_1": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7541226033305382,
+        "communication_link_m": 1.5082452066610756,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "numbers_10": {
+        "compatible": true,
+        "width_m": 7.073908846745187,
+        "adjusted": true,
+        "minimum_spacing_m": 0.8214118982277678,
+        "communication_link_m": 2.9699999999999998,
+        "message": "Largeur adaptée à 7.07 m pour garder au moins 0,40 m entre les places."
+      },
+      "numbers_2": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.49222467567852646,
+        "communication_link_m": 1.8652908364885814,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "numbers_3": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4472652149269543,
+        "communication_link_m": 2.4922815345109104,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "numbers_4": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.129411764705882,
+        "communication_link_m": 1.8823529411764712,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "numbers_5": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4665393917110419,
+        "communication_link_m": 1.9341426684451566,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "numbers_6": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.5205979184445186,
+        "communication_link_m": 2.5149264124862825,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "numbers_7": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.7847795977299836,
+        "communication_link_m": 1.1739130434782643,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "numbers_8": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4577624158020097,
+        "communication_link_m": 2.736476646121573,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      },
+      "numbers_9": {
+        "compatible": true,
+        "width_m": 12.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.3317073170731706,
+        "communication_link_m": 2.013775801757582,
+        "message": "Largeur : 12.00 m. Espacement et communications compatibles."
+      }
+    },
+    "teacher-64": {
+      "geometries_arrow": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.9343332508699915,
+        "communication_link_m": 1.5227733707753806,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_circle": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.3738948811676976,
+        "communication_link_m": 1.3738948811677127,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_cross": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.2463145670335398,
+        "communication_link_m": 1.7500000000000009,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_decagon": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.288492247895143,
+        "communication_link_m": 1.3519493503904016,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_diamond": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.2374368670764517,
+        "communication_link_m": 1.237436867076469,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_ellipse": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1130885572000018,
+        "communication_link_m": 1.1163577502615296,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_heart": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6000963830787854,
+        "communication_link_m": 1.4794581652619343,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_heptagon": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.2000092031509344,
+        "communication_link_m": 1.3287689510475327,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_hexagon": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1575161985907578,
+        "communication_link_m": 1.3125000000000013,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_line": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.44444444444444287,
+        "communication_link_m": 0.444444444444446,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_octagon": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.3393920132778059,
+        "communication_link_m": 1.3393920132778208,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_parallelogram": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.5096675197693055,
+        "communication_link_m": 1.5923284148787413,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_pentagon": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.0511425736782556,
+        "communication_link_m": 1.285780239389788,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_rectangle": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.202572474138481,
+        "communication_link_m": 1.4583333333333375,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_semicircle": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.0121455923147114,
+        "communication_link_m": 1.1246543986415443,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_square": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.75,
+        "communication_link_m": 1.75,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_star": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6320257653262974,
+        "communication_link_m": 1.5181707744022956,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_trapezoid": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.0306526148235688,
+        "communication_link_m": 1.5923284148787429,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_triangle": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6562499999999966,
+        "communication_link_m": 1.136658342467078,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "geometries_v": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.4444444444444456,
+        "communication_link_m": 0.9938079899999135,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_A": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8987067469377158,
+        "communication_link_m": 1.872305722786903,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_B": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.4463816860135215,
+        "communication_link_m": 2.760884771030482,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_C": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.0462515711952687,
+        "communication_link_m": 1.0469173749908058,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_D": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1238583928670187,
+        "communication_link_m": 1.8728058604426876,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_E": {
+        "compatible": true,
+        "width_m": 24.43064516129032,
+        "adjusted": true,
+        "minimum_spacing_m": 1.4370967741935488,
+        "communication_link_m": 2.97,
+        "message": "Largeur adaptée à 24.43 m pour garder au moins 0,40 m entre les places."
+      },
+      "letters_F": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.9032258064516121,
+        "communication_link_m": 1.7248288652574784,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_G": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1502762852561481,
+        "communication_link_m": 2.2510443379325342,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_H": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8621700879765388,
+        "communication_link_m": 1.765395894428151,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_I": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8621700879765388,
+        "communication_link_m": 1.765395894428151,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_J": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8911567621674912,
+        "communication_link_m": 1.7747777727269463,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_K": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.9741286238612934,
+        "communication_link_m": 1.948257247722589,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_L": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6285393610547089,
+        "communication_link_m": 0.888888888888892,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_M": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5959143834349756,
+        "communication_link_m": 1.5174282499436078,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_N": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5959143834349756,
+        "communication_link_m": 1.5174282499436078,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_O": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.3738948811676976,
+        "communication_link_m": 1.3738948811677127,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_P": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.9476923076923081,
+        "communication_link_m": 1.9777560727550711,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_Q": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.0941425297987013,
+        "communication_link_m": 2.2833521690951977,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_R": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.401714254552104,
+        "communication_link_m": 2.916666666666667,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_S": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1124939477546962,
+        "communication_link_m": 1.5174282499436078,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_T": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6027397260273972,
+        "communication_link_m": 1.1506849315068477,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_U": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8162544169611311,
+        "communication_link_m": 1.7067137809187276,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_V": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.4444444444444456,
+        "communication_link_m": 0.9938079899999135,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_W": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5303693064168625,
+        "communication_link_m": 1.4131496895816609,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_X": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.201737654765002,
+        "communication_link_m": 2.4022257771816977,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_Y": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6285393610547089,
+        "communication_link_m": 1.3094570021973064,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "letters_Z": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5959143834349756,
+        "communication_link_m": 1.5174282499436078,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "numbers_1": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.6086956521739126,
+        "communication_link_m": 1.1666666666666672,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "numbers_10": {
+        "compatible": false,
+        "width_m": null,
+        "adjusted": false,
+        "message": "Cette forme ne peut pas accueillir 64 robots dans cette arène tout en gardant les distances de sécurité et les communications. Réduisez l’effectif ou choisissez une autre forme.",
+        "minimum_width_m": 10.038983447725922,
+        "maximum_width_m": 7.486432905359081
+      },
+      "numbers_2": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.5243244210069695,
+        "communication_link_m": 1.588951453305095,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "numbers_3": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.2920337968167224,
+        "communication_link_m": 2.7006678074006873,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "numbers_4": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.9032258064516121,
+        "communication_link_m": 1.8064516129032273,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "numbers_5": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.1651965412601528,
+        "communication_link_m": 1.647603013860697,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "numbers_6": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.226919658203331,
+        "communication_link_m": 2.565377467152415,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "numbers_7": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8944271909999155,
+        "communication_link_m": 1.0000000000000078,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "numbers_8": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 1.45620538868096,
+        "communication_link_m": 2.997546094309537,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      },
+      "numbers_9": {
+        "compatible": true,
+        "width_m": 28.0,
+        "adjusted": false,
+        "minimum_spacing_m": 0.8886070020158123,
+        "communication_link_m": 1.863567512881496,
+        "message": "Largeur : 28.00 m. Espacement et communications compatibles."
+      }
+    }
+  },
+  "examples": {
+    "arrow-24-8800": {
+      "request": {
+        "shape": "geometries_arrow",
+        "next_shape": "letters_A",
+        "robots": 24,
+        "seed": 8800,
+        "controller": "teacher",
+        "scenario": "formation",
+        "obstacle_count": 1
+      },
+      "width_m": 7.575972519631659,
+      "geometry": {
+        "shape": {
+          "compatible": true,
+          "width_m": 7.575972519631659,
+          "adjusted": true,
+          "minimum_spacing_m": 0.404,
+          "communication_link_m": 1.0987132581543924,
+          "message": "Largeur adaptée à 7.58 m pour garder au moins 0,40 m entre les places."
+        }
+      },
+      "reports": {
+        "teacher": {
+          "formation_error_m": 0.23821503564256055,
+          "stabilization_time_s": null,
+          "collisions": 0,
+          "success": false,
+          "initial_collision": false,
+          "allocation_resolved": true,
+          "allocation_time_s": 57.6,
+          "reconnection_time_s": 9.0,
+          "control_release_time_s": 66.60000000000001,
+          "allocation_graph_changed_steps": 0,
+          "max_allocation_speed_m_s": 0.0,
+          "allocation_stationary": true,
+          "packets_delivered": 156672,
+          "safety_infeasible_robot_steps": 49,
+          "safety_intervention_robot_steps": 1928,
+          "motion_safety_intervention_robot_steps": 1913
+        }
+      }
+    },
+    "arrow-24-8800-room": {
+      "request": {
+        "shape": "geometries_arrow",
+        "next_shape": "letters_A",
+        "robots": 24,
+        "seed": 8800,
+        "controller": "teacher",
+        "scenario": "formation",
+        "obstacle_count": 1
+      },
+      "width_m": 9.376203613405519,
+      "geometry": {
+        "shape": {
+          "compatible": true,
+          "width_m": 9.376203613405519,
+          "adjusted": true,
+          "minimum_spacing_m": 0.5,
+          "communication_link_m": 1.3597936363296936,
+          "message": "Largeur adaptée à 9.38 m pour garder au moins 0,40 m entre les places."
+        }
+      },
+      "reports": {
+        "teacher": {
+          "formation_error_m": 9.930136612989092e-16,
+          "stabilization_time_s": 74.9,
+          "collisions": 0,
+          "success": true,
+          "initial_collision": false,
+          "allocation_resolved": true,
+          "allocation_time_s": 57.6,
+          "reconnection_time_s": 9.0,
+          "control_release_time_s": 66.60000000000001,
+          "allocation_graph_changed_steps": 0,
+          "max_allocation_speed_m_s": 0.0,
+          "allocation_stationary": true,
+          "packets_delivered": 156672,
+          "safety_infeasible_robot_steps": 49,
+          "safety_intervention_robot_steps": 1577,
+          "motion_safety_intervention_robot_steps": 1562
+        }
+      }
+    },
+    "x-8-8800": {
+      "request": {
+        "shape": "letters_X",
+        "next_shape": "letters_A",
+        "robots": 8,
+        "seed": 8800,
+        "controller": "teacher",
+        "scenario": "formation",
+        "obstacle_count": 1
+      },
+      "width_m": 4.233549314218315,
+      "geometry": {
+        "shape": {
+          "compatible": true,
+          "width_m": 4.233549314218315,
+          "adjusted": true,
+          "minimum_spacing_m": 1.4851870630479171,
+          "communication_link_m": 2.9699999999999998,
+          "message": "Largeur adaptée à 4.23 m pour garder au moins 0,40 m entre les places."
+        }
+      },
+      "reports": {
+        "teacher": {
+          "formation_error_m": 6.280369834735101e-16,
+          "stabilization_time_s": 21.1,
+          "collisions": 0,
+          "success": true,
+          "initial_collision": false,
+          "allocation_resolved": true,
+          "allocation_time_s": 6.4,
+          "reconnection_time_s": 9.0,
+          "control_release_time_s": 15.4,
+          "allocation_graph_changed_steps": 0,
+          "max_allocation_speed_m_s": 0.0,
+          "allocation_stationary": true,
+          "packets_delivered": 3584,
+          "safety_infeasible_robot_steps": 11,
+          "safety_intervention_robot_steps": 432,
+          "motion_safety_intervention_robot_steps": 421
+        }
+      }
+    },
+    "arrow-24-8801": {
+      "request": {
+        "shape": "geometries_arrow",
+        "next_shape": "letters_A",
+        "robots": 24,
+        "seed": 8801,
+        "controller": "teacher",
+        "scenario": "formation",
+        "obstacle_count": 1
+      },
+      "width_m": 9.376203613405519,
+      "geometry": {
+        "shape": {
+          "compatible": true,
+          "width_m": 9.376203613405519,
+          "adjusted": true,
+          "minimum_spacing_m": 0.5,
+          "communication_link_m": 1.3597936363296936,
+          "message": "Largeur adaptée à 9.38 m pour garder au moins 0,40 m entre les places."
+        }
+      },
+      "reports": {
+        "teacher": {
+          "formation_error_m": 9.155133597044475e-16,
+          "stabilization_time_s": 75.3,
+          "collisions": 0,
+          "success": true,
+          "initial_collision": false,
+          "allocation_resolved": true,
+          "allocation_time_s": 57.6,
+          "reconnection_time_s": 9.0,
+          "control_release_time_s": 66.60000000000001,
+          "allocation_graph_changed_steps": 57,
+          "max_allocation_speed_m_s": 0.14420268439150213,
+          "allocation_stationary": false,
+          "packets_delivered": 136194,
+          "safety_infeasible_robot_steps": 45,
+          "safety_intervention_robot_steps": 3346,
+          "motion_safety_intervention_robot_steps": 1619
+        }
+      }
+    },
+    "x-8-8801": {
+      "request": {
+        "shape": "letters_X",
+        "next_shape": "letters_A",
+        "robots": 8,
+        "seed": 8801,
+        "controller": "teacher",
+        "scenario": "formation",
+        "obstacle_count": 1
+      },
+      "width_m": 4.233549314218315,
+      "geometry": {
+        "shape": {
+          "compatible": true,
+          "width_m": 4.233549314218315,
+          "adjusted": true,
+          "minimum_spacing_m": 1.4851870630479171,
+          "communication_link_m": 2.9699999999999998,
+          "message": "Largeur adaptée à 4.23 m pour garder au moins 0,40 m entre les places."
+        }
+      },
+      "reports": {
+        "teacher": {
+          "formation_error_m": 6.280369834735101e-16,
+          "stabilization_time_s": 20.0,
+          "collisions": 0,
+          "success": true,
+          "initial_collision": false,
+          "allocation_resolved": true,
+          "allocation_time_s": 6.4,
+          "reconnection_time_s": 9.0,
+          "control_release_time_s": 15.4,
+          "allocation_graph_changed_steps": 0,
+          "max_allocation_speed_m_s": 0.0,
+          "allocation_stationary": true,
+          "packets_delivered": 3584,
+          "safety_infeasible_robot_steps": 11,
+          "safety_intervention_robot_steps": 378,
+          "motion_safety_intervention_robot_steps": 373
+        }
+      }
+    }
+  },
+  "safety_distance_m": 0.4,
+  "communication_radius_m": 3.0,
+  "weights_changed": false
+}
