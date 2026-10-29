@@ -1,29 +1,92 @@
 \chapter*{Introduction générale}
+\phantomsection
 \addcontentsline{toc}{chapter}{Introduction générale}
+\label{chap:introduction}
 
-Faire travailler plusieurs robots ensemble pose une question simple à formuler : comment obtenir un résultat commun lorsque chaque robot ne connaît qu'une partie de la situation ? Un robot peut se rapprocher d'une destination. Un groupe doit, en plus, partager l'espace, éviter les contacts et se répartir les places. Le déplacement de chacun modifie alors les conditions dans lesquelles les autres prennent leurs décisions.
+\section*{Contexte de l'étude}
+\phantomsection
+\addcontentsline{toc}{section}{Contexte de l'étude}
+La robotique en essaim s'intéresse à la manière dont plusieurs robots peuvent agir ensemble à partir de décisions locales. Le groupe ne se résume pas à une collection de machines qui exécutent chacune une tâche isolée. Le mouvement d'une unité change les distances, les passages et les informations disponibles pour les autres. La coordination doit tenir compte de ces relations.
 
-La robotique en essaim étudie cette coordination à partir de règles et d'échanges locaux \cite{brambilla2013}. Elle intéresse notamment les missions où plusieurs unités doivent couvrir une zone ou organiser leur déplacement. Ce mémoire porte sur une tâche plus précise : former des lettres, des nombres et des figures géométriques avec des robots simulés, puis déplacer certaines formations dans un espace contenant des obstacles. Il s'agit d'un banc d'essai en deux dimensions. Aucun robot physique n'a été utilisé dans les expériences présentées.
+Un tel système peut être envisagé pour explorer une zone, répartir des points d'observation ou déplacer plusieurs unités en groupe. Ce sont des motivations de recherche, et non des applications déjà validées par notre programme. La revue de Brambilla et de ses coauteurs décrit cette démarche de conception et d'évaluation des comportements collectifs \cite{brambilla2013}. Elle rappelle aussi qu'un comportement utile dans un cas ne suffit pas à établir sa fiabilité dans toutes les situations.
 
-\section*{Problème étudié}
-Une forme est représentée par un ensemble de places à occuper. Pour la réaliser, il ne suffit pas de demander à tous les robots d'aller vers le centre : ils doivent occuper des places différentes et y rester sans se toucher. Deux difficultés se présentent. La première concerne l'organisation du groupe : quelle place attribuer à chaque robot, et comment régler un conflit lorsque plusieurs robots demandent la même ? La seconde concerne le mouvement : quelle accélération appliquer pour rejoindre sa place en tenant compte des voisins ?
+Nous retenons une tâche concrète : demander à un essaim simulé de former des lettres, des nombres et des figures géométriques. Chaque robot occupe une place du tracé. L'ensemble doit couvrir la forme et rester immobile sans contact. Certaines expériences ajoutent ensuite le déplacement de la formation vers une destination, avec des obstacles connus.
 
-Nous séparons ces deux problèmes. Un protocole classique attribue les places à partir de demandes échangées entre voisins. Un réseau de neurones partagé par les robots apprend ensuite à produire une accélération à partir d'une observation locale. Cette séparation permet de préciser ce qui est appris et ce qui reste défini dans le programme. Le réseau ne dessine pas la forme et ne réserve pas lui-même les places.
+Le choix de cette tâche rend le résultat visible et mesurable. Un cercle ou un rectangle permet de voir si les robots se répartissent correctement. Une lettre composée de plusieurs traits ajoute des angles et des zones où les trajectoires peuvent se croiser. L'image finale reste toutefois insuffisante : des robots peuvent finir bien placés après s'être heurtés. Il faut donc conserver le déplacement complet.
 
-Les réseaux de neurones sur graphes conviennent à cette organisation parce que les voisins d'un robot peuvent changer au cours du déplacement. Un graphe représente les échanges possibles : un sommet correspond à un robot et une arête relie deux robots suffisamment proches. Les travaux de Tolstaya et de ses coauteurs montrent comment apprendre des contrôleurs locaux à partir d'exemples de commande \cite{tolstaya2020}. Notre travail reprend cette idée générale d'imitation, avec son propre simulateur, son protocole de formation et ses limites d'observation.
+Les réseaux de neurones sur graphes fournissent une manière d'utiliser les relations entre voisins. Ils permettent d'appliquer les mêmes paramètres à chaque robot tout en acceptant un voisinage variable. L'apprentissage par imitation offre ensuite un moyen de produire leurs exemples : un contrôleur programmé, appelé professeur, donne les accélérations attendues. Le réseau cherche à reproduire ces commandes à partir des informations qui lui sont accessibles.
 
-La question principale est la suivante : \textit{dans quelles conditions un contrôleur appris à partir d'exemples locaux peut-il former un essaim sans contact, et quelle part du résultat dépend encore des mécanismes classiques qui l'entourent ?} Cette question impose de regarder les trajectoires complètes. Une faible erreur pendant l'entraînement ne suffit pas à prouver que les robots se déplacent correctement une fois le réseau utilisé dans le simulateur.
+\section*{Problématique}
+\phantomsection
+\addcontentsline{toc}{section}{Problématique}
+Former une figure demande de résoudre deux problèmes différents. Il faut d'abord répartir les places : deux robots ne doivent pas recevoir la même cible pendant qu'une autre reste vide. Il faut ensuite déplacer chaque robot vers sa place en tenant compte des voisins. Le premier problème relève de l'organisation du groupe ; le second concerne la commande de mouvement.
 
-\section*{Objectifs et démarche}
-L'objectif est de relier la forme demandée au déplacement mesuré, avec un moteur physique simple, un professeur, un modèle appris et des critères annoncés avant les essais. Dans chaque campagne, les contrôleurs comparés partent des mêmes positions.
+Cette séparation est essentielle pour expliquer le système. Un réseau peut bien prédire une accélération sans savoir à quel robot revient une place. À l'inverse, une attribution correcte ne garantit pas que les trajectoires seront sans contact. Dans notre implémentation, l'attribution reste un protocole classique de demandes locales. Le réseau apprend la commande des phases de mouvement prévues par la mission.
 
-Le travail s'est construit par étapes. Un premier réseau a été entraîné avec douze robots. Son utilisation avec un filtre classique a donné des formations réussies dans les cas réservés au test, mais son utilisation sans ce filtre a provoqué des contacts. Une collecte complémentaire a réduit leur nombre sans résoudre le problème. Ces échecs ont conduit à modifier la structure du modèle : une partie du mouvement vers la cible est écrite explicitement, tandis que le réseau apprend des corrections liées aux voisins. Cette seconde approche a été évaluée avec 12, 24 et 64 robots, à partir de départs contrôlés.
+Une difficulté apparaît dès que l'on utilise le modèle en simulation. Les exemples du professeur décrivent les états rencontrés par celui-ci. Le réseau peut produire une commande légèrement différente, atteindre un autre état et rencontrer des observations moins familières. Les petites erreurs ne restent donc pas nécessairement isolées. Elles peuvent modifier les décisions suivantes.
 
-La navigation avec obstacles constitue un volet distinct. Elle associe une planification classique du trajet et une commande locale protégée. Les résultats de ce volet ne sont donc pas présentés comme ceux d'un réseau qui aurait appris, seul, à découvrir et à contourner les obstacles.
+Une autre difficulté concerne l'effectif. Un réseau partagé peut recevoir les observations de douze ou de soixante-quatre robots sans que l'on change ses matrices de paramètres. Cette possibilité informatique ne démontre pas que les mouvements resteront corrects. La densité, le nombre de voisins, la taille de la forme et la préparation du groupe changent aussi.
 
-\section*{Apports et portée du mémoire}
-Le système actuel comprend un catalogue de 56 noms de formes, une attribution locale des places, deux familles de modèles appris et une interface de démonstration. Les 56 noms correspondent à 54 géométries différentes, car deux paires de noms désignent les mêmes tracés. Les résultats conservés permettent de suivre les progrès et les échecs sans les confondre avec les tests de fonctionnement du logiciel.
+Enfin, un système protégé peut réussir grâce à une combinaison de mécanismes. Si le filtre classique modifie souvent les commandes du réseau, la réussite ne doit pas être attribuée au seul apprentissage. La même prudence s'applique aux obstacles : un trajet préparé sur une carte connue et une commande locale apprise sont deux fonctions distinctes.
 
-Le modèle structuré réussit les 18 cas de formation qui lui ont été réservés, sans contact observé. Ces cas concernent trois formes, deux départs par effectif et trois effectifs. Cette réussite porte sur un domaine limité : les robots commencent près d'un cercle de préparation, dans un environnement idéal et sans obstacle. Elle ne prouve ni une réussite sur toutes les formes du catalogue ni un fonctionnement sur de vrais robots. Les essais de navigation avec cinq à dix obstacles portent, quant à eux, sur un carré à douze robots et sur des scènes connues du planificateur.
+La question centrale de ce mémoire est donc la suivante : \textit{dans quelles conditions une commande locale apprise par imitation permet-elle à un essaim de réaliser une formation sans contact, et quelle part du résultat dépend des composants classiques ?} Nous examinons cette question à travers la qualité de l'imitation, les trajectoires, le passage à plusieurs effectifs et la navigation hybride.
 
-Les quatre chapitres présentent les notions de base, les travaux liés, la méthode et les expériences. La discussion finale précise la portée des résultats et les questions encore ouvertes.
+\section*{Hypothèses}
+\phantomsection
+\addcontentsline{toc}{section}{Hypothèses}
+Trois hypothèses de travail guident les expériences. Elles indiquent ce que nous voulons examiner, sans annoncer d'avance un résultat positif.
+
+La première est qu'un réseau partagé, informé de sa cible et de son voisinage, peut apprendre une commande utile à la formation. Elle porte sur le comportement en exécution, pas uniquement sur la baisse de l'erreur pendant l'entraînement. Le taux de réussite, les contacts et la stabilisation permettent de l'examiner.
+
+La deuxième est qu'une commande structurée peut faciliter l'apprentissage du mouvement local. L'idée est de conserver explicitement l'attraction et le freinage, puis d'apprendre des corrections liées aux voisins. Une meilleure réussite dans une campagne donnée appuie ce choix pratique. Pour isoler son effet propre, il faudrait cependant comparer des variantes où les autres éléments restent identiques.
+
+La troisième est que le partage des paramètres permet d'utiliser un même modèle avec plusieurs effectifs, sous réserve d'adapter les dimensions et le protocole. Nous distinguons ici deux niveaux : accepter les données d'un autre effectif et réussir la mission à cet effectif. Le premier se vérifie dans le code ; le second exige des trajectoires réservées.
+
+L'apport exact des messages reste une question complémentaire. Nos résultats ne permettent pas d'affirmer que l'attention, prise seule, explique le progrès du modèle structuré. Une comparaison avec une version privée de messages, à entraînement comparable, reste nécessaire.
+
+\subsection*{Hypothèses de modélisation et périmètre}
+Les robots sont des disques mobiles dans un espace plan borné. Le contrôleur demande une accélération ; la vitesse et la position évoluent ensuite à chaque pas de temps. Les observations de position et de vitesse sont supposées exactes. Les voisins sont définis par une portée fixe, sans perte aléatoire de communication.
+
+Les obstacles des expériences de navigation sont immobiles et connus du planificateur. Aucun capteur physique ne construit la carte. Les robots ne possèdent pas de modèle détaillé de roues, de batterie ou de frottements. Les pannes, les retards et les capteurs bruités ne font pas partie de la validation actuelle. Ces limites sont reprises dans la discussion.
+
+\section*{Objectifs poursuivis}
+\phantomsection
+\addcontentsline{toc}{section}{Objectifs poursuivis}
+L'objectif général est de construire et d'évaluer une chaîne de formation locale par apprentissage, dans des conditions assez précises pour que ses réussites et ses échecs puissent être compris. Le système doit relier la consigne, les informations disponibles, les commandes et les mesures finales.
+
+Les objectifs spécifiques sont de représenter une dynamique à accélérations, de produire des places géométriques distinctes, de régler leur attribution et de générer des exemples par un professeur. Le réseau est ensuite entraîné et évalué avec des critères communs. Le passage à plusieurs effectifs et la navigation sont abordés dans des campagnes séparées.
+
+\subsection*{Choix du problème étudié}
+Les lettres et les nombres sont des consignes géométriques. Le système ne reconnaît pas une image écrite à la main et ne prédit pas le nom d'un symbole. Il reçoit le tracé demandé, le transforme en places et organise les robots pour les occuper. Cette précision évite de confondre formation et reconnaissance de formes.
+
+Le catalogue contient les lettres A à Z, les nombres de 1 à 10 et vingt géométries. Le nombre de noms disponibles est plus grand que le nombre de géométries différentes, car O partage son tracé avec le cercle, et V avec la géométrie en V. Le nombre de formes proposées par l'application ne doit pas non plus être confondu avec le nombre de formes sur lesquelles un modèle a été validé.
+
+\subsection*{Critères de réussite}
+Une réussite demande une forme suffisamment proche de la cible, des vitesses faibles pendant une durée minimale et aucun contact sur toute l'expérience. L'attribution doit également être résolue. Pour la navigation, il faut en plus rejoindre la destination en limitant la déformation pendant le transport. Les seuils précis sont donnés dans la méthode, avant les résultats.
+
+\section*{Méthodes et techniques utilisées}
+\phantomsection
+\addcontentsline{toc}{section}{Méthodes et techniques utilisées}
+La démarche est expérimentale. Nous partons d'un simulateur qui met à jour les positions à partir des commandes et enregistre les états. Des tests vérifient les opérations du programme : limites physiques, observations, attribution et calcul des indicateurs. Ces tests ne remplacent pas les campagnes de déplacement.
+
+Les données d'apprentissage sont synthétiques. Le professeur produit des trajectoires ; chaque instant fournit des observations locales et une accélération attendue. Les ensembles d'entraînement, de validation et de test sont séparés. La validation sert à sélectionner les poids, puis le test réservé est exécuté avec un modèle fixé.
+
+L'apprentissage est supervisé et porte sur des valeurs continues. L'erreur quadratique moyenne mesure l'imitation du premier modèle. Le modèle structuré ajoute une pénalité de séparation pendant l'entraînement. À l'exécution, nous distinguons une commande brute d'une commande modifiée par le filtre classique.
+
+Les comparaisons sont appariées à l'intérieur de chaque campagne : les contrôleurs partent des mêmes positions. Les graines de tirage sont conservées pour reproduire ces départs. Les rapports regroupent les mesures, tandis que les archives de trajectoires permettent de les recalculer. Un audit vérifie aussi les poids utilisés et le respect des règles physiques.
+
+\section*{Contribution de l'étude}
+\phantomsection
+\addcontentsline{toc}{section}{Contribution de l'étude}
+Le travail fournit un simulateur, un catalogue vectoriel, une attribution locale, des données d'imitation, deux familles de réseaux et une interface de démonstration. Il fournit surtout une lecture séparée de leurs rôles. La réservation ne vient pas du réseau ; la carte connue sert au planificateur ; le filtre peut modifier la commande. Ces distinctions sont nécessaires pour interpréter les scores.
+
+Le premier modèle montre une limite nette de l'imitation : les neuf cas réservés réussissent avec protection, mais échouent sans filtre pendant le mouvement, avec 54 contacts. La seconde architecture réussit dix-huit cas réservés à trois effectifs dans un domaine contrôlé. La navigation finale réussit huit cas par contrôleur dans sa propre campagne hybride. Ces résultats ne décrivent ni la même architecture ni le même domaine d'essai.
+
+La contribution comprend aussi les résultats négatifs et leur traçabilité. Ils expliquent pourquoi le modèle a été modifié et pourquoi certaines utilisations restent exploratoires. Nous ne revendiquons ni une garantie générale de sécurité, ni une supériorité sur toutes les méthodes classiques, ni une validation sur robots réels.
+
+\section*{Plan sommaire et subdivision du travail}
+\phantomsection
+\addcontentsline{toc}{section}{Plan sommaire et subdivision du travail}
+Le mémoire comprend quatre chapitres. Le premier, \textit{Concepts de base}, présente les robots, les informations locales, les graphes et l'apprentissage. Le deuxième, \textit{État de l'art}, distingue les méthodes traditionnelles et avancées, puis analyse trois travaux connexes avant de situer notre approche.
+
+Le troisième chapitre, \textit{Méthodologie et solution proposée}, décrit les hypothèses, les modèles, les données et les critères de mesure. Le quatrième, \textit{Implémentation, expérimentations et résultats}, explique le fonctionnement du programme et présente les campagnes. Une discussion séparée examine la validité des conclusions. La conclusion générale et les perspectives ferment le travail avant la bibliographie.

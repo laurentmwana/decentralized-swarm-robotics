@@ -1,0 +1,16 @@
+{
+  "status": "passed",
+  "numbered_chapters": 4,
+  "intro_required_sections": 7,
+  "related_studies": 3,
+  "required_subheadings_per_study": 4,
+  "discussion_and_conclusion_separate": true,
+  "existing_directories_preserved": [
+    "latex/chapters",
+    "latex/frontmatter"
+  ],
+  "layout": "12 pt, interligne 1,5, marges de 2,5 cm conservés",
+  "figures": 8,
+  "tables": 11,
+  "equation_groups": 16
+}

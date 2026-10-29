@@ -1,4 +1,4 @@
-# Rédaction du mémoire — version du 29 octobre 2026
+# Rédaction du mémoire — plan rétabli, 70 pages
 
 Le fichier principal est `main.tex`. Les pages personnelles et les réglages de présentation existants sont conservés. Les chapitres sont rédigés en français simple ; les termes techniques nécessaires sont expliqués lors de leur introduction.
 
@@ -16,7 +16,7 @@ Les échecs intermédiaires et les limites sont conservés. Le nombre d'observat
 
 ## Figures issues du programme
 
-Aucune image générée par un modèle d'images n'est ajoutée. Les cinq figures `images/current_*` sont des tracés Matplotlib en noir et blanc : graphe de voisinage, courbes d'entraînement, séquence de formation, décomposition des durées et trajectoires près des obstacles. Les fichiers PDF vectoriels sont intégrés au mémoire ; les PNG permettent une vérification rapide.
+Aucune image générée par un modèle d'images n'est ajoutée. Les huit figures `images/current_*` sont des tracés Matplotlib en noir et blanc : graphe de voisinage, catalogue, courbes d'entraînement, contacts après correction, séquence de formation, décomposition des durées, convergence et trajectoires près des obstacles. Les fichiers PDF vectoriels sont intégrés au mémoire ; les PNG permettent une vérification rapide.
 
 Les tableaux de résultats sont reconstruits depuis les rapports JSON. Les données lues et leurs empreintes SHA-256 figurent dans `generated/sources.json`.
 
@@ -25,9 +25,10 @@ Depuis la racine du dépôt :
 ```powershell
 python latex/tools/prepare_current_results.py
 python latex/tools/check_manuscript.py
+python latex/tools/check_professor_plan.py
 ```
 
-Le premier script nécessite NumPy et Matplotlib. Il ne lance aucun entraînement. Le second utilise uniquement la bibliothèque standard et vérifie notamment citations, renvois, figures, empreintes des sources et des poids, ainsi que les principaux chiffres rapportés.
+Le premier script nécessite NumPy et Matplotlib. Il ne lance aucun entraînement. Les scripts de contrôle utilisent uniquement la bibliothèque standard et vérifient notamment les citations, les renvois, les figures, les empreintes des sources et des poids, ainsi que les principaux chiffres rapportés.
 
 ## Sources des résultats
 
@@ -47,6 +48,10 @@ Les journaux d'entraînement utilisés dans les courbes sont `outputs/imitation/
 
 Une copie des sources avant cette reprise se trouve dans `outputs/thesis-redaction/source-before/`. Cette version est une rédaction fondée sur les résultats disponibles. Les consignes supplémentaires du directeur et les corrections personnelles pourront ensuite être appliquées sans changer les conclusions expérimentales.
 
-## Rendu vérifié
+## Plan et rendu vérifiés
 
-La version du 29 octobre 2026 compile avec pdfLaTeX et Biber en 45 pages. Elle contient cinq figures scientifiques, sept tableaux et dix références citées. Les renvois sont résolus et aucun débordement n’est signalé. Les pages rendues ont été examinées. Le PDF à relire est `output/pdf/memoire-swarm-gnn-redaction.pdf` depuis la racine du dépôt ; `latex/main.pdf` contient le même document.
+La correction 022 rétablit les rubriques de `RULES.md`. Les dossiers `chapters/` et `frontmatter/` et les quatre chapitres numérotés sont conservés. Les trois travaux connexes sont détaillés sous les quatre rubriques requises. Discussion et Conclusion générale et perspectives sont séparées.
+
+La version courante compile en **70 pages au total**, avec huit figures scientifiques, onze tableaux et onze références citées. La table des matières et les légendes sont rétablies selon le plan. La répartition est donnée dans `PAGINATION.md`.
+
+Le PDF à relire est `output/pdf/memoire-swarm-gnn-redaction.pdf` depuis la racine du dépôt ; `latex/main.pdf` contient le même document. Une sauvegarde locale de la version intermédiaire de 45 pages se trouve dans `outputs/thesis-redaction/version-45-pages/`. Les preuves 021 restent celles de cette version intermédiaire ; les preuves 022 décrivent la version courante.

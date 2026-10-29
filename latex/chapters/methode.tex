@@ -1,4 +1,4 @@
-\chapter{Méthode et implémentation}
+\chapter{Méthodologie et solution proposée}
 \label{chap:methode}
 
 \section{Introduction}
@@ -11,20 +11,27 @@ Le code distingue le moteur physique, les observations locales, les références
 
 \section{Modèle physique}
 Chaque robot est représenté par un disque de rayon $r_b=0{,}1$ m. Sa position $p_i$ et sa vitesse $v_i$ sont des vecteurs à deux composantes. La commande demandée est une accélération. Pour limiter un vecteur à une norme $b$, on définit :
+L'Équation~\eqref{eq:methode-1} définit la limitation de norme.
 \begin{equation}
 \operatorname{sat}_{b}(z)=\frac{z}{\max(1,\|z\|/b)}.
+\label{eq:methode-1}
 \end{equation}
 Avec un pas de temps $\Delta t=0{,}1$ s, le moteur applique :
-\begin{align}
+Les mises à jour sont regroupées dans l'Équation~\eqref{eq:methode-2}.
+\begin{equation}\begin{aligned}
 a_i^t&=\operatorname{sat}_{2}(a_{i,\text{demandée}}^t),\\
 v_i^{t+1}&=\operatorname{sat}_{1}(v_i^t+\Delta t\,a_i^t),\\
 \widetilde p_i^{t+1}&=p_i^t+\Delta t\,v_i^{t+1}.
-\end{align}
+\end{aligned}\label{eq:methode-2}
+\end{equation}
 Les accélérations sont exprimées en m/s$^2$ et les vitesses en m/s. La vitesse maximale est de 1 m/s ; l'accélération maximale est de 2 m/s$^2$. Cette mise à jour utilise la nouvelle vitesse pour calculer la position suivante.
 
 L'espace est un carré délimité. Si le disque atteint un mur, sa position est ramenée à la limite admissible et sa vitesse dirigée vers l'extérieur est annulée. Ce traitement empêche de sortir de l'espace simulé. Il n'efface pas le contact du bilan : un épisode avec contact n'est pas déclaré réussi.
 
+Le Tableau~\ref{tab:methode-1} rassemble les éléments de cette étape.
 \begin{table}[htbp]
+\caption{Paramètres communs aux principales campagnes décrites. Les dimensions de l'espace et de la forme varient selon l'effectif.}
+\label{tab:methode-1}
 \centering
 \begin{tabular}{lll}\toprule
 Paramètre & Valeur & Rôle\\\midrule
@@ -37,8 +44,16 @@ Seuil de formation & 0,1 m & Critère de stabilisation\\
 Seuil de vitesse & 0,05 m/s & Critère de stabilisation\\
 Maintien demandé & 1 s & Écarter un passage fugitif\\\bottomrule
 \end{tabular}
-\caption{Paramètres communs aux principales campagnes décrites. Les dimensions de l'espace et de la forme varient selon l'effectif.}
+
 \end{table}
+
+
+\subsection{Pourquoi commander une accélération ?}
+Une consigne de vitesse remplacerait directement le mouvement courant si le modèle ne représentait pas son évolution. Avec une accélération, la commande agit d'abord sur la vitesse. Un robot qui se rapproche rapidement de sa cible doit donc freiner à temps. Cette relation rend les trajectoires plus proches d'un problème de commande avec inertie, tout en gardant un modèle simple.
+
+Le modèle reste volontairement limité. Il ne représente pas l'orientation d'un véhicule à deux roues ni le lien entre couple moteur et contact au sol. La saturation de norme évite seulement de demander une vitesse ou une accélération au-delà des bornes choisies. Elle ne calcule pas une consommation d'énergie et ne garantit pas l'absence de contact.
+
+Deux distances doivent être distinguées. Le contact physique entre deux disques de rayon 0,1 m correspond à 0,2 m entre centres. La distance de sécurité de la commande est plus grande. Elle vise à réagir avant le contact. Pendant l'entraînement structuré v2, une marge encore différente est utilisée pour guider l'apprentissage. Ces valeurs n'ont donc pas toutes le même rôle.
 
 \section{Représentation des formes}
 Le catalogue contient les 26 lettres de A à Z, les dix nombres de 1 à 10 et vingt géométries : cercle, ellipse, carré, rectangle, triangle, pentagone, hexagone, heptagone, octogone, décagone, losange, trapèze, parallélogramme, étoile, croix, flèche, demi-cercle, cœur, ligne et V. Les noms O et cercle partagent un tracé ; les noms V et géométrie en V en partagent un autre. Le décompte est donc de 56 noms pour 54 géométries différentes.
@@ -47,11 +62,23 @@ Les formes sont construites par des segments et des courbes. Pour un tracé uniq
 
 Avant le lancement, la géométrie doit respecter trois conditions : des places suffisamment espacées, un graphe de cibles connecté à la portée choisie et une forme qui tient dans l'espace. L'écart minimal de référence entre places est de 0,4 m. L'interface peut adapter uniformément les dimensions lorsqu'une combinaison est trop dense. Pour examiner la connexité, elle utilise notamment la plus longue arête d'un arbre reliant les cibles avec une longueur totale minimale. Si aucune échelle ne satisfait les contraintes, la combinaison est refusée. Cette adaptation géométrique ne constitue pas un nouvel entraînement du réseau.
 
+
+La Figure~\ref{fig:catalogue-actuel} donne douze exemples de tracés issus du catalogue du programme. Elle décrit les consignes disponibles et ne constitue pas un bilan de réussite du réseau sur ces formes.
+\begin{figure}[htbp]
+\centering\includegraphics[width=\linewidth]{images/current_catalog.pdf}
+\caption[Exemples de tracés du catalogue]{Douze tracés produits par les définitions vectorielles du programme. Les paramètres d'échelle sont de 6 m par axe, sauf pour le rectangle réglé à 6 m sur 4 m. L'étendue exacte dépend du tracé. Les places sont échantillonnées ensuite selon l'effectif.}
+\label{fig:catalogue-actuel}
+\end{figure}
+
+Une augmentation de largeur peut rendre les places moins denses, mais elle change aussi leurs distances de communication. L'adaptation doit donc satisfaire les deux conditions en même temps. Le programme recherche un intervalle d'échelles admissibles ; il ne se contente pas de remplacer une erreur de densité par un agrandissement sans contrôle. Une combinaison impossible reste refusée avec une raison.
+
 \section{Préparation et attribution des places}
 \subsection{Pourquoi une étape circulaire ?}
 Le cercle visible au début est une consigne de préparation prévue par le programme. Il sert à organiser les échanges avant l'attribution finale. Pour un espacement de 0,6 m entre voisins sur l'anneau, le rayon est :
+Le rayon de préparation est donné dans l'Équation~\eqref{eq:methode-3}.
 \begin{equation}
 R_N=\frac{0{,}6}{2\sin(\pi/N)}.
+\label{eq:methode-3}
 \end{equation}
 Chaque identifiant correspond à une place sur cet anneau. Une phase de freinage suit le rassemblement. Les robots échangent ensuite leurs demandes en restant immobiles, puis commencent le mouvement vers la forme demandée.
 
@@ -64,24 +91,39 @@ Une présence physique temporaire sur une cible ne vaut pas réservation. Un rob
 
 Les annonces se propagent d'un voisin à l'autre au cours de tours successifs. Le budget actuel est de $N^2$ tours, à raison de 0,1 s par tour. Il représente 14,4 s à douze robots et 409,6 s à soixante-quatre robots. Ce choix est conservateur et coûteux. Il décrit le protocole implémenté ; il n'est pas présenté comme une complexité minimale nécessaire à toute attribution décentralisée. La résolution est vérifiée avant la libération du mouvement. Lors d'un changement de mission, un nouveau numéro de mission permet d'écarter les anciennes annonces.
 
+
+\subsection{Exemple de résolution d'un conflit}
+Supposons que les robots 2 et 5 classent la place 3 en premier. Au départ, chacun peut annoncer sa demande sans encore connaître celle de l'autre. Lorsque les annonces se rencontrent, la priorité donne la place 3 au robot 2. Le robot 5 choisit sa prochaine place compatible avec les demandes prioritaires connues et diffuse une nouvelle version de son annonce.
+
+Ce mécanisme n'exige pas qu'un centre connaisse les distances de tous les robots. Chaque robot calcule son propre classement. Les annonces transportent une réservation, pas toutes les préférences privées. Il faut toutefois du temps pour que les informations se propagent. C'est pourquoi la phase d'attribution est séparée du mouvement vers les cibles.
+
+Le protocole ne se réduit pas à « premier arrivé, premier servi ». L'arrivée physique n'est pas la règle de priorité. Le robot peut passer près d'une place qui ne lui appartient pas et continuer vers la sienne. Une attribution obtenue avant le déplacement évite des changements permanents de cible dus aux seuls croisements de trajectoires.
+
+À la fin de la phase, le programme vérifie l'accord et l'absence de doublons. S'il manque une réservation ou si le réseau de communication ne permet pas d'achever les échanges, la mission n'est pas déclarée résolue. Une forme finale approximative ne doit pas masquer cet échec d'organisation.
+
 \section{Le professeur et la protection classique}
 Le professeur associe attraction, freinage et répulsion de proximité. Avant protection, sa commande s'écrit :
+L'Équation~\eqref{eq:methode-4} regroupe les trois termes de la commande nominale.
 \begin{equation}
 a_i^{\mathrm{nom}}=6(g_i-p_i)-4v_i
 -60\sum_{j\in\mathcal{N}_i}\max(0,0{,}4-d_{ij})\frac{p_j-p_i}{d_{ij}},
+\label{eq:methode-4}
 \end{equation}
 où $g_i$ est la cible attribuée et $d_{ij}$ la distance entre les centres. Le premier terme rapproche le robot de sa cible, le deuxième freine son mouvement et le troisième l'éloigne des voisins trop proches.
 
 La protection cherche ensuite une accélération proche de cette proposition, tout en respectant des inégalités locales et la borne physique. Avec $r=p_i-p_j$, $w=v_i-v_j$, une distance de sécurité $d_s=0{,}4$ m et $\alpha=3$, la contrainte réciproque utilisée entre deux robots est :
+La condition locale est écrite dans l'Équation~\eqref{eq:contrainte}.
 \begin{equation}
 r^\top a_i\geq-\tfrac12\|w\|^2-\alpha r^\top w
 -\tfrac14\alpha^2(\|r\|^2-d_s^2).
 \label{eq:contrainte}
 \end{equation}
 Chaque robot reçoit une moitié de la contrainte symétrique. Une petite composante de détour peut aussi être ajoutée pour départager un face-à-face. Le programme résout en deux dimensions une projection sous contraintes :
+L'Équation~\eqref{eq:methode-6} décrit la correction recherchée.
 \begin{equation}
 \min_a\|a-a_i^{\text{proposé}}\|^2
 \quad\text{sous}\quad n_k^\top a\geq b_k,\qquad\|a\|\leq2.
+\label{eq:methode-6}
 \end{equation}
 Lorsqu'aucune accélération admissible n'est trouvée, une commande bornée de freinage est appliquée et ce cas est compté. La présence du filtre ne justifie donc pas une garantie générale de sécurité. Les contacts sont toujours mesurés sur la trajectoire produite.
 
@@ -95,6 +137,14 @@ Deux couches linéaires avec activation ReLU encodent l'état propre ; deux autr
 
 Le modèle contient ainsi huit modules linéaires et une seule agrégation de voisinage par décision. Aucun objectif privé d'un voisin ne lui est fourni. Les poids sont partagés entre tous les robots.
 
+
+\subsection{Du fichier d'observation au calcul local}
+L'observation propre est rangée dans un vecteur de huit valeurs. Les voisins forment une petite matrice dont chaque ligne contient quatre valeurs relatives. Comme le nombre de voisins varie, le calcul par lots utilise un masque : il indique quelles lignes correspondent à de vrais voisins et quelles lignes servent seulement à compléter la taille du tableau.
+
+Les lignes masquées ne doivent influencer ni l'attention ni la somme finale. Ce point est vérifié dans le code. Sans lui, l'ajout de lignes vides pour constituer un lot pourrait changer artificiellement une accélération. Un voisinage vide reçoit également un traitement explicite pour éviter une division ou une normalisation indéfinie.
+
+Le lot d'apprentissage regroupe des observations de robots, pas une décision centrale pour l'essaim entier. Le réseau applique le même calcul à chacune de ces observations. Le moteur réunit ensuite les commandes pour mettre à jour l'état physique commun. L'entraînement et l'exécution utilisent ainsi la même définition des caractéristiques locales.
+
 \subsection{Modes brut et protégé}
 Le mode protégé applique le filtre classique à l'accélération du réseau. Le mode brut retire cette projection pendant le rassemblement et le mouvement vers la forme, c'est-à-dire les phases apprises. Les bornes physiques restent appliquées par le simulateur. Le freinage et l'attribution restent des étapes classiques communes. Le mot « brut » porte donc sur la commande des phases de mouvement ; il ne signifie pas que toute la mission serait réalisée par le réseau.
 
@@ -106,10 +156,41 @@ La collecte élargie contient 214 épisodes du professeur : 185 fichiers d'entra
 
 Ces nombres doivent être lus avec leur unité. Un exemple est une observation locale, pas une nouvelle mission indépendante. Cinq graines de départ sont réutilisées entre les formes d'entraînement, deux entre celles de validation et une entre celles de test : la collecte contient donc huit configurations initiales distinctes, répétées pour différentes consignes. Cette réutilisation facilite les comparaisons mais limite la diversité des départs.
 
+
+Le Tableau~\ref{tab:partitions} précise les différentes unités de la collecte. Les fichiers portant des noms de formes équivalentes restent rattachés à leur partition, mais leur répétition n'ajoute pas une nouvelle géométrie ni une nouvelle trajectoire distincte.
+\begin{table}[htbp]
+\caption{Partitions de la collecte élargie du modèle de référence.}
+\label{tab:partitions}
+
+
+\centering
+\begin{tabular}{lrrrr}
+\toprule
+Partition & Noms & Géométries & Fichiers & Trajectoires distinctes\\\midrule
+Entraînement & 37 & 36 & 185 & 180\\
+Validation & 10 & 9 & 20 & 18\\
+Test & 9 & 9 & 9 & 9\\\bottomrule
+\end{tabular}
+\end{table}
+
+Le contrôle des doublons a un but précis. Si le cercle était rangé en entraînement et la lettre O en test alors que leurs tracés sont identiques, la réserve ne mesurerait pas une nouvelle géométrie. Le regroupement des formes équivalentes empêche cette confusion. Il ne crée pas pour autant une grande diversité des positions de départ.
+
+Les états voisins dans le temps sont aussi liés. Le robot observé à 10,0 s et à 10,1 s peut avoir presque la même position. On conserve ces exemples pour apprendre le mouvement, mais on ne les compte pas comme deux missions indépendantes. La taille du fichier mesure le volume d'exemples, tandis que les graines et les épisodes décrivent mieux la diversité des situations.
+
 \subsection{Optimisation et sélection}
 L'optimiseur Adam utilise un taux d'apprentissage de $5\times10^{-4}$ et des lots de 1\,024 exemples. La graine d'initialisation vaut 42. Le budget maximal est de 80 époques, avec arrêt après douze époques sans amélioration en validation. La MSE est définie par l'Équation~\eqref{eq:mse}. Son unité est le m$^2$/s$^4$, puisqu'elle porte sur des écarts d'accélération au carré.
 
 L'entraînement s'arrête après 23 époques. Les poids retenus correspondent à l'époque 11, avec une MSE de validation de 0,112516. Le test réservé est ensuite exécuté avec ces poids fixes. Les exemples de test ne servent ni à ajuster les paramètres ni à choisir l'époque retenue.
+
+
+\subsection{Déroulement d'un entraînement}
+Le programme charge d'abord les observations et les commandes de la partition d'entraînement. Pour chaque lot, le modèle produit ses deux composantes d'accélération. La fonction de coût compare cette réponse à celle du professeur, puis l'optimiseur modifie les paramètres pour réduire ce coût. Une époque correspond à un passage sur les exemples sélectionnés.
+
+Après l'époque, la validation est calculée sans mettre à jour les paramètres. Si son coût s'améliore, une copie des poids est conservée. L'arrêt anticipé évite de poursuivre indéfiniment lorsque les nouvelles époques n'améliorent plus la sélection. Les poids de la dernière époque ne sont donc pas nécessairement ceux du modèle retenu.
+
+L'évaluation en trajectoire intervient ensuite. Le simulateur appelle le modèle à chaque décision et les erreurs peuvent modifier les états suivants. Ce test observe un comportement différent du calcul d'une moyenne sur des exemples fixes. Les deux résultats sont conservés : la courbe d'apprentissage explique la sélection, les trajectoires décrivent la mission.
+
+Reprendre un entraînement change les poids. Rejouer une expérience avec des poids déjà sauvegardés ne les change pas. L'interface utilise cette seconde opération lorsqu'elle affiche un résultat ; choisir une nouvelle forme ou une nouvelle graine n'entraîne pas le réseau à nouveau.
 
 \section{Corrections et modèle structuré}
 \subsection{Collecter sur les états rencontrés par le réseau}
@@ -119,22 +200,28 @@ Cette opération réduit une partie du décalage entre les exemples initiaux et 
 
 \subsection{Mouvement nominal et corrections vectorielles}
 Le second modèle, appelé GAT structuré, contient une commande explicite vers la cible :
+La commande de base est définie par l'Équation~\eqref{eq:methode-7}.
 \begin{equation}
 a_i^{\mathrm{base}}=\operatorname{sat}_{2}\big(k_p(g_i-p_i)-k_dv_i\big),
 \qquad k_p>0,\quad k_d>0.
+\label{eq:methode-7}
 \end{equation}
 Les deux gains positifs sont appris sur 8\,192 exemples synthétiques sans voisin, puis fixés pour la suite. Ils retrouvent les valeurs 6 et 4. Le réseau apprend alors des corrections liées au voisinage au lieu de devoir réapprendre seul le mouvement nominal.
 
 Pour une arête, on note $r_{ij}=p_j-p_i$, $w_{ij}=v_j-v_i$, $u_{ij}=r_{ij}/\|r_{ij}\|$ et $\tau_{ij}$ le vecteur obtenu par une rotation de $-u_{ij}$ d'un quart de tour. Le message vectoriel prend la forme :
+L'Équation~\eqref{eq:methode-8} combine les trois directions du message.
 \begin{equation}
 m_{ij}=\rho_{ij}\left(c_{ij}^{(1)}(-u_{ij})+
 c_{ij}^{(2)}\tau_{ij}+c_{ij}^{(3)}w_{ij}\right).
+\label{eq:methode-8}
 \end{equation}
 Les trois coefficients sont calculés par le réseau. Le facteur d'activité
 $\rho_{ij}=\tanh(\|g_i-p_i\|+\|v_i\|+\|w_{ij}\|)$ annule cette correction lorsque le robot est à sa cible et que le voisinage est immobile. La commande finale est :
+La somme finale est donnée dans l'Équation~\eqref{eq:methode-9}.
 \begin{equation}
 \widehat a_i=\operatorname{sat}_{2}\left(a_i^{\mathrm{base}}+
 \sqrt{|\mathcal{N}_i|}\sum_{j\in\mathcal{N}_i}\alpha_{ij}m_{ij}\right).
+\label{eq:methode-9}
 \end{equation}
 Si le robot n'a pas de voisin, la somme est nulle.
 
@@ -144,14 +231,17 @@ Le réseau calcule ses coefficients à partir de distances, de normes et de proj
 Les données locales issues du pilote multi-effectifs sont complétées par des voisinages synthétiques. Les effectifs représentés sont 12, 24 et 64, avec différents nombres de voisins et des situations de proximité. Après sélection, le jeu utilisé contient 30\,000 exemples d'entraînement et 21\,000 de validation, dont respectivement 12\,000 et 3\,000 voisinages ajoutés. Les candidats dont la commande du professeur n'est pas admissible sont comptés avant exclusion : 100 en entraînement et 28 en validation pour cette augmentation.
 
 L'objectif combine une erreur d'imitation pondérée et une pénalité lorsque la commande viole les inégalités locales de séparation. Une écriture du principe est :
+L'Équation~\eqref{eq:methode-10} sépare les deux contributions du coût.
 \begin{equation}
 \mathcal{L}=\mathcal{L}_{\text{imitation,pondérée}}+
 \lambda\,\mathcal{L}_{\text{séparation}}.
+\label{eq:methode-10}
 \end{equation}
 La seconde partie pénalise les valeurs positives de $b_{ij}-r_{ij}^{\top}\widehat a_i$, avec une normalisation par la distance. Elle guide l'apprentissage ; elle n'est pas un filtre appliqué aux mouvements du modèle brut.
 
 Une première version réussit six des neuf cas de validation. La seconde repart de ses poids, augmente le poids de séparation à 200 et utilise une distance d'apprentissage de 0,5 m. Le taux d'apprentissage est de $3\times10^{-4}$, la taille des lots de 512 et le budget maximal de 60 époques, avec une patience de douze. L'entraînement s'arrête à l'époque 53 ; l'époque 41 est retenue. La valeur de validation est de 0,239340 pour cet objectif composite. Elle ne peut pas être comparée directement à la MSE du premier modèle, ni à une valeur calculée avec une autre pénalité.
 
+La Figure~\ref{fig:entrainement} présente les courbes issues des deux journaux d'entraînement.
 \begin{figure}[htbp]
 \centering\includegraphics[width=\textwidth]{images/current_training.pdf}
 \caption{Courbes extraites des journaux d'entraînement. À gauche, l'imitation du modèle de référence est mesurée par une MSE. À droite, le modèle structuré v2 utilise un coût composite. Les deux ordonnées n'ont pas la même signification.}
@@ -170,6 +260,7 @@ Dans les scènes finales à plusieurs obstacles, la préparation est classique p
 \section{Critères d'évaluation}
 \subsection{Erreur de formation et maintien}
 Pour les positions $P=\{p_i\}$ et les cibles $Q=\{q_j\}$, l'erreur de couverture est :
+L'erreur de couverture est définie dans l'Équation~\eqref{eq:formation}.
 \begin{equation}
 E(P,Q)=\max\left(\max_i\min_j\|p_i-q_j\|,
 \max_j\min_i\|q_j-p_i\|\right).
@@ -191,5 +282,48 @@ Une graine permet de reproduire un tirage de positions initiales. À configurati
 
 Les archives conservent les positions, les vitesses, les commandes, les instants et les paramètres. Les rapports donnent les métriques et les empreintes des poids utilisés. Les tableaux et les figures du chapitre suivant sont reconstruits à partir de ces fichiers. Les tests logiciels vérifient les fonctions du programme ; les campagnes de trajectoires évaluent les comportements. Cette distinction reste valable même lorsque tous les tests logiciels réussissent.
 
+
+\section{Configurations actuelles et progression de l'apprentissage}
+Le passage à plusieurs effectifs modifie aussi la taille de la scène. Le Tableau~\ref{tab:profils} donne les profils utilisés pour le test structuré. Il évite d'attribuer au seul nombre de robots des écarts produits par des configurations plus larges et des préparations plus longues.
+\begin{table}[htbp]
+\caption{Profils contrôlés des campagnes multi-effectifs.}
+\label{tab:profils}
+
+
+\centering\small
+\begin{tabular}{rrrrrr}
+\toprule
+Robots & Arène (m) & Largeur (m) & Rassemblement (s) & Freinage (s) & Allocation (s)\\\midrule
+12 & 10 & 6 & 8 & 2 & 14,4\\
+24 & 18 & 12 & 15 & 2 & 57,6\\
+64 & 32 & 28 & 30 & 2 & 409,6\\\bottomrule
+\end{tabular}
+\end{table}
+
+La progression suivie n'est pas un apprentissage cumulatif de toutes les lettres une à une. Elle correspond à des versions de développement : modèle de référence, collecte de correction, pilote multi-effectifs, puis modèle structuré. Chaque changement possède ses données et ses poids. Les résultats de l'un ne sont pas ajoutés au taux de réussite d'un autre pour annoncer un score global.
+
+Le deuxième modèle structuré repart des poids de sa première version, mais modifie la pénalité et la marge utilisées pendant l'apprentissage. La valeur du coût n'est donc pas directement comparable entre ces deux réglages. La réussite en validation est examinée avant de figer la version soumise au test réservé.
+
+\section{Organisation logicielle et niveau de preuve}
+Le Tableau~\ref{tab:modules} présente les principales parties du programme. Les noms indiquent où retrouver les calculs décrits, sans confondre le moteur, l'apprentissage et l'affichage.
+\begin{table}[htbp]
+\caption{Organisation des composants de la version actuelle.}
+\label{tab:modules}
+
+
+\centering\small
+\begin{tabularx}{\textwidth}{p{3.8cm}XX}
+\toprule
+Partie & Fonction & Données produites ou utilisées\\\midrule
+\path{src/simulator/} & Physique et observations & États, commandes, voisinages\\
+\path{src/reference/} & Formes, attribution, professeur, navigation & Cibles, annonces, trajets\\
+\path{src/imitation/} & Collecte, modèles et entraînement & Exemples, poids, journaux\\
+\path{demo/} & Expériences et affichage web & Réglages, animation, exports\\
+\path{tasks/evidence/} & Rapports conservés & Résumés, audits, empreintes\\\bottomrule
+\end{tabularx}
+\end{table}
+
+Trois vérifications sont complémentaires. Les tests du logiciel contrôlent des opérations prévues. Les campagnes mesurent le comportement des contrôleurs. Les audits relisent les archives pour vérifier la cohérence physique et les métriques annoncées. Un grand nombre de tests logiciels réussis ne remplace pas des essais de généralisation du modèle.
+
 \section{Conclusion partielle}
-La méthode sépare la forme demandée, l’attribution des places et le mouvement. Deux modèles apprennent à partir de commandes synthétiques, avec des structures différentes. Les critères restent fondés sur la trajectoire complète, afin que l’apprentissage et la réussite de la mission ne soient pas confondus.
+La méthode sépare la forme, l'attribution des places et le mouvement. Les deux modèles apprennent à partir de commandes synthétiques, puis sont évalués sur des trajectoires complètes. Le chapitre suivant présente l'implémentation et les résultats des campagnes.

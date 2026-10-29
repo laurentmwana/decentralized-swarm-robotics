@@ -1,0 +1,27 @@
+{
+  "status": "passed",
+  "pages": 70,
+  "counting_scope": "PDF complet, page de garde, pages liminaires et bibliographie incluses",
+  "allowed_range": [
+    65,
+    70
+  ],
+  "front_pages": 13,
+  "arabic_pages": 57,
+  "figures": 8,
+  "tables": 11,
+  "cited_references": 11,
+  "equation_groups": 16,
+  "layout_unchanged": {
+    "font_pt": 12,
+    "line_spacing": 1.5,
+    "margins_cm": 2.5
+  },
+  "rendered_pages": 70,
+  "visual_review": "70 pages sur planches, figures nouvelles et fin de méthode inspectées",
+  "overfull_boxes": 0,
+  "undefined_references": 0,
+  "hyperref_warnings": 0,
+  "pdf": "output/pdf/memoire-swarm-gnn-redaction.pdf",
+  "sha256": "b4ae3bfb66709a47d69a207622bd35d584b2bebf8f590604af8610f95fc9c66c"
+}

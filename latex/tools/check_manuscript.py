@@ -1,5 +1,6 @@
 """Contrôles documentaires : citations, renvois, figures, sources et chiffres clés."""
 from pathlib import Path
+import argparse
 import hashlib
 import json
 import re
@@ -43,6 +44,10 @@ result={'status':'passed','files_checked':len(files),'citations':len(citations),
         'labels':len(labels),'figure_references':len(figures),'source_hashes_checked':len(manifest['sha256']),
         'checkpoint_hashes_checked':2,'reserved_formation_cases':18,'navigation_cases_per_controller':8,
         'note':'Contrôle documentaire ; ne remplace ni compilation ni relecture du PDF.'}
-out=ROOT/'tasks/evidence/021-manuscript-audit.json'
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--report',type=Path,default=ROOT/'latex/generated/manuscript-audit.json')
+args=parser.parse_args()
+out=args.report if args.report.is_absolute() else ROOT/args.report
+out.parent.mkdir(parents=True,exist_ok=True)
 out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(result,ensure_ascii=False))

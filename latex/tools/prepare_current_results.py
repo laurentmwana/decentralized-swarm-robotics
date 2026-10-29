@@ -133,6 +133,60 @@ with np.load(p,allow_pickle=False) as a:
     ax.legend(fontsize=8,loc='upper center',bbox_to_anchor=(.5,-.15),ncol=2)
     fig.tight_layout();save(fig,'navigation')
 
+from src.reference.catalog import shape_definition
+fig,axes=plt.subplots(3,4,figsize=(8,6.8))
+examples=[('letters_A','A'),('letters_B','B'),('letters_C','C'),('numbers_1','1'),
+          ('numbers_3','3'),('numbers_7','7'),('geometries_square','Carré'),('geometries_rectangle','Rectangle'),
+          ('geometries_triangle','Triangle'),('geometries_star','Étoile'),('geometries_circle','Cercle'),('geometries_heart','Cœur')]
+source('src/reference/catalog.py')
+for ax,(name,label) in zip(axes.ravel(),examples):
+    _,_,strokes,closed=shape_definition(name)
+    for stroke,flag in zip(strokes,closed):
+        points=np.asarray(stroke)*[6,4 if name=='geometries_rectangle' else 6]
+        if flag:points=np.vstack([points,points[:1]])
+        ax.plot(points[:,0],points[:,1],color='black',lw=1.1)
+    ax.set(xlim=(-3.7,3.7),ylim=(-3.7,3.7),aspect='equal',title=label)
+    ax.axis('off')
+fig.tight_layout();save(fig,'catalog')
+
+fig,axes=plt.subplots(2,1,figsize=(8,5.8),sharex=True)
+for n,style in [(12,'-'),(24,'--'),(64,':')]:
+    p=source(f'outputs/imitation/vector-fresh-test-v2/raw-{n}-geometries_rectangle-8500.npz')
+    row=next(r for r in vector['reports'] if r['count']==n and r['shape']=='geometries_rectangle' and r['seed']==8500)
+    release=row['metrics']['control_release_time_s']
+    with np.load(source(f'outputs/imitation/vector-fresh-test-v2/raw-{n}-geometries_rectangle-8500-control.npz'),allow_pickle=False) as control:
+        goal=control['local_targets'][-1]
+    with np.load(p,allow_pickle=False) as a:
+        p=a['positions'];v=a['velocities'];t=a['times']
+        distances=np.linalg.norm(p[:,:,None,:]-goal[None,None,:,:],axis=-1)
+        error=np.maximum(distances.min(axis=2).max(axis=1),distances.min(axis=1).max(axis=1))
+        selected=(t>=release)&(t<=release+35)
+        axes[0].semilogy(t[selected]-release,np.maximum(error[selected],1e-10),style,color='black',label=f'{n} robots')
+        axes[1].plot(t[selected]-release,np.linalg.norm(v[selected],axis=-1).max(axis=1),style,color='black',label=f'{n} robots')
+axes[0].axhline(.1,color='0.6',ls='-.',label='Seuil de formation')
+axes[1].axhline(.05,color='0.6',ls='-.',label='Seuil de vitesse')
+axes[0].set_ylabel('Écart à la forme finale (m)');axes[1].set_ylabel('Vitesse maximale (m/s)')
+axes[1].set_xlabel('Temps après libération du mouvement (s)')
+for ax in axes:ax.legend(fontsize=8);ax.grid(alpha=.15)
+fig.tight_layout();save(fig,'convergence')
+
+correction=read('tasks/evidence/011-fresh-evaluation.json')
+fig,ax=plt.subplots(figsize=(7,3.5))
+names=['Modèle initial brut','Modèle corrigé brut','Modèle corrigé protégé']
+values=[correction['summary'][key]['collisions_total'] for key in ['baseline_raw','candidate_raw','candidate_guarded']]
+bars=ax.bar(names,values,color=['0.7','0.4','0.9'],edgecolor='black')
+for bar,value in zip(bars,values):ax.text(bar.get_x()+bar.get_width()/2,value+1,str(value),ha='center')
+ax.set(ylabel='Événements de contact',ylim=(0,118));fig.tight_layout();save(fig,'correction')
+
+rows=[]
+for r in vector['reports']:
+    label={'geometries_rectangle':'Rectangle','letters_C':'C','numbers_3':'3'}[r['shape']]
+    m=r['metrics'];t=r['teacher_metrics']
+    rows.append(f"{r['count']} & {label} & {r['seed']} & {m['stabilization_time_s']:.1f} & {t['stabilization_time_s']:.1f} & {m['collisions']} " + chr(92)*2)
+(GENERATED/'reserved_cases.tex').write_text(r'\begin{tabular}{rlrrrr}'+'\n'+r'\toprule'+
+    '\n'+r'Robots & Forme & Graine & Temps GAT (s) & Temps prof. (s) & Contacts GAT\\\midrule'+'\n'+
+    '\n'.join(rows)+'\n'+r'\bottomrule\end{tabular}'+'\n',encoding='utf-8')
+
 (GENERATED/'sources.json').write_text(json.dumps({'description':'Sources des figures et tableaux du mémoire',
     'sha256':SOURCES},indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
 print(f'{len(SOURCES)} sources enregistrées ; figures et tableaux produits dans latex/.')

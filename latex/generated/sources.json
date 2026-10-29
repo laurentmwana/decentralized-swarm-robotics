@@ -7,6 +7,13 @@
     "outputs/imitation/training-multiform-expanded-v1/run.json": "a56f949ed5d5a63e805d3973ddb9396959d8d0de75732b21679c3811254d598a",
     "outputs/imitation/training-vector-gat-v2/run.json": "c555acaf1321895a4b1f347e9a6adcc3f419bb0a1508b5ad92f4907bc79d17a7",
     "outputs/imitation/vector-fresh-test-v2/raw-24-geometries_rectangle-8500.npz": "3e4f98128d555e24c12e18b82b6f2d3260f305f7833f49e21fc22d3128094303",
-    "outputs/navigation-near-targets/validation-8901-8902/obstacles-10-seed-8901/guarded.npz": "75b025a48a1256f2e8e88e1982fadd71ef6169030b72801fb57c6cf1a2dfd370"
+    "outputs/navigation-near-targets/validation-8901-8902/obstacles-10-seed-8901/guarded.npz": "75b025a48a1256f2e8e88e1982fadd71ef6169030b72801fb57c6cf1a2dfd370",
+    "src/reference/catalog.py": "d89efb2053eb464e229b13c60814031bd4ba1e87ce47e84032ddc62cae8d2e0a",
+    "outputs/imitation/vector-fresh-test-v2/raw-12-geometries_rectangle-8500.npz": "523fd33b1035cf7a5ae3372312c79227bd1d9d50020fc8d006cf5afbe9629346",
+    "outputs/imitation/vector-fresh-test-v2/raw-12-geometries_rectangle-8500-control.npz": "3ee93baa6d22cafb6b4ea6b7ef1b79af5361f7b23d0290b06e1352b2656e232a",
+    "outputs/imitation/vector-fresh-test-v2/raw-24-geometries_rectangle-8500-control.npz": "cfc18d6d40f3aec80f2bc596420f97ac0c725175890c70ce7b8275f79f48d5c5",
+    "outputs/imitation/vector-fresh-test-v2/raw-64-geometries_rectangle-8500.npz": "fcfac4036bf057b895592494856003e3577d398f4d93d03d730e9a2c8fb385ee",
+    "outputs/imitation/vector-fresh-test-v2/raw-64-geometries_rectangle-8500-control.npz": "5b0096697c011e0f0906bab8251ab0180a4954c760036364be6cef0e394e9f9a",
+    "tasks/evidence/011-fresh-evaluation.json": "88995234f0ef18295feed7cd5ad0d3635f9048a5d9e8e7646c214b26a86d4453"
   }
 }

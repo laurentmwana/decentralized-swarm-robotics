@@ -1,17 +1,39 @@
-\chapter{Expériences et résultats}
+\chapter{Implémentation, expérimentations et résultats}
 \label{chap:experiences}
 
 \section{Introduction}
 Ce chapitre rassemble les résultats enregistrés pendant le développement. Les cas ratés sont présentés avec les cas réussis, car ils expliquent les changements apportés au modèle et les limites de la solution finale.
 
-\section{Questions et organisation des essais}
+
+\section{Ce que fait l'application}
+L'application prépare une mission à partir d'une forme, d'un effectif, d'un contrôleur et d'un départ reproductible. Elle vérifie d'abord la compatibilité géométrique. Elle calcule ensuite les mouvements et affiche la trajectoire. Le temps affiché sous l'animation est le temps simulé de la mission ; le temps nécessaire au calcul sur l'ordinateur est une autre durée.
+
+Le menu propose trois contrôleurs et deux comparaisons. Le contrôleur classique utilise les règles programmées. Le GAT protégé ajoute un filtre à la proposition du premier réseau. Le GAT structuré brut utilise le second modèle pendant les phases apprises, dans le domaine de formation prévu. Les deux autres choix lancent chacun une paire d'expériences pour faciliter la comparaison.
+
+Ce menu ne représente donc pas cinq réseaux entraînés. Il faut lire le nom du contrôleur réellement exécuté avant d'interpréter l'animation. Une formation classique à soixante-quatre robots ne démontre pas une performance neuronale. Un effectif accepté à titre exploratoire ne devient pas validé parce que le dessin s'affiche.
+
+Le cercle initial correspond au rendez-vous du protocole. Le numéro reproductible change le tirage de départ, avec des variations limitées autour de l'anneau pour le modèle structuré. Il ne change pas la définition du réseau. La lecture complète conserve le freinage et les échanges de places, même si le bouton de résultat final permet d'aller directement au dernier état.
+
+Le résultat peut être exporté avec les positions, les vitesses, les paramètres et les métriques. Ces fichiers permettent une lecture indépendante de l'interface. Une erreur visible doit pouvoir être reliée à un instant et à une mesure, plutôt qu'à la seule impression donnée par la vitesse de lecture.
+
+\subsection{Conditions d'une démonstration reproductible}
+Pour reproduire un cas, on conserve ensemble la graine, l'effectif, la forme, ses dimensions, la scène et le modèle. La graine seule ne décrit pas toute l'expérience. Une modification de largeur ou de contrôleur suffit à changer la trajectoire, même si le numéro de départ reste identique.
+
+Le serveur local se lance depuis la racine du projet avec la commande suivante. Elle ouvre le service de démonstration ; elle ne lance pas un entraînement :
+\begin{quote}\ttfamily\detokenize{.\demo\start-reference.ps1}\end{quote}
+La page est ensuite accessible à l'adresse \url{http://127.0.0.1:8765/}. Les commandes détaillées, les domaines des contrôleurs et les exports sont décrits dans le guide d'expériences conservé avec le projet. Les scores du présent chapitre restent ceux des campagnes archivées, pas ceux d'une démonstration improvisée.
+
+\section{Protocole des campagnes}
 Les expériences répondent à trois questions. Le premier modèle peut-il reproduire les commandes du professeur tout en réalisant une formation sans contact ? Le changement de structure du modèle permet-il d'utiliser une commande brute avec plusieurs effectifs ? Enfin, la chaîne hybride de navigation peut-elle déplacer une formation autour d'obstacles proches de ses cibles ?
 
 Les campagnes sont présentées dans leur ordre de développement, car leurs échecs expliquent les choix suivants. Elles n'utilisent pas toutes les mêmes données ni les mêmes conditions. Une amélioration entre deux campagnes ne suffit donc pas à attribuer un gain à un seul composant. À l'intérieur d'une campagne, les contrôleurs comparés partent des mêmes états et utilisent les mêmes critères de réussite.
 
 Les valeurs proviennent des rapports conservés dans le dépôt. Les figures montrent des trajectoires enregistrées et des courbes issues des journaux d'entraînement. Leurs légendes précisent la campagne, le contrôleur et le cas représenté.
 
+Le Tableau~\ref{tab:experiences-1} rassemble les éléments de cette étape.
 \begin{table}[htbp]
+\caption{Principales campagnes discutées. « Cas » désigne une combinaison de forme, de départ et d'effectif ou de scène ; il ne signifie pas toujours un départ distinct.}
+\label{tab:experiences-1}
 \centering\small
 \begin{tabularx}{\textwidth}{p{2.5cm}p{3.5cm}X}
 \toprule
@@ -23,17 +45,32 @@ Modèle structuré v2 & Mouvement appris sans filtre & 18 cas réservés, 12/24/
 Navigation finale & Transport près des obstacles & 8 cas par contrôleur, carré à 12 robots\\
 \bottomrule
 \end{tabularx}
-\caption{Principales campagnes discutées. « Cas » désigne une combinaison de forme, de départ et d'effectif ou de scène ; il ne signifie pas toujours un départ distinct.}
+
 \end{table}
+
+
+\subsection{Même départ, même critère}
+La comparaison appariée sert à éviter qu'un contrôleur soit avantagé par un départ plus facile. À forme et scène identiques, le professeur et le réseau reçoivent les mêmes états initiaux. On vérifie aussi que la trajectoire n'est pas remplacée par un état final préparé à l'avance.
+
+Une campagne reste toutefois liée à son domaine. La réserve du modèle de référence utilise des formes différentes de celles de l'entraînement, mais peu de départs. Le test structuré utilise trois consignes et deux départs par effectif. La navigation utilise une scène définie par le programme. Ces ensembles ne constituent pas un échantillon aléatoire de tous les environnements possibles.
+
+\section{Ce que montre l'entraînement}
+Les courbes du chapitre précédent montrent une baisse du coût d'entraînement pour les deux modèles. Pour le réseau de référence, la validation atteint son meilleur niveau avant la fin. Continuer les époques réduit encore l'erreur sur les exemples appris sans améliorer le choix de validation. C'est la raison du retour aux poids de l'époque retenue.
+
+Pour le réseau structuré, l'ordonnée regroupe l'imitation et la pénalité de séparation. Une valeur plus grande que la MSE du premier réseau ne signifie donc pas un modèle moins bon. Comparer ces nombres sans préciser leurs termes reviendrait à comparer deux mesures différentes.
+
+La bonne lecture consiste à suivre une courbe à l'intérieur de son propre réglage, puis à examiner le mouvement avec les critères communs. Les résultats de trajectoire donnent un verdict plus directement lié à la mission. Ils peuvent aussi révéler un échec malgré un faible coût sur les exemples enregistrés.
 
 \section{Premier modèle : une imitation correcte ne suffit pas}
 Le GAT de référence est entraîné avec douze robots à partir des commandes du professeur. Après sélection des poids sur la validation, neuf formes sont évaluées dans une partition réservée. Les résultats sont présentés dans le Tableau~\ref{tab:reference}. La même configuration initiale est utilisée pour ces formes ; les neuf épisodes ne représentent donc pas neuf tirages de départ indépendants.
 
 \begin{table}[htbp]
-\centering\small
-\input{generated/reference_rows}
 \caption{Campagne réservée du modèle de référence. Les erreurs et temps sont des moyennes ; le temps porte sur les épisodes réussis. Le tiret indique qu'aucun épisode n'a réussi. Source : rapport 008d.}
 \label{tab:reference}
+\centering\small
+\input{generated/reference_rows}
+
+
 \end{table}
 
 Le professeur réussit les neuf cas sans contact. Le réseau protégé réussit également les neuf, avec une erreur finale moyenne d'environ 1,27 cm. Son temps moyen de stabilisation est de 30,43 s, contre 29,83 s pour le professeur. Ces temps comprennent la préparation et l'attribution.
@@ -49,10 +86,23 @@ Sur ces mêmes cas, le modèle brut initial provoque 102 contacts. Le modèle co
 
 La correction a donc un effet mesurable, mais elle n'atteint pas l'objectif d'un mouvement brut sans contact. Nous ne la présentons pas comme un modèle sûr. Les poids corrigés et les trajectoires ratées sont conservés pour expliquer cette conclusion, tandis que le modèle de référence protégé reste disponible pour la démonstration hybride.
 
+
+La Figure~\ref{fig:correction-contacts} rassemble les contacts de cette comparaison. La baisse entre les deux commandes brutes est mesurée sur les mêmes dix-huit cas. Le troisième résultat inclut une protection : il ne mesure pas seulement l'effet des nouvelles données.
+\begin{figure}[htbp]
+\centering\includegraphics[width=\linewidth]{images/current_correction.pdf}
+\caption[Contacts avant et après correction]{Événements de contact dans la campagne de correction : modèle initial brut, modèle corrigé brut et modèle corrigé protégé. Les dix-huit cas sont communs aux trois commandes. Source : rapport 011.}
+\label{fig:correction-contacts}
+\end{figure}
+
+Le nombre de contacts et le nombre d'épisodes réussis n'ont pas la même unité. Une trajectoire peut compter plusieurs contacts ; réduire leur somme ne suffit pas si chaque épisode en conserve au moins un ou ne satisfait pas une autre condition. Le résultat reste donc un progrès partiel, pas une réussite du modèle brut.
+
 \section{Premier essai avec plusieurs effectifs}
 Le pilote multi-effectifs utilise 12, 24 et 64 robots. Les dimensions de l'espace, de la forme et de la préparation sont adaptées à chaque profil. Trois formes sont réservées au test pour chaque effectif. Les résultats sont :
 
+Le Tableau~\ref{tab:pilote} rassemble les éléments de cette étape.
 \begin{table}[htbp]
+\caption{Pilote multi-effectifs avant le modèle structuré. Source : rapport 012.}
+\label{tab:pilote}
 \centering
 \begin{tabular}{rrrrr}
 \toprule
@@ -61,8 +111,8 @@ Robots & Brut : réussites & Brut : contacts & Protégé : réussites & Protég�
 24 & 0/3 & 65 & 0/3 & 0\\
 64 & 0/3 & 127 & 0/3 & 0\\\bottomrule
 \end{tabular}
-\caption{Pilote multi-effectifs avant le modèle structuré. Source : rapport 012.}
-\label{tab:pilote}
+
+
 \end{table}
 
 À 24 et 64 robots, le système protégé évite les contacts dans ces cas mais ne termine pas correctement le protocole. Le rassemblement ne permet pas d'aboutir à l'attribution attendue. Une absence de collision n'est donc pas suffisante pour déclarer une réussite.
@@ -79,16 +129,19 @@ Les poids sont alors fixés avant l'exécution du test réservé. Ce test utilis
 Le Tableau~\ref{tab:vector} rassemble les résultats du GAT structuré brut. Dans les dix-huit cas, aucun contact n'est observé et aucun filtre de sécurité n'intervient pendant les phases de mouvement apprises. Le professeur, évalué sur les mêmes départs, réussit lui aussi les dix-huit cas sans contact.
 
 \begin{table}[htbp]
-\centering\small
-\input{generated/vector_rows}
 \caption{Test réservé du GAT structuré v2. Les erreurs et temps sont des moyennes sur six cas par effectif. Les temps incluent toutes les phases de préparation. Source : rapport 014.}
 \label{tab:vector}
+\centering\small
+\input{generated/vector_rows}
+
+
 \end{table}
 
 Les erreurs finales sont très faibles, de l'ordre de $10^{-7}$ à $10^{-6}$ m. Elles sont obtenues après une longue stabilisation dans une simulation sans bruit. Elles ne doivent pas être lues comme une précision atteignable par des robots physiques. Pour la mission, le critère utile reste le respect du seuil de 0,1 m, du seuil de vitesse, du maintien et de l'absence de contact.
 
 L'audit des 36 trajectoires, dix-huit pour chaque contrôleur, vérifie les mises à jour physiques, les bornes, les contacts, l'attribution, la fenêtre de stabilisation et l'identité des départs comparés. Il vérifie aussi que les fichiers utilisent les poids retenus. La plus petite distance entre centres observée pendant le déplacement interpolé est d'environ 0,546 m à douze robots, 0,516 m à vingt-quatre et 0,411 m à soixante-quatre. La distance de 0,5 m choisie pendant l'apprentissage n'est donc pas toujours maintenue. L'absence de contact dans ces cas ne constitue pas une garantie générale sur cette marge.
 
+La Figure~\ref{fig:sequence} montre quatre états enregistrés d'une formation à 24 robots.
 \begin{figure}[htbp]
 \centering\includegraphics[width=\textwidth]{images/current_sequence.pdf}
 \caption{Quatre états d'une trajectoire enregistrée du rectangle à 24 robots, graine 8500, GAT structuré brut. Les cercles vides indiquent les positions finales enregistrées, les points pleins les robots à l'instant indiqué. Le cercle initial est une étape du protocole.}
@@ -98,6 +151,7 @@ L'audit des 36 trajectoires, dix-huit pour chaque contrôleur, vérifie les mise
 \subsection{Pourquoi le temps augmente-t-il autant ?}
 Le temps moyen atteint 465,8 s à 64 robots. Il s'agit du temps simulé depuis le début de la mission, et non du temps de calcul d'une décision du réseau. Le budget d'attribution vaut à lui seul 409,6 s à cet effectif. Les phases de rassemblement et de freinage ajoutent 32 s, et le mouvement vers la forme commence à 441,6 s. À 24 robots, il commence à 74,6 s ; à 12 robots, à 24,4 s.
 
+La Figure~\ref{fig:temps} distingue les durées de préparation et de mouvement.
 \begin{figure}[htbp]
 \centering\includegraphics[width=.88\textwidth]{images/current_timing.pdf}
 \caption{Temps de stabilisation décomposé à partir du protocole et des moyennes mesurées du GAT structuré. L'allocation domine à 64 robots. La dernière partie couvre le temps entre la libération du mouvement et la stabilisation.}
@@ -105,6 +159,29 @@ Le temps moyen atteint 465,8 s à 64 robots. Il s'agit du temps simulé depuis l
 \end{figure}
 
 Cette lecture change l'interprétation du résultat. Le réseau ne met pas plus de quatre cents secondes à calculer une accélération. Le protocole attend de nombreux tours d'échanges avant de lancer le mouvement final. Réduire ce budget demanderait un travail sur l'attribution et sa condition d'arrêt, puis une nouvelle vérification des trajectoires.
+
+
+\subsection{Lecture des dix-huit cas}
+Le Tableau~\ref{tab:cas-reserves} détaille les temps de stabilisation du modèle structuré et du professeur. Le bilan moyen ne vient donc pas d'une sélection des meilleures trajectoires. Chaque combinaison annoncée de forme, d'effectif et de graine est présente.
+\begin{table}[htbp]
+\caption{Détail des cas réservés du modèle structuré v2.}
+\label{tab:cas-reserves}
+
+
+\centering\small
+\input{generated/reserved_cases}
+\end{table}
+
+Les temps voisins du professeur et du réseau ne constituent pas une preuve de supériorité. Les deux réussissent le critère dans cette réserve et partagent les longues phases de préparation. L'écart utile à examiner serait aussi le temps après libération du mouvement, avec davantage de départs et plusieurs entraînements.
+
+La Figure~\ref{fig:convergence-locale} montre cette partie du mouvement pour le rectangle à la graine 8500. Les courbes sont alignées sur la libération, afin de ne pas comparer les attentes d'attribution. Le seuil d'erreur et le seuil de vitesse sont tracés séparément ; leur franchissement doit encore être maintenu pour satisfaire le protocole.
+\begin{figure}[htbp]
+\centering\includegraphics[width=\linewidth]{images/current_convergence.pdf}
+\caption[Erreur et vitesse après libération]{Évolution enregistrée après libération du mouvement du rectangle, graine 8500, aux trois effectifs. L'erreur est calculée par rapport aux cibles attribuées et représentée en échelle logarithmique ; la seconde courbe montre la vitesse maximale. GAT structuré brut.}
+\label{fig:convergence-locale}
+\end{figure}
+
+Ces trois courbes sont des exemples parmi les cas du tableau. Elles n'ajoutent pas de nouveaux départs à la réserve. Leur intérêt est de rendre visible le lien entre une mesure finale et le mouvement qui y conduit.
 
 \section{Transitions entre formes}
 Une mission peut demander plusieurs formes successives. Le système conserve alors les positions et les vitesses entre les étapes. Il ne replace pas les robots directement sur la forme suivante. Les annonces d'attribution sont renouvelées pour la nouvelle mission, et l'enregistrement permet de vérifier cette continuité.
@@ -122,7 +199,10 @@ Les essais finaux portent sur un carré de largeur 6 m à douze robots. Le centr
 
 La campagne comporte les six nombres d'obstacles, de cinq à dix, avec la graine 8901 ; elle ajoute dix obstacles avec la graine 8902 et un cas à un obstacle avec cette même graine. Cela représente huit cas pour le professeur et huit pour le GAT de référence protégé. Pour les sept cas à plusieurs obstacles, la préparation est classique et commune ; la différence de contrôleur concerne le transport. Le cas à un obstacle vérifie également le comportement de la chaîne déjà disponible.
 
+Le Tableau~\ref{tab:navigation} rassemble les éléments de cette étape.
 \begin{table}[htbp]
+\caption{Campagne finale avec obstacles proches des cibles. Les deux dernières colonnes sont les maxima entre les cas, et non des moyennes. La déformation est mesurée pendant le transport. Source : rapport 019.}
+\label{tab:navigation}
 \centering\small
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{lrrrr}
@@ -131,24 +211,33 @@ Contrôleur & Réussites & Contacts & Déformation max. (m) & Destination max. (
 Professeur classique & 8/8 & 0 & $3{,}06\times10^{-11}$ & $1{,}11\times10^{-16}$\\
 GAT de référence protégé & 8/8 & 0 & 0,010388 & 0,005550\\\bottomrule
 \end{tabular}
-\caption{Campagne finale avec obstacles proches des cibles. Les deux dernières colonnes sont les maxima entre les cas, et non des moyennes. La déformation est mesurée pendant le transport. Source : rapport 019.}
-\label{tab:navigation}
+
+
 \end{table}
 
 Les huit cas réussissent pour chacun des deux contrôleurs. L'audit de seize trajectoires confirme la physique et les métriques. Le GAT protégé reste à environ 1,04 cm de déformation maximale et 0,56 cm d'erreur maximale de destination. Ces résultats évaluent une chaîne hybride : planification classique sur carte connue, préparation classique dans les scènes multiples, commande locale et filtre. Ils ne démontrent pas que le réseau a appris à contourner dix obstacles.
 
+La Figure~\ref{fig:navigation} montre les trajectoires de transport et les obstacles de la scène finale.
 \begin{figure}[htbp]
 \centering\includegraphics[width=.92\textwidth]{images/current_navigation.pdf}
 \caption{Trajectoires enregistrées pendant le transport du carré avec dix obstacles, graine 8901, GAT de référence protégé. Les disques noirs représentent les obstacles à leur rayon physique. Les traits gris suivent les centres des robots ; les cercles vides indiquent leur état final. Le trait discontinu suit le centre de référence. La préparation n'est pas tracée.}
 \label{fig:navigation}
 \end{figure}
 
+
+\section{Analyse des métriques et des résultats négatifs}
+Quatre situations doivent être distinguées à la lecture. Une grande erreur finale indique que le groupe n'occupe pas la forme attendue. Une petite erreur avec une vitesse élevée indique que les robots n'y sont pas encore stabilisés. Une petite erreur et une faible vitesse après un contact restent un échec de l'épisode. Enfin, une formation correcte mais trop loin de la destination peut rater une mission de transport.
+
+Le message de résultat doit renvoyer à cette cause. « Stabilisation non atteinte » ne signifie pas nécessairement qu'une fonction du logiciel a cessé de répondre. Il signifie que les conditions prévues n'ont pas été maintenues à temps. À l'inverse, une exception de lecture ou une image non dessinée relève de l'interface et doit être corrigée sans changer le verdict physique.
+
+Le cas d'une cible bloquée est encore différent. Il est détecté avant l'exécution lorsque l'obstacle occupe une place finale. Déplacer cette place pour faire réussir la mission changerait la consigne. Le programme conserve donc la demande et refuse ce cas, au lieu de le compter parmi les transports réussis.
+
 \section{Lecture d'ensemble}
-Trois constats ressortent des expériences. D'abord, la qualité de l'imitation mesurée par une MSE n'assure pas la réussite d'une trajectoire : le premier modèle peut finir près de la forme après plusieurs contacts. Ensuite, la structure de la commande et les données de proximité jouent un rôle important dans le développement du modèle brut. La seconde version atteint l'objectif sur les dix-huit cas réservés, mais dans des conditions contrôlées. Enfin, les réussites de navigation dépendent explicitement du planificateur et du filtre classiques.
+Trois constats se dégagent : la MSE ne suffit pas à prévoir la réussite, le modèle structuré atteint l'objectif dans sa réserve contrôlée et la navigation reste hybride. Les campagnes antérieures conservent leurs échecs ; les scènes corrigées ont leurs propres archives et les mêmes critères.
 
 Les expériences ne suffisent pas à isoler l'effet de l'attention. Plusieurs éléments ont changé entre le premier réseau et le modèle structuré : la représentation, la commande nominale, les données et la fonction de coût. Une comparaison qui retire uniquement les messages, répétée avec plusieurs entraînements et de nouveaux départs, reste nécessaire pour mesurer cet apport séparément.
 
-Les résultats actuels ne valident pas non plus toutes les combinaisons proposées dans l'interface. Les effectifs 8 et 16, certaines formes ou certaines dimensions peuvent être exécutés à titre exploratoire, mais ils ne disposent pas de la même campagne réservée que les profils 12/24/64. De même, un résultat classique à 64 robots ne prouve rien sur un réseau si aucun réseau n'a été utilisé. Le nom du contrôleur et le domaine de validation doivent accompagner chaque démonstration.
+Toutes les combinaisons de l'interface ne sont pas validées. Les effectifs 8 et 16 et les autres formes ou dimensions restent exploratoires selon le modèle. Une exécution classique à 64 robots ne prouve pas une performance du réseau. Le contrôleur et son domaine doivent accompagner chaque démonstration.
 
 \section{Conclusion partielle}
 Les essais établissent une réussite du modèle structuré dans son domaine contrôlé et une réussite de la navigation hybride dans les scènes finales. Ils montrent aussi les limites du premier modèle brut et du pilote multi-effectifs. La discussion suivante examine la portée de ces constats.
