@@ -5,21 +5,29 @@
 Ce chapitre présente les notions utilisées dans le mémoire. Il part du robot individuel, puis décrit les échanges de voisinage et le principe de l’apprentissage à partir d’exemples.
 
 \section{Essaim, localité, décentralisation}
-\subsection{Du robot individuel au groupe}
-Un robot est un système capable de percevoir des informations, de prendre une décision et d'agir sur son environnement. Sur une plateforme mobile réelle, les capteurs fournissent des mesures, le programme calcule une commande et les actionneurs produisent le déplacement. Les moteurs et les roues, par exemple, traduisent une commande en mouvement. Un réseau de neurones ne déplace donc pas directement un robot : il participe au calcul de cette commande.
+\subsection{Essaim}
+Un essaim est un groupe de robots qui coordonnent leurs actions par des interactions locales. Des règles de séparation, d’alignement et de regroupement peuvent produire un déplacement collectif \cite{reynolds1987}. Former une figure demande en plus de répartir les robots sur des places précises.
 
-Dans notre simulateur, les capteurs et les moteurs sont remplacés par des calculs. Chaque robot possède une position et une vitesse dans le plan. Le contrôleur demande une accélération ; le moteur de simulation met ensuite à jour la vitesse et la position. Ce choix représente l'inertie de manière simple, mais il ne décrit pas les roues, les frottements, la batterie ou les erreurs des capteurs d'un robot réel.
+Dans notre simulateur, chaque robot possède une position et une vitesse. Le contrôleur demande une accélération, puis le moteur de simulation calcule le déplacement. Ce modèle représente une inertie simple, sans détailler les roues, la batterie ou les capteurs réels.
 
-Un système à plusieurs robots n'est pas automatiquement un essaim. L'idée d'essaim suppose une coordination qui repose largement sur des interactions locales. Des règles simples peuvent produire un déplacement collectif, comme l'illustre le modèle de Reynolds \cite{reynolds1987}. Toutefois, un comportement coordonné ne garantit pas à lui seul l'absence de collision ou la réussite d'une mission. Ces propriétés doivent être définies puis vérifiées pour le système étudié.
+\subsection{Localité}
+Une décision est locale lorsqu'elle utilise les observations propres du robot et les informations de ses voisins directs. La portée détermine ce voisinage ; elle ne donne pas une vue complète de l'essaim.
 
-\subsection{Environnement et informations disponibles}
+\subsection{Décentralisation}
+La décentralisation concerne la répartition des décisions entre robots. Elle ne signifie pas que toute information commune disparaît : les robots peuvent partager une mission tout en calculant séparément leurs commandes.
+
+\subsubsection{Environnement et informations disponibles}
 L'environnement de ce mémoire est fermé au sens où il est délimité et défini par le programme. Les dimensions de l'espace, les limites physiques, les cibles et les obstacles sont connus au lancement. Aucun événement extérieur imprévu ne vient modifier la scène pendant les expériences rapportées. Cette description ne signifie pas que chaque robot reçoit toutes les positions : la simulation peut connaître l'état complet tout en limitant l'information fournie au contrôleur.
 
 Le robot observe sa position, sa vitesse, sa cible et les déplacements relatifs de ses voisins directs. La portée de communication utilisée dans les principales campagnes est de trois mètres. Les mesures sont exactes dans le modèle simulé : il n'y a ni bruit de mesure, ni retard variable, ni perte aléatoire de messages. La carte d'obstacles utilisée pour préparer les détours est une information commune donnée au planificateur classique.
 
 Le caractère décentralisé doit donc être précisé. La décision locale de mouvement n'utilise pas l'état physique de robots éloignés. L'attribution des places s'appuie sur des échanges entre voisins. En revanche, la définition de la mission et la planification d'un trajet sur une carte connue restent communes au groupe. Dire que toute la chaîne serait entièrement décentralisée masquerait cette différence.
 
-\section{Voisins, portée de communication et graphe de proximité}\subsection{Positions, matrices et vecteurs}
+\section{Voisins, portée de communication et graphe de proximité}
+\subsection{Voisins}
+Les voisins sont les robots dont les états relatifs sont accessibles à une décision. Cette liste peut changer au cours du mouvement.
+
+\subsubsection{Représentation des positions}
 Pour un robot $i$, la position est le vecteur $p_i=(x_i,y_i)^\top$. Les positions de $N$ robots peuvent être rangées dans une matrice :
 La matrice des positions est définie dans l'Équation~\eqref{eq:concept-1}.
 \begin{equation}
@@ -36,7 +44,10 @@ Cette transformation change la présentation des nombres, pas les positions des 
 
 Les cibles forment une autre matrice $Q\in\mathbb{R}^{N\times2}$. L'attribution indique quelle ligne de $Q$ est destinée à chaque robot. La géométrie répond à la question « où sont les places ? » ; l'attribution répond à la question « quelle place revient à chacun ? ».
 
-\subsection{Le graphe de voisinage}
+\subsection{Portée de communication}
+La portée est la distance maximale autorisant un échange direct. Un message peut circuler plus loin par plusieurs échanges, si le protocole le prévoit. Cela ne donne pas au réseau de mouvement un accès immédiat aux états éloignés.
+
+\subsection{Graphe de proximité}
 On note $\mathcal{G}_t=(\mathcal{V},\mathcal{E}_t)$ le graphe à l'instant $t$. Les sommets représentent les robots. Une arête existe lorsque la distance entre deux centres ne dépasse pas la portée $r_c$ :
 La règle de voisinage apparaît dans l'Équation~\eqref{eq:concept-3}.
 \begin{equation}
@@ -79,7 +90,7 @@ Partager les paramètres signifie que les mêmes matrices sont utilisées pour t
 
 Ce partage réduit le nombre de modèles à entraîner. Il permet aussi d'appliquer le calcul à un ensemble de voisins plus grand ou plus petit. Mais le modèle peut rencontrer une densité ou des vitesses relatives peu représentées dans les exemples. Accepter ces entrées est une propriété de l'architecture ; réussir dans ces nouvelles conditions est une question expérimentale.
 
-\section{Former une forme, et dire si elle est formée}
+\section{Évaluation de la formation}
 Deux questions doivent être posées ensemble : les robots sont-ils près de la forme, et toute la forme est-elle couverte ? Si tous se regroupent sur un seul coin du carré, la première réponse peut sembler favorable pour certains points alors que le carré reste vide ailleurs. Une mesure de couverture doit regarder dans les deux sens, des robots vers les places et des places vers les robots.
 
 La forme et son attribution ne sont pas identiques. Permuter deux identifiants tout en gardant les positions ne change pas la figure visible. Pendant le trajet, en revanche, savoir à qui appartient chaque place reste utile pour éviter des demandes concurrentes. Nous utilisons donc une mesure géométrique pour la couverture et un état d'attribution pour vérifier l'organisation.
@@ -104,7 +115,7 @@ Les grandes erreurs pèsent davantage parce que les écarts sont élevés au car
 La matrice de confusion, la précision et le rappel servent à évaluer des catégories. Ici, nous utilisons la MSE pour l'imitation et quatre mesures de trajectoire : erreur de formation, temps de stabilisation, contacts et réussite. Ces mesures complètent l'évaluation de la commande apprise.
 
 
-\subsection{Jeu de données, exemple et épisode}
+\subsection{Organisation des données}
 Le mot « donnée » recouvre plusieurs niveaux. Un épisode est une mission complète. À chaque instant, chacun des robots fournit une observation. Une observation associée à la commande du professeur devient un exemple d'apprentissage. Un seul épisode peut donc produire de nombreux exemples qui restent liés les uns aux autres.
 
 Cette dépendance compte pour l'évaluation. Si l'on mélange au hasard les instants d'une même trajectoire entre entraînement et test, le modèle peut être évalué sur des états très proches de ceux qu'il a déjà vus. Séparer les missions ou les consignes avant l'optimisation donne une évaluation plus exigeante. Réutiliser une même position de départ pour plusieurs formes doit aussi être signalé.
@@ -116,7 +127,7 @@ L'entraînement modifie les paramètres à partir des exemples prévus pour cela
 
 Cette distinction explique pourquoi un essai utilisé pour corriger un modèle n'est plus un test final de cette correction. Il reste utile comme diagnostic ou comme validation. Pour mesurer la version corrigée, il faut de nouveaux cas réservés. Les campagnes du mémoire suivent cette séparation tout en précisant le faible nombre de départs distincts disponibles.
 
-\subsection{Formation, regroupement et déplacement collectif}
+\subsection{Missions du groupe}
 Le regroupement réduit la dispersion du groupe. La formation cherche une disposition précise. Le déplacement collectif transporte le groupe tout en préservant cette disposition. Ces objectifs peuvent se succéder, mais aucun n'implique automatiquement le suivant.
 
 Le cercle de préparation appartient au premier temps de notre protocole. Il organise les positions avant la répartition finale. Le rectangle ou la lettre demandée appartient à la mission de formation. Lorsque le groupe est ensuite transporté, il faut surveiller aussi sa destination et sa déformation. Cette distinction sert à comprendre les différentes expériences proposées dans l'interface.

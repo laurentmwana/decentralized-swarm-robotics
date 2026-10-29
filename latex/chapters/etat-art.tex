@@ -47,7 +47,7 @@ Le point important est le contenu des entrées. Une cible propre, une direction 
 
 Notre moteur de simulation connaît toutes les positions pour calculer la physique et les métriques. Il construit cependant une observation limitée pour chaque commande. Cette séparation permet de mesurer le résultat global sans fournir automatiquement cet état global au réseau. Le protocole de collecte doit conserver la même séparation.
 
-\subsection{Imitation, simulation différentiable et apprentissage multi-agents}
+\subsection{Méthodes d'apprentissage}
 Plusieurs stratégies peuvent servir à apprendre une commande. L'imitation donne des exemples d'actions produites par un professeur. L'apprentissage par renforcement utilise une évaluation des conséquences des actions pour améliorer une politique. L'optimisation à travers une simulation différentiable propage une dérivée à travers le déroulement du modèle physique \cite{belbute2018}. Ces approches n'utilisent pas la même information d'apprentissage.
 
 La version actuelle de notre travail suit l'imitation supervisée. Le simulateur produit les exemples, puis le réseau est ajusté sur les commandes enregistrées. La présence d'un simulateur ne signifie donc pas que le gradient traverse les trajectoires physiques. Nous n'utilisons pas non plus une récompense de renforcement pour entraîner les modèles présentés.
@@ -62,76 +62,52 @@ Le filtre de sécurité est une autre forme d'association. Il agit après la pro
 Ces associations ne sont pas une faiblesse en elles-mêmes. Un système peut utilement combiner calcul appris et calcul programmé. La question scientifique est de décrire cette combinaison et de ne pas présenter le résultat de l'ensemble comme la preuve d'une capacité isolée du réseau.
 
 \section{Quelques travaux connexes}
-Les trois études suivantes concernent la génération de formes, l'apprentissage local sur graphe et la formation à partir d'observations locales. Les mêmes quatre rubriques sont utilisées pour rendre leurs différences lisibles.
+Les trois travaux sont présentés sous forme de tableaux pour faciliter la comparaison. Chaque tableau conserve les quatre rubriques demandées : contexte, méthode, résultats et critique.
 
 \subsection{Decentralized controllers for shape generation with robotic swarms}
-Hsieh, Kumar et Chaimowicz étudient des contrôleurs décentralisés de génération de formes \cite{hsieh2008}.
-
-\subsubsection{Contexte de l'étude et questions de recherche}
-Leur étude relie des observations de proximité à la formation de courbes planes. La question retenue ici est celle du lien entre une description géométrique et une décision locale.
-
-Dans notre cas, ce lien est explicite : la forme est connue avant l'épisode et devient un ensemble de places. Il faut donc se demander si l'écart observé vient de la représentation de la forme, de sa répartition ou du mouvement. Cette lecture évite de réduire toute la tâche à l'évitement des voisins.
-
-\subsubsection{Méthodologie adoptée}
-L'article propose des lois décentralisées utilisant des informations relatives dans une portée limitée. Il analyse la stabilité et la convergence pour la classe de configurations et de formes considérée.
-
-Notre méthode n'est pas une reproduction de ces lois. Elle utilise une attribution de places et une dynamique discrète à accélérations. Les résultats théoriques d'un autre modèle ne deviennent donc pas des garanties pour notre simulateur, même si l'objectif général de formation est proche.
-
-\subsubsection{Aperçu sur les résultats}
-L'apport retenu est la possibilité de générer des formes à partir de contrôleurs décentralisés dans le cadre étudié par les auteurs. Il confirme l'intérêt de traiter la géométrie au niveau des décisions locales.
-
-Pour notre évaluation, cet apport conduit à examiner la couverture complète du tracé. Un simple rapprochement de quelques robots n'est pas une preuve de formation. La mesure retenue doit aussi détecter les places qui restent éloignées de tout robot.
-
-\subsubsection{Critique}
-La proximité de la tâche rend cette étude utile, mais elle ne fournit pas un score directement comparable à nos expériences. Le modèle physique, la description des cibles et les hypothèses de convergence diffèrent. Nous ne concluons donc pas à une supériorité de notre réseau sur cette méthode.
-
-Une comparaison future demanderait une réimplémentation qui précise l'information donnée aux deux contrôleurs et conserve les mêmes critères. C'est une limite de notre étude comparative, plutôt qu'un défaut démontré du travail cité.
+Le Tableau~\ref{tab:travail-connexe-1} résume cette étude \cite{hsieh2008}.
+\begin{table}[htbp]
+\caption[Analyse du travail connexe 1]{Analyse du travail connexe 1. Synthèse de lecture \cite{hsieh2008}.}
+\label{tab:travail-connexe-1}
+\centering
+\begin{tabularx}{\textwidth}{p{3.7cm}X}
+\toprule Rubrique & Synthèse\\\midrule
+Contexte de l’étude et questions de recherche & Former des courbes planes par des interactions locales. Le problème est de relier la géométrie demandée aux informations disponibles pour chaque robot.\\[5pt]
+Méthodologie adoptée & Lois décentralisées utilisant les positions relatives des voisins dans une portée connue. Analyse de stabilité et de convergence pour les courbes et les conditions considérées.\\[5pt]
+Aperçu sur les résultats & Les auteurs établissent des propriétés de formation dans leur cadre et présentent des simulations. Ces résultats concernent leur modèle, pas notre commande apprise.\\[5pt]
+Critique & Référence proche de notre tâche géométrique. Une comparaison chiffrée exigerait cependant les mêmes observations, la même dynamique et les mêmes critères. Elle ne mesure pas directement l’apport d’un réseau à messages.\\[5pt]
+\bottomrule\end{tabularx}
+\end{table}
 
 \subsection{Learning Decentralized Controllers for Robot Swarms with Graph Neural Networks}
-Tolstaya et ses coauteurs étudient un contrôleur appris pour des robots qui communiquent sur un graphe mobile \cite{tolstaya2020}.
-
-\subsubsection{Contexte de l'étude et questions de recherche}
-La tâche est le déplacement coordonné de type \textit{flocking}. Les auteurs examinent comment une commande locale peut exploiter des échanges limités alors que les robots bougent.
-
-Pour notre travail, cette question met en évidence une distinction : apprendre à harmoniser le déplacement du groupe n'est pas identique à attribuer puis occuper les places d'une lettre. Une architecture intéressante doit encore être évaluée sur la mission précise que nous lui demandons.
-
-\subsubsection{Méthodologie adoptée}
-Le réseau apprend par imitation d'un contrôleur centralisé qui dispose d'informations globales pendant l'apprentissage. À l'exécution, les robots utilisent des échanges locaux. L'approche traite un graphe variable et une propagation sur plusieurs échanges.
-
-Notre professeur de mouvement est local et notre réseau réalise une seule agrégation par décision. Nous ne supposons pas qu'il reconstitue l'état lointain du groupe. Les annonces de réservation peuvent se propager davantage, mais elles appartiennent à un autre protocole. Cette distinction empêche de confondre deux portées d'information.
-
-\subsubsection{Aperçu sur les résultats}
-L'étude montre une utilisation de l'imitation pour apprendre un contrôleur de déplacement collectif et examine l'intérêt de l'information à plusieurs sauts lorsque la portée ou la vitesse change.
-
-Nous retenons surtout la nécessité de relier la performance à la communication effectivement disponible. Notre campagne finale n'étudie pas encore une réduction systématique de portée. Elle ne permet donc pas de reprendre la même conclusion sur l'effet des messages à longue distance.
-
-\subsubsection{Critique}
-Le partage des paramètres et le traitement du graphe sont des points de rapprochement utiles. Les différences de tâche, d'expert et de portée des échanges empêchent toutefois une comparaison directe des taux de réussite. Nous n'utilisons pas cet article pour justifier d'avance notre résultat à soixante-quatre robots.
-
-Il suggère plutôt une expérience à mener : conserver une architecture et faire varier les conditions d'échange selon un protocole annoncé. Dans notre système, cette expérience devrait distinguer la communication de réservation et l'information utilisée par la commande.
+Le Tableau~\ref{tab:travail-connexe-2} résume cette étude \cite{tolstaya2020}.
+\begin{table}[htbp]
+\caption[Analyse du travail connexe 2]{Analyse du travail connexe 2. Synthèse de lecture \cite{tolstaya2020}.}
+\label{tab:travail-connexe-2}
+\centering
+\begin{tabularx}{\textwidth}{p{3.7cm}X}
+\toprule Rubrique & Synthèse\\\midrule
+Contexte de l’étude et questions de recherche & Apprendre un déplacement coordonné de type flocking lorsque le graphe de communication change avec les positions des robots.\\[5pt]
+Méthodologie adoptée & Imitation d’un expert centralisé pendant l’apprentissage, puis exécution locale d’un GNN partagé. Des échanges successifs permettent d’exploiter des informations à plusieurs sauts.\\[5pt]
+Aperçu sur les résultats & L’étude examine le déplacement collectif et l’intérêt des informations à plusieurs sauts lorsque la portée et la vitesse changent.\\[5pt]
+Critique & Le partage des paramètres rejoint notre choix, mais la tâche et l’expert diffèrent. Notre réseau réalise une seule agrégation par décision. Les réservations propagées appartiennent à un protocole séparé.\\[5pt]
+\bottomrule\end{tabularx}
+\end{table}
 
 \subsection{End-to-end decentralized formation control using a graph neural network-based learning method}
-Jiang, Huang et Guo proposent une méthode apprise de contrôle de formation à partir d'observations locales \cite{jiang2023}.
-
-\subsubsection{Contexte de l'étude et questions de recherche}
-Leur travail étudie une formation de groupe et le rôle de la perception locale dans une commande décentralisée. Il relie la représentation des observations et celle des interactions entre agents.
-
-Ce lien est important pour interpréter notre propre simulateur. Une position relative fournie exactement par le moteur n'est pas une mesure à reconstruire depuis un capteur. Nos résultats concernent d'abord la commande et l'organisation, avec une perception simplifiée.
-
-\subsubsection{Méthodologie adoptée}
-L'approche combine une représentation de type LiDAR, un traitement neuronal des observations et des interactions sur graphe. L'apprentissage utilise un expert et une collecte complémentaire d'exemples.
-
-Notre réseau ne contient pas de chaîne de traitement LiDAR ou d'images. Il reçoit directement des caractéristiques numériques locales. Cette différence allège l'expérience, mais elle réduit aussi ce que l'on peut conclure sur un passage au matériel. Un capteur réel devrait produire ou estimer ces caractéristiques avec ses propres erreurs.
-
-\subsubsection{Aperçu sur les résultats}
-L'article rapporte des expériences de formation et examine le fonctionnement avec un effectif différent de celui de l'apprentissage. Il montre l'intérêt de traiter conjointement la commande et la structure des interactions.
-
-Dans notre étude, le passage à plusieurs effectifs reste lui aussi une mesure, pas une simple propriété annoncée de l'architecture. Le pilote à 24 et 64 robots échoue avant la seconde conception structurée. Nous conservons ce résultat pour montrer pourquoi une vérification en trajectoire est nécessaire.
-
-\subsubsection{Critique}
-La comparaison est utile pour distinguer perception, apprentissage et déploiement. Elle ne permet pas de conclure que notre commande serait meilleure, car les données, les scènes et les critères ne sont pas les mêmes. Nous ne reproduisons pas les expériences de l'article.
-
-Pour rapprocher les deux démarches, une suite possible serait d'introduire des observations bruitées ou estimées, puis de mesurer la dégradation des trajectoires. Cette proposition concerne nos travaux futurs. Elle ne doit pas être présentée comme une validation déjà réalisée.
+Le Tableau~\ref{tab:travail-connexe-3} résume cette étude \cite{jiang2023}.
+\begin{table}[htbp]
+\caption[Analyse du travail connexe 3]{Analyse du travail connexe 3. Synthèse de lecture \cite{jiang2023}.}
+\label{tab:travail-connexe-3}
+\centering
+\begin{tabularx}{\textwidth}{p{3.7cm}X}
+\toprule Rubrique & Synthèse\\\midrule
+Contexte de l’étude et questions de recherche & Commander une formation à partir de perceptions locales, en reliant le traitement des observations et les interactions entre robots.\\[5pt]
+Méthodologie adoptée & Observations LiDAR, traitement neuronal et graphe d’interactions. Les commandes sont apprises à partir d’un expert avec une collecte complémentaire d’exemples.\\[5pt]
+Aperçu sur les résultats & Les auteurs évaluent une formation triangulaire et le fonctionnement avec différents effectifs dans un simulateur.\\[5pt]
+Critique & Notre moteur fournit directement les positions et les vitesses relatives. Il ne valide donc pas la perception LiDAR. Les scènes et les mesures diffèrent : les taux de réussite ne permettent pas un classement direct.\\[5pt]
+\bottomrule\end{tabularx}
+\end{table}
 
 \section{Positionnement}
 \subsection{Lecture critique des comparaisons}
@@ -139,9 +115,7 @@ Notre comparaison principale est interne au simulateur. À l'intérieur d'une ca
 
 Entre deux campagnes de développement, plusieurs éléments changent parfois ensemble. Le passage au modèle structuré modifie la commande nominale, les caractéristiques, les données et la pénalité d'apprentissage. Le progrès est réel dans le domaine testé, mais il ne mesure pas l'effet isolé de l'attention.
 
-La même prudence concerne la taille du jeu de données. Des milliers d'observations peuvent provenir de peu de missions. Le mémoire rapporte donc à la fois les observations locales, les épisodes et les départs distincts. Ces unités répondent à des questions différentes et ne doivent pas être additionnées comme des essais indépendants.
-
-\subsection{Consigne, perception et déploiement}
+\subsection{Informations disponibles}
 Les robots disposent d'une cible préparée à partir d'une mission commune. Ils n'infèrent pas la lettre demandée à partir d'une image. Le mouvement utilise l'état propre et les voisins directs. La préparation, la réservation et la planification de navigation restent décrites séparément.
 
 Ce découpage donne un sens précis au terme « décentralisé ». Il porte sur les décisions locales et les échanges d'attribution. La définition commune de la mission et le planificateur sur carte connue empêchent de présenter l'ensemble comme un système sans information partagée.

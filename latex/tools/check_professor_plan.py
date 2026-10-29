@@ -3,6 +3,7 @@
 Complément à check_manuscript.py ; la pagination se vérifie sur le PDF compilé.
 """
 from pathlib import Path
+import argparse
 import json
 import re
 
@@ -22,8 +23,12 @@ assert headings(read('etat-art'))==['Introduction','Méthodes traditionnelles','
                                     'Quelques travaux connexes','Positionnement','Conclusion partielle']
 studies=read('etat-art').split(r'\section{Quelques travaux connexes}')[1].split(r'\section{Positionnement}')[0]
 assert len(headings(studies,'subsection'))==3
-assert headings(studies,'subsubsection')==[
-    "Contexte de l'étude et questions de recherche",'Méthodologie adoptée','Aperçu sur les résultats','Critique']*3
+normalized=studies.replace('’',"'")
+for rubric in ["Contexte de l'étude et questions de recherche",'Méthodologie adoptée','Aperçu sur les résultats','Critique']:
+    assert normalized.count(rubric+' &')==3,(rubric,'rubrique requise dans chacun des trois tableaux')
+concept=read('concept')
+first_group=concept.split(r'\section{Essaim, localité, décentralisation}')[1].split(r'\section{Voisins,')[0]
+assert headings(first_group,'subsection')==['Essaim','Localité','Décentralisation']
 for name in ['concept','etat-art','methode','experiences']:
     sections=headings(read(name))
     assert sections[0]=='Introduction' and sections[-1]=='Conclusion partielle',name
@@ -58,8 +63,12 @@ for name in ['introduction','concept','etat-art','methode','experiences','discus
 abbreviations=(ROOT/'latex/frontmatter/abbreviations.tex').read_text(encoding='utf-8')
 assert re.findall(r'^(GAT|GNN|MSE|QP|ReLU|SiLU) &',abbreviations,re.M)==['GAT','GNN','MSE','QP','ReLU','SiLU']
 result={'status':'passed','numbered_chapters':4,'intro_required_sections':7,'related_studies':3,
-        'required_subheadings_per_study':4,'discussion_and_conclusion_separate':True,
+        'required_table_rubrics_per_study':4,'related_studies_format':'three_tables_requested_by_author','discussion_and_conclusion_separate':True,
         'existing_directories_preserved':['latex/chapters','latex/frontmatter'],
         'layout':'12 pt, interligne 1,5, marges de 2,5 cm conservés',**counts}
-(ROOT/'tasks/evidence/022-professor-plan.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+parser=argparse.ArgumentParser(description=__doc__)
+parser.add_argument('--report',type=Path,default=ROOT/'latex/generated/professor-plan-audit.json')
+args=parser.parse_args();out=args.report if args.report.is_absolute() else ROOT/args.report
+out.parent.mkdir(parents=True,exist_ok=True)
+out.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(json.dumps(result,ensure_ascii=True))

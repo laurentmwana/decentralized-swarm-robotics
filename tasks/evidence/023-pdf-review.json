@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "pages": 65,
+  "allowed_range": [
+    65,
+    70
+  ],
+  "front_pages": 13,
+  "arabic_pages": 52,
+  "introduction_pages": 2,
+  "related_studies_tables": 3,
+  "scientific_figures": 8,
+  "tables": 14,
+  "cited_references": 11,
+  "layout_unchanged": true,
+  "rendered_and_reviewed_pages": 65,
+  "overfull_boxes": 0,
+  "undefined_references": 0,
+  "pdf": "output/pdf/memoire-swarm-gnn-redaction.pdf",
+  "sha256": "517bb898f386022699950267f7285cf3ffe70865cf20ee540ae9474bd4209da6"
+}

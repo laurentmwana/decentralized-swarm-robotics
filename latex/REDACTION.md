@@ -1,4 +1,4 @@
-# Rédaction du mémoire — plan rétabli, 70 pages
+# Rédaction du mémoire — lecture allégée, 65 pages
 
 Le fichier principal est `main.tex`. Les pages personnelles et les réglages de présentation existants sont conservés. Les chapitres sont rédigés en français simple ; les termes techniques nécessaires sont expliqués lors de leur introduction.
 
@@ -50,8 +50,10 @@ Une copie des sources avant cette reprise se trouve dans `outputs/thesis-redacti
 
 ## Plan et rendu vérifiés
 
-La correction 022 rétablit les rubriques de `RULES.md`. Les dossiers `chapters/` et `frontmatter/` et les quatre chapitres numérotés sont conservés. Les trois travaux connexes sont détaillés sous les quatre rubriques requises. Discussion et Conclusion générale et perspectives sont séparées.
+La correction 022 rétablit les rubriques de `RULES.md`. Les dossiers `chapters/` et `frontmatter/` et les quatre chapitres numérotés sont conservés. Les trois travaux connexes conservent les quatre rubriques sous forme de tableaux, à la demande de l’auteur. Discussion et Conclusion générale et perspectives sont séparées.
 
-La version courante compile en **70 pages au total**, avec huit figures scientifiques, onze tableaux et onze références citées. La table des matières et les légendes sont rétablies selon le plan. La répartition est donnée dans `PAGINATION.md`.
+La version courante compile en **65 pages au total**, avec huit figures scientifiques, quatorze tableaux et onze références citées. La table des matières et les légendes sont rétablies selon le plan. La répartition est donnée dans `PAGINATION.md`.
 
-Le PDF à relire est `output/pdf/memoire-swarm-gnn-redaction.pdf` depuis la racine du dépôt ; `latex/main.pdf` contient le même document. Une sauvegarde locale de la version intermédiaire de 45 pages se trouve dans `outputs/thesis-redaction/version-45-pages/`. Les preuves 021 restent celles de cette version intermédiaire ; les preuves 022 décrivent la version courante.
+Le PDF à relire est `output/pdf/memoire-swarm-gnn-redaction.pdf` depuis la racine du dépôt ; `latex/main.pdf` contient le même document. Une sauvegarde locale de la version intermédiaire de 45 pages se trouve dans `outputs/thesis-redaction/version-45-pages/`. Les preuves 021 restent celles de cette version intermédiaire ; les preuves 022 décrivent la version historique de 70 pages.
+
+La révision 023 réduit l’introduction à deux pages et présente le plan par une phrase suivie d’une énumération. Les preuves 023 décrivent la version courante ; les preuves 022 restent celles de la version précédente de 70 pages.
