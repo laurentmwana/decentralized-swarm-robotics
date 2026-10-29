@@ -1,0 +1,1276 @@
+{
+  "schema_version": 1,
+  "kind": "formation_navigation_campaign",
+  "status": "complete",
+  "registered_at_utc": "2026-10-29T10:47:48.781452+00:00",
+  "configuration": {
+    "robot_count": 12,
+    "width": 6.0,
+    "communication_radius": 3.0,
+    "preparation_seconds": 40.0,
+    "seeds": [
+      7602,
+      7603
+    ],
+    "metrics": {
+      "formation_threshold": 0.1,
+      "transit_formation_limit": 0.2,
+      "arrival_threshold": 0.1,
+      "speed_threshold": 0.05,
+      "hold_seconds": 1.0,
+      "sensor_range": 3.0,
+      "obstacle_clearance": 0.15
+    },
+    "scenarios": {
+      "clear_rectangle": {
+        "shape": "rectangle",
+        "points": [
+          [
+            -0.8,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "durations": [
+          20
+        ],
+        "navigation_seconds": 30
+      },
+      "clear_number": {
+        "shape": "numbers_7",
+        "points": [
+          [
+            -0.8,
+            -0.4
+          ],
+          [
+            0.1,
+            0.4
+          ],
+          [
+            1,
+            -0.4
+          ]
+        ],
+        "durations": [
+          12,
+          12
+        ],
+        "navigation_seconds": 34
+      },
+      "obstacle_bypass_shifted": {
+        "shape": "square",
+        "points": [
+          [
+            -1,
+            0
+          ],
+          [
+            -1,
+            0.9
+          ],
+          [
+            1,
+            0.9
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "durations": [
+          10,
+          16,
+          10
+        ],
+        "navigation_seconds": 46,
+        "obstacles": [
+          {
+            "center": [
+              -0.8,
+              -3
+            ],
+            "radius": 0.25
+          }
+        ]
+      },
+      "direct_obstacle_shifted": {
+        "group": "stress",
+        "shape": "square",
+        "points": [
+          [
+            -1,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "durations": [
+          20
+        ],
+        "navigation_seconds": 30,
+        "obstacles": [
+          {
+            "center": [
+              -0.8,
+              -3
+            ],
+            "radius": 0.25
+          }
+        ]
+      },
+      "blocked_goal": {
+        "group": "stress",
+        "shape": "square",
+        "points": [
+          [
+            -1,
+            0
+          ],
+          [
+            1,
+            0
+          ]
+        ],
+        "durations": [
+          20
+        ],
+        "navigation_seconds": 30,
+        "obstacles": [
+          {
+            "center": [
+              4,
+              -3
+            ],
+            "radius": 0.35
+          }
+        ]
+      }
+    }
+  },
+  "configuration_sha256": "5f63edda3959275ed8203c65e8fcabf88e6a45c723d5daf61b86cd169e6a133f",
+  "physics": {
+    "arena_size": 10.0,
+    "dt": 0.1,
+    "max_speed": 1.0,
+    "max_acceleration": 2.0,
+    "robot_radius": 0.1
+  },
+  "model_sha256": "a1e3b88b39386a3d490798b5c7717e3939416e52572a058045d7402ec6cf6d84",
+  "metrics": {
+    "formation_threshold": 0.1,
+    "transit_formation_limit": 0.2,
+    "arrival_threshold": 0.1,
+    "speed_threshold": 0.05,
+    "hold_seconds": 1.0,
+    "sensor_range": 3.0,
+    "obstacle_clearance": 0.15
+  },
+  "policy_frame": "common_translating_frame_plus_classical_reference_acceleration",
+  "obstacle_policy": "local_disk_sensor_to_classical_joint_safety_filter_only",
+  "reports": [
+    {
+      "scenario": "clear_rectangle",
+      "group": "nominal",
+      "seed": 7602,
+      "initial_positions": [
+        [
+          -0.6907689599086747,
+          -0.8895672458617294
+        ],
+        [
+          0.23219762999158738,
+          -3.5942316791110085
+        ],
+        [
+          0.2707283252895499,
+          2.6242719335531004
+        ],
+        [
+          -1.8498482583224252,
+          2.702428430550502
+        ],
+        [
+          -0.8232971091744146,
+          -2.2385029827194134
+        ],
+        [
+          1.6798331507327695,
+          0.907182849472337
+        ],
+        [
+          -2.2638655563768677,
+          -0.09547952105031139
+        ],
+        [
+          2.420181457348586,
+          1.033611918310569
+        ],
+        [
+          -0.988680655239756,
+          2.0380502037670376
+        ],
+        [
+          -3.8609630041747667,
+          -0.7473811929141533
+        ],
+        [
+          -2.268878154057765,
+          0.9737882303273973
+        ],
+        [
+          -1.9893623335824642,
+          -3.1259579417393293
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": true,
+          "arrival_time_s": 60.0,
+          "preparation_success": true,
+          "formation_error_m": 4.965068306494546e-16,
+          "max_navigation_formation_error_m": 8.563353936113348e-14,
+          "mean_navigation_formation_error_m": 2.032073374037254e-15,
+          "reference_tracking_error_m": 2.673771110915334e-15,
+          "max_reference_tracking_error_m": 0.0008594927250027418,
+          "destination_error_m": 2.445012586343469e-15,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": null,
+          "navigation_obstacle_observations": 0,
+          "safety_infeasible_robot_steps": 13,
+          "safety_intervention_robot_steps": 729,
+          "elapsed_time_s": 70.0,
+          "failure_reasons": []
+        },
+        "guarded": {
+          "success": true,
+          "arrival_time_s": 60.0,
+          "preparation_success": true,
+          "formation_error_m": 0.004108152140768201,
+          "max_navigation_formation_error_m": 0.004110155340140129,
+          "mean_navigation_formation_error_m": 0.004108131808551328,
+          "reference_tracking_error_m": 0.010367427961666214,
+          "max_reference_tracking_error_m": 0.01132117841801918,
+          "destination_error_m": 0.006917582743963825,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": null,
+          "navigation_obstacle_observations": 0,
+          "safety_infeasible_robot_steps": 10,
+          "safety_intervention_robot_steps": 512,
+          "elapsed_time_s": 70.0,
+          "failure_reasons": []
+        }
+      },
+      "trajectories": {
+        "teacher": "teacher-clear_rectangle-7602.npz",
+        "guarded": "guarded-clear_rectangle-7602.npz"
+      }
+    },
+    {
+      "scenario": "clear_rectangle",
+      "group": "nominal",
+      "seed": 7603,
+      "initial_positions": [
+        [
+          1.6200559678196989,
+          1.3727413738600265
+        ],
+        [
+          -1.1680949320822103,
+          0.07144573849541168
+        ],
+        [
+          -0.9788542433423859,
+          2.7413226908073733
+        ],
+        [
+          -0.484603832416429,
+          -0.8335637054698215
+        ],
+        [
+          1.9935693003059762,
+          3.45083197204074
+        ],
+        [
+          -2.4785828989415877,
+          2.827249991873495
+        ],
+        [
+          3.775355435702148,
+          1.1632229827251246
+        ],
+        [
+          -2.855307582179994,
+          1.8448469455516756
+        ],
+        [
+          2.3570115366413056,
+          0.0010041720040042596
+        ],
+        [
+          -1.2021767453264518,
+          2.148852939997461
+        ],
+        [
+          -0.6080366709154859,
+          0.39161316600508245
+        ],
+        [
+          -3.1836034107893405,
+          0.7962338773222991
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": true,
+          "arrival_time_s": 60.0,
+          "preparation_success": true,
+          "formation_error_m": 4.965068306494546e-16,
+          "max_navigation_formation_error_m": 6.490542696189979e-14,
+          "mean_navigation_formation_error_m": 1.5612542189046947e-15,
+          "reference_tracking_error_m": 2.673771110915334e-15,
+          "max_reference_tracking_error_m": 0.0008594927250027418,
+          "destination_error_m": 2.44312138127538e-15,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": null,
+          "navigation_obstacle_observations": 0,
+          "safety_infeasible_robot_steps": 12,
+          "safety_intervention_robot_steps": 746,
+          "elapsed_time_s": 70.0,
+          "failure_reasons": []
+        },
+        "guarded": {
+          "success": true,
+          "arrival_time_s": 60.0,
+          "preparation_success": true,
+          "formation_error_m": 0.004108151396550444,
+          "max_navigation_formation_error_m": 0.004109139605467339,
+          "mean_navigation_formation_error_m": 0.004108006154411806,
+          "reference_tracking_error_m": 0.010367426472802367,
+          "max_reference_tracking_error_m": 0.011321168149319176,
+          "destination_error_m": 0.006917578478904887,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": null,
+          "navigation_obstacle_observations": 0,
+          "safety_infeasible_robot_steps": 0,
+          "safety_intervention_robot_steps": 582,
+          "elapsed_time_s": 70.0,
+          "failure_reasons": []
+        }
+      },
+      "trajectories": {
+        "teacher": "teacher-clear_rectangle-7603.npz",
+        "guarded": "guarded-clear_rectangle-7603.npz"
+      }
+    },
+    {
+      "scenario": "clear_number",
+      "group": "nominal",
+      "seed": 7602,
+      "initial_positions": [
+        [
+          -0.6907689599086747,
+          -0.8895672458617294
+        ],
+        [
+          0.23219762999158738,
+          -3.5942316791110085
+        ],
+        [
+          0.2707283252895499,
+          2.6242719335531004
+        ],
+        [
+          -1.8498482583224252,
+          2.702428430550502
+        ],
+        [
+          -0.8232971091744146,
+          -2.2385029827194134
+        ],
+        [
+          1.6798331507327695,
+          0.907182849472337
+        ],
+        [
+          -2.2638655563768677,
+          -0.09547952105031139
+        ],
+        [
+          2.420181457348586,
+          1.033611918310569
+        ],
+        [
+          -0.988680655239756,
+          2.0380502037670376
+        ],
+        [
+          -3.8609630041747667,
+          -0.7473811929141533
+        ],
+        [
+          -2.268878154057765,
+          0.9737882303273973
+        ],
+        [
+          -1.9893623335824642,
+          -3.1259579417393293
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": true,
+          "arrival_time_s": 64.0,
+          "preparation_success": true,
+          "formation_error_m": 4.965068306494546e-16,
+          "max_navigation_formation_error_m": 1.996625531970139e-12,
+          "mean_navigation_formation_error_m": 1.872412136867977e-14,
+          "reference_tracking_error_m": 7.707858776888524e-15,
+          "max_reference_tracking_error_m": 0.0015762155916525696,
+          "destination_error_m": 7.421074851107613e-15,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": null,
+          "navigation_obstacle_observations": 0,
+          "safety_infeasible_robot_steps": 13,
+          "safety_intervention_robot_steps": 771,
+          "elapsed_time_s": 74.0,
+          "failure_reasons": []
+        },
+        "guarded": {
+          "success": true,
+          "arrival_time_s": 64.0,
+          "preparation_success": true,
+          "formation_error_m": 0.008256636302520503,
+          "max_navigation_formation_error_m": 0.00827722096453215,
+          "mean_navigation_formation_error_m": 0.008256696477362685,
+          "reference_tracking_error_m": 0.014776656252571473,
+          "max_reference_tracking_error_m": 0.016927649840338344,
+          "destination_error_m": 0.006716394932768291,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": null,
+          "navigation_obstacle_observations": 0,
+          "safety_infeasible_robot_steps": 10,
+          "safety_intervention_robot_steps": 534,
+          "elapsed_time_s": 74.0,
+          "failure_reasons": []
+        }
+      },
+      "trajectories": {
+        "teacher": "teacher-clear_number-7602.npz",
+        "guarded": "guarded-clear_number-7602.npz"
+      }
+    },
+    {
+      "scenario": "clear_number",
+      "group": "nominal",
+      "seed": 7603,
+      "initial_positions": [
+        [
+          1.6200559678196989,
+          1.3727413738600265
+        ],
+        [
+          -1.1680949320822103,
+          0.07144573849541168
+        ],
+        [
+          -0.9788542433423859,
+          2.7413226908073733
+        ],
+        [
+          -0.484603832416429,
+          -0.8335637054698215
+        ],
+        [
+          1.9935693003059762,
+          3.45083197204074
+        ],
+        [
+          -2.4785828989415877,
+          2.827249991873495
+        ],
+        [
+          3.775355435702148,
+          1.1632229827251246
+        ],
+        [
+          -2.855307582179994,
+          1.8448469455516756
+        ],
+        [
+          2.3570115366413056,
+          0.0010041720040042596
+        ],
+        [
+          -1.2021767453264518,
+          2.148852939997461
+        ],
+        [
+          -0.6080366709154859,
+          0.39161316600508245
+        ],
+        [
+          -3.1836034107893405,
+          0.7962338773222991
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": true,
+          "arrival_time_s": 64.0,
+          "preparation_success": true,
+          "formation_error_m": 4.965068306494546e-16,
+          "max_navigation_formation_error_m": 3.997295353244866e-12,
+          "mean_navigation_formation_error_m": 3.661194023362435e-14,
+          "reference_tracking_error_m": 7.707858776888524e-15,
+          "max_reference_tracking_error_m": 0.0015762155916525696,
+          "destination_error_m": 7.421074851107613e-15,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": null,
+          "navigation_obstacle_observations": 0,
+          "safety_infeasible_robot_steps": 12,
+          "safety_intervention_robot_steps": 809,
+          "elapsed_time_s": 74.0,
+          "failure_reasons": []
+        },
+        "guarded": {
+          "success": true,
+          "arrival_time_s": 64.0,
+          "preparation_success": true,
+          "formation_error_m": 0.008256629068105604,
+          "max_navigation_formation_error_m": 0.008277211823003715,
+          "mean_navigation_formation_error_m": 0.00825669218067538,
+          "reference_tracking_error_m": 0.014776652228467656,
+          "max_reference_tracking_error_m": 0.016927654994400625,
+          "destination_error_m": 0.006716398594397894,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": null,
+          "navigation_obstacle_observations": 0,
+          "safety_infeasible_robot_steps": 0,
+          "safety_intervention_robot_steps": 586,
+          "elapsed_time_s": 74.0,
+          "failure_reasons": []
+        }
+      },
+      "trajectories": {
+        "teacher": "teacher-clear_number-7603.npz",
+        "guarded": "guarded-clear_number-7603.npz"
+      }
+    },
+    {
+      "scenario": "obstacle_bypass_shifted",
+      "group": "nominal",
+      "seed": 7602,
+      "initial_positions": [
+        [
+          -0.6907689599086747,
+          -0.8895672458617294
+        ],
+        [
+          0.23219762999158738,
+          -3.5942316791110085
+        ],
+        [
+          0.2707283252895499,
+          2.6242719335531004
+        ],
+        [
+          -1.8498482583224252,
+          2.702428430550502
+        ],
+        [
+          -0.8232971091744146,
+          -2.2385029827194134
+        ],
+        [
+          1.6798331507327695,
+          0.907182849472337
+        ],
+        [
+          -2.2638655563768677,
+          -0.09547952105031139
+        ],
+        [
+          2.420181457348586,
+          1.033611918310569
+        ],
+        [
+          -0.988680655239756,
+          2.0380502037670376
+        ],
+        [
+          -3.8609630041747667,
+          -0.7473811929141533
+        ],
+        [
+          -2.268878154057765,
+          0.9737882303273973
+        ],
+        [
+          -1.9893623335824642,
+          -3.1259579417393293
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": true,
+          "arrival_time_s": 76.0,
+          "preparation_success": true,
+          "formation_error_m": 9.155133597044475e-16,
+          "max_navigation_formation_error_m": 1.3554545541108105e-13,
+          "mean_navigation_formation_error_m": 3.3488283137277704e-15,
+          "reference_tracking_error_m": 9.368072144568357e-15,
+          "max_reference_tracking_error_m": 0.0016811556004545647,
+          "destination_error_m": 9.180529300745254e-15,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.40224619303801445,
+          "navigation_obstacle_observations": 1702,
+          "safety_infeasible_robot_steps": 13,
+          "safety_intervention_robot_steps": 649,
+          "elapsed_time_s": 86.0,
+          "failure_reasons": []
+        },
+        "guarded": {
+          "success": true,
+          "arrival_time_s": 76.0,
+          "preparation_success": true,
+          "formation_error_m": 0.010014843923211803,
+          "max_navigation_formation_error_m": 0.010055598662534325,
+          "mean_navigation_formation_error_m": 0.010014823160774594,
+          "reference_tracking_error_m": 0.011366918746403429,
+          "max_reference_tracking_error_m": 0.01320068582768759,
+          "destination_error_m": 0.0055503400359969545,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.1924114553670385,
+          "navigation_obstacle_observations": 1698,
+          "safety_infeasible_robot_steps": 6,
+          "safety_intervention_robot_steps": 489,
+          "elapsed_time_s": 86.0,
+          "failure_reasons": []
+        }
+      },
+      "trajectories": {
+        "teacher": "teacher-obstacle_bypass_shifted-7602.npz",
+        "guarded": "guarded-obstacle_bypass_shifted-7602.npz"
+      }
+    },
+    {
+      "scenario": "obstacle_bypass_shifted",
+      "group": "nominal",
+      "seed": 7603,
+      "initial_positions": [
+        [
+          1.6200559678196989,
+          1.3727413738600265
+        ],
+        [
+          -1.1680949320822103,
+          0.07144573849541168
+        ],
+        [
+          -0.9788542433423859,
+          2.7413226908073733
+        ],
+        [
+          -0.484603832416429,
+          -0.8335637054698215
+        ],
+        [
+          1.9935693003059762,
+          3.45083197204074
+        ],
+        [
+          -2.4785828989415877,
+          2.827249991873495
+        ],
+        [
+          3.775355435702148,
+          1.1632229827251246
+        ],
+        [
+          -2.855307582179994,
+          1.8448469455516756
+        ],
+        [
+          2.3570115366413056,
+          0.0010041720040042596
+        ],
+        [
+          -1.2021767453264518,
+          2.148852939997461
+        ],
+        [
+          -0.6080366709154859,
+          0.39161316600508245
+        ],
+        [
+          -3.1836034107893405,
+          0.7962338773222991
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": true,
+          "arrival_time_s": 76.0,
+          "preparation_success": true,
+          "formation_error_m": 9.155133597044475e-16,
+          "max_navigation_formation_error_m": 1.3636142274188392e-13,
+          "mean_navigation_formation_error_m": 3.2293338644541406e-15,
+          "reference_tracking_error_m": 9.368072144568357e-15,
+          "max_reference_tracking_error_m": 0.0016811556004545647,
+          "destination_error_m": 9.180529300745254e-15,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.4116211936799098,
+          "navigation_obstacle_observations": 1702,
+          "safety_infeasible_robot_steps": 12,
+          "safety_intervention_robot_steps": 642,
+          "elapsed_time_s": 86.0,
+          "failure_reasons": []
+        },
+        "guarded": {
+          "success": true,
+          "arrival_time_s": 76.0,
+          "preparation_success": true,
+          "formation_error_m": 0.010014846624583905,
+          "max_navigation_formation_error_m": 0.010055625452127893,
+          "mean_navigation_formation_error_m": 0.010014797925626269,
+          "reference_tracking_error_m": 0.011366887166403132,
+          "max_reference_tracking_error_m": 0.013200669599395433,
+          "destination_error_m": 0.005550339584437716,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.22023372051332998,
+          "navigation_obstacle_observations": 1698,
+          "safety_infeasible_robot_steps": 0,
+          "safety_intervention_robot_steps": 561,
+          "elapsed_time_s": 86.0,
+          "failure_reasons": []
+        }
+      },
+      "trajectories": {
+        "teacher": "teacher-obstacle_bypass_shifted-7603.npz",
+        "guarded": "guarded-obstacle_bypass_shifted-7603.npz"
+      }
+    },
+    {
+      "scenario": "direct_obstacle_shifted",
+      "group": "stress",
+      "seed": 7602,
+      "initial_positions": [
+        [
+          -0.6907689599086747,
+          -0.8895672458617294
+        ],
+        [
+          0.23219762999158738,
+          -3.5942316791110085
+        ],
+        [
+          0.2707283252895499,
+          2.6242719335531004
+        ],
+        [
+          -1.8498482583224252,
+          2.702428430550502
+        ],
+        [
+          -0.8232971091744146,
+          -2.2385029827194134
+        ],
+        [
+          1.6798331507327695,
+          0.907182849472337
+        ],
+        [
+          -2.2638655563768677,
+          -0.09547952105031139
+        ],
+        [
+          2.420181457348586,
+          1.033611918310569
+        ],
+        [
+          -0.988680655239756,
+          2.0380502037670376
+        ],
+        [
+          -3.8609630041747667,
+          -0.7473811929141533
+        ],
+        [
+          -2.268878154057765,
+          0.9737882303273973
+        ],
+        [
+          -1.9893623335824642,
+          -3.1259579417393293
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": false,
+          "arrival_time_s": null,
+          "preparation_success": true,
+          "formation_error_m": 9.930136612989092e-16,
+          "max_navigation_formation_error_m": 0.9706803251972881,
+          "mean_navigation_formation_error_m": 0.1604834961442026,
+          "reference_tracking_error_m": 3.580361673049448e-15,
+          "max_reference_tracking_error_m": 1.0597676597775054,
+          "destination_error_m": 3.553484583372621e-15,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.11379209665982001,
+          "navigation_obstacle_observations": 1188,
+          "safety_infeasible_robot_steps": 13,
+          "safety_intervention_robot_steps": 727,
+          "elapsed_time_s": 70.0,
+          "failure_reasons": [
+            "in_transit_formation_error"
+          ]
+        },
+        "guarded": {
+          "success": false,
+          "arrival_time_s": null,
+          "preparation_success": true,
+          "formation_error_m": 0.010014851988050263,
+          "max_navigation_formation_error_m": 0.7071950895108208,
+          "mean_navigation_formation_error_m": 0.1156576041079164,
+          "reference_tracking_error_m": 0.011366885808803394,
+          "max_reference_tracking_error_m": 0.7745639207545779,
+          "destination_error_m": 0.005550335248278506,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.13450332321747635,
+          "navigation_obstacle_observations": 1189,
+          "safety_infeasible_robot_steps": 6,
+          "safety_intervention_robot_steps": 516,
+          "elapsed_time_s": 70.0,
+          "failure_reasons": [
+            "in_transit_formation_error"
+          ]
+        }
+      },
+      "trajectories": {
+        "teacher": "teacher-direct_obstacle_shifted-7602.npz",
+        "guarded": "guarded-direct_obstacle_shifted-7602.npz"
+      }
+    },
+    {
+      "scenario": "direct_obstacle_shifted",
+      "group": "stress",
+      "seed": 7603,
+      "initial_positions": [
+        [
+          1.6200559678196989,
+          1.3727413738600265
+        ],
+        [
+          -1.1680949320822103,
+          0.07144573849541168
+        ],
+        [
+          -0.9788542433423859,
+          2.7413226908073733
+        ],
+        [
+          -0.484603832416429,
+          -0.8335637054698215
+        ],
+        [
+          1.9935693003059762,
+          3.45083197204074
+        ],
+        [
+          -2.4785828989415877,
+          2.827249991873495
+        ],
+        [
+          3.775355435702148,
+          1.1632229827251246
+        ],
+        [
+          -2.855307582179994,
+          1.8448469455516756
+        ],
+        [
+          2.3570115366413056,
+          0.0010041720040042596
+        ],
+        [
+          -1.2021767453264518,
+          2.148852939997461
+        ],
+        [
+          -0.6080366709154859,
+          0.39161316600508245
+        ],
+        [
+          -3.1836034107893405,
+          0.7962338773222991
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": false,
+          "arrival_time_s": null,
+          "preparation_success": true,
+          "formation_error_m": 9.930136612989092e-16,
+          "max_navigation_formation_error_m": 0.9706803251972881,
+          "mean_navigation_formation_error_m": 0.16048349614420243,
+          "reference_tracking_error_m": 3.580361673049448e-15,
+          "max_reference_tracking_error_m": 1.0597676597775054,
+          "destination_error_m": 3.552906420625072e-15,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.11379209665982001,
+          "navigation_obstacle_observations": 1188,
+          "safety_infeasible_robot_steps": 12,
+          "safety_intervention_robot_steps": 720,
+          "elapsed_time_s": 70.0,
+          "failure_reasons": [
+            "in_transit_formation_error"
+          ]
+        },
+        "guarded": {
+          "success": false,
+          "arrival_time_s": null,
+          "preparation_success": true,
+          "formation_error_m": 0.010014849057598895,
+          "max_navigation_formation_error_m": 0.7071951359976413,
+          "mean_navigation_formation_error_m": 0.11565756636967127,
+          "reference_tracking_error_m": 0.011366915770205042,
+          "max_reference_tracking_error_m": 0.7745639709708037,
+          "destination_error_m": 0.005550341713978687,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.13450330755726977,
+          "navigation_obstacle_observations": 1189,
+          "safety_infeasible_robot_steps": 0,
+          "safety_intervention_robot_steps": 588,
+          "elapsed_time_s": 70.0,
+          "failure_reasons": [
+            "in_transit_formation_error"
+          ]
+        }
+      },
+      "trajectories": {
+        "teacher": "teacher-direct_obstacle_shifted-7603.npz",
+        "guarded": "guarded-direct_obstacle_shifted-7603.npz"
+      }
+    },
+    {
+      "scenario": "blocked_goal",
+      "group": "stress",
+      "seed": 7602,
+      "initial_positions": [
+        [
+          -0.6907689599086747,
+          -0.8895672458617294
+        ],
+        [
+          0.23219762999158738,
+          -3.5942316791110085
+        ],
+        [
+          0.2707283252895499,
+          2.6242719335531004
+        ],
+        [
+          -1.8498482583224252,
+          2.702428430550502
+        ],
+        [
+          -0.8232971091744146,
+          -2.2385029827194134
+        ],
+        [
+          1.6798331507327695,
+          0.907182849472337
+        ],
+        [
+          -2.2638655563768677,
+          -0.09547952105031139
+        ],
+        [
+          2.420181457348586,
+          1.033611918310569
+        ],
+        [
+          -0.988680655239756,
+          2.0380502037670376
+        ],
+        [
+          -3.8609630041747667,
+          -0.7473811929141533
+        ],
+        [
+          -2.268878154057765,
+          0.9737882303273973
+        ],
+        [
+          -1.9893623335824642,
+          -3.1259579417393293
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": false,
+          "arrival_time_s": null,
+          "preparation_success": true,
+          "formation_error_m": 0.5204333772730044,
+          "max_navigation_formation_error_m": 0.6768036709786919,
+          "mean_navigation_formation_error_m": 0.3147971499475794,
+          "reference_tracking_error_m": 0.5677455024796446,
+          "max_reference_tracking_error_m": 0.737542018081008,
+          "destination_error_m": 0.047312125206640375,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.11365331706264833,
+          "navigation_obstacle_observations": 819,
+          "safety_infeasible_robot_steps": 13,
+          "safety_intervention_robot_steps": 809,
+          "elapsed_time_s": 70.0,
+          "failure_reasons": [
+            "in_transit_formation_error",
+            "arrival_or_stabilization_deadline"
+          ]
+        },
+        "guarded": {
+          "success": false,
+          "arrival_time_s": null,
+          "preparation_success": true,
+          "formation_error_m": 0.5519911260739294,
+          "max_navigation_formation_error_m": 0.8249044902593091,
+          "mean_navigation_formation_error_m": 0.3396332245961341,
+          "reference_tracking_error_m": 0.6081962882271376,
+          "max_reference_tracking_error_m": 0.8931803355930212,
+          "destination_error_m": 0.05620795999071108,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.12927101945637562,
+          "navigation_obstacle_observations": 818,
+          "safety_infeasible_robot_steps": 10,
+          "safety_intervention_robot_steps": 569,
+          "elapsed_time_s": 70.0,
+          "failure_reasons": [
+            "in_transit_formation_error",
+            "arrival_or_stabilization_deadline"
+          ]
+        }
+      },
+      "trajectories": {
+        "teacher": "teacher-blocked_goal-7602.npz",
+        "guarded": "guarded-blocked_goal-7602.npz"
+      }
+    },
+    {
+      "scenario": "blocked_goal",
+      "group": "stress",
+      "seed": 7603,
+      "initial_positions": [
+        [
+          1.6200559678196989,
+          1.3727413738600265
+        ],
+        [
+          -1.1680949320822103,
+          0.07144573849541168
+        ],
+        [
+          -0.9788542433423859,
+          2.7413226908073733
+        ],
+        [
+          -0.484603832416429,
+          -0.8335637054698215
+        ],
+        [
+          1.9935693003059762,
+          3.45083197204074
+        ],
+        [
+          -2.4785828989415877,
+          2.827249991873495
+        ],
+        [
+          3.775355435702148,
+          1.1632229827251246
+        ],
+        [
+          -2.855307582179994,
+          1.8448469455516756
+        ],
+        [
+          2.3570115366413056,
+          0.0010041720040042596
+        ],
+        [
+          -1.2021767453264518,
+          2.148852939997461
+        ],
+        [
+          -0.6080366709154859,
+          0.39161316600508245
+        ],
+        [
+          -3.1836034107893405,
+          0.7962338773222991
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": false,
+          "arrival_time_s": null,
+          "preparation_success": true,
+          "formation_error_m": 0.5204333772730044,
+          "max_navigation_formation_error_m": 0.6768036709786919,
+          "mean_navigation_formation_error_m": 0.3147971499475793,
+          "reference_tracking_error_m": 0.5677455024796446,
+          "max_reference_tracking_error_m": 0.737542018081008,
+          "destination_error_m": 0.047312125206640375,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.11365331706264833,
+          "navigation_obstacle_observations": 819,
+          "safety_infeasible_robot_steps": 12,
+          "safety_intervention_robot_steps": 815,
+          "elapsed_time_s": 70.0,
+          "failure_reasons": [
+            "in_transit_formation_error",
+            "arrival_or_stabilization_deadline"
+          ]
+        },
+        "guarded": {
+          "success": false,
+          "arrival_time_s": null,
+          "preparation_success": true,
+          "formation_error_m": 0.5519911353658876,
+          "max_navigation_formation_error_m": 0.8249044806566332,
+          "mean_navigation_formation_error_m": 0.33963317197123255,
+          "reference_tracking_error_m": 0.6081962901146281,
+          "max_reference_tracking_error_m": 0.8931803219268372,
+          "destination_error_m": 0.05620795264077006,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.1292710214715362,
+          "navigation_obstacle_observations": 818,
+          "safety_infeasible_robot_steps": 0,
+          "safety_intervention_robot_steps": 606,
+          "elapsed_time_s": 70.0,
+          "failure_reasons": [
+            "in_transit_formation_error",
+            "arrival_or_stabilization_deadline"
+          ]
+        }
+      },
+      "trajectories": {
+        "teacher": "teacher-blocked_goal-7603.npz",
+        "guarded": "guarded-blocked_goal-7603.npz"
+      }
+    }
+  ],
+  "summary": {
+    "teacher": {
+      "all": {
+        "episodes": 10,
+        "successes": 6,
+        "collisions": 0,
+        "max_formation_error_m": 0.9706803251972881,
+        "max_destination_error_m": 0.047312125206640375
+      },
+      "nominal": {
+        "episodes": 6,
+        "successes": 6,
+        "collisions": 0,
+        "max_formation_error_m": 3.997295353244866e-12,
+        "max_destination_error_m": 9.180529300745254e-15
+      },
+      "stress": {
+        "episodes": 4,
+        "successes": 0,
+        "collisions": 0,
+        "max_formation_error_m": 0.9706803251972881,
+        "max_destination_error_m": 0.047312125206640375
+      }
+    },
+    "guarded": {
+      "all": {
+        "episodes": 10,
+        "successes": 6,
+        "collisions": 0,
+        "max_formation_error_m": 0.8249044902593091,
+        "max_destination_error_m": 0.05620795999071108
+      },
+      "nominal": {
+        "episodes": 6,
+        "successes": 6,
+        "collisions": 0,
+        "max_formation_error_m": 0.010055625452127893,
+        "max_destination_error_m": 0.006917582743963825
+      },
+      "stress": {
+        "episodes": 4,
+        "successes": 0,
+        "collisions": 0,
+        "max_formation_error_m": 0.8249044902593091,
+        "max_destination_error_m": 0.05620795999071108
+      }
+    }
+  }
+}

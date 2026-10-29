@@ -1,0 +1,11 @@
+robot_count: 12
+width: 6.0
+communication_radius: 3.0
+stage_seconds: 40.0
+seeds: [7402, 7403]
+metrics:
+  error_threshold: 0.1
+  speed_threshold: 0.05
+  hold_seconds: 1.0
+sequences:
+  mixed_return: [letters_C, numbers_7, geometries_triangle, letters_C]

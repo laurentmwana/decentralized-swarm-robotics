@@ -1,0 +1,27 @@
+{
+  "schema_version": 2,
+  "manifest_sha256": "1e053db26c173da2a41e9ace54e2aa059d34751af3813e74a809f7749e1f2c7f",
+  "quality_status": "passed",
+  "splits_checked": [
+    "train",
+    "validation",
+    "test"
+  ],
+  "summary": {
+    "train": {
+      "episodes": 37,
+      "unique_episodes": 36,
+      "learned_robot_samples": 109224
+    },
+    "validation": {
+      "episodes": 10,
+      "unique_episodes": 9,
+      "learned_robot_samples": 29520
+    },
+    "test": {
+      "episodes": 9,
+      "unique_episodes": 9,
+      "learned_robot_samples": 26568
+    }
+  }
+}

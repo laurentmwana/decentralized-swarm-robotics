@@ -1,0 +1,103 @@
+[
+  {
+    "shape": "letters_A",
+    "formation_error_m": 0.03512465088043194,
+    "max_assigned_error_m": 0.03512465088043194,
+    "max_speed_m_s": 0.058904159163209194,
+    "minimum_pair_distance_m": 0.8646484742904677,
+    "blocked_robots": [],
+    "safety_infeasible": 0
+  },
+  {
+    "shape": "letters_L",
+    "formation_error_m": 0.09262508176268049,
+    "max_assigned_error_m": 0.09262508176268049,
+    "max_speed_m_s": 0.059971260295539765,
+    "minimum_pair_distance_m": 0.757443041658591,
+    "blocked_robots": [],
+    "safety_infeasible": 0
+  },
+  {
+    "shape": "letters_V",
+    "formation_error_m": 0.2872313485485669,
+    "max_assigned_error_m": 0.3823355175836326,
+    "max_speed_m_s": 0.05288443497531167,
+    "minimum_pair_distance_m": 0.39941201203361293,
+    "blocked_robots": [
+      1,
+      2
+    ],
+    "safety_infeasible": 0
+  },
+  {
+    "shape": "letters_W",
+    "formation_error_m": 0.21033044544040985,
+    "max_assigned_error_m": 0.21033044544040985,
+    "max_speed_m_s": 0.05560609145723723,
+    "minimum_pair_distance_m": 0.5334778368930462,
+    "blocked_robots": [
+      0,
+      1,
+      2,
+      6,
+      10,
+      11
+    ],
+    "safety_infeasible": 0
+  },
+  {
+    "shape": "letters_Y",
+    "formation_error_m": 0.05111312327555148,
+    "max_assigned_error_m": 0.05111312327555148,
+    "max_speed_m_s": 0.06595508750858578,
+    "minimum_pair_distance_m": 0.8603261551818658,
+    "blocked_robots": [],
+    "safety_infeasible": 0
+  },
+  {
+    "shape": "numbers_1",
+    "formation_error_m": 0.0784627365765605,
+    "max_assigned_error_m": 0.0784627365765605,
+    "max_speed_m_s": 0.1347523220385974,
+    "minimum_pair_distance_m": 0.7386938904120973,
+    "blocked_robots": [],
+    "safety_infeasible": 0
+  },
+  {
+    "shape": "geometries_star",
+    "formation_error_m": 0.14536541887122242,
+    "max_assigned_error_m": 0.14536541887122242,
+    "max_speed_m_s": 0.03129273308931338,
+    "minimum_pair_distance_m": 0.6841107950026215,
+    "blocked_robots": [
+      3,
+      5
+    ],
+    "safety_infeasible": 0
+  },
+  {
+    "shape": "geometries_line",
+    "formation_error_m": 0.13076545435354942,
+    "max_assigned_error_m": 0.13076545435354942,
+    "max_speed_m_s": 0.32150396131643866,
+    "minimum_pair_distance_m": 0.5161475110230284,
+    "blocked_robots": [
+      3,
+      5,
+      8
+    ],
+    "safety_infeasible": 4
+  },
+  {
+    "shape": "geometries_v",
+    "formation_error_m": 0.2872313485485669,
+    "max_assigned_error_m": 0.3823355175836326,
+    "max_speed_m_s": 0.05288443497531167,
+    "minimum_pair_distance_m": 0.39941201203361293,
+    "blocked_robots": [
+      1,
+      2
+    ],
+    "safety_infeasible": 0
+  }
+]

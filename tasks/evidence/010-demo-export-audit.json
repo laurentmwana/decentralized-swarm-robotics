@@ -1,0 +1,269 @@
+{
+  "schema_version": 1,
+  "kind": "reference_demo_export_audit",
+  "success": true,
+  "tests_passed": 423,
+  "completed_jobs": 4,
+  "trajectories": 6,
+  "checks": [
+    "JSON/NPZ physical states and times identical",
+    "CSV rows and final coordinates verified",
+    "ZIP integrity and exact file content verified",
+    "paired initial positions identical",
+    "manifest metrics identical to displayed metrics"
+  ],
+  "jobs": [
+    {
+      "folder": "outputs\\demo-reference\\3c3877db14444f56984535c50a8e4c41",
+      "request": {
+        "shape": "geometries_square",
+        "next_shape": "letters_B",
+        "robots": 12,
+        "seed": 7700,
+        "controller": "guarded",
+        "scenario": "transition"
+      },
+      "model_sha256": "a1e3b88b39386a3d490798b5c7717e3939416e52572a058045d7402ec6cf6d84",
+      "reports": {
+        "guarded": {
+          "stages": [
+            {
+              "index": 0,
+              "shape": "geometries_square",
+              "epoch": "stage:0",
+              "start_time_s": 0.0,
+              "deadline_time_s": 43.400000000000006,
+              "formation_error_m": 0.011366886436713183,
+              "stabilization_time_s": 31.200000000000003,
+              "stabilization_absolute_time_s": 31.200000000000003,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 0,
+              "packets_delivered": 18144,
+              "safety_infeasible_robot_steps": 8,
+              "safety_intervention_robot_steps": 557
+            },
+            {
+              "index": 1,
+              "shape": "letters_B",
+              "epoch": "stage:1",
+              "start_time_s": 43.400000000000006,
+              "deadline_time_s": 86.80000000000001,
+              "formation_error_m": 0.013406851678152355,
+              "stabilization_time_s": 33.0,
+              "stabilization_absolute_time_s": 76.4,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 118,
+              "packets_delivered": 17110,
+              "safety_infeasible_robot_steps": 1,
+              "safety_intervention_robot_steps": 599
+            }
+          ],
+          "success": true,
+          "stage_success_rate_percent": 100.0,
+          "successful_stages": 2,
+          "total_stages": 2,
+          "collisions_total": 0,
+          "formation_error_mean_m": 0.012386869057432769,
+          "stabilization_time_mean_s": 32.1,
+          "elapsed_time_s": 86.80000000000001,
+          "stale_packets_discarded": 118,
+          "boundary_states_preserved": true
+        }
+      },
+      "export_sha256": "0305d26a015b824f5f96bf6cc066bd09c0a7c04dc0f370eefdc627fe28ec82ed"
+    },
+    {
+      "folder": "outputs\\demo-reference\\5be95c9498404ce89561d805d0e7daa8",
+      "request": {
+        "shape": "geometries_square",
+        "next_shape": "letters_A",
+        "robots": 12,
+        "seed": 7700,
+        "controller": "comparison",
+        "scenario": "blocked"
+      },
+      "model_sha256": "a1e3b88b39386a3d490798b5c7717e3939416e52572a058045d7402ec6cf6d84",
+      "reports": {
+        "teacher": {
+          "success": false,
+          "arrival_time_s": null,
+          "preparation_success": true,
+          "formation_error_m": 0.5204333772730033,
+          "max_navigation_formation_error_m": 0.6508130947342804,
+          "mean_navigation_formation_error_m": 0.33039064477073443,
+          "reference_tracking_error_m": 0.5677455024796391,
+          "max_reference_tracking_error_m": 0.7088359306818475,
+          "destination_error_m": 0.04731212520663589,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.11599728299327658,
+          "navigation_obstacle_observations": 715,
+          "safety_infeasible_robot_steps": 0,
+          "safety_intervention_robot_steps": 597,
+          "elapsed_time_s": 69.4,
+          "failure_reasons": [
+            "in_transit_formation_error",
+            "arrival_or_stabilization_deadline"
+          ]
+        },
+        "guarded": {
+          "success": false,
+          "arrival_time_s": null,
+          "preparation_success": true,
+          "formation_error_m": 0.5663851792429723,
+          "max_navigation_formation_error_m": 0.78462200369041,
+          "mean_navigation_formation_error_m": 0.3553967563589485,
+          "reference_tracking_error_m": 0.6124179532412891,
+          "max_reference_tracking_error_m": 0.8487250976297326,
+          "destination_error_m": 0.04611718196962402,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.12808248091008576,
+          "navigation_obstacle_observations": 715,
+          "safety_infeasible_robot_steps": 8,
+          "safety_intervention_robot_steps": 605,
+          "elapsed_time_s": 69.4,
+          "failure_reasons": [
+            "in_transit_formation_error",
+            "arrival_or_stabilization_deadline"
+          ]
+        }
+      },
+      "export_sha256": "71d0e4112d129b12bf44353794f6091fbda74f377a68d6587387573e0622f134"
+    },
+    {
+      "folder": "outputs\\demo-reference\\649f6ac0ffa4404ba59ed9ea4c7fe78e",
+      "request": {
+        "shape": "geometries_square",
+        "next_shape": "letters_A",
+        "robots": 12,
+        "seed": 7700,
+        "controller": "comparison",
+        "scenario": "formation"
+      },
+      "model_sha256": "a1e3b88b39386a3d490798b5c7717e3939416e52572a058045d7402ec6cf6d84",
+      "reports": {
+        "teacher": {
+          "formation_error_m": 6.280369834735101e-16,
+          "stabilization_time_s": 29.1,
+          "collisions": 0,
+          "success": true,
+          "initial_collision": false,
+          "allocation_resolved": true,
+          "allocation_time_s": 14.4,
+          "reconnection_time_s": 9.0,
+          "control_release_time_s": 23.400000000000002,
+          "allocation_graph_changed_steps": 0,
+          "max_allocation_speed_m_s": 0.0,
+          "allocation_stationary": true,
+          "packets_delivered": 19008,
+          "safety_infeasible_robot_steps": 0,
+          "safety_intervention_robot_steps": 454,
+          "motion_safety_intervention_robot_steps": 454
+        },
+        "guarded": {
+          "formation_error_m": 0.011366886436713183,
+          "stabilization_time_s": 31.200000000000003,
+          "collisions": 0,
+          "success": true,
+          "initial_collision": false,
+          "allocation_resolved": true,
+          "allocation_time_s": 14.4,
+          "reconnection_time_s": 9.0,
+          "control_release_time_s": 23.400000000000002,
+          "allocation_graph_changed_steps": 0,
+          "max_allocation_speed_m_s": 0.0,
+          "allocation_stationary": true,
+          "packets_delivered": 18144,
+          "safety_infeasible_robot_steps": 8,
+          "safety_intervention_robot_steps": 557,
+          "motion_safety_intervention_robot_steps": 530
+        }
+      },
+      "export_sha256": "6e9240758df2eba66fd55d99af4cc9b05e45f6bf522e2b92d50c5fac4cb73373"
+    },
+    {
+      "folder": "outputs\\demo-reference\\e98e338582aa4de28ca3c6e2d31e9e45",
+      "request": {
+        "shape": "geometries_square",
+        "next_shape": "letters_B",
+        "robots": 12,
+        "seed": 7700,
+        "controller": "guarded",
+        "scenario": "transition"
+      },
+      "model_sha256": "a1e3b88b39386a3d490798b5c7717e3939416e52572a058045d7402ec6cf6d84",
+      "reports": {
+        "guarded": {
+          "stages": [
+            {
+              "index": 0,
+              "shape": "geometries_square",
+              "epoch": "stage:0",
+              "start_time_s": 0.0,
+              "deadline_time_s": 43.400000000000006,
+              "formation_error_m": 0.011366886436713183,
+              "stabilization_time_s": 31.200000000000003,
+              "stabilization_absolute_time_s": 31.200000000000003,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 0,
+              "packets_delivered": 18144,
+              "safety_infeasible_robot_steps": 8,
+              "safety_intervention_robot_steps": 557
+            },
+            {
+              "index": 1,
+              "shape": "letters_B",
+              "epoch": "stage:1",
+              "start_time_s": 43.400000000000006,
+              "deadline_time_s": 86.80000000000001,
+              "formation_error_m": 0.013406851678152355,
+              "stabilization_time_s": 33.0,
+              "stabilization_absolute_time_s": 76.4,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 118,
+              "packets_delivered": 17110,
+              "safety_infeasible_robot_steps": 1,
+              "safety_intervention_robot_steps": 599
+            }
+          ],
+          "success": true,
+          "stage_success_rate_percent": 100.0,
+          "successful_stages": 2,
+          "total_stages": 2,
+          "collisions_total": 0,
+          "formation_error_mean_m": 0.012386869057432769,
+          "stabilization_time_mean_s": 32.1,
+          "elapsed_time_s": 86.80000000000001,
+          "stale_packets_discarded": 118,
+          "boundary_states_preserved": true
+        }
+      },
+      "export_sha256": "a0f2a4b11989f5f3cc101c56e4a910d20b81cba95feb73adea0f05d451cbd65a"
+    }
+  ]
+}

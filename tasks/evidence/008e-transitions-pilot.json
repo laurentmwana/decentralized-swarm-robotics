@@ -1,0 +1,1222 @@
+{
+  "schema_version": 1,
+  "kind": "continuous_transition_campaign",
+  "status": "complete",
+  "registered_at_utc": "2026-10-29T10:17:08.718124+00:00",
+  "configuration": {
+    "robot_count": 12,
+    "width": 6.0,
+    "communication_radius": 3.0,
+    "stage_seconds": 40.0,
+    "seeds": [
+      7400,
+      7401
+    ],
+    "metrics": {
+      "error_threshold": 0.1,
+      "speed_threshold": 0.05,
+      "hold_seconds": 1.0
+    },
+    "sequences": {
+      "letters_return": [
+        "letters_A",
+        "letters_B",
+        "letters_A"
+      ],
+      "numbers": [
+        "numbers_1",
+        "numbers_10",
+        "numbers_3"
+      ],
+      "geometries": [
+        "geometries_square",
+        "geometries_rectangle",
+        "geometries_circle"
+      ]
+    }
+  },
+  "configuration_sha256": "be8c90eff57b135cb4bd38d35654af6c10479549483dbb968f6eb829c4244b71",
+  "physics": {
+    "arena_size": 10.0,
+    "dt": 0.1,
+    "max_speed": 1.0,
+    "max_acceleration": 2.0,
+    "robot_radius": 0.1
+  },
+  "communication_radius": 3.0,
+  "gains": {
+    "attraction": 6.0,
+    "damping": 4.0,
+    "avoidance": 60.0,
+    "safety_distance": 0.4,
+    "barrier_alpha": 3.0,
+    "detour_distance": 1.0,
+    "detour_gain": 3.0,
+    "detour_only_on_constraint": true
+  },
+  "reconnection": {
+    "gather_seconds": 8.0,
+    "braking_seconds": 1.0,
+    "spacing": 0.6,
+    "center": [
+      0.0,
+      0.0
+    ]
+  },
+  "metrics": {
+    "error_threshold": 0.1,
+    "speed_threshold": 0.05,
+    "hold_seconds": 1.0
+  },
+  "model_sha256": "a1e3b88b39386a3d490798b5c7717e3939416e52572a058045d7402ec6cf6d84",
+  "modes": [
+    "teacher",
+    "guarded"
+  ],
+  "stale_replay": "one_previous_snapshot_per_visible_sender_at_first_current_allocation_round",
+  "sequences": {
+    "letters_return": [
+      {
+        "shape": "letters_A",
+        "steps": 400,
+        "epoch": "stage:0"
+      },
+      {
+        "shape": "letters_B",
+        "steps": 400,
+        "epoch": "stage:1"
+      },
+      {
+        "shape": "letters_A",
+        "steps": 400,
+        "epoch": "stage:2"
+      }
+    ],
+    "numbers": [
+      {
+        "shape": "numbers_1",
+        "steps": 400,
+        "epoch": "stage:0"
+      },
+      {
+        "shape": "numbers_10",
+        "steps": 400,
+        "epoch": "stage:1"
+      },
+      {
+        "shape": "numbers_3",
+        "steps": 400,
+        "epoch": "stage:2"
+      }
+    ],
+    "geometries": [
+      {
+        "shape": "geometries_square",
+        "steps": 400,
+        "epoch": "stage:0"
+      },
+      {
+        "shape": "geometries_rectangle",
+        "steps": 400,
+        "epoch": "stage:1"
+      },
+      {
+        "shape": "geometries_circle",
+        "steps": 400,
+        "epoch": "stage:2"
+      }
+    ]
+  },
+  "reports": [
+    {
+      "sequence": "letters_return",
+      "seed": 7400,
+      "modes": {
+        "teacher": {
+          "stages": [
+            {
+              "index": 0,
+              "shape": "letters_A",
+              "epoch": "stage:0",
+              "start_time_s": 0.0,
+              "deadline_time_s": 40.0,
+              "formation_error_m": 1.0318655522375938e-14,
+              "stabilization_time_s": 29.0,
+              "stabilization_absolute_time_s": 29.0,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 0,
+              "packets_delivered": 19008,
+              "safety_infeasible_robot_steps": 11,
+              "safety_intervention_robot_steps": 606
+            },
+            {
+              "index": 1,
+              "shape": "letters_B",
+              "epoch": "stage:1",
+              "start_time_s": 40.0,
+              "deadline_time_s": 80.0,
+              "formation_error_m": 1.2741723533298402e-13,
+              "stabilization_time_s": 30.900000000000002,
+              "stabilization_absolute_time_s": 70.9,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 132,
+              "packets_delivered": 19140,
+              "safety_infeasible_robot_steps": 24,
+              "safety_intervention_robot_steps": 548
+            },
+            {
+              "index": 2,
+              "shape": "letters_A",
+              "epoch": "stage:2",
+              "start_time_s": 80.0,
+              "deadline_time_s": 120.0,
+              "formation_error_m": 7.161354591121016e-12,
+              "stabilization_time_s": 31.700000000000003,
+              "stabilization_absolute_time_s": 111.7,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 132,
+              "packets_delivered": 19140,
+              "safety_infeasible_robot_steps": 0,
+              "safety_intervention_robot_steps": 591
+            }
+          ],
+          "success": true,
+          "stage_success_rate_percent": 100.0,
+          "successful_stages": 3,
+          "total_stages": 3,
+          "collisions_total": 0,
+          "formation_error_mean_m": 2.433030160658792e-12,
+          "stabilization_time_mean_s": 30.533333333333335,
+          "elapsed_time_s": 120.0,
+          "stale_packets_discarded": 264,
+          "boundary_states_preserved": true
+        },
+        "guarded": {
+          "stages": [
+            {
+              "index": 0,
+              "shape": "letters_A",
+              "epoch": "stage:0",
+              "start_time_s": 0.0,
+              "deadline_time_s": 40.0,
+              "formation_error_m": 0.017935397885117128,
+              "stabilization_time_s": 29.6,
+              "stabilization_absolute_time_s": 29.6,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 0,
+              "packets_delivered": 17856,
+              "safety_infeasible_robot_steps": 0,
+              "safety_intervention_robot_steps": 498
+            },
+            {
+              "index": 1,
+              "shape": "letters_B",
+              "epoch": "stage:1",
+              "start_time_s": 40.0,
+              "deadline_time_s": 80.0,
+              "formation_error_m": 0.013406850891868695,
+              "stabilization_time_s": 30.5,
+              "stabilization_absolute_time_s": 70.5,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 132,
+              "packets_delivered": 19140,
+              "safety_infeasible_robot_steps": 1,
+              "safety_intervention_robot_steps": 376
+            },
+            {
+              "index": 2,
+              "shape": "letters_A",
+              "epoch": "stage:2",
+              "start_time_s": 80.0,
+              "deadline_time_s": 120.0,
+              "formation_error_m": 0.01793537899508382,
+              "stabilization_time_s": 30.3,
+              "stabilization_absolute_time_s": 110.3,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 116,
+              "packets_delivered": 16820,
+              "safety_infeasible_robot_steps": 8,
+              "safety_intervention_robot_steps": 446
+            }
+          ],
+          "success": true,
+          "stage_success_rate_percent": 100.0,
+          "successful_stages": 3,
+          "total_stages": 3,
+          "collisions_total": 0,
+          "formation_error_mean_m": 0.016425875924023215,
+          "stabilization_time_mean_s": 30.133333333333336,
+          "elapsed_time_s": 120.0,
+          "stale_packets_discarded": 248,
+          "boundary_states_preserved": true
+        }
+      },
+      "trajectories": {
+        "teacher": "teacher-letters_return-7400.npz",
+        "guarded": "guarded-letters_return-7400.npz"
+      }
+    },
+    {
+      "sequence": "numbers",
+      "seed": 7400,
+      "modes": {
+        "teacher": {
+          "stages": [
+            {
+              "index": 0,
+              "shape": "numbers_1",
+              "epoch": "stage:0",
+              "start_time_s": 0.0,
+              "deadline_time_s": 40.0,
+              "formation_error_m": 4.048219223305239e-14,
+              "stabilization_time_s": 29.6,
+              "stabilization_absolute_time_s": 29.6,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 0,
+              "packets_delivered": 19008,
+              "safety_infeasible_robot_steps": 11,
+              "safety_intervention_robot_steps": 604
+            },
+            {
+              "index": 1,
+              "shape": "numbers_10",
+              "epoch": "stage:1",
+              "start_time_s": 40.0,
+              "deadline_time_s": 80.0,
+              "formation_error_m": 2.220446049250313e-15,
+              "stabilization_time_s": 28.5,
+              "stabilization_absolute_time_s": 68.5,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 132,
+              "packets_delivered": 19140,
+              "safety_infeasible_robot_steps": 8,
+              "safety_intervention_robot_steps": 439
+            },
+            {
+              "index": 2,
+              "shape": "numbers_3",
+              "epoch": "stage:2",
+              "start_time_s": 80.0,
+              "deadline_time_s": 120.0,
+              "formation_error_m": 7.546119826995774e-14,
+              "stabilization_time_s": 30.700000000000003,
+              "stabilization_absolute_time_s": 110.7,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 132,
+              "packets_delivered": 19140,
+              "safety_infeasible_robot_steps": 0,
+              "safety_intervention_robot_steps": 399
+            }
+          ],
+          "success": true,
+          "stage_success_rate_percent": 100.0,
+          "successful_stages": 3,
+          "total_stages": 3,
+          "collisions_total": 0,
+          "formation_error_mean_m": 3.9387945517420154e-14,
+          "stabilization_time_mean_s": 29.600000000000005,
+          "elapsed_time_s": 120.0,
+          "stale_packets_discarded": 264,
+          "boundary_states_preserved": true
+        },
+        "guarded": {
+          "stages": [
+            {
+              "index": 0,
+              "shape": "numbers_1",
+              "epoch": "stage:0",
+              "start_time_s": 0.0,
+              "deadline_time_s": 40.0,
+              "formation_error_m": 0.014293086206816,
+              "stabilization_time_s": 28.3,
+              "stabilization_absolute_time_s": 28.3,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 0,
+              "packets_delivered": 17856,
+              "safety_infeasible_robot_steps": 0,
+              "safety_intervention_robot_steps": 475
+            },
+            {
+              "index": 1,
+              "shape": "numbers_10",
+              "epoch": "stage:1",
+              "start_time_s": 40.0,
+              "deadline_time_s": 80.0,
+              "formation_error_m": 0.010265378748728198,
+              "stabilization_time_s": 28.3,
+              "stabilization_absolute_time_s": 68.3,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 128,
+              "packets_delivered": 18560,
+              "safety_infeasible_robot_steps": 2,
+              "safety_intervention_robot_steps": 385
+            },
+            {
+              "index": 2,
+              "shape": "numbers_3",
+              "epoch": "stage:2",
+              "start_time_s": 80.0,
+              "deadline_time_s": 120.0,
+              "formation_error_m": 0.01692788612668647,
+              "stabilization_time_s": 30.8,
+              "stabilization_absolute_time_s": 110.8,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 126,
+              "packets_delivered": 18270,
+              "safety_infeasible_robot_steps": 0,
+              "safety_intervention_robot_steps": 390
+            }
+          ],
+          "success": true,
+          "stage_success_rate_percent": 100.0,
+          "successful_stages": 3,
+          "total_stages": 3,
+          "collisions_total": 0,
+          "formation_error_mean_m": 0.01382878369407689,
+          "stabilization_time_mean_s": 29.133333333333336,
+          "elapsed_time_s": 120.0,
+          "stale_packets_discarded": 254,
+          "boundary_states_preserved": true
+        }
+      },
+      "trajectories": {
+        "teacher": "teacher-numbers-7400.npz",
+        "guarded": "guarded-numbers-7400.npz"
+      }
+    },
+    {
+      "sequence": "geometries",
+      "seed": 7400,
+      "modes": {
+        "teacher": {
+          "stages": [
+            {
+              "index": 0,
+              "shape": "geometries_square",
+              "epoch": "stage:0",
+              "start_time_s": 0.0,
+              "deadline_time_s": 40.0,
+              "formation_error_m": 1.377392637215886e-14,
+              "stabilization_time_s": 29.1,
+              "stabilization_absolute_time_s": 29.1,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 0,
+              "packets_delivered": 19008,
+              "safety_infeasible_robot_steps": 11,
+              "safety_intervention_robot_steps": 624
+            },
+            {
+              "index": 1,
+              "shape": "geometries_rectangle",
+              "epoch": "stage:1",
+              "start_time_s": 40.0,
+              "deadline_time_s": 80.0,
+              "formation_error_m": 1.1957467920563633e-15,
+              "stabilization_time_s": 28.5,
+              "stabilization_absolute_time_s": 68.5,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 132,
+              "packets_delivered": 19140,
+              "safety_infeasible_robot_steps": 0,
+              "safety_intervention_robot_steps": 393
+            },
+            {
+              "index": 2,
+              "shape": "geometries_circle",
+              "epoch": "stage:2",
+              "start_time_s": 80.0,
+              "deadline_time_s": 120.0,
+              "formation_error_m": 4.440892098500626e-16,
+              "stabilization_time_s": 26.400000000000002,
+              "stabilization_absolute_time_s": 106.4,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 132,
+              "packets_delivered": 19140,
+              "safety_infeasible_robot_steps": 0,
+              "safety_intervention_robot_steps": 223
+            }
+          ],
+          "success": true,
+          "stage_success_rate_percent": 100.0,
+          "successful_stages": 3,
+          "total_stages": 3,
+          "collisions_total": 0,
+          "formation_error_mean_m": 5.137920791355096e-15,
+          "stabilization_time_mean_s": 28.0,
+          "elapsed_time_s": 120.0,
+          "stale_packets_discarded": 264,
+          "boundary_states_preserved": true
+        },
+        "guarded": {
+          "stages": [
+            {
+              "index": 0,
+              "shape": "geometries_square",
+              "epoch": "stage:0",
+              "start_time_s": 0.0,
+              "deadline_time_s": 40.0,
+              "formation_error_m": 0.011366750497996564,
+              "stabilization_time_s": 31.400000000000002,
+              "stabilization_absolute_time_s": 31.400000000000002,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 0,
+              "packets_delivered": 17856,
+              "safety_infeasible_robot_steps": 0,
+              "safety_intervention_robot_steps": 473
+            },
+            {
+              "index": 1,
+              "shape": "geometries_rectangle",
+              "epoch": "stage:1",
+              "start_time_s": 40.0,
+              "deadline_time_s": 80.0,
+              "formation_error_m": 0.010367428275367864,
+              "stabilization_time_s": 31.3,
+              "stabilization_absolute_time_s": 71.3,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 128,
+              "packets_delivered": 18560,
+              "safety_infeasible_robot_steps": 8,
+              "safety_intervention_robot_steps": 422
+            },
+            {
+              "index": 2,
+              "shape": "geometries_circle",
+              "epoch": "stage:2",
+              "start_time_s": 80.0,
+              "deadline_time_s": 120.0,
+              "formation_error_m": 0.014798745382605609,
+              "stabilization_time_s": 29.6,
+              "stabilization_absolute_time_s": 109.6,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 132,
+              "packets_delivered": 19140,
+              "safety_infeasible_robot_steps": 0,
+              "safety_intervention_robot_steps": 348
+            }
+          ],
+          "success": true,
+          "stage_success_rate_percent": 100.0,
+          "successful_stages": 3,
+          "total_stages": 3,
+          "collisions_total": 0,
+          "formation_error_mean_m": 0.012177641385323346,
+          "stabilization_time_mean_s": 30.76666666666667,
+          "elapsed_time_s": 120.0,
+          "stale_packets_discarded": 260,
+          "boundary_states_preserved": true
+        }
+      },
+      "trajectories": {
+        "teacher": "teacher-geometries-7400.npz",
+        "guarded": "guarded-geometries-7400.npz"
+      }
+    },
+    {
+      "sequence": "letters_return",
+      "seed": 7401,
+      "modes": {
+        "teacher": {
+          "stages": [
+            {
+              "index": 0,
+              "shape": "letters_A",
+              "epoch": "stage:0",
+              "start_time_s": 0.0,
+              "deadline_time_s": 40.0,
+              "formation_error_m": 4.245656008653617e-14,
+              "stabilization_time_s": 29.6,
+              "stabilization_absolute_time_s": 29.6,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 0,
+              "packets_delivered": 19008,
+              "safety_infeasible_robot_steps": 15,
+              "safety_intervention_robot_steps": 607
+            },
+            {
+              "index": 1,
+              "shape": "letters_B",
+              "epoch": "stage:1",
+              "start_time_s": 40.0,
+              "deadline_time_s": 80.0,
+              "formation_error_m": 1.2741723533298402e-13,
+              "stabilization_time_s": 30.900000000000002,
+              "stabilization_absolute_time_s": 70.9,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 132,
+              "packets_delivered": 19140,
+              "safety_infeasible_robot_steps": 24,
+              "safety_intervention_robot_steps": 548
+            },
+            {
+              "index": 2,
+              "shape": "letters_A",
+              "epoch": "stage:2",
+              "start_time_s": 80.0,
+              "deadline_time_s": 120.0,
+              "formation_error_m": 7.161354591121016e-12,
+              "stabilization_time_s": 31.700000000000003,
+              "stabilization_absolute_time_s": 111.7,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 132,
+              "packets_delivered": 19140,
+              "safety_infeasible_robot_steps": 0,
+              "safety_intervention_robot_steps": 591
+            }
+          ],
+          "success": true,
+          "stage_success_rate_percent": 100.0,
+          "successful_stages": 3,
+          "total_stages": 3,
+          "collisions_total": 0,
+          "formation_error_mean_m": 2.443742795513512e-12,
+          "stabilization_time_mean_s": 30.733333333333334,
+          "elapsed_time_s": 120.0,
+          "stale_packets_discarded": 264,
+          "boundary_states_preserved": true
+        },
+        "guarded": {
+          "stages": [
+            {
+              "index": 0,
+              "shape": "letters_A",
+              "epoch": "stage:0",
+              "start_time_s": 0.0,
+              "deadline_time_s": 40.0,
+              "formation_error_m": 0.017935461425678083,
+              "stabilization_time_s": 31.900000000000002,
+              "stabilization_absolute_time_s": 31.900000000000002,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 0,
+              "packets_delivered": 18720,
+              "safety_infeasible_robot_steps": 12,
+              "safety_intervention_robot_steps": 429
+            },
+            {
+              "index": 1,
+              "shape": "letters_B",
+              "epoch": "stage:1",
+              "start_time_s": 40.0,
+              "deadline_time_s": 80.0,
+              "formation_error_m": 0.013407132848337699,
+              "stabilization_time_s": 31.900000000000002,
+              "stabilization_absolute_time_s": 71.9,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 132,
+              "packets_delivered": 19140,
+              "safety_infeasible_robot_steps": 12,
+              "safety_intervention_robot_steps": 419
+            },
+            {
+              "index": 2,
+              "shape": "letters_A",
+              "epoch": "stage:2",
+              "start_time_s": 80.0,
+              "deadline_time_s": 120.0,
+              "formation_error_m": 0.017931005535431768,
+              "stabilization_time_s": 33.6,
+              "stabilization_absolute_time_s": 113.6,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 122,
+              "packets_delivered": 17690,
+              "safety_infeasible_robot_steps": 20,
+              "safety_intervention_robot_steps": 617
+            }
+          ],
+          "success": true,
+          "stage_success_rate_percent": 100.0,
+          "successful_stages": 3,
+          "total_stages": 3,
+          "collisions_total": 0,
+          "formation_error_mean_m": 0.016424533269815852,
+          "stabilization_time_mean_s": 32.46666666666667,
+          "elapsed_time_s": 120.0,
+          "stale_packets_discarded": 254,
+          "boundary_states_preserved": true
+        }
+      },
+      "trajectories": {
+        "teacher": "teacher-letters_return-7401.npz",
+        "guarded": "guarded-letters_return-7401.npz"
+      }
+    },
+    {
+      "sequence": "numbers",
+      "seed": 7401,
+      "modes": {
+        "teacher": {
+          "stages": [
+            {
+              "index": 0,
+              "shape": "numbers_1",
+              "epoch": "stage:0",
+              "start_time_s": 0.0,
+              "deadline_time_s": 40.0,
+              "formation_error_m": 4.8164433591655956e-14,
+              "stabilization_time_s": 29.6,
+              "stabilization_absolute_time_s": 29.6,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 0,
+              "packets_delivered": 19008,
+              "safety_infeasible_robot_steps": 15,
+              "safety_intervention_robot_steps": 600
+            },
+            {
+              "index": 1,
+              "shape": "numbers_10",
+              "epoch": "stage:1",
+              "start_time_s": 40.0,
+              "deadline_time_s": 80.0,
+              "formation_error_m": 2.220446049250313e-15,
+              "stabilization_time_s": 28.5,
+              "stabilization_absolute_time_s": 68.5,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 132,
+              "packets_delivered": 19140,
+              "safety_infeasible_robot_steps": 8,
+              "safety_intervention_robot_steps": 439
+            },
+            {
+              "index": 2,
+              "shape": "numbers_3",
+              "epoch": "stage:2",
+              "start_time_s": 80.0,
+              "deadline_time_s": 120.0,
+              "formation_error_m": 7.546119826995774e-14,
+              "stabilization_time_s": 30.700000000000003,
+              "stabilization_absolute_time_s": 110.7,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 132,
+              "packets_delivered": 19140,
+              "safety_infeasible_robot_steps": 0,
+              "safety_intervention_robot_steps": 399
+            }
+          ],
+          "success": true,
+          "stage_success_rate_percent": 100.0,
+          "successful_stages": 3,
+          "total_stages": 3,
+          "collisions_total": 0,
+          "formation_error_mean_m": 4.194869263695467e-14,
+          "stabilization_time_mean_s": 29.600000000000005,
+          "elapsed_time_s": 120.0,
+          "stale_packets_discarded": 264,
+          "boundary_states_preserved": true
+        },
+        "guarded": {
+          "stages": [
+            {
+              "index": 0,
+              "shape": "numbers_1",
+              "epoch": "stage:0",
+              "start_time_s": 0.0,
+              "deadline_time_s": 40.0,
+              "formation_error_m": 0.014293091751246696,
+              "stabilization_time_s": 32.4,
+              "stabilization_absolute_time_s": 32.4,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 0,
+              "packets_delivered": 18720,
+              "safety_infeasible_robot_steps": 12,
+              "safety_intervention_robot_steps": 425
+            },
+            {
+              "index": 1,
+              "shape": "numbers_10",
+              "epoch": "stage:1",
+              "start_time_s": 40.0,
+              "deadline_time_s": 80.0,
+              "formation_error_m": 0.010265378718019157,
+              "stabilization_time_s": 30.8,
+              "stabilization_absolute_time_s": 70.8,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 132,
+              "packets_delivered": 19140,
+              "safety_infeasible_robot_steps": 0,
+              "safety_intervention_robot_steps": 354
+            },
+            {
+              "index": 2,
+              "shape": "numbers_3",
+              "epoch": "stage:2",
+              "start_time_s": 80.0,
+              "deadline_time_s": 120.0,
+              "formation_error_m": 0.016927357305779135,
+              "stabilization_time_s": 32.7,
+              "stabilization_absolute_time_s": 112.7,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 132,
+              "packets_delivered": 19140,
+              "safety_infeasible_robot_steps": 0,
+              "safety_intervention_robot_steps": 482
+            }
+          ],
+          "success": true,
+          "stage_success_rate_percent": 100.0,
+          "successful_stages": 3,
+          "total_stages": 3,
+          "collisions_total": 0,
+          "formation_error_mean_m": 0.01382860925834833,
+          "stabilization_time_mean_s": 31.96666666666667,
+          "elapsed_time_s": 120.0,
+          "stale_packets_discarded": 264,
+          "boundary_states_preserved": true
+        }
+      },
+      "trajectories": {
+        "teacher": "teacher-numbers-7401.npz",
+        "guarded": "guarded-numbers-7401.npz"
+      }
+    },
+    {
+      "sequence": "geometries",
+      "seed": 7401,
+      "modes": {
+        "teacher": {
+          "stages": [
+            {
+              "index": 0,
+              "shape": "geometries_square",
+              "epoch": "stage:0",
+              "start_time_s": 0.0,
+              "deadline_time_s": 40.0,
+              "formation_error_m": 8.460219978402775e-14,
+              "stabilization_time_s": 29.900000000000002,
+              "stabilization_absolute_time_s": 29.900000000000002,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 0,
+              "packets_delivered": 19008,
+              "safety_infeasible_robot_steps": 15,
+              "safety_intervention_robot_steps": 559
+            },
+            {
+              "index": 1,
+              "shape": "geometries_rectangle",
+              "epoch": "stage:1",
+              "start_time_s": 40.0,
+              "deadline_time_s": 80.0,
+              "formation_error_m": 4.965068306494546e-16,
+              "stabilization_time_s": 28.200000000000003,
+              "stabilization_absolute_time_s": 68.2,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 132,
+              "packets_delivered": 19140,
+              "safety_infeasible_robot_steps": 9,
+              "safety_intervention_robot_steps": 502
+            },
+            {
+              "index": 2,
+              "shape": "geometries_circle",
+              "epoch": "stage:2",
+              "start_time_s": 80.0,
+              "deadline_time_s": 120.0,
+              "formation_error_m": 4.440892098500626e-16,
+              "stabilization_time_s": 26.400000000000002,
+              "stabilization_absolute_time_s": 106.4,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 132,
+              "packets_delivered": 19140,
+              "safety_infeasible_robot_steps": 0,
+              "safety_intervention_robot_steps": 223
+            }
+          ],
+          "success": true,
+          "stage_success_rate_percent": 100.0,
+          "successful_stages": 3,
+          "total_stages": 3,
+          "collisions_total": 0,
+          "formation_error_mean_m": 2.851426527484242e-14,
+          "stabilization_time_mean_s": 28.16666666666667,
+          "elapsed_time_s": 120.0,
+          "stale_packets_discarded": 264,
+          "boundary_states_preserved": true
+        },
+        "guarded": {
+          "stages": [
+            {
+              "index": 0,
+              "shape": "geometries_square",
+              "epoch": "stage:0",
+              "start_time_s": 0.0,
+              "deadline_time_s": 40.0,
+              "formation_error_m": 0.011366924489695725,
+              "stabilization_time_s": 30.1,
+              "stabilization_absolute_time_s": 30.1,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 0,
+              "packets_delivered": 18720,
+              "safety_infeasible_robot_steps": 12,
+              "safety_intervention_robot_steps": 446
+            },
+            {
+              "index": 1,
+              "shape": "geometries_rectangle",
+              "epoch": "stage:1",
+              "start_time_s": 40.0,
+              "deadline_time_s": 80.0,
+              "formation_error_m": 0.0103674256658684,
+              "stabilization_time_s": 29.400000000000002,
+              "stabilization_absolute_time_s": 69.4,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 130,
+              "packets_delivered": 18850,
+              "safety_infeasible_robot_steps": 0,
+              "safety_intervention_robot_steps": 354
+            },
+            {
+              "index": 2,
+              "shape": "geometries_circle",
+              "epoch": "stage:2",
+              "start_time_s": 80.0,
+              "deadline_time_s": 120.0,
+              "formation_error_m": 0.014779244708618404,
+              "stabilization_time_s": 27.200000000000003,
+              "stabilization_absolute_time_s": 107.2,
+              "collisions": 0,
+              "contact_present": false,
+              "initial_contact": false,
+              "success": true,
+              "allocation_resolved": true,
+              "control_release_relative_time_s": 23.400000000000002,
+              "stale_packets_discarded": 122,
+              "packets_delivered": 17690,
+              "safety_infeasible_robot_steps": 0,
+              "safety_intervention_robot_steps": 371
+            }
+          ],
+          "success": true,
+          "stage_success_rate_percent": 100.0,
+          "successful_stages": 3,
+          "total_stages": 3,
+          "collisions_total": 0,
+          "formation_error_mean_m": 0.012171198288060842,
+          "stabilization_time_mean_s": 28.900000000000002,
+          "elapsed_time_s": 120.0,
+          "stale_packets_discarded": 252,
+          "boundary_states_preserved": true
+        }
+      },
+      "trajectories": {
+        "teacher": "teacher-geometries-7401.npz",
+        "guarded": "guarded-geometries-7401.npz"
+      }
+    }
+  ],
+  "initial_states": {
+    "7400": [
+      [
+        0.8081775214392782,
+        -3.629672034225714
+      ],
+      [
+        2.385114195657881,
+        -2.391510322521904
+      ],
+      [
+        -1.1846392906752186,
+        -1.7765803630959682
+      ],
+      [
+        2.2848908243299673,
+        -3.200950853930503
+      ],
+      [
+        0.3362904841081303,
+        0.7278945511430679
+      ],
+      [
+        2.850771882114964,
+        -2.424730453939503
+      ],
+      [
+        -0.8649604099745876,
+        1.414123788456808
+      ],
+      [
+        -0.8876812658986633,
+        -2.909485440006823
+      ],
+      [
+        0.8583766146605225,
+        1.298711783296308
+      ],
+      [
+        3.7012586093685265,
+        1.1657941197421304
+      ],
+      [
+        1.5782378704215798,
+        -1.6164572721916495
+      ],
+      [
+        3.219192227861644,
+        0.2307556165838746
+      ]
+    ],
+    "7401": [
+      [
+        -0.7829097628218484,
+        2.2405481606293036
+      ],
+      [
+        -2.2913189015101363,
+        2.0578271210100403
+      ],
+      [
+        2.0581872682665683,
+        0.4819768449494619
+      ],
+      [
+        1.9132160291934868,
+        -2.8069194876434524
+      ],
+      [
+        0.005723014102271327,
+        0.07960926222540078
+      ],
+      [
+        3.6380673630482536,
+        -0.025591903726181673
+      ],
+      [
+        -1.0540740516125626,
+        3.8538466279524823
+      ],
+      [
+        1.6290054408278754,
+        1.9878250173772583
+      ],
+      [
+        -2.444961440355259,
+        -0.10025634744103203
+      ],
+      [
+        -1.251699312856235,
+        -0.43477051115193954
+      ],
+      [
+        0.8785508719358072,
+        -1.9518685224043557
+      ],
+      [
+        1.5492196095471167,
+        -1.1232161915693952
+      ]
+    ]
+  },
+  "summary": {
+    "teacher": {
+      "sequences": 6,
+      "successful_sequences": 6,
+      "sequence_success_rate_percent": 100.0,
+      "stages": {
+        "episodes": 18,
+        "success_rate_percent": 100.0,
+        "formation_error_mean_m": 8.31960296732146e-13,
+        "formation_error_std_m": 2.238157007841839e-12,
+        "collisions_total": 0,
+        "stabilization_time_mean_s": 29.438888888888894,
+        "stabilization_successful_episodes": 18
+      },
+      "collisions_total": 0,
+      "boundary_states_preserved": true,
+      "stale_packets_discarded": 1584,
+      "safety_infeasible_robot_steps": 151,
+      "safety_intervention_robot_steps": 8895
+    },
+    "guarded": {
+      "sequences": 6,
+      "successful_sequences": 6,
+      "sequence_success_rate_percent": 100.0,
+      "stages": {
+        "episodes": 18,
+        "success_rate_percent": 100.0,
+        "formation_error_mean_m": 0.014142773636608078,
+        "formation_error_std_m": 0.002876761655545727,
+        "collisions_total": 0,
+        "stabilization_time_mean_s": 30.561111111111114,
+        "stabilization_successful_episodes": 18
+      },
+      "collisions_total": 0,
+      "boundary_states_preserved": true,
+      "stale_packets_discarded": 1532,
+      "safety_infeasible_robot_steps": 87,
+      "safety_intervention_robot_steps": 7710
+    }
+  }
+}

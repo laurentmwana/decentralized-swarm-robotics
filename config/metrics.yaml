@@ -1,5 +1,0 @@
-# Parametres des metriques (phase 2). Definitions et formules figees dans
-# docs/decisions/06-evaluation.md — ne jamais changer apres avoir vu les resultats.
-success_threshold: 0.15     # 15 % du rayon de la cible (distance moyenne symetrique)
-collision_radius: 0.1       # deux robots actifs sont "en collision" si distance <= ce rayon
-regularity_reference: auto  # espacement ideal : 'auto' = perimetre effectif / n_actifs, ou un nombre

@@ -1,0 +1,1670 @@
+{
+  "schema_version": 3,
+  "feature_schema_version": 2,
+  "kind": "multi_size_local_target_imitation",
+  "status": "complete",
+  "domain": "controlled_near_own_rendezvous_ring_not_general_scattered_starts",
+  "profiles": {
+    "12": {
+      "count": 12,
+      "arena_size": 10.0,
+      "width": 6.0,
+      "gather_seconds": 8.0,
+      "formation_seconds": 40.0
+    },
+    "24": {
+      "count": 24,
+      "arena_size": 18.0,
+      "width": 12.0,
+      "gather_seconds": 15.0,
+      "formation_seconds": 40.0
+    },
+    "64": {
+      "count": 64,
+      "arena_size": 32.0,
+      "width": 28.0,
+      "gather_seconds": 30.0,
+      "formation_seconds": 40.0
+    }
+  },
+  "shape_splits": {
+    "train": [
+      "geometries_square",
+      "letters_A",
+      "numbers_1"
+    ],
+    "validation": [
+      "geometries_triangle",
+      "letters_B",
+      "numbers_7"
+    ],
+    "test": [
+      "geometries_rectangle",
+      "letters_C",
+      "numbers_3"
+    ]
+  },
+  "episode_seeds": {
+    "train": [
+      8100
+    ],
+    "validation": [
+      8200
+    ],
+    "test": [
+      8300
+    ]
+  },
+  "catalog_audit": [
+    {
+      "count": 12,
+      "shape": "letters_A",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_B",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_C",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_D",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_E",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_F",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_G",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_H",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_I",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_J",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_K",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_L",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_M",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_N",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_O",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_P",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_Q",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_R",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_S",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_T",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_U",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_V",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_W",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_X",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_Y",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "letters_Z",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "numbers_1",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "numbers_2",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "numbers_3",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "numbers_4",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "numbers_5",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "numbers_6",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "numbers_7",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "numbers_8",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "numbers_9",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "numbers_10",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_circle",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_ellipse",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_square",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_rectangle",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_triangle",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_pentagon",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_hexagon",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_heptagon",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_octagon",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_decagon",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_diamond",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_trapezoid",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_parallelogram",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_star",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_cross",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_arrow",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_semicircle",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_heart",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_line",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 12,
+      "shape": "geometries_v",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_A",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_B",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_C",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_D",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_E",
+      "feasible": false,
+      "reason": "Les places ne sont pas connect\u00e9es \u00e0 cette port\u00e9e"
+    },
+    {
+      "count": 24,
+      "shape": "letters_F",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_G",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_H",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_I",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_J",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_K",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_L",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_M",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_N",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_O",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_P",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_Q",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_R",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_S",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_T",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_U",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_V",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_W",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_X",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_Y",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "letters_Z",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "numbers_1",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "numbers_2",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "numbers_3",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "numbers_4",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "numbers_5",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "numbers_6",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "numbers_7",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "numbers_8",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "numbers_9",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "numbers_10",
+      "feasible": false,
+      "reason": "Les places ne sont pas connect\u00e9es \u00e0 cette port\u00e9e"
+    },
+    {
+      "count": 24,
+      "shape": "geometries_circle",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_ellipse",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_square",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_rectangle",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_triangle",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_pentagon",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_hexagon",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_heptagon",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_octagon",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_decagon",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_diamond",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_trapezoid",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_parallelogram",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_star",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_cross",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_arrow",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_semicircle",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_heart",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_line",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 24,
+      "shape": "geometries_v",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_A",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_B",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_C",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_D",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_E",
+      "feasible": false,
+      "reason": "Les places ne sont pas connect\u00e9es \u00e0 cette port\u00e9e"
+    },
+    {
+      "count": 64,
+      "shape": "letters_F",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_G",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_H",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_I",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_J",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_K",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_L",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_M",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_N",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_O",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_P",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_Q",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_R",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_S",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_T",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_U",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_V",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_W",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_X",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_Y",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "letters_Z",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "numbers_1",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "numbers_2",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "numbers_3",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "numbers_4",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "numbers_5",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "numbers_6",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "numbers_7",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "numbers_8",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "numbers_9",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "numbers_10",
+      "feasible": false,
+      "reason": "Les places ne sont pas connect\u00e9es \u00e0 cette port\u00e9e"
+    },
+    {
+      "count": 64,
+      "shape": "geometries_circle",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_ellipse",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_square",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_rectangle",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_triangle",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_pentagon",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_hexagon",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_heptagon",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_octagon",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_decagon",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_diamond",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_trapezoid",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_parallelogram",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_star",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_cross",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_arrow",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_semicircle",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_heart",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_line",
+      "feasible": true,
+      "reason": null
+    },
+    {
+      "count": 64,
+      "shape": "geometries_v",
+      "feasible": true,
+      "reason": null
+    }
+  ],
+  "allocation": "fixed_N_squared_rounds_no_global_early_stop",
+  "sampling_stride": 2,
+  "model": {
+    "hidden_dim": 64,
+    "spatial_scale": 28.0,
+    "speed_scale": 1.0,
+    "count_scale": 64.0,
+    "init_seed": 42
+  },
+  "training": {
+    "epochs": 40,
+    "batch_size": 512,
+    "learning_rate": 0.001,
+    "patience": 8,
+    "seed": 42,
+    "max_samples_per_count": 24000
+  },
+  "metrics": {
+    "error_threshold": 0.1,
+    "speed_threshold": 0.05,
+    "hold_seconds": 1.0
+  },
+  "storage": "own_8_labels_2_relative_neighbors_4_CSR_offsets",
+  "episodes": [
+    {
+      "split": "train",
+      "count": 12,
+      "shape": "geometries_square",
+      "seed": 8100,
+      "physics": "train-12-geometries_square-8100-physics.npz",
+      "samples": "train-12-geometries_square-8100-samples.npz",
+      "sha256": "f99fe566c0dc3fc2e3c475b9067626b57eb736de78113745f047f2f8c20d7eb5",
+      "sample_count": 2880,
+      "neighbor_records": 12324,
+      "max_neighbors": 11,
+      "examples_bytes": 352712,
+      "wall_seconds": 1.2910532999994757,
+      "metrics": {
+        "formation_error_m": 6.280369834735101e-16,
+        "stabilization_time_s": 30.1,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 14.4,
+        "reconnection_time_s": 10.0,
+        "control_release_time_s": 24.400000000000002,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 19008,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 148,
+        "motion_safety_intervention_robot_steps": 148
+      }
+    },
+    {
+      "split": "train",
+      "count": 12,
+      "shape": "letters_A",
+      "seed": 8100,
+      "physics": "train-12-letters_A-8100-physics.npz",
+      "samples": "train-12-letters_A-8100-samples.npz",
+      "sha256": "5bc2854a1373613d01d0538ab910a2f23df450f8712a257a965c3abefca4e364",
+      "sample_count": 2880,
+      "neighbor_records": 18414,
+      "max_neighbors": 11,
+      "examples_bytes": 450152,
+      "wall_seconds": 1.5703714999999647,
+      "metrics": {
+        "formation_error_m": 6.280369834735101e-16,
+        "stabilization_time_s": 30.200000000000003,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 14.4,
+        "reconnection_time_s": 10.0,
+        "control_release_time_s": 24.400000000000002,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 19008,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 129,
+        "motion_safety_intervention_robot_steps": 129
+      }
+    },
+    {
+      "split": "train",
+      "count": 12,
+      "shape": "numbers_1",
+      "seed": 8100,
+      "physics": "train-12-numbers_1-8100-physics.npz",
+      "samples": "train-12-numbers_1-8100-samples.npz",
+      "sha256": "984c05e7984fab3876cd18cc7bbb9903c0580bf1334eff3d4bf9c39381dfcbd5",
+      "sample_count": 2880,
+      "neighbor_records": 19366,
+      "max_neighbors": 11,
+      "examples_bytes": 465384,
+      "wall_seconds": 1.6286576000002242,
+      "metrics": {
+        "formation_error_m": 4.965068306494546e-16,
+        "stabilization_time_s": 30.6,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 14.4,
+        "reconnection_time_s": 10.0,
+        "control_release_time_s": 24.400000000000002,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 19008,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 125,
+        "motion_safety_intervention_robot_steps": 125
+      }
+    },
+    {
+      "split": "train",
+      "count": 24,
+      "shape": "geometries_square",
+      "seed": 8100,
+      "physics": "train-24-geometries_square-8100-physics.npz",
+      "samples": "train-24-geometries_square-8100-samples.npz",
+      "sha256": "c6846215c25d4f77fb0e0de578d628d96959f71bda4aeb0bc906f281a8e5afa3",
+      "sample_count": 6600,
+      "neighbor_records": 30954,
+      "max_neighbors": 10,
+      "examples_bytes": 851672,
+      "wall_seconds": 3.801846399999704,
+      "metrics": {
+        "formation_error_m": 1.2560739669470201e-15,
+        "stabilization_time_s": 86.30000000000001,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 57.6,
+        "reconnection_time_s": 17.0,
+        "control_release_time_s": 74.60000000000001,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 138240,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 572,
+        "motion_safety_intervention_robot_steps": 572
+      }
+    },
+    {
+      "split": "train",
+      "count": 24,
+      "shape": "letters_A",
+      "seed": 8100,
+      "physics": "train-24-letters_A-8100-physics.npz",
+      "samples": "train-24-letters_A-8100-samples.npz",
+      "sha256": "9264a50810d61e14bdfbbfff191fa1b7d0a53ca1eeab7a5e330d45294f482d3a",
+      "sample_count": 6588,
+      "neighbor_records": 41971,
+      "max_neighbors": 17,
+      "examples_bytes": 1027296,
+      "wall_seconds": 4.761339399999997,
+      "metrics": {
+        "formation_error_m": 1.7763568394002505e-15,
+        "stabilization_time_s": 92.30000000000001,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 57.6,
+        "reconnection_time_s": 17.0,
+        "control_release_time_s": 74.60000000000001,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 138240,
+        "safety_infeasible_robot_steps": 23,
+        "safety_intervention_robot_steps": 869,
+        "motion_safety_intervention_robot_steps": 869
+      }
+    },
+    {
+      "split": "train",
+      "count": 24,
+      "shape": "numbers_1",
+      "seed": 8100,
+      "physics": "train-24-numbers_1-8100-physics.npz",
+      "samples": "train-24-numbers_1-8100-samples.npz",
+      "sha256": "8cfd26fa4334da3af7a861d1a737b692b8d5b3f34d6c1efad55dd199db061bf3",
+      "sample_count": 6600,
+      "neighbor_records": 48994,
+      "max_neighbors": 16,
+      "examples_bytes": 1140312,
+      "wall_seconds": 4.564689799999542,
+      "metrics": {
+        "formation_error_m": 2.6668472207145996e-15,
+        "stabilization_time_s": 85.5,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 57.6,
+        "reconnection_time_s": 17.0,
+        "control_release_time_s": 74.60000000000001,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 138240,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 828,
+        "motion_safety_intervention_robot_steps": 828
+      }
+    },
+    {
+      "split": "train",
+      "count": 64,
+      "shape": "geometries_square",
+      "seed": 8100,
+      "physics": "train-64-geometries_square-8100-physics.npz",
+      "samples": "train-64-geometries_square-8100-samples.npz",
+      "sha256": "f02ea816aedb11e2e20a118183ec08c68acf48c9bdcaa9b857ad1da3167739b7",
+      "sample_count": 22400,
+      "neighbor_records": 133592,
+      "max_neighbors": 11,
+      "examples_bytes": 3347080,
+      "wall_seconds": 30.12240489999931,
+      "metrics": {
+        "formation_error_m": 5.617333549722722e-15,
+        "stabilization_time_s": 468.40000000000003,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 409.6,
+        "reconnection_time_s": 32.0,
+        "control_release_time_s": 441.6,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 2621440,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 4193,
+        "motion_safety_intervention_robot_steps": 4193
+      }
+    },
+    {
+      "split": "train",
+      "count": 64,
+      "shape": "letters_A",
+      "seed": 8100,
+      "physics": "train-64-letters_A-8100-physics.npz",
+      "samples": "train-64-letters_A-8100-samples.npz",
+      "sha256": "6ac502217194ca50a522511a465a24fc6f9a36884ad5cb89421abdf4539068cb",
+      "sample_count": 22371,
+      "neighbor_records": 164965,
+      "max_neighbors": 15,
+      "examples_bytes": 3847482,
+      "wall_seconds": 31.075039000001198,
+      "metrics": {
+        "formation_error_m": 5.617333549722722e-15,
+        "stabilization_time_s": 470.5,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 409.6,
+        "reconnection_time_s": 32.0,
+        "control_release_time_s": 441.6,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 2621440,
+        "safety_infeasible_robot_steps": 57,
+        "safety_intervention_robot_steps": 3451,
+        "motion_safety_intervention_robot_steps": 3451
+      }
+    },
+    {
+      "split": "train",
+      "count": 64,
+      "shape": "numbers_1",
+      "seed": 8100,
+      "physics": "train-64-numbers_1-8100-physics.npz",
+      "samples": "train-64-numbers_1-8100-samples.npz",
+      "sha256": "5a1a68612be72ce8b454432bd971d5e264370f53acc10c37a7b67ea794472732",
+      "sample_count": 22398,
+      "neighbor_records": 189201,
+      "max_neighbors": 16,
+      "examples_bytes": 4236716,
+      "wall_seconds": 31.831490900000063,
+      "metrics": {
+        "formation_error_m": 5.4025784115714076e-15,
+        "stabilization_time_s": 464.40000000000003,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 409.6,
+        "reconnection_time_s": 32.0,
+        "control_release_time_s": 441.6,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 2621440,
+        "safety_infeasible_robot_steps": 7,
+        "safety_intervention_robot_steps": 5163,
+        "motion_safety_intervention_robot_steps": 5163
+      }
+    },
+    {
+      "split": "validation",
+      "count": 12,
+      "shape": "geometries_triangle",
+      "seed": 8200,
+      "physics": "validation-12-geometries_triangle-8200-physics.npz",
+      "samples": "validation-12-geometries_triangle-8200-samples.npz",
+      "sha256": "4b892c1a52430c296a30ae4f8a655cbfd423ec4735b282445d79611cb40e61d1",
+      "sample_count": 2880,
+      "neighbor_records": 19040,
+      "max_neighbors": 11,
+      "examples_bytes": 460168,
+      "wall_seconds": 1.5317876000008255,
+      "metrics": {
+        "formation_error_m": 4.965068306494546e-16,
+        "stabilization_time_s": 29.3,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 14.4,
+        "reconnection_time_s": 10.0,
+        "control_release_time_s": 24.400000000000002,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 19008,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 128,
+        "motion_safety_intervention_robot_steps": 128
+      }
+    },
+    {
+      "split": "validation",
+      "count": 12,
+      "shape": "letters_B",
+      "seed": 8200,
+      "physics": "validation-12-letters_B-8200-physics.npz",
+      "samples": "validation-12-letters_B-8200-samples.npz",
+      "sha256": "5885be79e2c659176c6ceb7761616f977d00eeb73d5373a50b48fdf8405b47ec",
+      "sample_count": 2880,
+      "neighbor_records": 14596,
+      "max_neighbors": 11,
+      "examples_bytes": 389064,
+      "wall_seconds": 1.3826255000003584,
+      "metrics": {
+        "formation_error_m": 6.661338147750939e-16,
+        "stabilization_time_s": 31.900000000000002,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 14.4,
+        "reconnection_time_s": 10.0,
+        "control_release_time_s": 24.400000000000002,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 19008,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 166,
+        "motion_safety_intervention_robot_steps": 166
+      }
+    },
+    {
+      "split": "validation",
+      "count": 12,
+      "shape": "numbers_7",
+      "seed": 8200,
+      "physics": "validation-12-numbers_7-8200-physics.npz",
+      "samples": "validation-12-numbers_7-8200-samples.npz",
+      "sha256": "6854547ed4745a927d334191dedbd8b37b09426032dc5c39900173ee173aaad8",
+      "sample_count": 2880,
+      "neighbor_records": 17150,
+      "max_neighbors": 11,
+      "examples_bytes": 429928,
+      "wall_seconds": 1.4701380000005884,
+      "metrics": {
+        "formation_error_m": 4.965068306494546e-16,
+        "stabilization_time_s": 35.2,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 14.4,
+        "reconnection_time_s": 10.0,
+        "control_release_time_s": 24.400000000000002,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 19008,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 380,
+        "motion_safety_intervention_robot_steps": 380
+      }
+    },
+    {
+      "split": "validation",
+      "count": 24,
+      "shape": "geometries_triangle",
+      "seed": 8200,
+      "physics": "validation-24-geometries_triangle-8200-physics.npz",
+      "samples": "validation-24-geometries_triangle-8200-samples.npz",
+      "sha256": "54893332617b202f46fa7b9efcf05fe0c54668f4379ea1bfdd37dab56cc0d38f",
+      "sample_count": 6600,
+      "neighbor_records": 42286,
+      "max_neighbors": 13,
+      "examples_bytes": 1032984,
+      "wall_seconds": 3.9245999999984633,
+      "metrics": {
+        "formation_error_m": 9.930136612989092e-16,
+        "stabilization_time_s": 87.4,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 57.6,
+        "reconnection_time_s": 17.0,
+        "control_release_time_s": 74.60000000000001,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 138240,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 595,
+        "motion_safety_intervention_robot_steps": 595
+      }
+    },
+    {
+      "split": "validation",
+      "count": 24,
+      "shape": "letters_B",
+      "seed": 8200,
+      "physics": "validation-24-letters_B-8200-physics.npz",
+      "samples": "validation-24-letters_B-8200-samples.npz",
+      "sha256": "9560cf0d789ce8614fcb17abc80f4bae36472d90ce7780887499237e7daf1635",
+      "sample_count": 6600,
+      "neighbor_records": 32000,
+      "max_neighbors": 13,
+      "examples_bytes": 868408,
+      "wall_seconds": 3.6082790000000386,
+      "metrics": {
+        "formation_error_m": 1.2560739669470201e-15,
+        "stabilization_time_s": 89.10000000000001,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 57.6,
+        "reconnection_time_s": 17.0,
+        "control_release_time_s": 74.60000000000001,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 138240,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 737,
+        "motion_safety_intervention_robot_steps": 737
+      }
+    },
+    {
+      "split": "validation",
+      "count": 24,
+      "shape": "numbers_7",
+      "seed": 8200,
+      "physics": "validation-24-numbers_7-8200-physics.npz",
+      "samples": "validation-24-numbers_7-8200-samples.npz",
+      "sha256": "0bdd8e997224aa0595025cf92c89c395c8735140ca541d701b9dc3502fb4a1bd",
+      "sample_count": 6594,
+      "neighbor_records": 42563,
+      "max_neighbors": 20,
+      "examples_bytes": 1037092,
+      "wall_seconds": 4.014406300000701,
+      "metrics": {
+        "formation_error_m": 1.7763568394002505e-15,
+        "stabilization_time_s": 89.2,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 57.6,
+        "reconnection_time_s": 17.0,
+        "control_release_time_s": 74.60000000000001,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 138240,
+        "safety_infeasible_robot_steps": 12,
+        "safety_intervention_robot_steps": 1057,
+        "motion_safety_intervention_robot_steps": 1057
+      }
+    },
+    {
+      "split": "validation",
+      "count": 64,
+      "shape": "geometries_triangle",
+      "seed": 8200,
+      "physics": "validation-64-geometries_triangle-8200-physics.npz",
+      "samples": "validation-64-geometries_triangle-8200-samples.npz",
+      "sha256": "a0b9f116b795b7b16cbdf30b22d01d439e53a7ccc7122d782bff253ea53b843c",
+      "sample_count": 22400,
+      "neighbor_records": 157744,
+      "max_neighbors": 12,
+      "examples_bytes": 3733512,
+      "wall_seconds": 30.807060000001,
+      "metrics": {
+        "formation_error_m": 3.2023728339893768e-15,
+        "stabilization_time_s": 463.70000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 409.6,
+        "reconnection_time_s": 32.0,
+        "control_release_time_s": 441.6,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 2621440,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 2971,
+        "motion_safety_intervention_robot_steps": 2971
+      }
+    },
+    {
+      "split": "validation",
+      "count": 64,
+      "shape": "letters_B",
+      "seed": 8200,
+      "physics": "validation-64-letters_B-8200-physics.npz",
+      "samples": "validation-64-letters_B-8200-samples.npz",
+      "sha256": "4328ffacde76ecf678844c928827098dc14fcf8ccf78e80cfd7a4ece9df9d885",
+      "sample_count": 22395,
+      "neighbor_records": 142120,
+      "max_neighbors": 21,
+      "examples_bytes": 3483258,
+      "wall_seconds": 31.17312690000108,
+      "metrics": {
+        "formation_error_m": 2.5121479338940403e-15,
+        "stabilization_time_s": 469.40000000000003,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 409.6,
+        "reconnection_time_s": 32.0,
+        "control_release_time_s": 441.6,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 2621440,
+        "safety_infeasible_robot_steps": 12,
+        "safety_intervention_robot_steps": 3750,
+        "motion_safety_intervention_robot_steps": 3750
+      }
+    },
+    {
+      "split": "validation",
+      "count": 64,
+      "shape": "numbers_7",
+      "seed": 8200,
+      "physics": "validation-64-numbers_7-8200-physics.npz",
+      "samples": "validation-64-numbers_7-8200-samples.npz",
+      "sha256": "a788e032908495e879a42a37f8b658fbcd9f920e96a3ab13757b5538ea9c69ac",
+      "sample_count": 22348,
+      "neighbor_records": 182309,
+      "max_neighbors": 25,
+      "examples_bytes": 4123744,
+      "wall_seconds": 35.59780950000095,
+      "metrics": {
+        "formation_error_m": 4.2111273014916496e-14,
+        "stabilization_time_s": 472.40000000000003,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 409.6,
+        "reconnection_time_s": 32.0,
+        "control_release_time_s": 441.6,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 2621440,
+        "safety_infeasible_robot_steps": 101,
+        "safety_intervention_robot_steps": 6392,
+        "motion_safety_intervention_robot_steps": 6392
+      }
+    }
+  ],
+  "quality_status": "passed"
+}

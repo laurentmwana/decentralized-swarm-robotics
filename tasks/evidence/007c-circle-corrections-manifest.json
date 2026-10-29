@@ -1,0 +1,340 @@
+{
+  "schema_version": 1,
+  "kind": "train_on_policy_teacher_labels",
+  "status": "complete",
+  "dataset_manifest_sha256": "7d0cfa83b024092950b3ea6352fe7d7c94eb86eb873b8a30eac84647720fecbd",
+  "source_model_sha256": "227f042240826317b82a11834456676a74e4056dcc8b3e5e88c04a81a3600ef4",
+  "source_model": {
+    "model_type": "AccelerationGAT",
+    "schema_version": 2,
+    "config": {
+      "hidden_dim": 64,
+      "spatial_scale": 4.0,
+      "speed_scale": 1.0,
+      "count_scale": 12.0,
+      "negative_slope": 0.2,
+      "init_seed": 42,
+      "relative_edges": true
+    },
+    "max_acceleration": 2.0,
+    "feature_count": 8
+  },
+  "simulator": {
+    "physics": {
+      "arena_size": 10.0,
+      "dt": 0.1,
+      "max_speed": 1.0,
+      "max_acceleration": 2.0,
+      "robot_radius": 0.1
+    },
+    "horizon": 100,
+    "communication_radius": 2.0,
+    "spawn_radius": 4.0
+  },
+  "teacher": {
+    "mission": {
+      "center": [
+        0.0,
+        0.0
+      ],
+      "radius": 2.0,
+      "robot_count": 12
+    },
+    "gains": {
+      "radial": 12.0,
+      "damping": 6.0,
+      "spacing": 60.0,
+      "avoidance": 60.0,
+      "safety_distance": 0.4
+    }
+  },
+  "target": "bounded_teacher_acceleration_m_s2",
+  "policy": "all_train_rollouts_kept_including_collisions",
+  "episodes": [
+    {
+      "seed": 100,
+      "split": "train",
+      "path": "train-100.npz",
+      "sha256": "24cedaee75874b574addd7d18e814102d95a6108641ed102cf69ad173972f18b",
+      "parent_archive_sha256": "4c67e1ef5de22e1f4402989f81273192241b577fb7d0b3f19ff242f7b5b9df7c",
+      "collector_quality": {
+        "formation_error_m": 0.04779185997440538,
+        "stabilization_time_s": null,
+        "collisions": 1,
+        "success": false,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 101,
+      "split": "train",
+      "path": "train-101.npz",
+      "sha256": "e12bc0ecaccab2351267841ad504e76572c48bff862627cefa66a52b1740f029",
+      "parent_archive_sha256": "5aff24ea6ef8976d6003d91942d72442ac5805958e334557e10167998f5b99b2",
+      "collector_quality": {
+        "formation_error_m": 0.04382527090516475,
+        "stabilization_time_s": 6.7,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 102,
+      "split": "train",
+      "path": "train-102.npz",
+      "sha256": "e90d44e47c3895a48e0f0e9e938deb60122b6f2722e96924e84315612022e558",
+      "parent_archive_sha256": "59b1171a5f2d2a214fd88dffdf86c866694a4cea17f37b37fbb6aac5e6c5878a",
+      "collector_quality": {
+        "formation_error_m": 0.043172212527524456,
+        "stabilization_time_s": 7.9,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 103,
+      "split": "train",
+      "path": "train-103.npz",
+      "sha256": "e2c9280bca8388c6cbb7fa3f8fa3d52f68b39374d3e1a7e74918579e904e09cb",
+      "parent_archive_sha256": "9ea90a80dafcf98c01b520ddf75b0684e90fde9140066f2c715add73881f099a",
+      "collector_quality": {
+        "formation_error_m": 0.0406368976112208,
+        "stabilization_time_s": null,
+        "collisions": 1,
+        "success": false,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 104,
+      "split": "train",
+      "path": "train-104.npz",
+      "sha256": "9f1c37d18971116e07c49dcece4ab792b19845fb16460013c8b528cbc447cf57",
+      "parent_archive_sha256": "2f09dc668abc0d473ca8373d15c6dcc51cb1c4a72fd29f711e1c715e1b87df77",
+      "collector_quality": {
+        "formation_error_m": 0.04530875164679382,
+        "stabilization_time_s": 5.7,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 105,
+      "split": "train",
+      "path": "train-105.npz",
+      "sha256": "af05063efd3cdee4a60147d7f66f37d483bd414227ca223c280e398864df9a78",
+      "parent_archive_sha256": "a1a317221bdea7b5b12fae3d6e4d33510b81c92dc3dc267201f51ce0bb64d865",
+      "collector_quality": {
+        "formation_error_m": 0.042112915945231366,
+        "stabilization_time_s": null,
+        "collisions": 1,
+        "success": false,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 106,
+      "split": "train",
+      "path": "train-106.npz",
+      "sha256": "77136d02974e3edb5f6b8f92ff0e18a4ebfa204ad8c5b3ca2faa47e5b74f8817",
+      "parent_archive_sha256": "ba7f04615b75f7b6ecd33a560fff8ee8c491b6177a8b738f448a50620e9da409",
+      "collector_quality": {
+        "formation_error_m": 0.04980427000562826,
+        "stabilization_time_s": 6.800000000000001,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 107,
+      "split": "train",
+      "path": "train-107.npz",
+      "sha256": "e25c3488d7df5a553d08f418b04ca3826a90522b0225823f33102045316b1779",
+      "parent_archive_sha256": "676d94c7317cb34ed2e1307616ce26105d886429f898f24a836ca64b5f60dca9",
+      "collector_quality": {
+        "formation_error_m": 0.046590717902279755,
+        "stabilization_time_s": 5.7,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 108,
+      "split": "train",
+      "path": "train-108.npz",
+      "sha256": "050d6e2fd91e5cb7407c0d894669d6d29cf962a44ba902059facafe4c62d1c3e",
+      "parent_archive_sha256": "6cf8a1f2d25e239e31d53996d47c8996f20f691849f858fad633611e055d1f67",
+      "collector_quality": {
+        "formation_error_m": 0.04553087146413293,
+        "stabilization_time_s": 8.9,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 109,
+      "split": "train",
+      "path": "train-109.npz",
+      "sha256": "cd6dcccefc197b213082a04d85915fbc6e403785c8e3e60bb899175e55bc530c",
+      "parent_archive_sha256": "c9df9ea05f644301cf3ba656865dba9ef9e49af2424ff0c37a9981f51e1e4f9a",
+      "collector_quality": {
+        "formation_error_m": 0.04218440708714799,
+        "stabilization_time_s": 8.8,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 110,
+      "split": "train",
+      "path": "train-110.npz",
+      "sha256": "6d7a2ccab6f769e01337874d4348025d7273ccd8af02b682c15adec975db63cc",
+      "parent_archive_sha256": "a0543bb34535283b2cd80804ae4f7dd3d7544e0c56d9de18fc29b33dafd60ab1",
+      "collector_quality": {
+        "formation_error_m": 0.045839766813316585,
+        "stabilization_time_s": 8.3,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 111,
+      "split": "train",
+      "path": "train-111.npz",
+      "sha256": "dc77b7edbe694c8c8a7a502430589fcc3c4201c52411309bfab73b5fa4e46d17",
+      "parent_archive_sha256": "3ca25853f8b90ba2f6a69a73b35306c5431d1455b4e92ceb26b38a4353fd826b",
+      "collector_quality": {
+        "formation_error_m": 0.04061541075890562,
+        "stabilization_time_s": 4.800000000000001,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 112,
+      "split": "train",
+      "path": "train-112.npz",
+      "sha256": "5f71dcd33313a64b0662d77b0cae7cde7e88b4d83e991e14f219a4db82c31c55",
+      "parent_archive_sha256": "59cd6c0b522fb0290668399f1f578523425d96f7057f8084ef56643fae4deccf",
+      "collector_quality": {
+        "formation_error_m": 0.045229067482799534,
+        "stabilization_time_s": 5.1000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 114,
+      "split": "train",
+      "path": "train-114.npz",
+      "sha256": "2bba4e301bc7f1741f4afd516b39b55e2d1929dc6ebd6758f9a43ab27c74b0bd",
+      "parent_archive_sha256": "46637426129b3d5a943fedbdb88b4e98f2bb3635a50618355172c0989a713b69",
+      "collector_quality": {
+        "formation_error_m": 0.04010359655539664,
+        "stabilization_time_s": 6.5,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 115,
+      "split": "train",
+      "path": "train-115.npz",
+      "sha256": "786d14f6093022c39ad923b1c448ba101c18cac44572792ffdf27f7ef4b75ef5",
+      "parent_archive_sha256": "016652f6b73208bd40e814a2a46c0a17f04bfbe0f1a6cc5d5ec764b4dcd269ca",
+      "collector_quality": {
+        "formation_error_m": 0.04343569732316044,
+        "stabilization_time_s": 5.6000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 116,
+      "split": "train",
+      "path": "train-116.npz",
+      "sha256": "2181bfa0231628f2957bcc2945cc43c3b639c936b2d06ce562857554c42bbfda",
+      "parent_archive_sha256": "5ecf07396a2bdfcd3bd742c56d25285473b6c26ecd06e2217e3128df78a14a92",
+      "collector_quality": {
+        "formation_error_m": 0.04477181180881451,
+        "stabilization_time_s": 6.5,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 117,
+      "split": "train",
+      "path": "train-117.npz",
+      "sha256": "8bbe63e7bf778ef8ae651367f4ceae108f2006852227e9f704f287899c34debc",
+      "parent_archive_sha256": "ff430368a17dccf2de4fd125c0e692eacb6255e457ee4ebf0cb1d7b59193b56b",
+      "collector_quality": {
+        "formation_error_m": 0.047624243860496795,
+        "stabilization_time_s": 7.4,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 118,
+      "split": "train",
+      "path": "train-118.npz",
+      "sha256": "60188293498d89a05345857ed0ca21662d2b7a54f31c49cf143f998aaae74ada",
+      "parent_archive_sha256": "b4c44ed96db81b75e6277a9beecd81cc8843af8d9932e79081e450d844f4a3d6",
+      "collector_quality": {
+        "formation_error_m": 0.03949048210604178,
+        "stabilization_time_s": null,
+        "collisions": 1,
+        "success": false,
+        "initial_collision": false
+      },
+      "graphs": 100
+    },
+    {
+      "seed": 119,
+      "split": "train",
+      "path": "train-119.npz",
+      "sha256": "fa5d2ce05addab834a5782143e568fd400a12b1c0639000d8c533e86cc7ef3fa",
+      "parent_archive_sha256": "1844efdf766a0721625b68e46217c2362eed71339ecd4b261aa029999b0dcf3c",
+      "collector_quality": {
+        "formation_error_m": 0.04490342917766266,
+        "stabilization_time_s": 5.9,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "graphs": 100
+    }
+  ]
+}

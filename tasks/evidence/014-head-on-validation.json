@@ -1,0 +1,19 @@
+{
+  "kind": "validation_head_on_ablation",
+  "count": 12,
+  "active_crossing_pair": 2,
+  "learned_gains": {
+    "kp": 6.0,
+    "kd": 4.0
+  },
+  "reports": {
+    "nominal_only": {
+      "collisions": 1,
+      "max_private_target_error_m": 0.0
+    },
+    "graph_attention": {
+      "collisions": 0,
+      "max_private_target_error_m": 3.828386430093644e-08
+    }
+  }
+}

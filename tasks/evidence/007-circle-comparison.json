@@ -1,0 +1,120 @@
+{
+  "run": "D:\\ProjectLabs\\python\\swarm-gnn\\outputs\\imitation\\training-circle-v1",
+  "dataset": "D:\\ProjectLabs\\python\\swarm-gnn\\outputs\\imitation\\circle-reviewed-task007",
+  "model_sha256": "d778a2d9de10f40f5b17a7385ac54bcd0e067661587b8e032eea35fa2d43a6b4",
+  "dataset_manifest_sha256": "7d0cfa83b024092950b3ea6352fe7d7c94eb86eb873b8a30eac84647720fecbd",
+  "protocol": {
+    "error_threshold": 0.1,
+    "speed_threshold": 0.05,
+    "hold_seconds": 1.0,
+    "deadline_seconds": 10.0
+  },
+  "test_teacher_state_mse": 0.37933956980705263,
+  "reports": [
+    {
+      "seed": 300,
+      "teacher": {
+        "formation_error_m": 0.007881031876320277,
+        "stabilization_time_s": 6.4,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 1.0351348903164723,
+        "stabilization_time_s": null,
+        "collisions": 4,
+        "success": false,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 301,
+      "teacher": {
+        "formation_error_m": 0.0009764098108140384,
+        "stabilization_time_s": 4.1000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 1.034692275401871,
+        "stabilization_time_s": null,
+        "collisions": 4,
+        "success": false,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 302,
+      "teacher": {
+        "formation_error_m": 9.752976637922295e-05,
+        "stabilization_time_s": 4.2,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.9636129190324116,
+        "stabilization_time_s": null,
+        "collisions": 4,
+        "success": false,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 303,
+      "teacher": {
+        "formation_error_m": 0.0024633136764828922,
+        "stabilization_time_s": 4.6000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.9899065263084903,
+        "stabilization_time_s": null,
+        "collisions": 3,
+        "success": false,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 304,
+      "teacher": {
+        "formation_error_m": 0.004383847457712253,
+        "stabilization_time_s": 5.6000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 1.7258579221728165,
+        "stabilization_time_s": null,
+        "collisions": 7,
+        "success": false,
+        "initial_collision": false
+      }
+    }
+  ],
+  "summary": {
+    "teacher": {
+      "episodes": 5,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 0.003160426517541737,
+      "formation_error_std_m": 0.002771934542765868,
+      "collisions_total": 0,
+      "stabilization_time_mean_s": 4.98,
+      "stabilization_successful_episodes": 5
+    },
+    "gat": {
+      "episodes": 5,
+      "success_rate_percent": 0.0,
+      "formation_error_mean_m": 1.1498409066464124,
+      "formation_error_std_m": 0.2892998959628424,
+      "collisions_total": 22,
+      "stabilization_time_mean_s": null,
+      "stabilization_successful_episodes": 0
+    }
+  }
+}

@@ -1,0 +1,13 @@
+robot_count: 12
+width: 6.0
+communication_radius: 3.0
+stage_seconds: 40.0
+seeds: [7400, 7401]
+metrics:
+  error_threshold: 0.1
+  speed_threshold: 0.05
+  hold_seconds: 1.0
+sequences:
+  letters_return: [letters_A, letters_B, letters_A]
+  numbers: [numbers_1, numbers_10, numbers_3]
+  geometries: [geometries_square, geometries_rectangle, geometries_circle]

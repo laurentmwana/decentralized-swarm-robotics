@@ -1,0 +1,2262 @@
+{
+  "equivalent": true,
+  "max_absolute_differences": {
+    "positions": 0.0,
+    "velocities": 0.0,
+    "accelerations": 0.0
+  },
+  "benchmarks": [
+    {
+      "schema_version": 3,
+      "feature_schema_version": 2,
+      "kind": "multi_size_local_target_imitation",
+      "status": "complete",
+      "domain": "controlled_near_own_rendezvous_ring_not_general_scattered_starts",
+      "profiles": {
+        "12": {
+          "count": 12,
+          "arena_size": 10.0,
+          "width": 6.0,
+          "gather_seconds": 8.0,
+          "formation_seconds": 40.0
+        },
+        "24": {
+          "count": 24,
+          "arena_size": 18.0,
+          "width": 12.0,
+          "gather_seconds": 15.0,
+          "formation_seconds": 40.0
+        },
+        "64": {
+          "count": 64,
+          "arena_size": 32.0,
+          "width": 28.0,
+          "gather_seconds": 30.0,
+          "formation_seconds": 40.0
+        }
+      },
+      "shape_splits": {
+        "train": [
+          "geometries_square",
+          "letters_A",
+          "numbers_1"
+        ],
+        "validation": [
+          "geometries_triangle",
+          "letters_B",
+          "numbers_7"
+        ],
+        "test": [
+          "geometries_rectangle",
+          "letters_C",
+          "numbers_3"
+        ]
+      },
+      "episode_seeds": {
+        "train": [
+          8100
+        ],
+        "validation": [
+          8200
+        ],
+        "test": [
+          8300
+        ]
+      },
+      "catalog_audit": [
+        {
+          "count": 12,
+          "shape": "letters_A",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_B",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_C",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_D",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_E",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_F",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_G",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_H",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_I",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_J",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_K",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_L",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_M",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_N",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_O",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_P",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_Q",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_R",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_S",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_T",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_U",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_V",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_W",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_X",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_Y",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_Z",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_1",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_2",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_3",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_4",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_5",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_6",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_7",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_8",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_9",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_10",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_circle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_ellipse",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_square",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_rectangle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_triangle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_pentagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_hexagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_heptagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_octagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_decagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_diamond",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_trapezoid",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_parallelogram",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_star",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_cross",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_arrow",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_semicircle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_heart",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_line",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_v",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_A",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_B",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_C",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_D",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_E",
+          "feasible": false,
+          "reason": "Les places ne sont pas connect\u00e9es \u00e0 cette port\u00e9e"
+        },
+        {
+          "count": 24,
+          "shape": "letters_F",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_G",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_H",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_I",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_J",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_K",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_L",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_M",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_N",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_O",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_P",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_Q",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_R",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_S",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_T",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_U",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_V",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_W",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_X",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_Y",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_Z",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_1",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_2",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_3",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_4",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_5",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_6",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_7",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_8",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_9",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_10",
+          "feasible": false,
+          "reason": "Les places ne sont pas connect\u00e9es \u00e0 cette port\u00e9e"
+        },
+        {
+          "count": 24,
+          "shape": "geometries_circle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_ellipse",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_square",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_rectangle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_triangle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_pentagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_hexagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_heptagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_octagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_decagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_diamond",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_trapezoid",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_parallelogram",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_star",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_cross",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_arrow",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_semicircle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_heart",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_line",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_v",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_A",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_B",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_C",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_D",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_E",
+          "feasible": false,
+          "reason": "Les places ne sont pas connect\u00e9es \u00e0 cette port\u00e9e"
+        },
+        {
+          "count": 64,
+          "shape": "letters_F",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_G",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_H",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_I",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_J",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_K",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_L",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_M",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_N",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_O",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_P",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_Q",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_R",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_S",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_T",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_U",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_V",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_W",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_X",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_Y",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_Z",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_1",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_2",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_3",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_4",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_5",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_6",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_7",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_8",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_9",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_10",
+          "feasible": false,
+          "reason": "Les places ne sont pas connect\u00e9es \u00e0 cette port\u00e9e"
+        },
+        {
+          "count": 64,
+          "shape": "geometries_circle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_ellipse",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_square",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_rectangle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_triangle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_pentagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_hexagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_heptagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_octagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_decagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_diamond",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_trapezoid",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_parallelogram",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_star",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_cross",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_arrow",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_semicircle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_heart",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_line",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_v",
+          "feasible": true,
+          "reason": null
+        }
+      ],
+      "allocation": "fixed_N_squared_rounds_no_global_early_stop",
+      "sampling_stride": 2,
+      "model": {
+        "hidden_dim": 64,
+        "spatial_scale": 28.0,
+        "speed_scale": 1.0,
+        "count_scale": 64.0,
+        "init_seed": 42
+      },
+      "training": {
+        "epochs": 40,
+        "batch_size": 512,
+        "learning_rate": 0.001,
+        "patience": 8,
+        "seed": 42,
+        "max_samples_per_count": 24000
+      },
+      "metrics": {
+        "error_threshold": 0.1,
+        "speed_threshold": 0.05,
+        "hold_seconds": 1.0
+      },
+      "storage": "own_8_labels_2_relative_neighbors_4_CSR_offsets",
+      "episodes": [
+        {
+          "split": "benchmark",
+          "count": 64,
+          "shape": "geometries_square",
+          "seed": 8000,
+          "physics": "benchmark-64-geometries_square-8000-physics.npz",
+          "samples": "benchmark-64-geometries_square-8000-samples.npz",
+          "sha256": "1171a9001dfd36c298e1899cefef78229fb445b7285df40764fc6aea8cab0d0d",
+          "sample_count": 22400,
+          "neighbor_records": 133582,
+          "max_neighbors": 11,
+          "examples_bytes": 3346920,
+          "wall_seconds": 69.63282100000106,
+          "metrics": {
+            "formation_error_m": 5.617333549722722e-15,
+            "stabilization_time_s": 468.40000000000003,
+            "collisions": 0,
+            "success": true,
+            "initial_collision": false,
+            "allocation_resolved": true,
+            "allocation_time_s": 409.6,
+            "reconnection_time_s": 32.0,
+            "control_release_time_s": 441.6,
+            "allocation_graph_changed_steps": 0,
+            "max_allocation_speed_m_s": 0.0,
+            "allocation_stationary": true,
+            "packets_delivered": 2621440,
+            "safety_infeasible_robot_steps": 0,
+            "safety_intervention_robot_steps": 4193,
+            "motion_safety_intervention_robot_steps": 4193
+          }
+        }
+      ],
+      "quality_status": "passed"
+    },
+    {
+      "schema_version": 3,
+      "feature_schema_version": 2,
+      "kind": "multi_size_local_target_imitation",
+      "status": "complete",
+      "domain": "controlled_near_own_rendezvous_ring_not_general_scattered_starts",
+      "profiles": {
+        "12": {
+          "count": 12,
+          "arena_size": 10.0,
+          "width": 6.0,
+          "gather_seconds": 8.0,
+          "formation_seconds": 40.0
+        },
+        "24": {
+          "count": 24,
+          "arena_size": 18.0,
+          "width": 12.0,
+          "gather_seconds": 15.0,
+          "formation_seconds": 40.0
+        },
+        "64": {
+          "count": 64,
+          "arena_size": 32.0,
+          "width": 28.0,
+          "gather_seconds": 30.0,
+          "formation_seconds": 40.0
+        }
+      },
+      "shape_splits": {
+        "train": [
+          "geometries_square",
+          "letters_A",
+          "numbers_1"
+        ],
+        "validation": [
+          "geometries_triangle",
+          "letters_B",
+          "numbers_7"
+        ],
+        "test": [
+          "geometries_rectangle",
+          "letters_C",
+          "numbers_3"
+        ]
+      },
+      "episode_seeds": {
+        "train": [
+          8100
+        ],
+        "validation": [
+          8200
+        ],
+        "test": [
+          8300
+        ]
+      },
+      "catalog_audit": [
+        {
+          "count": 12,
+          "shape": "letters_A",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_B",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_C",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_D",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_E",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_F",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_G",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_H",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_I",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_J",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_K",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_L",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_M",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_N",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_O",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_P",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_Q",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_R",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_S",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_T",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_U",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_V",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_W",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_X",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_Y",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "letters_Z",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_1",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_2",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_3",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_4",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_5",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_6",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_7",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_8",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_9",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "numbers_10",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_circle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_ellipse",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_square",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_rectangle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_triangle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_pentagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_hexagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_heptagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_octagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_decagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_diamond",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_trapezoid",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_parallelogram",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_star",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_cross",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_arrow",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_semicircle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_heart",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_line",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 12,
+          "shape": "geometries_v",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_A",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_B",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_C",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_D",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_E",
+          "feasible": false,
+          "reason": "Les places ne sont pas connect\u00e9es \u00e0 cette port\u00e9e"
+        },
+        {
+          "count": 24,
+          "shape": "letters_F",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_G",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_H",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_I",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_J",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_K",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_L",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_M",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_N",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_O",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_P",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_Q",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_R",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_S",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_T",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_U",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_V",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_W",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_X",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_Y",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "letters_Z",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_1",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_2",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_3",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_4",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_5",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_6",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_7",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_8",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_9",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "numbers_10",
+          "feasible": false,
+          "reason": "Les places ne sont pas connect\u00e9es \u00e0 cette port\u00e9e"
+        },
+        {
+          "count": 24,
+          "shape": "geometries_circle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_ellipse",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_square",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_rectangle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_triangle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_pentagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_hexagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_heptagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_octagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_decagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_diamond",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_trapezoid",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_parallelogram",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_star",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_cross",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_arrow",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_semicircle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_heart",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_line",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 24,
+          "shape": "geometries_v",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_A",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_B",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_C",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_D",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_E",
+          "feasible": false,
+          "reason": "Les places ne sont pas connect\u00e9es \u00e0 cette port\u00e9e"
+        },
+        {
+          "count": 64,
+          "shape": "letters_F",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_G",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_H",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_I",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_J",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_K",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_L",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_M",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_N",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_O",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_P",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_Q",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_R",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_S",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_T",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_U",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_V",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_W",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_X",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_Y",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "letters_Z",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_1",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_2",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_3",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_4",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_5",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_6",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_7",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_8",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_9",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "numbers_10",
+          "feasible": false,
+          "reason": "Les places ne sont pas connect\u00e9es \u00e0 cette port\u00e9e"
+        },
+        {
+          "count": 64,
+          "shape": "geometries_circle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_ellipse",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_square",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_rectangle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_triangle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_pentagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_hexagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_heptagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_octagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_decagon",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_diamond",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_trapezoid",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_parallelogram",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_star",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_cross",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_arrow",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_semicircle",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_heart",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_line",
+          "feasible": true,
+          "reason": null
+        },
+        {
+          "count": 64,
+          "shape": "geometries_v",
+          "feasible": true,
+          "reason": null
+        }
+      ],
+      "allocation": "fixed_N_squared_rounds_no_global_early_stop",
+      "sampling_stride": 2,
+      "model": {
+        "hidden_dim": 64,
+        "spatial_scale": 28.0,
+        "speed_scale": 1.0,
+        "count_scale": 64.0,
+        "init_seed": 42
+      },
+      "training": {
+        "epochs": 40,
+        "batch_size": 512,
+        "learning_rate": 0.001,
+        "patience": 8,
+        "seed": 42,
+        "max_samples_per_count": 24000
+      },
+      "metrics": {
+        "error_threshold": 0.1,
+        "speed_threshold": 0.05,
+        "hold_seconds": 1.0
+      },
+      "storage": "own_8_labels_2_relative_neighbors_4_CSR_offsets",
+      "episodes": [
+        {
+          "split": "benchmark",
+          "count": 64,
+          "shape": "geometries_square",
+          "seed": 8000,
+          "physics": "benchmark-64-geometries_square-8000-physics.npz",
+          "samples": "benchmark-64-geometries_square-8000-samples.npz",
+          "sha256": "1171a9001dfd36c298e1899cefef78229fb445b7285df40764fc6aea8cab0d0d",
+          "sample_count": 22400,
+          "neighbor_records": 133582,
+          "max_neighbors": 11,
+          "examples_bytes": 3346920,
+          "wall_seconds": 31.532937500000116,
+          "metrics": {
+            "formation_error_m": 5.617333549722722e-15,
+            "stabilization_time_s": 468.40000000000003,
+            "collisions": 0,
+            "success": true,
+            "initial_collision": false,
+            "allocation_resolved": true,
+            "allocation_time_s": 409.6,
+            "reconnection_time_s": 32.0,
+            "control_release_time_s": 441.6,
+            "allocation_graph_changed_steps": 0,
+            "max_allocation_speed_m_s": 0.0,
+            "allocation_stationary": true,
+            "packets_delivered": 2621440,
+            "safety_infeasible_robot_steps": 0,
+            "safety_intervention_robot_steps": 4193,
+            "motion_safety_intervention_robot_steps": 4193
+          }
+        }
+      ],
+      "quality_status": "passed"
+    }
+  ]
+}

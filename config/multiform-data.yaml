@@ -1,0 +1,71 @@
+shape_splits:
+  train:
+  - geometries_arrow
+  - geometries_circle
+  - geometries_decagon
+  - geometries_diamond
+  - geometries_hexagon
+  - geometries_line
+  - geometries_octagon
+  - geometries_parallelogram
+  - geometries_pentagon
+  - geometries_semicircle
+  - geometries_square
+  - geometries_star
+  - geometries_trapezoid
+  - letters_A
+  - letters_C
+  - letters_D
+  - letters_E
+  - letters_F
+  - letters_G
+  - letters_I
+  - letters_J
+  - letters_L
+  - letters_M
+  - letters_N
+  - letters_O
+  - letters_Q
+  - letters_R
+  - letters_S
+  - letters_U
+  - letters_X
+  - letters_Z
+  - numbers_1
+  - numbers_10
+  - numbers_2
+  - numbers_4
+  - numbers_5
+  - numbers_9
+  validation:
+  - geometries_cross
+  - geometries_heptagon
+  - geometries_triangle
+  - geometries_v
+  - letters_B
+  - letters_P
+  - letters_V
+  - letters_W
+  - numbers_6
+  - numbers_7
+  test:
+  - geometries_ellipse
+  - geometries_heart
+  - geometries_rectangle
+  - letters_H
+  - letters_K
+  - letters_T
+  - letters_Y
+  - numbers_3
+  - numbers_8
+episode_seeds:
+  train:
+  - 7100
+  validation:
+  - 7200
+  test:
+  - 7300
+robot_count: 12
+width: 6.0
+minimum_distance: 0.45
+max_spawn_attempts: 20000

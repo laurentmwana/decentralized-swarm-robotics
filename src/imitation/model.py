@@ -16,8 +16,11 @@ class GATConfig:
     count_scale: float
     negative_slope: float
     init_seed: int
+    relative_edges: bool = False
 
     def __post_init__(self):
+        if not isinstance(self.relative_edges, bool):
+            raise ValueError('relative_edges doit être un booléen')
         if isinstance(self.hidden_dim, bool) or not isinstance(self.hidden_dim, int) or self.hidden_dim < 1:
             raise ValueError('Dimension cachée entière positive requise')
         if not all(math.isfinite(v) and v > 0 for v in (self.spatial_scale, self.speed_scale, self.count_scale)):
@@ -35,22 +38,36 @@ class GATConfig:
 
 class OneHopAttention(nn.Module):
     """Un message de chaque voisin immédiat ; pas de propagation itérative."""
-    def __init__(self, hidden_dim, negative_slope):
+    def __init__(self, hidden_dim, negative_slope, relative_edges=False):
         super().__init__()
         self.projection = nn.Linear(hidden_dim, hidden_dim, bias=False)
         self.query = nn.Linear(hidden_dim, 1, bias=False)
         self.key = nn.Linear(hidden_dim, 1, bias=False)
         self.activation = nn.LeakyReLU(negative_slope)
+        self.relative_edges = relative_edges
+        if relative_edges:
+            self.edge_encoder = nn.Sequential(nn.Linear(5, hidden_dim), nn.ReLU(), nn.Linear(hidden_dim, hidden_dim))
+            self.edge_score = nn.Linear(5, 1, bias=False)
 
-    def forward(self, encoded, adjacency):
+    def forward(self, encoded, adjacency, edges=None):
         values = self.projection(encoded)
-        scores = self.activation(self.query(values) + self.key(values).transpose(-1, -2))
+        scores = self.query(values) + self.key(values).transpose(-1, -2)
+        if self.relative_edges:
+            if edges is None or edges.shape != adjacency.shape + (5,):
+                raise ValueError('Géométrie relative (..., N, N, 5) requise')
+            # Masquer avant les MLP : aucun contenu distant n'entre dans le calcul.
+            edges = edges.masked_fill(~adjacency[..., None], 0.)
+            scores = scores + self.edge_score(edges).squeeze(-1)
+        scores = self.activation(scores)
         scores = scores.masked_fill(~adjacency, float('-inf'))
         has_neighbors = adjacency.any(dim=-1, keepdim=True)
         # Une ligne sans voisin ne passe jamais un softmax de -inf uniquement.
         safe_scores = torch.where(has_neighbors, scores, torch.zeros_like(scores))
         weights = torch.softmax(safe_scores, dim=-1).masked_fill(~adjacency, 0.)
-        return weights @ values, weights
+        messages = weights @ values
+        if self.relative_edges:
+            messages = messages + (weights[..., None] * self.edge_encoder(edges)).sum(dim=-2)
+        return messages, weights
 
 
 class AccelerationGAT(nn.Module):
@@ -67,7 +84,7 @@ class AccelerationGAT(nn.Module):
             torch.manual_seed(config.init_seed)
             h = config.hidden_dim
             self.encoder = nn.Sequential(nn.Linear(6, h), nn.ReLU(), nn.Linear(h, h), nn.ReLU())
-            self.attention = OneHopAttention(h, config.negative_slope)
+            self.attention = OneHopAttention(h, config.negative_slope, config.relative_edges)
             self.decoder = nn.Sequential(nn.Linear(2*h + 1, h), nn.ReLU(), nn.Linear(h, 2))
 
     def forward(self, features, adjacency, *, return_attention=False):
@@ -89,7 +106,15 @@ class AccelerationGAT(nn.Module):
                           features[..., 6:7] / cfg.spatial_scale,
                           features[..., 7:8] / cfg.count_scale), dim=-1)
         encoded = self.encoder(own)
-        messages, weights = self.attention(encoded, adjacency)
+        edges = None
+        if cfg.relative_edges:
+            position = features[..., :2]
+            velocity = features[..., 2:4]
+            delta = position.unsqueeze(-3) - position.unsqueeze(-2)
+            relative_velocity = velocity.unsqueeze(-3) - velocity.unsqueeze(-2)
+            edges = torch.cat((delta / cfg.spatial_scale, relative_velocity / cfg.speed_scale,
+                               torch.linalg.vector_norm(delta, dim=-1, keepdim=True) / cfg.spatial_scale), dim=-1)
+        messages, weights = self.attention(encoded, adjacency, edges)
         degree = adjacency.sum(dim=-1, keepdim=True).to(features.dtype) / cfg.count_scale
         raw = self.decoder(torch.cat((encoded, messages, degree), dim=-1))
         # Norme euclidienne <= a_max, sans division par zéro ni écrêtage par composante.
@@ -98,5 +123,8 @@ class AccelerationGAT(nn.Module):
         return (output, weights) if return_attention else output
 
     def metadata(self):
-        return dict(model_type='AccelerationGAT', schema_version=1, config=asdict(self.config),
+        config = asdict(self.config)
+        if not self.config.relative_edges:
+            config.pop('relative_edges')
+        return dict(model_type='AccelerationGAT', schema_version=2 if self.config.relative_edges else 1, config=config,
                     max_acceleration=self.max_acceleration, feature_count=self.feature_count)

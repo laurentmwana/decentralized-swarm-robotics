@@ -1,0 +1,29 @@
+[
+  {
+    "count": 24,
+    "shape": "numbers_7",
+    "contacts": 1,
+    "times_s": [
+      76.7
+    ]
+  },
+  {
+    "count": 64,
+    "shape": "letters_B",
+    "contacts": 1,
+    "times_s": [
+      445.5
+    ]
+  },
+  {
+    "count": 64,
+    "shape": "numbers_7",
+    "contacts": 4,
+    "times_s": [
+      445.70000000000005,
+      446.40000000000003,
+      447.20000000000005,
+      451.20000000000005
+    ]
+  }
+]

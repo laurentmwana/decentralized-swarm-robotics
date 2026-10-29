@@ -1,0 +1,67 @@
+{
+  "kind": "vector_gat_local_augmentation",
+  "status": "complete",
+  "created_at_utc": "2026-10-29T13:20:29.366748+00:00",
+  "source": "local_teacher_projection_training_labels_only",
+  "train_seed": 8400,
+  "validation_seed": 8401,
+  "nominal_fitting": {
+    "seed": 8402,
+    "steps": 1200,
+    "learning_rate": 0.03
+  },
+  "model": {
+    "hidden_dim": 48,
+    "init_seed": 42
+  },
+  "training": {
+    "epochs": 80,
+    "patience": 12,
+    "batch_size": 512,
+    "learning_rate": 0.001,
+    "seed": 42,
+    "max_samples_per_count": 6000,
+    "barrier_weight": 20.0,
+    "risk_weight": 4.0
+  },
+  "final_reserve": {
+    "seeds": [
+      8500,
+      8501
+    ],
+    "counts": [
+      12,
+      24,
+      64
+    ],
+    "shapes": [
+      "geometries_rectangle",
+      "letters_C",
+      "numbers_3"
+    ],
+    "thresholds": {
+      "error": 0.1,
+      "speed": 0.05,
+      "hold_seconds": 1.0
+    },
+    "domain": "controlled_near_rendezvous",
+    "modes": [
+      "teacher",
+      "raw"
+    ]
+  },
+  "splits": {
+    "train": {
+      "samples": 12000,
+      "attempts": 13239,
+      "infeasible_labels": 100,
+      "sha256": "749f4f8e2504fb0a983c6a034a3cc4bf70c733c4097f09e8e1789e09ec4041a9"
+    },
+    "validation": {
+      "samples": 3000,
+      "attempts": 3319,
+      "infeasible_labels": 28,
+      "sha256": "b4e2f0ee3e267006fa0950b114cf105b59457e589de1c60183374e32c73c9f81"
+    }
+  }
+}

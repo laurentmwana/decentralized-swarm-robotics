@@ -2,171 +2,55 @@
 
 Contrôle décentralisé d'un essaim de robots par réseaux de neurones sur graphes.
 
-Commencer par `AGENT.md`, puis `PLAN.md`, puis le dossier `docs/` (un fichier par étape).
+## Démonstration actuelle — PLAN.md
 
-## Commandes rapides
+L’interface du parcours à accélérations propose A–Z, 1–10 et 20 géométries, les transitions, la navigation et les obstacles. Elle compare le contrôleur classique au **GAT protégé par un filtre classique** ; le GAT brut reste insuffisamment sûr. Aucun entraînement n’est lancé depuis l’interface.
 
-Le `Makefile` centralise les commandes du projet. Après installation de GNU Make, afficher la liste avec :
+Un second modèle est maintenant disponible : **GAT structuré brut · 12/24/64**. Il réussit les 18 essais réservés de formation dans le domaine contrôlé de rendez-vous, sans filtre pendant les mouvements appris ; freinage et attribution restent classiques. Les départs dispersés, les autres figures, la navigation et les obstacles avec ce candidat restent à évaluer. Voir la [décision 30](docs/decisions/30-gat-structure-validation.md). Les résultats d’échec de l’ancien GAT brut restent conservés.
+
+Sur cette installation Windows :
 
 ```powershell
-make help
+./demo/start-reference.ps1
 ```
 
-Les cibles les plus utiles sont `make test`, `make circle`, `make curriculum`, `make complex-smoke`, `make complex` et `make evaluation`. La cible `make complex` est plus longue : elle entraîne 50 robots et peut prendre plusieurs dizaines de minutes sur CPU.
-
-## Démonstration du simulateur
-
-Après installation de Python et des dépendances listées dans `AGENT.md`, lancer :
+Avec un environnement Python contenant les dépendances du projet :
 
 ```powershell
-python -m src.sim.demo
+python -m demo.reference_server
+```
+
+Ouvrir [la démonstration locale](http://127.0.0.1:8765). Choisir une expérience puis « Lancer l’expérience ». Le calcul est suivi d’une lecture animée avec pause, vitesse, remise au départ et curseur temporel. Les communications, trajectoires et places peuvent être affichées. « Exporter les résultats » fournit les mesures et paramètres JSON, les trajectoires CSV et les archives NPZ, dans un ZIP. Les fichiers sont aussi conservés sous `outputs/demo-reference/`.
+
+Pour le modèle de référence, les effectifs 8, 16 et 24 sont exploratoires et l’apprentissage multi-formes initial utilise 12 robots. Le modèle structuré a son propre apprentissage à 12/24/64, des arènes 10/18/32 m, des largeurs de forme 6/12/28 m et un départ proche du rendez-vous. Choisir « Former l’essaim », puis le modèle structuré, pour l’utiliser. Les formes incompatibles sont refusées ; les autres formes non évaluées restent expérimentales. Les routes de navigation du modèle de référence sont fournies explicitement.
+
+Le volet « Campagnes conservées » affiche les taux de réussite avec leurs dénominateurs et garde les échecs du GAT brut et des parcours difficiles. Pour réexporter ce tableau à partir des preuves, sans nouvelle simulation :
+
+```powershell
+python -m demo.comparison_report --output outputs/comparison-final
+python -m pytest tests/test_reference_demo.py tests/test_navigation.py tests/test_transitions.py -q -p no:cacheprovider
+```
+
+Le dossier de sortie d’un rapport doit être nouveau. Le modèle validé est attendu dans `outputs/imitation/training-multiform-expanded-v1/` ; sans poids disponibles, le contrôleur classique reste utilisable. Les décisions [25](docs/decisions/25-navigation-obstacles.md) et [26](docs/decisions/26-interface-demonstration.md) décrivent les contrats et limites.
+
+## Organisation conservée
+
+En navigation, l’interface calcule désormais un détour classique sur la carte statique de la scène pour l’ensemble des places de la formation. La destination reste identique ; une place finale occupée entraîne un refus explicite avant simulation. Le GAT conserve ses poids et observations locales. Les résultats antérieurs sont présentés comme archives. Voir la [décision 31](docs/decisions/31-navigation-planifiee.md).
+
+- `src/simulator/` : inertie, bornes physiques, observations locales et épisodes.
+- `src/reference/` : catalogue, allocation locale, professeurs, sécurité, transitions et navigation.
+- `src/imitation/` : données, GAT, entraînements et évaluations du cercle et des formes générales.
+- `demo/` : interface actuelle, lanceur et rapport comparatif.
+- `tests/` : tests du parcours à accélérations et des exports.
+- `tasks/evidence/` et `docs/decisions/` : résultats et décisions scientifiques conservés.
+
+Les anciens contrôleurs à vitesse, leur simulateur, leurs entraînements, leur interface et leurs configurations ont été supprimés après vérification des dépendances. Les décisions historiques restent consultables pour la traçabilité. Les données, modèles, documents de mémoire et de soutenance ne sont pas supprimés.
+
+## Installation et vérification
+
+```powershell
+python -m pip install -r requirements.txt
 python -m pytest tests -q -p no:cacheprovider
 ```
 
-L'animation produite est enregistrée dans `results/simulator-gathering.gif`.
-
-## Génération des formes cibles
-
-```powershell
-python -m src.shapes.build
-```
-
-Les images, nuages de points, index et planche-contact sont créés dans `data/shapes/`; l'archive est `data/shapes.zip`.
-
-## Vérification du contrôleur GNN
-
-```powershell
-python -m src.models.demo
-```
-
-Cette commande exécute le contrôleur non entraîné dans le simulateur et vérifie que ses commandes respectent la vitesse maximale configurée.
-
-## Premier entraînement sur le cercle
-
-```powershell
-python -m src.train.run
-```
-
-Le modèle, la configuration, les pertes CSV et leur courbe sont enregistrés dans `results/training-circle/`. Pour exporter l'animation finale :
-
-```powershell
-python -m src.train.visualize
-```
-
-## Apprentissage progressif
-
-```powershell
-python -m src.train.curriculum
-python -m src.train.visualize_curriculum
-```
-
-Le curriculum réduit préserve les formes des niveaux précédents tandis qu'il ajoute chiffres, lettres et nombres. Les résultats sont des contrôles intermédiaires ; consulter la planche produite avant toute conclusion sur la lisibilité.
-
-## Apprentissage des formes complexes
-
-La configuration `configs/curriculum-complex.yaml` entraîne un modèle distinct avec 50 robots, 50 points de contour, 60 pas de simulation et une géométrie locale de cible. Générer d'abord le jeu de données correspondant :
-
-```powershell
-python -m src.shapes.build --config configs/shapes-complex.yaml --output data/shapes-complex
-python -m src.train.curriculum --config configs/curriculum-complex.yaml --initial-model none --output results/curriculum-complex
-python -m src.train.visualize_curriculum --config configs/curriculum-complex.yaml --model results/curriculum-complex/numbers/model.pt --output results/curriculum-complex/numbers/contact-sheet.png
-```
-
-Cette campagne est volontairement plus coûteuse que le curriculum réduit et peut prendre plusieurs dizaines de minutes sur CPU. Le profil `configs/curriculum-complex-smoke.yaml` sert uniquement à vérifier le pipeline, pas à conclure sur la qualité des formes.
-
-## Évaluation pilote
-
-```powershell
-python -m src.eval.run
-```
-
-Cette commande produit les épisodes bruts, agrégats et figures du protocole pilote (pannes et passage à l'échelle) dans `results/evaluation-pilot/`.
-
-## API locale pour une démonstration Web (FastAPI + Swagger/ReDoc)
-
-L'API est maintenant construite avec **FastAPI** et documentée automatiquement via **Swagger UI** et **ReDoc** (OpenAPI 3.0).
-
-### Démarrage
-
-```powershell
-python -m src.web.server
-# Options: --host 127.0.0.1 --port 8000 --reload
-```
-
-### Interfaces disponibles
-
-| Interface | URL | Description |
-|-----------|-----|-------------|
-| **Swagger UI** | http://127.0.0.1:8000/docs | Documentation interactive, test des endpoints ("Try it out") |
-| **ReDoc** | http://127.0.0.1:8000/redoc | Documentation alternative, plus lisible |
-| **Health check** | http://127.0.0.1:8000/api/health | Vérification modèle chargé |
-| **Targets** | http://127.0.0.1:8000/api/targets | Liste des 11 formes du curriculum |
-| **Simulate** | http://127.0.0.1:8000/api/simulate | Lance une simulation complète |
-| **OpenAPI Spec** | http://127.0.0.1:8000/openapi.json | Spécification JSON brute |
-
-### Endpoint `/api/simulate` - Paramètres
-
-| Paramètre | Type | Requis | Défaut | Valeurs | Description |
-|-----------|------|--------|--------|---------|-------------|
-| `target` | string | Oui | - | `geometry_circle`, `alphabet_A`, `digit_0`, `number_123`, etc. | Identifiant de la forme cible |
-| `seed` | integer | Non | 142 | ≥ 0 | Graine aléatoire pour reproductibilité |
-| `method` | string | Non | `gnn` | `gnn`, `gathering`, `manual`, `gnn_no_comm` | Méthode de contrôle |
-| `failure` | number | Non | 0.0 | 0.0, 0.05, 0.10, 0.20 | Fraction de robots en panne à mi-épisode |
-| `robots` | integer | Non | 20 | 20, 40, 100 | Nombre de robots (passage à l'échelle) |
-
-### Exemples d'utilisation
-
-```powershell
-# Simulation GNN standard (20 robots, cercle)
-curl "http://127.0.0.1:8000/api/simulate?target=geometry_circle"
-
-# GNN avec 10% de pannes à mi-épisode
-curl "http://127.0.0.1:8000/api/simulate?target=alphabet_A&failure=0.10"
-
-# Baseline gathering (sans GNN)
-curl "http://127.0.0.1:8000/api/simulate?target=digit_2&method=gathering"
-
-# Passage à l'échelle : 100 robots
-curl "http://127.0.0.1:8000/api/simulate?target=number_123&robots=100"
-
-# Contrôle manuel avec consigne de forme
-curl "http://127.0.0.1:8000/api/simulate?target=geometry_square&method=manual"
-
-# GNN sans communication (même modèle, pas de messages)
-curl "http://127.0.0.1:8000/api/simulate?target=geometry_triangle&method=gnn_no_comm"
-```
-
-### Réponse `/api/simulate` (extrait)
-
-```json
-{
-  "model": {"path": "...", "stage": "numbers", "type": "GNNController"},
-  "target": {"id": "alphabet_A", "source": "...", "points": [[x,y], ...]},
-  "simulation": {
-    "seed": 142,
-    "method": "gnn",
-    "robot_count": 20,
-    "failure_fraction": 0.1,
-    "failure_step": 10,
-    "retired": [3, 7, 14],
-    "episode_steps": 20,
-    "arena_size": [10.0, 10.0],
-    ...
-  },
-  "metrics": {
-    "shape_distance": 0.098,
-    "regularity_std": 0.12,
-    "collisions": 45,
-    "collision_rate": 0.023,
-    "convergence_step": 15,
-    "success": 1
-  },
-  "frames": [
-    [[x1,y1], [x2,y2], ...],  // t=0
-    [[x1,y1], [x2,y2], ...],  // t=1
-    ...
-  ]
-}
-```
-
-Le contrat détaillé des réponses JSON est dans [`docs/10-api-visualisation.md`](docs/10-api-visualisation.md).
+`make web` lance la démonstration actuelle ; `make test` exécute la suite conservée. Les commandes d’apprentissage et de campagnes sont documentées dans les décisions 23 à 27. Le candidat correctif 011 réduit les contacts de 102 à 65 sur les 18 nouveaux scénarios, mais échoue encore sans filtre ; il ne remplace pas le modèle de l’interface. La généralisation à 24 et 64 robots reste la tâche 012.

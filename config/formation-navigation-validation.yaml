@@ -1,0 +1,44 @@
+robot_count: 12
+width: 6.0
+communication_radius: 3.0
+preparation_seconds: 40.0
+seeds: [7602, 7603]
+metrics:
+  formation_threshold: 0.1
+  transit_formation_limit: 0.2
+  arrival_threshold: 0.1
+  speed_threshold: 0.05
+  hold_seconds: 1.0
+  sensor_range: 3.0
+  obstacle_clearance: 0.15
+scenarios:
+  clear_rectangle:
+    shape: rectangle
+    points: [[-0.8, 0], [1, 0]]
+    durations: [20]
+    navigation_seconds: 30
+  clear_number:
+    shape: numbers_7
+    points: [[-0.8, -0.4], [0.1, 0.4], [1, -0.4]]
+    durations: [12, 12]
+    navigation_seconds: 34
+  obstacle_bypass_shifted:
+    shape: square
+    points: [[-1, 0], [-1, 0.9], [1, 0.9], [1, 0]]
+    durations: [10, 16, 10]
+    navigation_seconds: 46
+    obstacles: [{center: [-0.8, -3], radius: 0.25}]
+  direct_obstacle_shifted:
+    group: stress
+    shape: square
+    points: [[-1, 0], [1, 0]]
+    durations: [20]
+    navigation_seconds: 30
+    obstacles: [{center: [-0.8, -3], radius: 0.25}]
+  blocked_goal:
+    group: stress
+    shape: square
+    points: [[-1, 0], [1, 0]]
+    durations: [20]
+    navigation_seconds: 30
+    obstacles: [{center: [4, -3], radius: 0.35}]

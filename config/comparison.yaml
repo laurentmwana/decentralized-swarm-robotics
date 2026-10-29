@@ -1,5 +1,0 @@
-# Phase 7 : uniquement des artefacts figés de la campagne, aucun entraînement.
-source: outputs/evaluation
-output: outputs/comparison
-reference_controller: no_comm
-communication_controllers: [gnn_1_round, gnn_2_rounds, gnn_3_rounds]

@@ -1,0 +1,118 @@
+{
+  "checkpoint_sha256": "a1e3b88b39386a3d490798b5c7717e3939416e52572a058045d7402ec6cf6d84",
+  "campaigns": {
+    "outputs/navigation/task009-pilot-v1": {
+      "trajectories": 20,
+      "failures": [],
+      "max_speed_m_s": 1.0000000000000002,
+      "max_acceleration_m_s2": 2.0,
+      "minimum_swept_obstacle_clearance_m": 0.1111887670068765,
+      "model_sha256": "a1e3b88b39386a3d490798b5c7717e3939416e52572a058045d7402ec6cf6d84",
+      "summary": {
+        "teacher": {
+          "all": {
+            "episodes": 10,
+            "successes": 6,
+            "collisions": 0,
+            "max_formation_error_m": 0.6508130947342804,
+            "max_destination_error_m": 0.04731212520663592
+          },
+          "nominal": {
+            "episodes": 6,
+            "successes": 6,
+            "collisions": 0,
+            "max_formation_error_m": 1.390538272148542e-13,
+            "max_destination_error_m": 9.994474079390603e-15
+          },
+          "stress": {
+            "episodes": 4,
+            "successes": 0,
+            "collisions": 0,
+            "max_formation_error_m": 0.6508130947342804,
+            "max_destination_error_m": 0.04731212520663592
+          }
+        },
+        "guarded": {
+          "all": {
+            "episodes": 10,
+            "successes": 6,
+            "collisions": 0,
+            "max_formation_error_m": 0.8739086258124122,
+            "max_destination_error_m": 0.04611718099642581
+          },
+          "nominal": {
+            "episodes": 6,
+            "successes": 6,
+            "collisions": 0,
+            "max_formation_error_m": 0.010055631155241284,
+            "max_destination_error_m": 0.009826230287914491
+          },
+          "stress": {
+            "episodes": 4,
+            "successes": 0,
+            "collisions": 0,
+            "max_formation_error_m": 0.8739086258124122,
+            "max_destination_error_m": 0.04611718099642581
+          }
+        }
+      }
+    },
+    "outputs/navigation/task009-validation-v1": {
+      "trajectories": 20,
+      "failures": [],
+      "max_speed_m_s": 1.0000000000000002,
+      "max_acceleration_m_s2": 2.0,
+      "minimum_swept_obstacle_clearance_m": 0.11365331706264833,
+      "model_sha256": "a1e3b88b39386a3d490798b5c7717e3939416e52572a058045d7402ec6cf6d84",
+      "summary": {
+        "teacher": {
+          "all": {
+            "episodes": 10,
+            "successes": 6,
+            "collisions": 0,
+            "max_formation_error_m": 0.9706803251972881,
+            "max_destination_error_m": 0.047312125206640375
+          },
+          "nominal": {
+            "episodes": 6,
+            "successes": 6,
+            "collisions": 0,
+            "max_formation_error_m": 3.997295353244866e-12,
+            "max_destination_error_m": 9.180529300745254e-15
+          },
+          "stress": {
+            "episodes": 4,
+            "successes": 0,
+            "collisions": 0,
+            "max_formation_error_m": 0.9706803251972881,
+            "max_destination_error_m": 0.047312125206640375
+          }
+        },
+        "guarded": {
+          "all": {
+            "episodes": 10,
+            "successes": 6,
+            "collisions": 0,
+            "max_formation_error_m": 0.8249044902593091,
+            "max_destination_error_m": 0.05620795999071108
+          },
+          "nominal": {
+            "episodes": 6,
+            "successes": 6,
+            "collisions": 0,
+            "max_formation_error_m": 0.010055625452127893,
+            "max_destination_error_m": 0.006917582743963825
+          },
+          "stress": {
+            "episodes": 4,
+            "successes": 0,
+            "collisions": 0,
+            "max_formation_error_m": 0.8249044902593091,
+            "max_destination_error_m": 0.05620795999071108
+          }
+        }
+      }
+    }
+  },
+  "success": true
+}

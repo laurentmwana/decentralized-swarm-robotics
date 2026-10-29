@@ -44,7 +44,7 @@ def formation_error(positions, mission: CircleMission):
     return float(max(radial, spacing))
 
 
-def collision_events(positions, robot_radius):
+def collision_timeline(positions, robot_radius):
     """Contacts de disques : initiaux + entrées, y compris traversées entre deux états.
 
     Chaque segment de trajectoire est interpolé linéairement. Un contact prolongé
@@ -59,7 +59,8 @@ def collision_events(positions, robot_radius):
     relative = positions[:, i] - positions[:, j]
     threshold = (2 * robot_radius) ** 2
     initial = np.sum(relative[0] ** 2, axis=-1) <= threshold + 1e-12
-    count = int(initial.sum())
+    initial_count = int(initial.sum())
+    counts = []
     intervals = []
     for start, end in zip(relative[:-1], relative[1:]):
         movement = end - start
@@ -68,9 +69,14 @@ def collision_events(positions, robot_radius):
         nearest = start + fraction[:, None] * movement
         contact = np.sum(nearest ** 2, axis=-1) <= threshold + 1e-12
         at_start = np.sum(start ** 2, axis=-1) <= threshold + 1e-12
-        count += int((contact & ~at_start).sum())
+        counts.append(int((contact & ~at_start).sum()))
         intervals.append(bool(contact.any()))
-    return count, np.array(intervals, dtype=bool), bool(initial.any())
+    return np.array(counts, dtype=int), np.array(intervals, dtype=bool), initial_count
+
+
+def collision_events(positions, robot_radius):
+    counts, intervals, initial = collision_timeline(positions, robot_radius)
+    return int(counts.sum())+initial, intervals, initial > 0
 
 
 def evaluate_circle(result, mission, config: CircleMetricConfig):

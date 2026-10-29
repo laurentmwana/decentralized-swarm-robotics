@@ -1,0 +1,55 @@
+{
+  "success": true,
+  "trajectories": 72,
+  "distinct_initial_states": 2,
+  "model_hashes": {
+    "baseline": "a1e3b88b39386a3d490798b5c7717e3939416e52572a058045d7402ec6cf6d84",
+    "candidate": "e8d40571613479b093f123b978cd966d2fc3f32e676ca0da86449428885d514e"
+  },
+  "checks": [
+    "finite states",
+    "swept collision counts",
+    "physical bounds and integrator",
+    "time continuity",
+    "paired initial states",
+    "frozen weights"
+  ],
+  "summary": {
+    "teacher": {
+      "episodes": 18,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 1.1124826868027187e-12,
+      "formation_error_std_m": 4.269264956967754e-12,
+      "collisions_total": 0,
+      "stabilization_time_mean_s": 29.688888888888894,
+      "stabilization_successful_episodes": 18
+    },
+    "baseline_raw": {
+      "episodes": 18,
+      "success_rate_percent": 0.0,
+      "formation_error_mean_m": 0.012689781144171249,
+      "formation_error_std_m": 0.0030302011004038755,
+      "collisions_total": 102,
+      "stabilization_time_mean_s": null,
+      "stabilization_successful_episodes": 0
+    },
+    "candidate_raw": {
+      "episodes": 18,
+      "success_rate_percent": 0.0,
+      "formation_error_mean_m": 0.01782864889103045,
+      "formation_error_std_m": 0.010701064458275735,
+      "collisions_total": 65,
+      "stabilization_time_mean_s": null,
+      "stabilization_successful_episodes": 0
+    },
+    "candidate_guarded": {
+      "episodes": 18,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 0.017781973127816732,
+      "formation_error_std_m": 0.010715526254973394,
+      "collisions_total": 0,
+      "stabilization_time_mean_s": 30.866666666666667,
+      "stabilization_successful_episodes": 18
+    }
+  }
+}

@@ -1,0 +1,271 @@
+{
+  "kind": "vector_gat_closed_loop",
+  "status": "complete",
+  "split": "validation",
+  "registered_at_utc": "2026-10-29T13:34:44.155650+00:00",
+  "model_sha256": "411d902b0fbf52d60f79ca1c115fb07c4563602d3dc2ce03f6885c4824bc952a",
+  "seeds": [
+    8200
+  ],
+  "shapes": [
+    "geometries_triangle",
+    "letters_B",
+    "numbers_7"
+  ],
+  "reports": [
+    {
+      "count": 12,
+      "shape": "geometries_triangle",
+      "seed": 8200,
+      "metrics": {
+        "formation_error_m": 9.995604899210132e-08,
+        "stabilization_time_s": 29.5,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 14.4,
+        "reconnection_time_s": 10.0,
+        "control_release_time_s": 24.400000000000002,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 19008,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 0,
+        "motion_safety_intervention_robot_steps": 0,
+        "robot_collisions": 0,
+        "wall_collisions": 0
+      }
+    },
+    {
+      "count": 12,
+      "shape": "letters_B",
+      "seed": 8200,
+      "metrics": {
+        "formation_error_m": 1.1884514849138202e-07,
+        "stabilization_time_s": 31.400000000000002,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 14.4,
+        "reconnection_time_s": 10.0,
+        "control_release_time_s": 24.400000000000002,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 19008,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 0,
+        "motion_safety_intervention_robot_steps": 0,
+        "robot_collisions": 0,
+        "wall_collisions": 0
+      }
+    },
+    {
+      "count": 12,
+      "shape": "numbers_7",
+      "seed": 8200,
+      "metrics": {
+        "formation_error_m": 2.2938118614486836e-07,
+        "stabilization_time_s": 34.6,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 14.4,
+        "reconnection_time_s": 10.0,
+        "control_release_time_s": 24.400000000000002,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 19008,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 0,
+        "motion_safety_intervention_robot_steps": 0,
+        "robot_collisions": 0,
+        "wall_collisions": 0
+      }
+    },
+    {
+      "count": 24,
+      "shape": "geometries_triangle",
+      "seed": 8200,
+      "metrics": {
+        "formation_error_m": 3.2175855553964897e-07,
+        "stabilization_time_s": 85.4,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 57.6,
+        "reconnection_time_s": 17.0,
+        "control_release_time_s": 74.60000000000001,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 138240,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 0,
+        "motion_safety_intervention_robot_steps": 0,
+        "robot_collisions": 0,
+        "wall_collisions": 0
+      }
+    },
+    {
+      "count": 24,
+      "shape": "letters_B",
+      "seed": 8200,
+      "metrics": {
+        "formation_error_m": 4.447269978717467e-07,
+        "stabilization_time_s": 86.60000000000001,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 57.6,
+        "reconnection_time_s": 17.0,
+        "control_release_time_s": 74.60000000000001,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 138240,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 0,
+        "motion_safety_intervention_robot_steps": 0,
+        "robot_collisions": 0,
+        "wall_collisions": 0
+      }
+    },
+    {
+      "count": 24,
+      "shape": "numbers_7",
+      "seed": 8200,
+      "metrics": {
+        "formation_error_m": 4.857886885219692e-07,
+        "stabilization_time_s": 87.30000000000001,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 57.6,
+        "reconnection_time_s": 17.0,
+        "control_release_time_s": 74.60000000000001,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 138240,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 0,
+        "motion_safety_intervention_robot_steps": 0,
+        "robot_collisions": 0,
+        "wall_collisions": 0
+      }
+    },
+    {
+      "count": 64,
+      "shape": "geometries_triangle",
+      "seed": 8200,
+      "metrics": {
+        "formation_error_m": 8.265953867395594e-07,
+        "stabilization_time_s": 462.40000000000003,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 409.6,
+        "reconnection_time_s": 32.0,
+        "control_release_time_s": 441.6,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 2621440,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 0,
+        "motion_safety_intervention_robot_steps": 0,
+        "robot_collisions": 0,
+        "wall_collisions": 0
+      }
+    },
+    {
+      "count": 64,
+      "shape": "letters_B",
+      "seed": 8200,
+      "metrics": {
+        "formation_error_m": 8.813794045487112e-07,
+        "stabilization_time_s": 468.8,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 409.6,
+        "reconnection_time_s": 32.0,
+        "control_release_time_s": 441.6,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 2621440,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 0,
+        "motion_safety_intervention_robot_steps": 0,
+        "robot_collisions": 0,
+        "wall_collisions": 0
+      }
+    },
+    {
+      "count": 64,
+      "shape": "numbers_7",
+      "seed": 8200,
+      "metrics": {
+        "formation_error_m": 4.558434019007659e-06,
+        "stabilization_time_s": 478.1,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false,
+        "allocation_resolved": true,
+        "allocation_time_s": 409.6,
+        "reconnection_time_s": 32.0,
+        "control_release_time_s": 441.6,
+        "allocation_graph_changed_steps": 0,
+        "max_allocation_speed_m_s": 0.0,
+        "allocation_stationary": true,
+        "packets_delivered": 2621440,
+        "safety_infeasible_robot_steps": 0,
+        "safety_intervention_robot_steps": 0,
+        "motion_safety_intervention_robot_steps": 0,
+        "robot_collisions": 0,
+        "wall_collisions": 0
+      }
+    }
+  ],
+  "summary": {
+    "12": {
+      "episodes": 3,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 1.4939412787611723e-07,
+      "formation_error_std_m": 5.7082668927558466e-08,
+      "collisions_total": 0,
+      "stabilization_time_mean_s": 31.833333333333332,
+      "stabilization_successful_episodes": 3
+    },
+    "24": {
+      "episodes": 3,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 4.1742474731112166e-07,
+      "formation_error_std_m": 6.96923276303582e-08,
+      "collisions_total": 0,
+      "stabilization_time_mean_s": 86.43333333333334,
+      "stabilization_successful_episodes": 3
+    },
+    "64": {
+      "episodes": 3,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 2.08880293676531e-06,
+      "formation_error_std_m": 1.7464361013093617e-06,
+      "collisions_total": 0,
+      "stabilization_time_mean_s": 469.7666666666667,
+      "stabilization_successful_episodes": 3
+    }
+  }
+}

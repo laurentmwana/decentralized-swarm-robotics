@@ -1,0 +1,41 @@
+{
+  "test_archives": [
+    {
+      "path": "test/geometries_ellipse-7300.npz",
+      "sha256": "0841074854355f69c94b7acdbc5b088910b736f227f8f2e0dde9119299012d6a"
+    },
+    {
+      "path": "test/geometries_heart-7300.npz",
+      "sha256": "4d044cd6b326a675ca377eaf4eb488424c88b06cbb43eeb7fcb4eb9611bb5be7"
+    },
+    {
+      "path": "test/geometries_rectangle-7300.npz",
+      "sha256": "b33a4e184d1b7f4693808bcb8004144d979f8e7ffa4c94406847483c22bb7f9f"
+    },
+    {
+      "path": "test/letters_H-7300.npz",
+      "sha256": "d3383c58fd75f8b294dbc854c20165aa0ac513065d380bccca6b6476f4ba5cde"
+    },
+    {
+      "path": "test/letters_K-7300.npz",
+      "sha256": "886e1c31fed765e190b0a9729d46fde9ca7331f717216253a26eaa7af4e74c34"
+    },
+    {
+      "path": "test/letters_T-7300.npz",
+      "sha256": "ac24741dda99eeb14a6db87856d23c7954b6c6e5ffcdaad88d8acdf351a0362b"
+    },
+    {
+      "path": "test/letters_Y-7300.npz",
+      "sha256": "9c152ccfd40b644b0f1c39a20dad3d61614400573d4b69db0480a69fee9b4d87"
+    },
+    {
+      "path": "test/numbers_3-7300.npz",
+      "sha256": "ee572d5711e196f76790fe5cf7b58d297e42b41b9653b32bd65f9a7e986e8e89"
+    },
+    {
+      "path": "test/numbers_8-7300.npz",
+      "sha256": "af2838b1693c10068984d4cd01895d49884cb70057a1aa8637444008b4c311f7"
+    }
+  ],
+  "unchanged": true
+}

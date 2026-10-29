@@ -1,0 +1,21 @@
+{
+  "schema_version": 2,
+  "manifest_sha256": "1aa80f35c0a6dda274d4929598f864cece2ed444de5efbee04e412eb4c4e436f",
+  "quality_status": "passed",
+  "splits_checked": [
+    "train",
+    "validation"
+  ],
+  "summary": {
+    "train": {
+      "episodes": 185,
+      "unique_episodes": 180,
+      "learned_robot_samples": 546120
+    },
+    "validation": {
+      "episodes": 20,
+      "unique_episodes": 18,
+      "learned_robot_samples": 59040
+    }
+  }
+}

@@ -1,0 +1,191 @@
+{
+  "schema_version": 1,
+  "kind": "multiform_local_target_training",
+  "status": "trained",
+  "dataset": "D:\\ProjectLabs\\python\\swarm-gnn\\outputs\\imitation\\multiform-pilot-task008c",
+  "dataset_manifest_sha256": "1e053db26c173da2a41e9ace54e2aa059d34751af3813e74a809f7749e1f2c7f",
+  "model": {
+    "model_type": "LocalTargetGAT",
+    "schema_version": 1,
+    "dataset_schema_version": 2,
+    "config": {
+      "hidden_dim": 64,
+      "spatial_scale": 6.0,
+      "speed_scale": 1.0,
+      "count_scale": 12.0,
+      "init_seed": 42
+    },
+    "max_acceleration": 2.0,
+    "feature_names": [
+      "position_x",
+      "position_y",
+      "velocity_x",
+      "velocity_y",
+      "local_target_x",
+      "local_target_y",
+      "phase",
+      "robot_count"
+    ],
+    "message_feature_names": [
+      "relative_position_x",
+      "relative_position_y",
+      "relative_velocity_x",
+      "relative_velocity_y"
+    ]
+  },
+  "training": {
+    "epochs": 120,
+    "batch_size": 512,
+    "learning_rate": 0.001,
+    "patience": 15,
+    "seed": 42
+  },
+  "device": "cpu",
+  "selection": {
+    "train": {
+      "episodes": 36,
+      "samples": 106272,
+      "paths": [
+        "train/geometries_arrow-7100.npz",
+        "train/geometries_circle-7100.npz",
+        "train/geometries_decagon-7100.npz",
+        "train/geometries_diamond-7100.npz",
+        "train/geometries_hexagon-7100.npz",
+        "train/geometries_line-7100.npz",
+        "train/geometries_octagon-7100.npz",
+        "train/geometries_parallelogram-7100.npz",
+        "train/geometries_pentagon-7100.npz",
+        "train/geometries_semicircle-7100.npz",
+        "train/geometries_square-7100.npz",
+        "train/geometries_star-7100.npz",
+        "train/geometries_trapezoid-7100.npz",
+        "train/letters_A-7100.npz",
+        "train/letters_C-7100.npz",
+        "train/letters_D-7100.npz",
+        "train/letters_E-7100.npz",
+        "train/letters_F-7100.npz",
+        "train/letters_G-7100.npz",
+        "train/letters_I-7100.npz",
+        "train/letters_J-7100.npz",
+        "train/letters_L-7100.npz",
+        "train/letters_M-7100.npz",
+        "train/letters_N-7100.npz",
+        "train/letters_Q-7100.npz",
+        "train/letters_R-7100.npz",
+        "train/letters_S-7100.npz",
+        "train/letters_U-7100.npz",
+        "train/letters_X-7100.npz",
+        "train/letters_Z-7100.npz",
+        "train/numbers_1-7100.npz",
+        "train/numbers_10-7100.npz",
+        "train/numbers_2-7100.npz",
+        "train/numbers_4-7100.npz",
+        "train/numbers_5-7100.npz",
+        "train/numbers_9-7100.npz"
+      ]
+    },
+    "validation": {
+      "episodes": 9,
+      "samples": 26568,
+      "paths": [
+        "validation/geometries_cross-7200.npz",
+        "validation/geometries_heptagon-7200.npz",
+        "validation/geometries_triangle-7200.npz",
+        "validation/geometries_v-7200.npz",
+        "validation/letters_B-7200.npz",
+        "validation/letters_P-7200.npz",
+        "validation/letters_W-7200.npz",
+        "validation/numbers_6-7200.npz",
+        "validation/numbers_7-7200.npz"
+      ]
+    }
+  },
+  "torch_version": "2.15.0+cpu",
+  "numpy_version": "2.5.4",
+  "history": [
+    {
+      "epoch": 1,
+      "train_mse": 0.12975480190756736,
+      "validation_mse": 0.20580729163176784
+    },
+    {
+      "epoch": 2,
+      "train_mse": 0.06463867707026001,
+      "validation_mse": 0.23609731732402706
+    },
+    {
+      "epoch": 3,
+      "train_mse": 0.052391552198897,
+      "validation_mse": 0.2467590534429961
+    },
+    {
+      "epoch": 4,
+      "train_mse": 0.04741404576799716,
+      "validation_mse": 0.248626076023112
+    },
+    {
+      "epoch": 5,
+      "train_mse": 0.04395448273562121,
+      "validation_mse": 0.2547326647860852
+    },
+    {
+      "epoch": 6,
+      "train_mse": 0.04151379683741207,
+      "validation_mse": 0.2592610385663568
+    },
+    {
+      "epoch": 7,
+      "train_mse": 0.03963436049461652,
+      "validation_mse": 0.2651390821619133
+    },
+    {
+      "epoch": 8,
+      "train_mse": 0.03763185212996056,
+      "validation_mse": 0.2657122023284802
+    },
+    {
+      "epoch": 9,
+      "train_mse": 0.03621336275829999,
+      "validation_mse": 0.27108902231125076
+    },
+    {
+      "epoch": 10,
+      "train_mse": 0.03505154487303099,
+      "validation_mse": 0.27330812180756714
+    },
+    {
+      "epoch": 11,
+      "train_mse": 0.034161059582396756,
+      "validation_mse": 0.27701848534777973
+    },
+    {
+      "epoch": 12,
+      "train_mse": 0.03304702616965544,
+      "validation_mse": 0.2799180536305272
+    },
+    {
+      "epoch": 13,
+      "train_mse": 0.03223269434465733,
+      "validation_mse": 0.2868604652360005
+    },
+    {
+      "epoch": 14,
+      "train_mse": 0.03150798714372254,
+      "validation_mse": 0.2928063378876243
+    },
+    {
+      "epoch": 15,
+      "train_mse": 0.030769659678522666,
+      "validation_mse": 0.28876854629310234
+    },
+    {
+      "epoch": 16,
+      "train_mse": 0.029402575710520833,
+      "validation_mse": 0.28534011895264544
+    }
+  ],
+  "best_epoch": 1,
+  "best_validation_mse": 0.20580729163176784,
+  "checkpoint": "best.pt",
+  "epochs_completed": 16
+}

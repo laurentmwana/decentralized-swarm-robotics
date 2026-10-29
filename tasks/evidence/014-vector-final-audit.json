@@ -1,0 +1,75 @@
+{
+  "kind": "vector_gat_reserved_audit",
+  "success": true,
+  "model_sha256": "411d902b0fbf52d60f79ca1c115fb07c4563602d3dc2ce03f6885c4824bc952a",
+  "trajectories": 36,
+  "raw_trajectories": 18,
+  "teacher_trajectories": 18,
+  "distinct_initial_states": 6,
+  "raw_motion_filter_interventions": 0,
+  "minimum_swept_center_separation_m": {
+    "12": 0.5458858959339921,
+    "24": 0.5157735389766471,
+    "64": 0.41077271161139617
+  },
+  "physical_contact_distance_m": 0.2,
+  "errors": [],
+  "summary": {
+    "12": {
+      "episodes": 6,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 1.7875912398703777e-07,
+      "formation_error_std_m": 3.267646594016701e-08,
+      "collisions_total": 0,
+      "stabilization_time_mean_s": 29.433333333333337,
+      "stabilization_successful_episodes": 6
+    },
+    "24": {
+      "episodes": 6,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 3.44134179632455e-07,
+      "formation_error_std_m": 8.379351413892058e-08,
+      "collisions_total": 0,
+      "stabilization_time_mean_s": 85.23333333333333,
+      "stabilization_successful_episodes": 6
+    },
+    "64": {
+      "episodes": 6,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 8.671724684673486e-07,
+      "formation_error_std_m": 1.2563195610688237e-07,
+      "collisions_total": 0,
+      "stabilization_time_mean_s": 465.8,
+      "stabilization_successful_episodes": 6
+    }
+  },
+  "teacher_summary": {
+    "12": {
+      "episodes": 6,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 5.111129574856383e-16,
+      "formation_error_std_m": 8.278280587771461e-17,
+      "collisions_total": 0,
+      "stabilization_time_mean_s": 30.0,
+      "stabilization_successful_episodes": 6
+    },
+    "24": {
+      "episodes": 6,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 1.4993917521639527e-15,
+      "formation_error_std_m": 3.4410331182037016e-16,
+      "collisions_total": 0,
+      "stabilization_time_mean_s": 85.23333333333333,
+      "stabilization_successful_episodes": 6
+    },
+    "64": {
+      "episodes": 6,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 4.263920342969245e-15,
+      "formation_error_std_m": 1.0072728871517337e-15,
+      "collisions_total": 0,
+      "stabilization_time_mean_s": 465.93333333333334,
+      "stabilization_successful_episodes": 6
+    }
+  }
+}

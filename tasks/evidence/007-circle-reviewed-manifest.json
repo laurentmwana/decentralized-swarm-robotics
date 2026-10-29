@@ -1,0 +1,623 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "simulator": {
+    "physics": {
+      "arena_size": 10.0,
+      "dt": 0.1,
+      "max_speed": 1.0,
+      "max_acceleration": 2.0,
+      "robot_radius": 0.1
+    },
+    "horizon": 100,
+    "communication_radius": 2.0,
+    "spawn_radius": 4.0
+  },
+  "teacher": {
+    "mission": {
+      "center": [
+        0.0,
+        0.0
+      ],
+      "radius": 2.0,
+      "robot_count": 12
+    },
+    "gains": {
+      "radial": 12.0,
+      "damping": 6.0,
+      "spacing": 60.0,
+      "avoidance": 60.0,
+      "safety_distance": 0.4
+    }
+  },
+  "protocol": {
+    "error_threshold": 0.1,
+    "speed_threshold": 0.05,
+    "hold_seconds": 1.0,
+    "deadline_seconds": 10.0
+  },
+  "collection": {
+    "splits": {
+      "train": [
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119
+      ],
+      "validation": [
+        200,
+        201,
+        202,
+        203,
+        204
+      ],
+      "test": [
+        300,
+        301,
+        302,
+        303,
+        304
+      ]
+    },
+    "minimum_distance": 0.4,
+    "max_spawn_attempts": 20000
+  },
+  "feature_names": [
+    "position_x",
+    "position_y",
+    "velocity_x",
+    "velocity_y",
+    "center_x",
+    "center_y",
+    "radius",
+    "robot_count"
+  ],
+  "relative_feature_names": [
+    "relative_position_x",
+    "relative_position_y",
+    "relative_velocity_x",
+    "relative_velocity_y"
+  ],
+  "target": "bounded_teacher_acceleration_m_s2",
+  "units": {
+    "position": "m",
+    "velocity": "m/s",
+    "acceleration": "m/s^2",
+    "time": "s"
+  },
+  "episodes": [
+    {
+      "split": "train",
+      "seed": 100,
+      "path": "train/episode-100.npz",
+      "sha256": "4c67e1ef5de22e1f4402989f81273192241b577fb7d0b3f19ff242f7b5b9df7c",
+      "initial_sha256": "abc20d72c9cfdec292f3be3af0be892ef68c7ca97e8fd12298cd0baffc049a72",
+      "trajectory_sha256": "1ac61ab11c2653cf280d7daaec2e30ff4b1bbf023d86384cf2919f3fefeb3bab",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.00543146182601606,
+        "stabilization_time_s": 5.800000000000001,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 101,
+      "path": "train/episode-101.npz",
+      "sha256": "5aff24ea6ef8976d6003d91942d72442ac5805958e334557e10167998f5b99b2",
+      "initial_sha256": "f1a0b3184adc0953bdcd21403fa0694d7b1f08f9312df6d3399877e25f2b59ca",
+      "trajectory_sha256": "41d90d90725cfefe7c154bc838827ea55b847445d90b6b04709fd4a55668269a",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.011631223420103032,
+        "stabilization_time_s": 6.9,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 102,
+      "path": "train/episode-102.npz",
+      "sha256": "59b1171a5f2d2a214fd88dffdf86c866694a4cea17f37b37fbb6aac5e6c5878a",
+      "initial_sha256": "bd80456226864301edf39f10ddde1c736f192ac9ccdf2fc832d0e3d7a5d90dbe",
+      "trajectory_sha256": "cd3079263cdf67553ed93c1749815396b1e8f2776f2f3391a55abbffd73fb8d2",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.008421796192551012,
+        "stabilization_time_s": 6.5,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 103,
+      "path": "train/episode-103.npz",
+      "sha256": "9ea90a80dafcf98c01b520ddf75b0684e90fde9140066f2c715add73881f099a",
+      "initial_sha256": "5b785a586ec0f1129e422844d4aa5b974ae6d301fb16d397347d51301675923f",
+      "trajectory_sha256": "fb73bd4668f93fbe5b5215c4e487e8939e7799774ca804def0bd514ae0717a81",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.00012933077539467597,
+        "stabilization_time_s": 3.6,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 104,
+      "path": "train/episode-104.npz",
+      "sha256": "2f09dc668abc0d473ca8373d15c6dcc51cb1c4a72fd29f711e1c715e1b87df77",
+      "initial_sha256": "4c3695eb4d70a7dda525a70f1d62718d6be526c4eac44e4bb0ae92ece7d98445",
+      "trajectory_sha256": "042d4952b20c02757bfcbb30f07a93789322d121376daaea1047adeb6f9773c3",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.005003372840927112,
+        "stabilization_time_s": 5.7,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 105,
+      "path": "train/episode-105.npz",
+      "sha256": "a1a317221bdea7b5b12fae3d6e4d33510b81c92dc3dc267201f51ce0bb64d865",
+      "initial_sha256": "e602cf02096cb23ac0bec26cfbb3cd1a71cdd792eb6e709021a387e7c17fbdcc",
+      "trajectory_sha256": "bce59f9eeac36246eb2e0454dd2e07c19fe8663b96e883b92ca4684e7b4d09c3",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.012513164689327949,
+        "stabilization_time_s": 7.0,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 106,
+      "path": "train/episode-106.npz",
+      "sha256": "ba7f04615b75f7b6ecd33a560fff8ee8c491b6177a8b738f448a50620e9da409",
+      "initial_sha256": "2cd9edd82680e4de609f15d753e2e4a28e273c4865f6cd667749a21b207413c3",
+      "trajectory_sha256": "080111b4da05454b14326759d631e5ef39a4075fb0087bbd87695ea1e65e6734",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.00651097629770736,
+        "stabilization_time_s": 6.1000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 107,
+      "path": "train/episode-107.npz",
+      "sha256": "676d94c7317cb34ed2e1307616ce26105d886429f898f24a836ca64b5f60dca9",
+      "initial_sha256": "6a6e519003794dbe5647b1a494fccaa0c0880a12ea8aca43628b432b5bed5ca2",
+      "trajectory_sha256": "6be9b36429f6e281fa3dda3dc0d4f4bc53d03820643da6b2751ae7f8a232167a",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.001701479859465449,
+        "stabilization_time_s": 4.4,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 108,
+      "path": "train/episode-108.npz",
+      "sha256": "6cf8a1f2d25e239e31d53996d47c8996f20f691849f858fad633611e055d1f67",
+      "initial_sha256": "42ba7df3d54ea7ce3b13411d0a995cbe40ce1a55c2c7b9b7e75183d91a9dc4e4",
+      "trajectory_sha256": "3a56c9e3a56de10793d659f7081a43839ccfdf8181c03116093b6a0545af1457",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.005347485925711215,
+        "stabilization_time_s": 5.800000000000001,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 109,
+      "path": "train/episode-109.npz",
+      "sha256": "c9df9ea05f644301cf3ba656865dba9ef9e49af2424ff0c37a9981f51e1e4f9a",
+      "initial_sha256": "68f1d1f050823fcecefc3bd9a723c08448d0def23c57af653eada4072b85846c",
+      "trajectory_sha256": "cba88eebd4c36e0f14d9b2be82e7f6eb808d07ba1ac0bb29203e6a27afa5dd8d",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.005963638624217671,
+        "stabilization_time_s": 6.0,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 110,
+      "path": "train/episode-110.npz",
+      "sha256": "a0543bb34535283b2cd80804ae4f7dd3d7544e0c56d9de18fc29b33dafd60ab1",
+      "initial_sha256": "e41485217061372e231de5a760aaa4a1a45a228eb5881521b1c564849dd8dc85",
+      "trajectory_sha256": "8cc8439f988eaa1159311e07fd32b419924286da3bc1321aaf4902233580efa2",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.010491764901227496,
+        "stabilization_time_s": 6.800000000000001,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 111,
+      "path": "train/episode-111.npz",
+      "sha256": "3ca25853f8b90ba2f6a69a73b35306c5431d1455b4e92ceb26b38a4353fd826b",
+      "initial_sha256": "8a293e00127cf5ce7d5c26e3c5027c3a8acca81ad39c867092ee498a65a8ddcd",
+      "trajectory_sha256": "29ab42ad50bdf5f5a4411057ab95da0293f1ad7400cf4425a880d495f52b30d5",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.0012858250983505126,
+        "stabilization_time_s": 4.6000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 112,
+      "path": "train/episode-112.npz",
+      "sha256": "59cd6c0b522fb0290668399f1f578523425d96f7057f8084ef56643fae4deccf",
+      "initial_sha256": "96d0c2bbb448dde1779dec51bfefa0647beaa0999752f9cf909e497fabd5ab3d",
+      "trajectory_sha256": "6eafad8976ecd316bf4d24e5093df031671bb443e4b6ffb818082e61380e4e8e",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.0020337686968987523,
+        "stabilization_time_s": 4.4,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 114,
+      "path": "train/episode-114.npz",
+      "sha256": "46637426129b3d5a943fedbdb88b4e98f2bb3635a50618355172c0989a713b69",
+      "initial_sha256": "aabbdbecd3d41cc3aca396ec4f4214f8a1d446aed01cb16c1f5f11fbd80118cb",
+      "trajectory_sha256": "3b267dfa332018d2e1f94b37551201e268b0bace42b3aae9d489d75807b6301b",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.009384207918974097,
+        "stabilization_time_s": 6.6000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 115,
+      "path": "train/episode-115.npz",
+      "sha256": "016652f6b73208bd40e814a2a46c0a17f04bfbe0f1a6cc5d5ec764b4dcd269ca",
+      "initial_sha256": "d1b4d181b25628b2052cc7f225a33be4f2a020bfc3d4fecaf2f277f6f39ef17b",
+      "trajectory_sha256": "390101a22065c7fe76f68409881a60a87e8eb258ca02b566b5c7cdc477345348",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.00455545207554553,
+        "stabilization_time_s": 5.6000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 116,
+      "path": "train/episode-116.npz",
+      "sha256": "5ecf07396a2bdfcd3bd742c56d25285473b6c26ecd06e2217e3128df78a14a92",
+      "initial_sha256": "c3896efcd873931c106ad315954f341bc1658dab24335fe89f77a72c47d65568",
+      "trajectory_sha256": "909a80f5e3a4c814143fe95926beb0dd51c5356d21e5af333319899230dd8f3b",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.00490391543815849,
+        "stabilization_time_s": 5.7,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 117,
+      "path": "train/episode-117.npz",
+      "sha256": "ff430368a17dccf2de4fd125c0e692eacb6255e457ee4ebf0cb1d7b59193b56b",
+      "initial_sha256": "13bc0d764e2d4a2aedbbdbccf72a2c93bb9102c794622c7575096d978f43cd2d",
+      "trajectory_sha256": "c27d4064a2faf21490062af68264efcbbfeaa2d06a65e44907b2b03321d5b8f4",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.0016180413167876662,
+        "stabilization_time_s": 4.6000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 118,
+      "path": "train/episode-118.npz",
+      "sha256": "b4c44ed96db81b75e6277a9beecd81cc8843af8d9932e79081e450d844f4a3d6",
+      "initial_sha256": "4db0c47e287e3ec59433c41050006997347c1226aa9116a3f11657a7e1db5fbb",
+      "trajectory_sha256": "32836533dd70c42b58771fb47a76ef53e87c317e91f4025350d57b90d2d8d435",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.0007131708027159345,
+        "stabilization_time_s": 3.8000000000000003,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "train",
+      "seed": 119,
+      "path": "train/episode-119.npz",
+      "sha256": "1844efdf766a0721625b68e46217c2362eed71339ecd4b261aa029999b0dcf3c",
+      "initial_sha256": "8ce6e5cf2cb41aca74d5d4d7a1a06c9130a8a7ce1dff82003f86492c42a9de47",
+      "trajectory_sha256": "6850c7cad4357f176d6c65daa5a6327454ae73a8b9cb0282819e8825e3f779f5",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.0021669759832485536,
+        "stabilization_time_s": 4.5,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "validation",
+      "seed": 200,
+      "path": "validation/episode-200.npz",
+      "sha256": "05490d4aacd91fa5ea045308ca0b1c77ccc74c34b3e0ac0f2f372bfe30d87b44",
+      "initial_sha256": "56d39491265461ddc073a8fae282b70fde8f9f190ef73e3b99a8fb21593db93a",
+      "trajectory_sha256": "daca9df0110e10f55906c9f7456831a1f19f5938cd59674dcf1db2fc8eeeb425",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.00869871440591452,
+        "stabilization_time_s": 6.5,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "validation",
+      "seed": 201,
+      "path": "validation/episode-201.npz",
+      "sha256": "890adacc026e990ac659f338eae5e342cefa59186da439f7d1e791a947df74ee",
+      "initial_sha256": "5f1a0d9117f58f922cb1b625e46c37157b83d28496000ae2e11092a96a41a4e7",
+      "trajectory_sha256": "a4e3dc0cef6869747d6c24a3f0734e57fe1d9561fa3d14167813d0abbdc8b3cd",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.0012004763044621836,
+        "stabilization_time_s": 3.6,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "validation",
+      "seed": 202,
+      "path": "validation/episode-202.npz",
+      "sha256": "9457790e165df700ac907c0e76d9f74907f3437895842ebbf47684c2ac7d0800",
+      "initial_sha256": "d6aff75d06ba3703353b31b6ea1859ceddf3f6a7bd081e5497c1435f4225d704",
+      "trajectory_sha256": "c21e35c4eaeeaa58cc57b50f4a40f91bcf89ed257485b17e5257297f3fc3b57e",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.008019253484569111,
+        "stabilization_time_s": 6.4,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "validation",
+      "seed": 203,
+      "path": "validation/episode-203.npz",
+      "sha256": "e179902ff4b25372e22425f3b968e028db25476979f874ad2e800ff0336a21ab",
+      "initial_sha256": "dd50494c9e32796a8e3991b7ce85ede062e93da229b3d10e99d87613fc040b37",
+      "trajectory_sha256": "8b5d820a54c3d2f3e69aac86a9527439f5ad236938417494ea72c983be6e124b",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.0012253771134782543,
+        "stabilization_time_s": 3.6,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "validation",
+      "seed": 204,
+      "path": "validation/episode-204.npz",
+      "sha256": "e209dfe497b262b6798d3d895f7faac65488869e11e400a82cf0a9b755722d93",
+      "initial_sha256": "40b35660c8b576770b475342fbf7e88615ae9d5595a9d5850747d95d4e60b8e4",
+      "trajectory_sha256": "90a7e05570cf6f0712fdc1a87f49d1fc1ab2bc6a2ca4c4188c9dbb2319b5bd0e",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.0052971856928196726,
+        "stabilization_time_s": 5.800000000000001,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "test",
+      "seed": 300,
+      "path": "test/episode-300.npz",
+      "sha256": "8bca103755f5b9156b9d2a586b35055e16a7c1a0699149d61ceedf648c476475",
+      "initial_sha256": "a71209265591638da1a0141f10f45f9ac89a8062ed10b21a177edf32cd6662a9",
+      "trajectory_sha256": "55d24aef8405cb3be9c78231041cdb753e367293f4fc60c9b4bdfdcf1fba2021",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.007881031876320277,
+        "stabilization_time_s": 6.4,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "test",
+      "seed": 301,
+      "path": "test/episode-301.npz",
+      "sha256": "2bfbad6ec788e1af46ab277fd33801083da58a4c02225ecc5f7f0c2d56d62a66",
+      "initial_sha256": "4286cf186369bbe823672eeab7df1e48d91857f8d50c3713cb533199d34392f2",
+      "trajectory_sha256": "7f4e2681d46d232b5bcccc6293c84953f5e3ebec830228287b8fb0c563d2c41b",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.0009764098108140384,
+        "stabilization_time_s": 4.1000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "test",
+      "seed": 302,
+      "path": "test/episode-302.npz",
+      "sha256": "f590b2260ca6582fb7c49185b6a735ef8b7b446b09c12c4c3037dce4e3e6870c",
+      "initial_sha256": "0100a302d7a25d9744bc6574e3c0d87d0720245dbf1b80af13408c10438eafdc",
+      "trajectory_sha256": "c145d5e82dd07c0544226c6c00d612eeab0e8092599003ccd1630d939c37bbef",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 9.752976637922295e-05,
+        "stabilization_time_s": 4.2,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "test",
+      "seed": 303,
+      "path": "test/episode-303.npz",
+      "sha256": "f532a01afd6686298a45d3bdcc5c0f442bfe7b8d8c6a4fa6598ef1141451afcf",
+      "initial_sha256": "8825109c7739deb36efb21538301c67600f8e2ab5c9d011f2fb8bece23e6b4aa",
+      "trajectory_sha256": "edc9a737fea4c9d42997cb0819098634fa0ce467182c615dd30101f20589ec61",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.0024633136764828922,
+        "stabilization_time_s": 4.6000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "split": "test",
+      "seed": 304,
+      "path": "test/episode-304.npz",
+      "sha256": "76c41e928f5aad17a1917435876e4aa98838fb0a4e5e853ecbd8ae9faa3a1f0c",
+      "initial_sha256": "7c824503b315cf43dc3faf7442b42b7e78aa17df6df9a40ee9c1c5430e6c9b54",
+      "trajectory_sha256": "65766de493b8dd313e8976a182eac02f1a99ee4cd922a79456b86c95082ee86d",
+      "samples": 1200,
+      "quality": {
+        "formation_error_m": 0.004383847457712253,
+        "stabilization_time_s": 5.6000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    }
+  ],
+  "summary": {
+    "train": {
+      "episodes": 19,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 0.005253002772806767,
+      "formation_error_std_m": 0.0036925051572425744,
+      "collisions_total": 0,
+      "stabilization_time_mean_s": 5.4947368421052625,
+      "stabilization_successful_episodes": 19
+    },
+    "validation": {
+      "episodes": 5,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 0.004888201400248748,
+      "formation_error_std_m": 0.0032095595588957195,
+      "collisions_total": 0,
+      "stabilization_time_mean_s": 5.180000000000001,
+      "stabilization_successful_episodes": 5
+    },
+    "test": {
+      "episodes": 5,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 0.003160426517541737,
+      "formation_error_std_m": 0.002771934542765868,
+      "collisions_total": 0,
+      "stabilization_time_mean_s": 4.98,
+      "stabilization_successful_episodes": 5
+    }
+  },
+  "quality_status": "passed",
+  "review": {
+    "policy": "exclude_failed_train_only",
+    "source_manifest_sha256": "e9e759f6b7efcd28a2a3135989f1174b17badcf58abcc23b7af4cbf9dcc552ff",
+    "source": "/run/media/padoda/PADODA/ProjectLabs/python/swarm-gnn/outputs/imitation/circle-task005",
+    "excluded": [
+      {
+        "split": "train",
+        "seed": 113,
+        "path": "train/episode-113.npz",
+        "sha256": "9416806d0b39dc3a2edab477115c8f582656a029dd36717e1795eb0a25602ccd",
+        "initial_sha256": "15d7bbd9c4837a1cdb0d71d80a90bf2b7a007b5d858d5938a4312e7ae86e1b84",
+        "trajectory_sha256": "d383ec071fc09fd15ee26f7653193f0f1f1f6c22ecd3db1c8474d09a358e02b0",
+        "samples": 1200,
+        "quality": {
+          "formation_error_m": 0.01807532560665659,
+          "stabilization_time_s": null,
+          "collisions": 2,
+          "success": false,
+          "initial_collision": false
+        }
+      }
+    ],
+    "warning": "S\u00e9lection des d\u00e9monstrations train ; ne prouve pas la s\u00fbret\u00e9 du professeur"
+  }
+}

@@ -1,18 +1,8 @@
-from .arena import Arena
-from .episode import Episode, EpisodeResult, simulate_episode
-from .state import SwarmState
-from .graph import CommunicationGraph
-from .engine import Simulator
-from .failures import FailureModel, FailureEvent
+"""Moteur physique à accélérations et observations locales."""
+from .acceleration_episode import AccelerationEpisode,AccelerationEpisodeConfig,AccelerationEpisodeResult,LocalObservation
+from .dynamics import AccelerationDynamics,DynamicsConfig
 
 __all__ = [
-    "Arena",
-    "CommunicationGraph",
-    "Episode",
-    "EpisodeResult",
-    "FailureModel",
-    "FailureEvent",
-    "Simulator",
-    "SwarmState",
-    "simulate_episode",
+    'AccelerationEpisode','AccelerationEpisodeConfig','AccelerationEpisodeResult','LocalObservation',
+    'AccelerationDynamics','DynamicsConfig',
 ]

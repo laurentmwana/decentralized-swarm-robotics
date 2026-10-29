@@ -1,0 +1,36 @@
+{
+  "episodes": 168,
+  "source_sha256": "1dd615c24a433bd11cc2aab57c77e6625a0461bc64ea3c36dcf59da8aacdf1dd",
+  "max_allocation_speed_m_s": 0.0,
+  "allocation_graph_changed_steps": 0,
+  "max_speed_m_s": 1.0000000000000002,
+  "max_acceleration_m_s2": 2.0,
+  "max_step_displacement_m": 0.10000000000000032,
+  "limit_violations": 0,
+  "safety_infeasible_by_phase": {
+    "0": 3808,
+    "1": 0,
+    "2": 0,
+    "3": 7
+  },
+  "by_seed": {
+    "7003": {
+      "episodes": 56,
+      "successes": 56,
+      "collisions": 0,
+      "safety_infeasible_robot_steps": 676
+    },
+    "7004": {
+      "episodes": 56,
+      "successes": 56,
+      "collisions": 0,
+      "safety_infeasible_robot_steps": 1344
+    },
+    "7005": {
+      "episodes": 56,
+      "successes": 56,
+      "collisions": 0,
+      "safety_infeasible_robot_steps": 1795
+    }
+  }
+}

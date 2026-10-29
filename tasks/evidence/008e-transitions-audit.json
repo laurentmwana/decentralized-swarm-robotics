@@ -1,0 +1,15 @@
+{
+  "sequence_runs": 16,
+  "stage_runs": 52,
+  "limit_violations": 0,
+  "max_speed_m_s": 1.0000000000000002,
+  "max_acceleration_m_s2": 2.0,
+  "max_step_displacement_m": 0.10000000000000031,
+  "max_switch_speed_m_s": 8.798912204651602e-06,
+  "max_allocation_speed_m_s": 0.2680531589973491,
+  "allocation_graph_changed_steps": 0,
+  "collision_count_mismatches": 0,
+  "stale_packets_discarded": 4670,
+  "model_sha256": "a1e3b88b39386a3d490798b5c7717e3939416e52572a058045d7402ec6cf6d84",
+  "model_weights_unchanged": true
+}

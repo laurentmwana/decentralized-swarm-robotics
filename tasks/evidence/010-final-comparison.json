@@ -1,0 +1,139 @@
+{
+  "schema_version": 1,
+  "kind": "final_reference_comparison",
+  "sources_sha256": {
+    "008d-local-target-expanded-test.json": "5b04a6ef4483e33ef20a65ea99f66d67b349477952a3813b56abf5f5c8126427",
+    "008e-transitions-validation.json": "248b4d147010cd1c3a2d373696804cc8f97db8a0ff6744530b4521ba107d84f4",
+    "009-navigation-validation.json": "3b76aa1d83f4be013519c2d61374eb3adfec7b51339a24284ea9ec672d1709ea"
+  },
+  "rows": [
+    {
+      "campaign": "Formes réservées · test",
+      "scope": "épisodes",
+      "mode": "teacher",
+      "trials": 9,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 2.0962913728992146e-12,
+      "successful_time_mean_s": 29.833333333333332,
+      "time_definition": "stabilisation relative",
+      "collisions": 0
+    },
+    {
+      "campaign": "Formes réservées · test",
+      "scope": "épisodes",
+      "mode": "raw",
+      "trials": 9,
+      "success_rate_percent": 0.0,
+      "formation_error_mean_m": 0.012689778006866608,
+      "successful_time_mean_s": null,
+      "time_definition": "stabilisation relative",
+      "collisions": 54
+    },
+    {
+      "campaign": "Formes réservées · test",
+      "scope": "épisodes",
+      "mode": "guarded",
+      "trials": 9,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 0.012689791407795612,
+      "successful_time_mean_s": 30.433333333333337,
+      "time_definition": "stabilisation relative",
+      "collisions": 0
+    },
+    {
+      "campaign": "Transitions · validation",
+      "scope": "stages de 2 séquences",
+      "mode": "teacher",
+      "trials": 8,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 7.046643131253263e-10,
+      "successful_time_mean_s": 29.6125,
+      "time_definition": "stabilisation relative par stage",
+      "collisions": 0
+    },
+    {
+      "campaign": "Transitions · validation",
+      "scope": "stages de 2 séquences",
+      "mode": "guarded",
+      "trials": 8,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 0.011706342932565202,
+      "successful_time_mean_s": 30.5625,
+      "time_definition": "stabilisation relative par stage",
+      "collisions": 0
+    },
+    {
+      "campaign": "Navigation · ensemble",
+      "scope": "épisodes",
+      "mode": "teacher",
+      "trials": 10,
+      "success_rate_percent": 60.0,
+      "formation_error_mean_m": 0.10408667545460147,
+      "successful_time_mean_s": 66.66666666666667,
+      "time_definition": "arrivée absolue, préparation comprise",
+      "collisions": 0
+    },
+    {
+      "campaign": "Navigation · parcours prévus",
+      "scope": "épisodes",
+      "mode": "teacher",
+      "trials": 6,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 6.361756736677856e-16,
+      "successful_time_mean_s": 66.66666666666667,
+      "time_definition": "arrivée absolue, préparation comprise",
+      "collisions": 0
+    },
+    {
+      "campaign": "Navigation · cas difficiles",
+      "scope": "épisodes",
+      "mode": "teacher",
+      "trials": 4,
+      "success_rate_percent": 0.0,
+      "formation_error_mean_m": 0.2602166886365027,
+      "successful_time_mean_s": null,
+      "time_definition": "arrivée absolue, préparation comprise",
+      "collisions": 0
+    },
+    {
+      "campaign": "Navigation · ensemble",
+      "scope": "épisodes",
+      "mode": "guarded",
+      "trials": 10,
+      "success_rate_percent": 60.0,
+      "formation_error_mean_m": 0.11687712219412066,
+      "successful_time_mean_s": 66.66666666666667,
+      "time_definition": "arrivée absolue, préparation comprise",
+      "collisions": 0
+    },
+    {
+      "campaign": "Navigation · parcours prévus",
+      "scope": "épisodes",
+      "mode": "guarded",
+      "trials": 6,
+      "success_rate_percent": 100.0,
+      "formation_error_mean_m": 0.007459876575956743,
+      "successful_time_mean_s": 66.66666666666667,
+      "time_definition": "arrivée absolue, préparation comprise",
+      "collisions": 0
+    },
+    {
+      "campaign": "Navigation · cas difficiles",
+      "scope": "épisodes",
+      "mode": "guarded",
+      "trials": 4,
+      "success_rate_percent": 0.0,
+      "formation_error_mean_m": 0.2810029906213665,
+      "successful_time_mean_s": null,
+      "time_definition": "arrivée absolue, préparation comprise",
+      "collisions": 0
+    }
+  ],
+  "notes": [
+    "Les lignes ensemble/nominal/difficile de navigation se recouvrent ; ne pas les additionner.",
+    "Les temps moyens portent uniquement sur les essais réussis ; null signifie aucune réussite.",
+    "Le GAT protégé utilise le filtre classique ; le GAT brut échoue aux tests réservés.",
+    "Les stages partagent des séquences et les campagnes réutilisent des graines : les essais ne sont pas tous indépendants.",
+    "Les essais interactifs de démonstration sont distincts des campagnes conservées."
+  ]
+}

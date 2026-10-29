@@ -1,0 +1,6 @@
+# Un seul cycle de corrections train, initialisé depuis le modèle relatif.
+epochs: 100
+batch_size: 32
+learning_rate: 0.0003
+patience: 20
+seed: 42

@@ -1,0 +1,469 @@
+{
+  "status": "complete",
+  "registered_at_utc": "2026-10-29T08:01:44.565001+00:00",
+  "seeds": [
+    400,
+    401,
+    402,
+    403,
+    404,
+    405,
+    406,
+    407,
+    408,
+    409,
+    410,
+    411,
+    412,
+    413,
+    414,
+    415,
+    416,
+    417,
+    418,
+    419
+  ],
+  "run": "D:\\ProjectLabs\\python\\swarm-gnn\\outputs\\imitation\\training-circle-relative-v1",
+  "dataset_manifest_sha256": "7d0cfa83b024092950b3ea6352fe7d7c94eb86eb873b8a30eac84647720fecbd",
+  "model_sha256": "227f042240826317b82a11834456676a74e4056dcc8b3e5e88c04a81a3600ef4",
+  "protocol": {
+    "error_threshold": 0.1,
+    "speed_threshold": 0.05,
+    "hold_seconds": 1.0,
+    "deadline_seconds": 10.0
+  },
+  "simulator": {
+    "physics": {
+      "arena_size": 10.0,
+      "dt": 0.1,
+      "max_speed": 1.0,
+      "max_acceleration": 2.0,
+      "robot_radius": 0.1
+    },
+    "horizon": 100,
+    "communication_radius": 2.0,
+    "spawn_radius": 4.0
+  },
+  "teacher": {
+    "mission": {
+      "center": [
+        0.0,
+        0.0
+      ],
+      "radius": 2.0,
+      "robot_count": 12
+    },
+    "gains": {
+      "radial": 12.0,
+      "damping": 6.0,
+      "spacing": 60.0,
+      "avoidance": 60.0,
+      "safety_distance": 0.4
+    }
+  },
+  "initialization": {
+    "splits": {
+      "train": [
+        100,
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109,
+        110,
+        111,
+        112,
+        114,
+        115,
+        116,
+        117,
+        118,
+        119
+      ],
+      "validation": [
+        200,
+        201,
+        202,
+        203,
+        204
+      ],
+      "test": [
+        300,
+        301,
+        302,
+        303,
+        304
+      ]
+    },
+    "minimum_distance": 0.4,
+    "max_spawn_attempts": 20000
+  },
+  "torch_version": "2.15.0+cpu",
+  "policy": "paired_initial_states_all_failures_retained_no_model_selection",
+  "reports": [
+    {
+      "seed": 400,
+      "teacher": {
+        "formation_error_m": 0.005286954215190542,
+        "stabilization_time_s": 5.800000000000001,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.050067274594544076,
+        "stabilization_time_s": null,
+        "collisions": 0,
+        "success": false,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 401,
+      "teacher": {
+        "formation_error_m": 0.00793679847911366,
+        "stabilization_time_s": 6.4,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.03571752392612493,
+        "stabilization_time_s": 7.6000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 402,
+      "teacher": {
+        "formation_error_m": 0.006409148681265853,
+        "stabilization_time_s": 6.1000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.05126239833702928,
+        "stabilization_time_s": 7.800000000000001,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 403,
+      "teacher": {
+        "formation_error_m": 0.004976032706525357,
+        "stabilization_time_s": 5.7,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.042022526699866836,
+        "stabilization_time_s": 5.4,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 404,
+      "teacher": {
+        "formation_error_m": 0.01565196747581754,
+        "stabilization_time_s": 7.4,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.04611297239409917,
+        "stabilization_time_s": 6.7,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 405,
+      "teacher": {
+        "formation_error_m": 0.004079588621431318,
+        "stabilization_time_s": 5.4,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.049955951545335386,
+        "stabilization_time_s": 5.5,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 406,
+      "teacher": {
+        "formation_error_m": 0.006199055275643461,
+        "stabilization_time_s": 6.0,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.042781684007825005,
+        "stabilization_time_s": null,
+        "collisions": 1,
+        "success": false,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 407,
+      "teacher": {
+        "formation_error_m": 0.009598519434125707,
+        "stabilization_time_s": 6.7,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.02030276231169137,
+        "stabilization_time_s": null,
+        "collisions": 0,
+        "success": false,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 408,
+      "teacher": {
+        "formation_error_m": 0.026401183401256523,
+        "stabilization_time_s": 8.1,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.02286916607093592,
+        "stabilization_time_s": 8.9,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 409,
+      "teacher": {
+        "formation_error_m": 0.006686482675527294,
+        "stabilization_time_s": null,
+        "collisions": 1,
+        "success": false,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.039047976395713446,
+        "stabilization_time_s": 6.9,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 410,
+      "teacher": {
+        "formation_error_m": 0.00021553929196804766,
+        "stabilization_time_s": 3.7,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.05193583064996665,
+        "stabilization_time_s": null,
+        "collisions": 1,
+        "success": false,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 411,
+      "teacher": {
+        "formation_error_m": 0.00197924292657059,
+        "stabilization_time_s": 4.9,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.04345172080416648,
+        "stabilization_time_s": 7.2,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 412,
+      "teacher": {
+        "formation_error_m": 0.01293760938873656,
+        "stabilization_time_s": 7.1000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.04486445345654988,
+        "stabilization_time_s": null,
+        "collisions": 0,
+        "success": false,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 413,
+      "teacher": {
+        "formation_error_m": 0.006809646220647947,
+        "stabilization_time_s": 6.2,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.038189911319123526,
+        "stabilization_time_s": null,
+        "collisions": 0,
+        "success": false,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 414,
+      "teacher": {
+        "formation_error_m": 0.01496882919996323,
+        "stabilization_time_s": 7.300000000000001,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.03653007190035473,
+        "stabilization_time_s": null,
+        "collisions": 1,
+        "success": false,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 415,
+      "teacher": {
+        "formation_error_m": 0.0038187674069447564,
+        "stabilization_time_s": 5.300000000000001,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.04120007258136282,
+        "stabilization_time_s": 7.0,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 416,
+      "teacher": {
+        "formation_error_m": 0.0035335668388050134,
+        "stabilization_time_s": 5.2,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.034504333595788195,
+        "stabilization_time_s": 6.2,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 417,
+      "teacher": {
+        "formation_error_m": 0.016029371476314003,
+        "stabilization_time_s": 7.4,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.06667092029098476,
+        "stabilization_time_s": 9.0,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 418,
+      "teacher": {
+        "formation_error_m": 0.009402168227118812,
+        "stabilization_time_s": 6.6000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.0446444260115626,
+        "stabilization_time_s": null,
+        "collisions": 1,
+        "success": false,
+        "initial_collision": false
+      }
+    },
+    {
+      "seed": 419,
+      "teacher": {
+        "formation_error_m": 0.0023048052471803526,
+        "stabilization_time_s": 5.1000000000000005,
+        "collisions": 0,
+        "success": true,
+        "initial_collision": false
+      },
+      "gat": {
+        "formation_error_m": 0.03965890152042806,
+        "stabilization_time_s": null,
+        "collisions": 1,
+        "success": false,
+        "initial_collision": false
+      }
+    }
+  ],
+  "summary": {
+    "teacher": {
+      "episodes": 20,
+      "success_rate_percent": 95.0,
+      "formation_error_mean_m": 0.008261263859507328,
+      "formation_error_std_m": 0.006104248962347864,
+      "collisions_total": 1,
+      "stabilization_time_mean_s": 6.126315789473685,
+      "stabilization_successful_episodes": 19
+    },
+    "gat": {
+      "episodes": 20,
+      "success_rate_percent": 55.0,
+      "formation_error_mean_m": 0.042089543920672656,
+      "formation_error_std_m": 0.009868900262773617,
+      "collisions_total": 5,
+      "stabilization_time_mean_s": 7.109090909090909,
+      "stabilization_successful_episodes": 11
+    }
+  }
+}
