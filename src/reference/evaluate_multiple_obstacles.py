@@ -21,11 +21,12 @@ def audit_shared_preparation(folder,campaign):
     return dict(paired_preparations=checked,failures=failures)
 
 
-def evaluate(output):
+def evaluate(output,primary_seed=8901):
     output=Path(output);output.mkdir(parents=True,exist_ok=False)
-    cases=[(count,8701) for count in range(5,11)]+[(10,8702),(1,8702)]
+    cases=[(count,primary_seed) for count in range(5,11)]+[(10,primary_seed+1),(1,primary_seed+1)]
     campaign=dict(kind='multiple_obstacles_campaign',status='registered',model_sha256=EXPECTED_MODEL_SHA,
         protocol=dict(cases=cases,shape='geometries_square',robots=12,weights_updated=False,
+            obstacle_layout='near_final_slots_v2',
             obstacle_map='fixed_declared_scene',formation_threshold_m=.1,transit_limit_m=.2,
             destination_threshold_m=.1,speed_threshold_m_s=.05,hold_seconds=1.),reports=[],summary={})
     def save():
@@ -55,4 +56,5 @@ def evaluate(output):
 
 if __name__=='__main__':
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',required=True)
-    args=parser.parse_args();print(json.dumps(evaluate(args.output)['summary'],indent=2))
+    parser.add_argument('--seed',type=int,default=8901)
+    args=parser.parse_args();print(json.dumps(evaluate(args.output,args.seed)['summary'],indent=2))

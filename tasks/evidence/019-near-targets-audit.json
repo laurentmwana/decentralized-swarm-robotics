@@ -1,0 +1,32 @@
+{
+  "trajectories": 16,
+  "failures": [],
+  "max_speed_m_s": 1.0000000000000002,
+  "max_acceleration_m_s2": 2.0,
+  "minimum_swept_obstacle_clearance_m": 0.13886851591870383,
+  "model_sha256": "a1e3b88b39386a3d490798b5c7717e3939416e52572a058045d7402ec6cf6d84",
+  "summary": {
+    "teacher": {
+      "episodes": 8,
+      "successes": 8,
+      "collisions": 0,
+      "max_formation_error_m": 3.056055128642738e-11,
+      "max_destination_error_m": 1.1102230246251565e-16
+    },
+    "guarded": {
+      "episodes": 8,
+      "successes": 8,
+      "collisions": 0,
+      "max_formation_error_m": 0.010388000032140864,
+      "max_destination_error_m": 0.00555034377518162
+    }
+  },
+  "metric_checks": {
+    "trajectories": 16,
+    "failures": []
+  },
+  "shared_preparation": {
+    "paired_preparations": 7,
+    "failures": []
+  }
+}

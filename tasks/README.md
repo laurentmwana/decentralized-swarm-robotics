@@ -34,6 +34,7 @@ Le 29 octobre 2026, l'utilisateur a demandé explicitement de mettre à jour tâ
 | 016 | Vérifier la navigation corrigée sur de nouveaux départs et auditer les métriques | Terminée : 8/8 par contrôleur sans contact, audit physique et métriques de 16 trajectoires passé ; trois formes, deux départs et parcours complémentaires ; 604 tests |
 | 017 | Expliquer le modèle selon l’effectif et proposer cinq à dix obstacles | Terminé : six comptes publics 5–10, 8/8 par contrôleur sans contact avec le carré à 12 ; audit de 16 trajectoires, préparation classique déclarée, protection des murs et port serveur exclusif ; 621 tests |
 | 018 | Adapter les dimensions et prévenir densité, déconnexion et dépassement | Terminé : aperçu avant lancement, largeur adaptée, options incompatibles désactivées ; 336 combinaisons examinées, deux régressions classiques réussies sans contact, 634 tests |
+| 019 | Clarifier profils et cercle initial, rapprocher les obstacles et documenter chaque commande | Terminé : guide Markdown, messages explicites vérifiés, nouvelle scène proche des cibles ; 8/8 par contrôleur sans contact, audits de 16 trajectoires, 634 tests |
 
 Les métriques sont préparées avant la collecte. Les formations suivantes ne sont entraînées qu'après validation de leur répartition. Les anciens modèles commandant des vitesses ne sont pas réutilisés comme modèles à accélérations.
 

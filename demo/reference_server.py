@@ -121,8 +121,10 @@ def navigation_scene(scenario,obstacle_count=5):
         if type(obstacle_count) is not int or obstacle_count not in range(5,11):
             raise ValueError('Choisissez entre 5 et 10 obstacles.')
         obstacles=[DiskObstacle((x,-3),.25) for x in (-1,1,3)]
-        obstacles.extend(DiskObstacle((x,4.65),.12) for x in (-4,-2,0,2,4))
-        obstacles.extend(DiskObstacle((x,0),.12) for x in (-4.65,4.65))
+        # Near the final square's slots (center +1, width 6), not arena walls.
+        obstacles.extend(DiskObstacle((x,3),.12) for x in (-1,1,3))
+        obstacles.extend(DiskObstacle((4,y),.12) for y in (-2,0,2))
+        obstacles.append(DiskObstacle((-2,0),.12))
         return MovingReference(((-1,0),(1,0)),(16,)),DiskWorld(obstacles[:obstacle_count]),260
     if scenario=='bypass':return MovingReference(((-1,0),(-1,1),(1,1),(1,0)),(10,16,10)),DiskWorld((DiskObstacle((-1,-3),.25),)),460
     world=DiskWorld((DiskObstacle((-1,-3),.25),)) if scenario=='direct' else (
@@ -292,6 +294,7 @@ class ReferenceService:
                 clearance_m=.35,maximum_reference_speed_m_s=.2,
                 map_source='declared_demo_scene',learned_policy_receives_map=False)
             manifest['navigation_planner']['preparation_policy']='classical' if request['scenario']=='multiple' else 'selected_controller'
+            if request['scenario']=='multiple':manifest['navigation_planner']['obstacle_layout']='near_final_slots_v2'
         for mode,controller in modes:
             gains=ShapeGains(detour_only_on_constraint=True)
             if navigation:
@@ -366,6 +369,7 @@ def handler_for(service):
 
         def do_GET(self):
             if self.path=='/':return self.send(200,(ROOT/'demo/reference.html').read_bytes(),'text/html; charset=utf-8')
+            if self.path=='/guide.md':return self.send(200,(ROOT/'docs/GUIDE_EXPERIENCES.md').read_bytes(),'text/plain; charset=utf-8')
             if self.path=='/api/catalog':return self.send(200,service.catalog())
             if self.path=='/api/benchmarks':
                 from demo.comparison_report import build_report

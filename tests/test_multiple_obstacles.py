@@ -17,6 +17,9 @@ def test_multiple_obstacles_are_distinct_and_whole_route_is_clear(count):
     assert len(np.unique(world.centers,axis=0))==count
     config=AccelerationEpisodeConfig.from_yaml('config/acceleration-simulator.yaml')
     shape=named_shape('square',12,width=6.)
+    final_targets=shape.reference_points()+np.asarray(reference.points[-1])
+    nearest=np.linalg.norm(world.centers[:,None,:]-final_targets[None,:,:],axis=-1).min(axis=1)
+    assert nearest.max()<=1.+1e-12
     route=plan_formation_route(shape,reference,world,config)
     assert route.points[0]==reference.points[0] and route.points[-1]==reference.points[-1]
     positions=np.asarray(route.points)[:,None,:]+shape.reference_points()[None,:,:]
