@@ -2,7 +2,7 @@
 import argparse
 from dataclasses import asdict
 import json
-import math  
+import math
 from pathlib import Path
 
 import numpy as np

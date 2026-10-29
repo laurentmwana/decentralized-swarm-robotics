@@ -31,6 +31,8 @@ MULTISIZE_RUN=ROOT/'outputs/imitation/training-vector-gat-v2'
 MULTISIZE_DATA=ROOT/'outputs/imitation/multisize-pilot-task012'
 MULTISIZE_EVALUATION=ROOT/'outputs/imitation/vector-fresh-test-v2/evaluation.json'
 MULTISIZE_AUDIT=ROOT/'tasks/evidence/014-vector-final-audit.json'
+PLANNED_EVALUATION=ROOT/'tasks/evidence/016-planned-navigation-evaluation.json'
+PLANNED_AUDIT=ROOT/'tasks/evidence/016-planned-navigation-audit.json'
 EXPECTED_MODEL_SHA='a1e3b88b39386a3d490798b5c7717e3939416e52572a058045d7402ec6cf6d84'
 SHAPES={entry['identifier'] for entry in catalog_entries()}
 GEOMETRY_LABELS=dict(zip(
@@ -56,6 +58,28 @@ def verified_structured_report():
         if not audit.get('success') or audit.get('model_sha256')!=digest or report['model_sha256']!=digest:return None
         if audit.get('raw_motion_filter_interventions')!=0:return None
         return report
+    except (OSError,ValueError,KeyError,TypeError):return None
+
+
+def verified_navigation_summary():
+    try:
+        report=json.loads(PLANNED_EVALUATION.read_text(encoding='utf-8'))
+        audit=json.loads(PLANNED_AUDIT.read_text(encoding='utf-8'))
+        expected={(shape,'direct',seed) for shape in ('geometries_square','geometries_rectangle','geometries_triangle') for seed in (8600,8601)}
+        expected|={('geometries_square',scenario,8600) for scenario in ('straight','bypass')}
+        rows=report['reports']
+        if report.get('status')!='complete' or len(rows)!=8:return None
+        if {(r['shape'],r['scenario'],r['seed']) for r in rows}!=expected:return None
+        if report['model_sha256']!=EXPECTED_MODEL_SHA or audit['model_sha256']!=EXPECTED_MODEL_SHA:return None
+        if audit['trajectories']!=16 or audit['failures'] or audit['metric_checks']['trajectories']!=16 or audit['metric_checks']['failures']:return None
+        summary={}
+        for mode in ('teacher','guarded'):
+            metrics=[r['modes'][mode] for r in rows]
+            summary[mode]=dict(episodes=len(metrics),successes=sum(m['success'] for m in metrics),
+                collisions=sum(m['collisions'] for m in metrics),
+                max_formation_error_m=max(m['max_navigation_formation_error_m'] for m in metrics),
+                max_destination_error_m=max(m['destination_error_m'] for m in metrics))
+        return summary
     except (OSError,ValueError,KeyError,TypeError):return None
 
 
@@ -117,6 +141,7 @@ class ReferenceService:
         return dict(shapes=public_catalog(),robot_counts=[8,12,16,24,64],model_available=(self.model_run/'best.pt').is_file(),
                     multisize_model_available=multi_available,multisize_status='structured_raw_controlled_start_formation_only',
                     multisize_summary=multi_summary,
+                    planned_navigation_summary=verified_navigation_summary(),
                     trained_robot_count=12,units=dict(position='m',time='s',speed='m/s',acceleration='m/s²'))
 
     def _multisize_controller(self):

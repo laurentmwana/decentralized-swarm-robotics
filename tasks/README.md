@@ -5,6 +5,7 @@ Chaque tâche livre une fonctionnalité, ses tests et ses décisions dans docs/d
 Cycle : réalisation → tests → résumé → validation utilisateur → commit limité aux fichiers de la tâche → tâche suivante.
 Règle initiale : commandes d'entraînement remises à l'utilisateur. Le 2026-10-29, l'utilisateur a explicitement autorisé l'agent à lancer l'entraînement de la variante relative et à poursuivre l'étape suivante.
 Les modifications présentes avant cette migration sont préservées.
+Le 29 octobre 2026, l'utilisateur a demandé explicitement de mettre à jour tâches et décisions, créer les commits puis poursuivre : cette autorisation s'applique au cycle courant sans nouvelle confirmation.
 
 | Tâche | Livraison et critère de fin | État |
 |---|---|---|
@@ -30,7 +31,7 @@ Les modifications présentes avant cette migration sont préservées.
 | 013 | Retirer l’ancienne base inutilisée et ses commandes/configurations/tests | Terminé sur autorisation utilisateur : 96 fichiers obsolètes retirés, 578 tests conservés réussis ; résultats et supports préservés |
 | 014 | Corriger l’équilibre et obtenir un mouvement appris brut aux trois effectifs | Objectif atteint dans le domaine contrôlé : 18/18 réservés sans contact, aucun filtre sur mouvements 0/3, audit 36 trajectoires, 597 tests ; départs généraux/navigation/obstacles non couverts |
 | 015 | Planifier les détours de toute la formation et clarifier les résultats | Corrigé : carré avec obstacle réussi par les deux contrôleurs, destination impossible détectée avant calcul, métriques de navigation visibles ; 600 tests |
-| 016 | Vérifier la navigation corrigée sur de nouveaux départs et auditer les métriques | Campagne et audit en cours ; trois formes, deux départs et parcours complémentaires |
+| 016 | Vérifier la navigation corrigée sur de nouveaux départs et auditer les métriques | Terminée : 8/8 par contrôleur sans contact, audit physique et métriques de 16 trajectoires passé ; trois formes, deux départs et parcours complémentaires ; 604 tests |
 
 Les métriques sont préparées avant la collecte. Les formations suivantes ne sont entraînées qu'après validation de leur répartition. Les anciens modèles commandant des vitesses ne sont pas réutilisés comme modèles à accélérations.
 

@@ -105,5 +105,3 @@ def named_shape(name, robot_count, width=6., height=None, center=(0., 0.), orien
                          [math.sin(orientation), math.cos(orientation)]])
     transformed = tuple(tuple(map(tuple, (np.asarray(stroke)*[width, height])@rotation.T+center)) for stroke in strokes)
     return ShapeMission(token, transformed, closed, robot_count, category)
-
-
