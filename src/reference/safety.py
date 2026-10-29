@@ -40,7 +40,7 @@ def project_acceleration(nominal, normals, bounds, maximum):
     return min(feasible, key=lambda a: np.sum((a-nominal)**2)) if feasible else None
 
 
-def filter_command(observation, nominal, gains, maximum, *, obstacle_vectors=()):
+def filter_command(observation, nominal, gains, maximum, *, obstacle_vectors=(),wall_half_extent=None):
     """Une moitié symétrique de chaque contrainte pour chacun des deux robots."""
     normals, bounds = [], []
     nominal = np.array(nominal, dtype=float, copy=True)
@@ -50,6 +50,14 @@ def filter_command(observation, nominal, gains, maximum, *, obstacle_vectors=())
     obstacles=np.asarray(obstacle_vectors,dtype=float).reshape(-1,3)
     if not np.isfinite(obstacles).all() or (obstacles[:,2]<=0).any():
         raise ValueError('Obstacles locaux finis et rayons gonflés positifs requis')
+    if wall_half_extent is not None:
+        if not np.isfinite(wall_half_extent) or wall_half_extent<=0:
+            raise ValueError('Limite intérieure des murs finie positive requise')
+        # Linear wall distance h, with h'' + 2 h' + h >= 0.
+        # Slower wall response starts braking early under bounded acceleration.
+        for normal in (np.array([1.,0.]),np.array([-1.,0.]),np.array([0.,1.]),np.array([0.,-1.])):
+            gap=wall_half_extent+normal@observation.position
+            normals.append(normal);bounds.append(-2*(normal@observation.velocity)-gap)
     for relative, relative_velocity in zip(observation.relative_positions, observation.relative_velocities):
         r, w = -relative, -relative_velocity
         distance = np.linalg.norm(r)

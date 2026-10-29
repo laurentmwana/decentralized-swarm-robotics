@@ -106,11 +106,14 @@ class NavigationResult:
     safety_infeasible: np.ndarray
     safety_interventions: np.ndarray
     protocol: NavigationProtocol
+    classical_preparation: bool = False
 
     def save(self,path):
         meta=dict(schema_version=1,kind='formation_navigation',config=asdict(self.episode.config),seed=self.episode.seed,
             reference=asdict(self.reference),obstacles=[asdict(o) for o in self.world.obstacles],protocol=asdict(self.protocol),
             preparation_steps=self.preparation.episode.config.horizon,
+            preparation_policy='classical' if self.classical_preparation else 'selected_controller',
+            wall_guard_half_extent=self.episode.config.physics.arena_size/2-self.episode.config.physics.robot_radius-self.protocol.obstacle_clearance,
             policy_frame='common_translating_frame_plus_classical_reference_acceleration')
         with Path(path).open('xb') as stream:
             np.savez_compressed(stream,positions=self.episode.positions,velocities=self.episode.velocities,
@@ -123,7 +126,7 @@ class NavigationResult:
 
 
 def execute_navigation(shape,reference,world,config,positions,*,navigation_steps,preparation_steps=400,
-                       motion_policy=None,protocol=None,seed=0):
+                       motion_policy=None,protocol=None,seed=0,classical_preparation=False):
     _integer(navigation_steps,'navigation_steps',1);_integer(preparation_steps,'preparation_steps',1)
     protocol=NavigationProtocol() if protocol is None else protocol
     gains=ShapeGains(detour_only_on_constraint=True);reconnection=ReconnectionConfig()
@@ -133,9 +136,10 @@ def execute_navigation(shape,reference,world,config,positions,*,navigation_steps
                             clearance=protocol.obstacle_clearance)
         return vectors
     start=np.asarray(reference.points[0])
+    wall_half_extent=config.physics.arena_size/2-config.physics.robot_radius-protocol.obstacle_clearance
     preparation=execute_shape(translated_shape(shape,start),replace(config,horizon=preparation_steps),positions,
-        gains=gains,reconnection=reconnection,safety_filter=True,motion_policy=motion_policy,guard_motion=True,
-        obstacle_observer=sense,seed=seed)
+        gains=gains,reconnection=reconnection,safety_filter=True,motion_policy=None if classical_preparation else motion_policy,guard_motion=True,
+        obstacle_observer=sense,wall_half_extent=wall_half_extent,seed=seed)
     p,v=preparation.episode.positions[-1].copy(),preparation.episode.velocities[-1].copy()
     offsets=preparation.targets-start
     count=shape.robot_count;slots=np.full(count,-1,dtype=int);ready=np.zeros(count,dtype=bool)
@@ -168,7 +172,8 @@ def execute_navigation(shape,reference,world,config,positions,*,navigation_steps
             else:nominal=-actual.velocity/config.physics.dt
             vectors=world.sense(p[i],sensor_range=protocol.sensor_range,robot_radius=config.physics.robot_radius,
                                 clearance=protocol.obstacle_clearance)
-            command,feasible=filter_command(actual,nominal,gains,config.physics.max_acceleration,obstacle_vectors=vectors)
+            command,feasible=filter_command(actual,nominal,gains,config.physics.max_acceleration,obstacle_vectors=vectors,
+                wall_half_extent=wall_half_extent)
             before=_limit(np.asarray(nominal)[None,:],config.physics.max_acceleration)[0]
             step_commands.append(command);step_counts.append(len(vectors));step_failures.append(not feasible)
             step_changes.append(np.linalg.norm(command-before)>1e-6)
@@ -189,7 +194,7 @@ def execute_navigation(shape,reference,world,config,positions,*,navigation_steps
     return NavigationResult(episode,preparation,reference,world,offsets,slots,refp,refv,refa,
         np.concatenate((preparation.local_targets,np.asarray(targets))),np.asarray(counts),
         np.concatenate((preparation.safety_infeasible,np.asarray(failures))),
-        np.concatenate((preparation.safety_interventions,np.asarray(changes))),protocol)
+        np.concatenate((preparation.safety_interventions,np.asarray(changes))),protocol,classical_preparation)
 
 
 def evaluate_navigation(result):

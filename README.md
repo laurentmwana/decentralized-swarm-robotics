@@ -35,6 +35,10 @@ Le dossier de sortie d’un rapport doit être nouveau. Le modèle validé est a
 
 ## Organisation conservée
 
+Pour cinq à dix obstacles, choisissez **Naviguer avec plusieurs obstacles**, puis **Nombre d’obstacles**. Le parcours utilise une préparation classique puis le contrôleur choisi pour le transport, avec planification sur carte connue et protection des murs. Les six comptes ont été évalués avec le carré à 12 robots ; les autres combinaisons restent expérimentales. Voir la [décision 33](docs/decisions/33-obstacles-multiples.md).
+
+Le **GAT de référence protégé** a été entraîné avec 12 robots. Le **GAT structuré brut · 12/24/64** utilise d’autres poids, entraînés avec les trois effectifs et validés en formation contrôlée seulement. Choisir 24 robots ne change pas automatiquement de modèle.
+
 En navigation, l’interface calcule désormais un détour classique sur la carte statique de la scène pour l’ensemble des places de la formation. La destination reste identique ; une place finale occupée entraîne un refus explicite avant simulation. Le GAT conserve ses poids et observations locales. Les résultats antérieurs sont présentés comme archives. Voir la [décision 31](docs/decisions/31-navigation-planifiee.md).
 
 - `src/simulator/` : inertie, bornes physiques, observations locales et épisodes.

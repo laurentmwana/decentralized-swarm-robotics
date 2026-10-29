@@ -32,6 +32,7 @@ Le 29 octobre 2026, l'utilisateur a demandé explicitement de mettre à jour tâ
 | 014 | Corriger l’équilibre et obtenir un mouvement appris brut aux trois effectifs | Objectif atteint dans le domaine contrôlé : 18/18 réservés sans contact, aucun filtre sur mouvements 0/3, audit 36 trajectoires, 597 tests ; départs généraux/navigation/obstacles non couverts |
 | 015 | Planifier les détours de toute la formation et clarifier les résultats | Corrigé : carré avec obstacle réussi par les deux contrôleurs, destination impossible détectée avant calcul, métriques de navigation visibles ; 600 tests |
 | 016 | Vérifier la navigation corrigée sur de nouveaux départs et auditer les métriques | Terminée : 8/8 par contrôleur sans contact, audit physique et métriques de 16 trajectoires passé ; trois formes, deux départs et parcours complémentaires ; 604 tests |
+| 017 | Expliquer le modèle selon l’effectif et proposer cinq à dix obstacles | Terminé : six comptes publics 5–10, 8/8 par contrôleur sans contact avec le carré à 12 ; audit de 16 trajectoires, préparation classique déclarée, protection des murs et port serveur exclusif ; 621 tests |
 
 Les métriques sont préparées avant la collecte. Les formations suivantes ne sont entraînées qu'après validation de leur répartition. Les anciens modèles commandant des vitesses ne sont pas réutilisés comme modèles à accélérations.
 

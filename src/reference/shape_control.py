@@ -71,7 +71,7 @@ class ShapeEpisodeResult:
 def execute_shape(mission, config, positions, *, gains=None, allocation_rounds=None, seed=0, safety_filter=False,
                   reconnection=None, motion_policy=None, guard_motion=None, initial_velocities=None,
                   time_offset=0., mission_epoch=None, previous_packets=(), allow_short_window=False,
-                  obstacle_observer=None):
+                  obstacle_observer=None,wall_half_extent=None):
     gains = ShapeGains() if gains is None else gains
     mission.validate_environment(config, gains.safety_distance)
     if not isinstance(safety_filter, bool):
@@ -147,7 +147,8 @@ def execute_shape(mission, config, positions, *, gains=None, allocation_rounds=N
         previous=safety_cache.get(robot_id)
         if previous is not None and previous[0]==signature:
             return previous[1].copy(),previous[2],previous[3]
-        after, feasible = filter_command(observation, command, gains, config.physics.max_acceleration,obstacle_vectors=obstacles)
+        after, feasible = filter_command(observation, command, gains, config.physics.max_acceleration,obstacle_vectors=obstacles,
+            **({} if wall_half_extent is None else dict(wall_half_extent=wall_half_extent)))
         changed=np.linalg.norm(after-before)>1e-6
         safety_cache[robot_id]=(signature,after.copy(),feasible,changed)
         return after, feasible, changed

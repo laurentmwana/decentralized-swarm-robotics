@@ -9,6 +9,7 @@ import json
 import logging
 from pathlib import Path
 import re
+import socket
 from threading import RLock
 import uuid
 import zipfile
@@ -84,10 +85,13 @@ def verified_navigation_summary():
 
 
 def validate_request(raw):
-    if not isinstance(raw,dict) or set(raw)-{'shape','next_shape','robots','seed','controller','scenario'}:
+    if not isinstance(raw,dict) or set(raw)-{'shape','next_shape','robots','seed','controller','scenario','obstacle_count'}:
         raise ValueError('Paramètres de démonstration invalides.')
     request=dict(shape='geometries_square',next_shape='letters_A',robots=12,seed=7700,
                  controller='guarded',scenario='formation');request.update(raw)
+    request.setdefault('obstacle_count',5 if request['scenario']=='multiple' else 1)
+    if type(request['obstacle_count']) is not int or request['obstacle_count'] not in range(1,11):
+        raise ValueError('Nombre d’obstacles entier entre 1 et 10 requis.')
     if any(not isinstance(request[key],str) or request[key] not in SHAPES for key in ('shape','next_shape')):
         raise ValueError('Choisissez une forme du catalogue.')
     if type(request['robots']) is not int or request['robots'] not in (8,12,16,24,64):
@@ -96,8 +100,12 @@ def validate_request(raw):
         raise ValueError('Le départ doit être un entier entre 0 et 2147483647.')
     if request['controller'] not in ('teacher','guarded','comparison','multisize','comparison_multisize'):
         raise ValueError('Contrôleur inconnu.')
-    if request['scenario'] not in ('formation','transition','straight','bypass','direct','blocked'):
+    if request['scenario'] not in ('formation','transition','straight','bypass','direct','blocked','multiple'):
         raise ValueError('Parcours inconnu.')
+    if request['scenario']=='multiple' and request['obstacle_count'] not in range(5,11):
+        raise ValueError('Choisissez entre 5 et 10 obstacles pour ce parcours.')
+    if request['scenario']!='multiple' and request['obstacle_count']!=1:
+        raise ValueError('Le nombre d’obstacles réglable concerne le parcours « Plusieurs obstacles ».')
     multi=request['controller'] in ('multisize','comparison_multisize')
     if multi and request['robots'] not in (12,24,64):raise ValueError('Le pilote multi-effectifs couvre 12, 24 et 64 robots.')
     if (multi or request['robots']==64) and request['scenario']!='formation':
@@ -107,7 +115,14 @@ def validate_request(raw):
     return request
 
 
-def navigation_scene(scenario):
+def navigation_scene(scenario,obstacle_count=5):
+    if scenario=='multiple':
+        if type(obstacle_count) is not int or obstacle_count not in range(5,11):
+            raise ValueError('Choisissez entre 5 et 10 obstacles.')
+        obstacles=[DiskObstacle((x,-3),.25) for x in (-1,1,3)]
+        obstacles.extend(DiskObstacle((x,4.65),.12) for x in (-4,-2,0,2,4))
+        obstacles.extend(DiskObstacle((x,0),.12) for x in (-4.65,4.65))
+        return MovingReference(((-1,0),(1,0)),(16,)),DiskWorld(obstacles[:obstacle_count]),260
     if scenario=='bypass':return MovingReference(((-1,0),(-1,1),(1,1),(1,0)),(10,16,10)),DiskWorld((DiskObstacle((-1,-3),.25),)),460
     world=DiskWorld((DiskObstacle((-1,-3),.25),)) if scenario=='direct' else (
         DiskWorld((DiskObstacle((4,-3),.35),)) if scenario=='blocked' else DiskWorld())
@@ -192,7 +207,7 @@ class ReferenceService:
         for key in ('shape','next_shape') if request['scenario']=='transition' else ('shape',):
             named_shape(request[key],request['robots'],width=width).validate_environment(config,gains.safety_distance)
         if request['scenario'] not in ('formation','transition'):
-            reference,world,_=navigation_scene(request['scenario'])
+            reference,world,_=navigation_scene(request['scenario'],request['obstacle_count'])
             plan_formation_route(named_shape(request['shape'],request['robots'],width=width),reference,world,config)
         with self.lock:
             if self.submitted>=20:raise ValueError('Cette session contient déjà 20 calculs. Relancez le serveur pour une nouvelle session ; les exports sont conservés.')
@@ -235,7 +250,7 @@ class ReferenceService:
         learned_mode='raw' if multi else 'guarded'
         modes=[('teacher',None)] if policy is None else ([('teacher',None),(learned_mode,policy)] if request['controller'] in ('comparison','comparison_multisize') else [(learned_mode,policy)])
         navigation=request['scenario'] not in ('formation','transition')
-        reference,world,nav_steps=navigation_scene(request['scenario']) if navigation else (None,DiskWorld(),None)
+        reference,world,nav_steps=navigation_scene(request['scenario'],request['obstacle_count']) if navigation else (None,DiskWorld(),None)
         requested_reference=reference
         if navigation:
             reference=plan_formation_route(shape,reference,world,cfg)
@@ -253,11 +268,13 @@ class ReferenceService:
                 requested_reference=asdict(requested_reference),planned_reference=asdict(reference),
                 clearance_m=.35,maximum_reference_speed_m_s=.2,
                 map_source='declared_demo_scene',learned_policy_receives_map=False)
+            manifest['navigation_planner']['preparation_policy']='classical' if request['scenario']=='multiple' else 'selected_controller'
         for mode,controller in modes:
             gains=ShapeGains(detour_only_on_constraint=True)
             if navigation:
                 result=execute_navigation(shape,reference,world,cfg,initial,navigation_steps=nav_steps,
-                    preparation_steps=preparation_steps,motion_policy=controller,seed=seed)
+                    preparation_steps=preparation_steps,motion_policy=controller,seed=seed,
+                    classical_preparation=request['scenario']=='multiple')
                 metrics=evaluate_navigation(result);targets=result.local_targets
                 route=[list(point) for point in reference.points]
             elif request['scenario']=='transition':
@@ -360,10 +377,20 @@ def handler_for(service):
     return Handler
 
 
+class LocalReferenceServer(ThreadingHTTPServer):
+    # Windows SO_REUSEADDR permits two live servers on the same local port.
+    allow_reuse_address=False
+
+    def server_bind(self):
+        if hasattr(socket,'SO_EXCLUSIVEADDRUSE'):
+            self.socket.setsockopt(socket.SOL_SOCKET,socket.SO_EXCLUSIVEADDRUSE,1)
+        super().server_bind()
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--port',type=int,default=8765)
     args=parser.parse_args();logging.basicConfig(level=logging.INFO)
-    service=ReferenceService();server=ThreadingHTTPServer(('127.0.0.1',args.port),handler_for(service))
+    service=ReferenceService();server=LocalReferenceServer(('127.0.0.1',args.port),handler_for(service))
     print(f'Démonstration : http://127.0.0.1:{args.port}',flush=True)
     try:server.serve_forever()
     except KeyboardInterrupt:pass

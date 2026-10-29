@@ -1,0 +1,1268 @@
+{
+  "kind": "multiple_obstacles_campaign",
+  "status": "complete",
+  "model_sha256": "a1e3b88b39386a3d490798b5c7717e3939416e52572a058045d7402ec6cf6d84",
+  "protocol": {
+    "cases": [
+      [
+        5,
+        8701
+      ],
+      [
+        6,
+        8701
+      ],
+      [
+        7,
+        8701
+      ],
+      [
+        8,
+        8701
+      ],
+      [
+        9,
+        8701
+      ],
+      [
+        10,
+        8701
+      ],
+      [
+        10,
+        8702
+      ],
+      [
+        1,
+        8702
+      ]
+    ],
+    "shape": "geometries_square",
+    "robots": 12,
+    "weights_updated": false,
+    "obstacle_map": "fixed_declared_scene",
+    "formation_threshold_m": 0.1,
+    "transit_limit_m": 0.2,
+    "destination_threshold_m": 0.1,
+    "speed_threshold_m_s": 0.05,
+    "hold_seconds": 1.0
+  },
+  "reports": [
+    {
+      "obstacle_count": 5,
+      "seed": 8701,
+      "initial_positions": [
+        [
+          0.4366601823273386,
+          -2.4019968754176206
+        ],
+        [
+          1.39262935559878,
+          0.9826164966815942
+        ],
+        [
+          -2.78287243847781,
+          -2.751530145740255
+        ],
+        [
+          2.839065573491018,
+          1.7010038026584238
+        ],
+        [
+          -3.017767873939136,
+          -1.71990321018842
+        ],
+        [
+          -2.212957945206437,
+          -0.7247269444305565
+        ],
+        [
+          0.3331051414606075,
+          1.981224336652851
+        ],
+        [
+          1.0016225227740514,
+          0.0008156947940553504
+        ],
+        [
+          -2.3116274282318767,
+          1.278787960951874
+        ],
+        [
+          2.5996990520944814,
+          1.1627991211444815
+        ],
+        [
+          2.6892523507886392,
+          -2.338535230933445
+        ],
+        [
+          -1.1896544386364505,
+          -2.297519179948402
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": true,
+          "arrival_time_s": 67.60000000000001,
+          "preparation_success": true,
+          "formation_error_m": 4.577566798522237e-16,
+          "max_navigation_formation_error_m": 9.930136612989092e-16,
+          "mean_navigation_formation_error_m": 4.706831036583966e-16,
+          "reference_tracking_error_m": 4.577566798522237e-16,
+          "max_reference_tracking_error_m": 0.003328042762803518,
+          "destination_error_m": 1.1102230246251565e-16,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.2935495764196986,
+          "navigation_obstacle_observations": 5322,
+          "safety_infeasible_robot_steps": 14,
+          "safety_intervention_robot_steps": 864,
+          "elapsed_time_s": 79.60000000000001,
+          "failure_reasons": []
+        },
+        "guarded": {
+          "success": true,
+          "arrival_time_s": 67.60000000000001,
+          "preparation_success": true,
+          "formation_error_m": 0.010014845062175978,
+          "max_navigation_formation_error_m": 0.010387997098228024,
+          "mean_navigation_formation_error_m": 0.009820522083365006,
+          "reference_tracking_error_m": 0.011366927209687268,
+          "max_reference_tracking_error_m": 0.014441065626949046,
+          "destination_error_m": 0.005550342938006743,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.2935495764196986,
+          "navigation_obstacle_observations": 5321,
+          "safety_infeasible_robot_steps": 14,
+          "safety_intervention_robot_steps": 864,
+          "elapsed_time_s": 79.60000000000001,
+          "failure_reasons": []
+        }
+      },
+      "planner": {
+        "kind": "classical_static_map_translation",
+        "requested_reference": {
+          "points": [
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "durations": [
+            16.0
+          ]
+        },
+        "planned_reference": {
+          "points": [
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -0.29999999999999993,
+              -0.7000000000000001
+            ],
+            [
+              0.30000000000000004,
+              -0.7000000000000001
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "durations": [
+            9.280776503073437,
+            5.625,
+            9.280776503073437
+          ]
+        },
+        "clearance_m": 0.35,
+        "maximum_reference_speed_m_s": 0.2,
+        "map_source": "declared_demo_scene",
+        "learned_policy_receives_map": false,
+        "preparation_policy": "classical"
+      },
+      "trajectories": {
+        "teacher": "obstacles-5-seed-8701/teacher.npz",
+        "guarded": "obstacles-5-seed-8701/guarded.npz"
+      }
+    },
+    {
+      "obstacle_count": 6,
+      "seed": 8701,
+      "initial_positions": [
+        [
+          0.4366601823273386,
+          -2.4019968754176206
+        ],
+        [
+          1.39262935559878,
+          0.9826164966815942
+        ],
+        [
+          -2.78287243847781,
+          -2.751530145740255
+        ],
+        [
+          2.839065573491018,
+          1.7010038026584238
+        ],
+        [
+          -3.017767873939136,
+          -1.71990321018842
+        ],
+        [
+          -2.212957945206437,
+          -0.7247269444305565
+        ],
+        [
+          0.3331051414606075,
+          1.981224336652851
+        ],
+        [
+          1.0016225227740514,
+          0.0008156947940553504
+        ],
+        [
+          -2.3116274282318767,
+          1.278787960951874
+        ],
+        [
+          2.5996990520944814,
+          1.1627991211444815
+        ],
+        [
+          2.6892523507886392,
+          -2.338535230933445
+        ],
+        [
+          -1.1896544386364505,
+          -2.297519179948402
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": true,
+          "arrival_time_s": 67.60000000000001,
+          "preparation_success": true,
+          "formation_error_m": 4.577566798522237e-16,
+          "max_navigation_formation_error_m": 9.930136612989092e-16,
+          "mean_navigation_formation_error_m": 4.706831036583966e-16,
+          "reference_tracking_error_m": 4.577566798522237e-16,
+          "max_reference_tracking_error_m": 0.003328042762803518,
+          "destination_error_m": 1.1102230246251565e-16,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.2935495764196986,
+          "navigation_obstacle_observations": 6263,
+          "safety_infeasible_robot_steps": 14,
+          "safety_intervention_robot_steps": 864,
+          "elapsed_time_s": 79.60000000000001,
+          "failure_reasons": []
+        },
+        "guarded": {
+          "success": true,
+          "arrival_time_s": 67.60000000000001,
+          "preparation_success": true,
+          "formation_error_m": 0.010014845062175978,
+          "max_navigation_formation_error_m": 0.010387997098228024,
+          "mean_navigation_formation_error_m": 0.009820522083365006,
+          "reference_tracking_error_m": 0.011366927209687268,
+          "max_reference_tracking_error_m": 0.014441065626949046,
+          "destination_error_m": 0.005550342938006743,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.2935495764196986,
+          "navigation_obstacle_observations": 6262,
+          "safety_infeasible_robot_steps": 14,
+          "safety_intervention_robot_steps": 864,
+          "elapsed_time_s": 79.60000000000001,
+          "failure_reasons": []
+        }
+      },
+      "planner": {
+        "kind": "classical_static_map_translation",
+        "requested_reference": {
+          "points": [
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "durations": [
+            16.0
+          ]
+        },
+        "planned_reference": {
+          "points": [
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -0.29999999999999993,
+              -0.7000000000000001
+            ],
+            [
+              0.30000000000000004,
+              -0.7000000000000001
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "durations": [
+            9.280776503073437,
+            5.625,
+            9.280776503073437
+          ]
+        },
+        "clearance_m": 0.35,
+        "maximum_reference_speed_m_s": 0.2,
+        "map_source": "declared_demo_scene",
+        "learned_policy_receives_map": false,
+        "preparation_policy": "classical"
+      },
+      "trajectories": {
+        "teacher": "obstacles-6-seed-8701/teacher.npz",
+        "guarded": "obstacles-6-seed-8701/guarded.npz"
+      }
+    },
+    {
+      "obstacle_count": 7,
+      "seed": 8701,
+      "initial_positions": [
+        [
+          0.4366601823273386,
+          -2.4019968754176206
+        ],
+        [
+          1.39262935559878,
+          0.9826164966815942
+        ],
+        [
+          -2.78287243847781,
+          -2.751530145740255
+        ],
+        [
+          2.839065573491018,
+          1.7010038026584238
+        ],
+        [
+          -3.017767873939136,
+          -1.71990321018842
+        ],
+        [
+          -2.212957945206437,
+          -0.7247269444305565
+        ],
+        [
+          0.3331051414606075,
+          1.981224336652851
+        ],
+        [
+          1.0016225227740514,
+          0.0008156947940553504
+        ],
+        [
+          -2.3116274282318767,
+          1.278787960951874
+        ],
+        [
+          2.5996990520944814,
+          1.1627991211444815
+        ],
+        [
+          2.6892523507886392,
+          -2.338535230933445
+        ],
+        [
+          -1.1896544386364505,
+          -2.297519179948402
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": true,
+          "arrival_time_s": 67.60000000000001,
+          "preparation_success": true,
+          "formation_error_m": 4.577566798522237e-16,
+          "max_navigation_formation_error_m": 9.930136612989092e-16,
+          "mean_navigation_formation_error_m": 4.706831036583966e-16,
+          "reference_tracking_error_m": 4.577566798522237e-16,
+          "max_reference_tracking_error_m": 0.003328042762803518,
+          "destination_error_m": 1.1102230246251565e-16,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.2935495764196986,
+          "navigation_obstacle_observations": 7155,
+          "safety_infeasible_robot_steps": 14,
+          "safety_intervention_robot_steps": 864,
+          "elapsed_time_s": 79.60000000000001,
+          "failure_reasons": []
+        },
+        "guarded": {
+          "success": true,
+          "arrival_time_s": 67.60000000000001,
+          "preparation_success": true,
+          "formation_error_m": 0.010014845062175978,
+          "max_navigation_formation_error_m": 0.010387997098228024,
+          "mean_navigation_formation_error_m": 0.009820522083365006,
+          "reference_tracking_error_m": 0.011366927209687268,
+          "max_reference_tracking_error_m": 0.014441065626949046,
+          "destination_error_m": 0.005550342938006743,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.2935495764196986,
+          "navigation_obstacle_observations": 7154,
+          "safety_infeasible_robot_steps": 14,
+          "safety_intervention_robot_steps": 864,
+          "elapsed_time_s": 79.60000000000001,
+          "failure_reasons": []
+        }
+      },
+      "planner": {
+        "kind": "classical_static_map_translation",
+        "requested_reference": {
+          "points": [
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "durations": [
+            16.0
+          ]
+        },
+        "planned_reference": {
+          "points": [
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -0.29999999999999993,
+              -0.7000000000000001
+            ],
+            [
+              0.30000000000000004,
+              -0.7000000000000001
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "durations": [
+            9.280776503073437,
+            5.625,
+            9.280776503073437
+          ]
+        },
+        "clearance_m": 0.35,
+        "maximum_reference_speed_m_s": 0.2,
+        "map_source": "declared_demo_scene",
+        "learned_policy_receives_map": false,
+        "preparation_policy": "classical"
+      },
+      "trajectories": {
+        "teacher": "obstacles-7-seed-8701/teacher.npz",
+        "guarded": "obstacles-7-seed-8701/guarded.npz"
+      }
+    },
+    {
+      "obstacle_count": 8,
+      "seed": 8701,
+      "initial_positions": [
+        [
+          0.4366601823273386,
+          -2.4019968754176206
+        ],
+        [
+          1.39262935559878,
+          0.9826164966815942
+        ],
+        [
+          -2.78287243847781,
+          -2.751530145740255
+        ],
+        [
+          2.839065573491018,
+          1.7010038026584238
+        ],
+        [
+          -3.017767873939136,
+          -1.71990321018842
+        ],
+        [
+          -2.212957945206437,
+          -0.7247269444305565
+        ],
+        [
+          0.3331051414606075,
+          1.981224336652851
+        ],
+        [
+          1.0016225227740514,
+          0.0008156947940553504
+        ],
+        [
+          -2.3116274282318767,
+          1.278787960951874
+        ],
+        [
+          2.5996990520944814,
+          1.1627991211444815
+        ],
+        [
+          2.6892523507886392,
+          -2.338535230933445
+        ],
+        [
+          -1.1896544386364505,
+          -2.297519179948402
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": true,
+          "arrival_time_s": 67.60000000000001,
+          "preparation_success": true,
+          "formation_error_m": 4.577566798522237e-16,
+          "max_navigation_formation_error_m": 9.930136612989092e-16,
+          "mean_navigation_formation_error_m": 4.706831036583966e-16,
+          "reference_tracking_error_m": 4.577566798522237e-16,
+          "max_reference_tracking_error_m": 0.003328042762803518,
+          "destination_error_m": 1.1102230246251565e-16,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.2935495764196986,
+          "navigation_obstacle_observations": 7685,
+          "safety_infeasible_robot_steps": 14,
+          "safety_intervention_robot_steps": 864,
+          "elapsed_time_s": 79.60000000000001,
+          "failure_reasons": []
+        },
+        "guarded": {
+          "success": true,
+          "arrival_time_s": 67.60000000000001,
+          "preparation_success": true,
+          "formation_error_m": 0.010014845062175978,
+          "max_navigation_formation_error_m": 0.010387997098228024,
+          "mean_navigation_formation_error_m": 0.009820522083365006,
+          "reference_tracking_error_m": 0.011366927209687268,
+          "max_reference_tracking_error_m": 0.014441065626949046,
+          "destination_error_m": 0.005550342938006743,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.2935495764196986,
+          "navigation_obstacle_observations": 7684,
+          "safety_infeasible_robot_steps": 14,
+          "safety_intervention_robot_steps": 864,
+          "elapsed_time_s": 79.60000000000001,
+          "failure_reasons": []
+        }
+      },
+      "planner": {
+        "kind": "classical_static_map_translation",
+        "requested_reference": {
+          "points": [
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "durations": [
+            16.0
+          ]
+        },
+        "planned_reference": {
+          "points": [
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -0.29999999999999993,
+              -0.7000000000000001
+            ],
+            [
+              0.30000000000000004,
+              -0.7000000000000001
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "durations": [
+            9.280776503073437,
+            5.625,
+            9.280776503073437
+          ]
+        },
+        "clearance_m": 0.35,
+        "maximum_reference_speed_m_s": 0.2,
+        "map_source": "declared_demo_scene",
+        "learned_policy_receives_map": false,
+        "preparation_policy": "classical"
+      },
+      "trajectories": {
+        "teacher": "obstacles-8-seed-8701/teacher.npz",
+        "guarded": "obstacles-8-seed-8701/guarded.npz"
+      }
+    },
+    {
+      "obstacle_count": 9,
+      "seed": 8701,
+      "initial_positions": [
+        [
+          0.4366601823273386,
+          -2.4019968754176206
+        ],
+        [
+          1.39262935559878,
+          0.9826164966815942
+        ],
+        [
+          -2.78287243847781,
+          -2.751530145740255
+        ],
+        [
+          2.839065573491018,
+          1.7010038026584238
+        ],
+        [
+          -3.017767873939136,
+          -1.71990321018842
+        ],
+        [
+          -2.212957945206437,
+          -0.7247269444305565
+        ],
+        [
+          0.3331051414606075,
+          1.981224336652851
+        ],
+        [
+          1.0016225227740514,
+          0.0008156947940553504
+        ],
+        [
+          -2.3116274282318767,
+          1.278787960951874
+        ],
+        [
+          2.5996990520944814,
+          1.1627991211444815
+        ],
+        [
+          2.6892523507886392,
+          -2.338535230933445
+        ],
+        [
+          -1.1896544386364505,
+          -2.297519179948402
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": true,
+          "arrival_time_s": 67.60000000000001,
+          "preparation_success": true,
+          "formation_error_m": 4.577566798522237e-16,
+          "max_navigation_formation_error_m": 9.930136612989092e-16,
+          "mean_navigation_formation_error_m": 4.706831036583966e-16,
+          "reference_tracking_error_m": 4.577566798522237e-16,
+          "max_reference_tracking_error_m": 0.003328042762803518,
+          "destination_error_m": 1.1102230246251565e-16,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.2935495764196986,
+          "navigation_obstacle_observations": 8601,
+          "safety_infeasible_robot_steps": 14,
+          "safety_intervention_robot_steps": 864,
+          "elapsed_time_s": 79.60000000000001,
+          "failure_reasons": []
+        },
+        "guarded": {
+          "success": true,
+          "arrival_time_s": 67.60000000000001,
+          "preparation_success": true,
+          "formation_error_m": 0.010014845062175978,
+          "max_navigation_formation_error_m": 0.010387997098228024,
+          "mean_navigation_formation_error_m": 0.009820522083365006,
+          "reference_tracking_error_m": 0.011366927209687268,
+          "max_reference_tracking_error_m": 0.014441065626949046,
+          "destination_error_m": 0.005550342938006743,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.2935495764196986,
+          "navigation_obstacle_observations": 8601,
+          "safety_infeasible_robot_steps": 14,
+          "safety_intervention_robot_steps": 864,
+          "elapsed_time_s": 79.60000000000001,
+          "failure_reasons": []
+        }
+      },
+      "planner": {
+        "kind": "classical_static_map_translation",
+        "requested_reference": {
+          "points": [
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "durations": [
+            16.0
+          ]
+        },
+        "planned_reference": {
+          "points": [
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -0.29999999999999993,
+              -0.7000000000000001
+            ],
+            [
+              0.30000000000000004,
+              -0.7000000000000001
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "durations": [
+            9.280776503073437,
+            5.625,
+            9.280776503073437
+          ]
+        },
+        "clearance_m": 0.35,
+        "maximum_reference_speed_m_s": 0.2,
+        "map_source": "declared_demo_scene",
+        "learned_policy_receives_map": false,
+        "preparation_policy": "classical"
+      },
+      "trajectories": {
+        "teacher": "obstacles-9-seed-8701/teacher.npz",
+        "guarded": "obstacles-9-seed-8701/guarded.npz"
+      }
+    },
+    {
+      "obstacle_count": 10,
+      "seed": 8701,
+      "initial_positions": [
+        [
+          0.4366601823273386,
+          -2.4019968754176206
+        ],
+        [
+          1.39262935559878,
+          0.9826164966815942
+        ],
+        [
+          -2.78287243847781,
+          -2.751530145740255
+        ],
+        [
+          2.839065573491018,
+          1.7010038026584238
+        ],
+        [
+          -3.017767873939136,
+          -1.71990321018842
+        ],
+        [
+          -2.212957945206437,
+          -0.7247269444305565
+        ],
+        [
+          0.3331051414606075,
+          1.981224336652851
+        ],
+        [
+          1.0016225227740514,
+          0.0008156947940553504
+        ],
+        [
+          -2.3116274282318767,
+          1.278787960951874
+        ],
+        [
+          2.5996990520944814,
+          1.1627991211444815
+        ],
+        [
+          2.6892523507886392,
+          -2.338535230933445
+        ],
+        [
+          -1.1896544386364505,
+          -2.297519179948402
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": true,
+          "arrival_time_s": 67.60000000000001,
+          "preparation_success": true,
+          "formation_error_m": 4.577566798522237e-16,
+          "max_navigation_formation_error_m": 9.930136612989092e-16,
+          "mean_navigation_formation_error_m": 4.706831036583966e-16,
+          "reference_tracking_error_m": 4.577566798522237e-16,
+          "max_reference_tracking_error_m": 0.003328042762803518,
+          "destination_error_m": 1.1102230246251565e-16,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.2935495764196986,
+          "navigation_obstacle_observations": 9755,
+          "safety_infeasible_robot_steps": 14,
+          "safety_intervention_robot_steps": 864,
+          "elapsed_time_s": 79.60000000000001,
+          "failure_reasons": []
+        },
+        "guarded": {
+          "success": true,
+          "arrival_time_s": 67.60000000000001,
+          "preparation_success": true,
+          "formation_error_m": 0.010014845062175978,
+          "max_navigation_formation_error_m": 0.010387997098228024,
+          "mean_navigation_formation_error_m": 0.009820522083365006,
+          "reference_tracking_error_m": 0.011366927209687268,
+          "max_reference_tracking_error_m": 0.014441065626949046,
+          "destination_error_m": 0.005550342938006743,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.2935495764196986,
+          "navigation_obstacle_observations": 9755,
+          "safety_infeasible_robot_steps": 14,
+          "safety_intervention_robot_steps": 864,
+          "elapsed_time_s": 79.60000000000001,
+          "failure_reasons": []
+        }
+      },
+      "planner": {
+        "kind": "classical_static_map_translation",
+        "requested_reference": {
+          "points": [
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "durations": [
+            16.0
+          ]
+        },
+        "planned_reference": {
+          "points": [
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -0.29999999999999993,
+              -0.7000000000000001
+            ],
+            [
+              0.30000000000000004,
+              -0.7000000000000001
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "durations": [
+            9.280776503073437,
+            5.625,
+            9.280776503073437
+          ]
+        },
+        "clearance_m": 0.35,
+        "maximum_reference_speed_m_s": 0.2,
+        "map_source": "declared_demo_scene",
+        "learned_policy_receives_map": false,
+        "preparation_policy": "classical"
+      },
+      "trajectories": {
+        "teacher": "obstacles-10-seed-8701/teacher.npz",
+        "guarded": "obstacles-10-seed-8701/guarded.npz"
+      }
+    },
+    {
+      "obstacle_count": 10,
+      "seed": 8702,
+      "initial_positions": [
+        [
+          -0.7874796736339511,
+          -0.8809648600800744
+        ],
+        [
+          -2.0313880871822376,
+          -1.1457249696841907
+        ],
+        [
+          -1.155736382155893,
+          -0.037518751245855186
+        ],
+        [
+          1.1543755807771432,
+          -1.9510970952552296
+        ],
+        [
+          -1.918994085919667,
+          2.532735520846532
+        ],
+        [
+          0.28465457060042537,
+          2.6434672408010456
+        ],
+        [
+          3.041424822995209,
+          0.4824260664365279
+        ],
+        [
+          0.06974932610906513,
+          -3.099241225954825
+        ],
+        [
+          2.066052438382945,
+          2.3399704766508
+        ],
+        [
+          3.4541733765698712,
+          0.034259097119704145
+        ],
+        [
+          -1.3927141864946195,
+          1.8085929960176275
+        ],
+        [
+          0.7580781605410927,
+          3.40714098944581
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": true,
+          "arrival_time_s": 67.60000000000001,
+          "preparation_success": true,
+          "formation_error_m": 4.577566798522237e-16,
+          "max_navigation_formation_error_m": 9.930136612989092e-16,
+          "mean_navigation_formation_error_m": 4.634204109700499e-16,
+          "reference_tracking_error_m": 4.577566798522237e-16,
+          "max_reference_tracking_error_m": 0.003328042762803518,
+          "destination_error_m": 1.1102230246251565e-16,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.3500006135362912,
+          "navigation_obstacle_observations": 9755,
+          "safety_infeasible_robot_steps": 20,
+          "safety_intervention_robot_steps": 817,
+          "elapsed_time_s": 79.60000000000001,
+          "failure_reasons": []
+        },
+        "guarded": {
+          "success": true,
+          "arrival_time_s": 67.60000000000001,
+          "preparation_success": true,
+          "formation_error_m": 0.010014845814102686,
+          "max_navigation_formation_error_m": 0.010387997098228824,
+          "mean_navigation_formation_error_m": 0.00982052934332202,
+          "reference_tracking_error_m": 0.011366903762299428,
+          "max_reference_tracking_error_m": 0.01444104721083822,
+          "destination_error_m": 0.005550341197149424,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.3434836189919034,
+          "navigation_obstacle_observations": 9755,
+          "safety_infeasible_robot_steps": 20,
+          "safety_intervention_robot_steps": 817,
+          "elapsed_time_s": 79.60000000000001,
+          "failure_reasons": []
+        }
+      },
+      "planner": {
+        "kind": "classical_static_map_translation",
+        "requested_reference": {
+          "points": [
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "durations": [
+            16.0
+          ]
+        },
+        "planned_reference": {
+          "points": [
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -0.29999999999999993,
+              -0.7000000000000001
+            ],
+            [
+              0.30000000000000004,
+              -0.7000000000000001
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "durations": [
+            9.280776503073437,
+            5.625,
+            9.280776503073437
+          ]
+        },
+        "clearance_m": 0.35,
+        "maximum_reference_speed_m_s": 0.2,
+        "map_source": "declared_demo_scene",
+        "learned_policy_receives_map": false,
+        "preparation_policy": "classical"
+      },
+      "trajectories": {
+        "teacher": "obstacles-10-seed-8702/teacher.npz",
+        "guarded": "obstacles-10-seed-8702/guarded.npz"
+      }
+    },
+    {
+      "obstacle_count": 1,
+      "seed": 8702,
+      "initial_positions": [
+        [
+          -0.7874796736339511,
+          -0.8809648600800744
+        ],
+        [
+          -2.0313880871822376,
+          -1.1457249696841907
+        ],
+        [
+          -1.155736382155893,
+          -0.037518751245855186
+        ],
+        [
+          1.1543755807771432,
+          -1.9510970952552296
+        ],
+        [
+          -1.918994085919667,
+          2.532735520846532
+        ],
+        [
+          0.28465457060042537,
+          2.6434672408010456
+        ],
+        [
+          3.041424822995209,
+          0.4824260664365279
+        ],
+        [
+          0.06974932610906513,
+          -3.099241225954825
+        ],
+        [
+          2.066052438382945,
+          2.3399704766508
+        ],
+        [
+          3.4541733765698712,
+          0.034259097119704145
+        ],
+        [
+          -1.3927141864946195,
+          1.8085929960176275
+        ],
+        [
+          0.7580781605410927,
+          3.40714098944581
+        ]
+      ],
+      "modes": {
+        "teacher": {
+          "success": true,
+          "arrival_time_s": 67.60000000000001,
+          "preparation_success": true,
+          "formation_error_m": 4.577566798522237e-16,
+          "max_navigation_formation_error_m": 9.930136612989092e-16,
+          "mean_navigation_formation_error_m": 4.634204109700499e-16,
+          "reference_tracking_error_m": 4.577566798522237e-16,
+          "max_reference_tracking_error_m": 0.003328042762803518,
+          "destination_error_m": 1.1102230246251565e-16,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.3500006135362912,
+          "navigation_obstacle_observations": 1447,
+          "safety_infeasible_robot_steps": 20,
+          "safety_intervention_robot_steps": 803,
+          "elapsed_time_s": 79.60000000000001,
+          "failure_reasons": []
+        },
+        "guarded": {
+          "success": true,
+          "arrival_time_s": 67.60000000000001,
+          "preparation_success": true,
+          "formation_error_m": 0.01001483708875925,
+          "max_navigation_formation_error_m": 0.010061374089433896,
+          "mean_navigation_formation_error_m": 0.010014835456306414,
+          "reference_tracking_error_m": 0.011366906660192046,
+          "max_reference_tracking_error_m": 0.014441055298200282,
+          "destination_error_m": 0.005550343013159038,
+          "robot_collisions": 0,
+          "obstacle_collisions": 0,
+          "wall_collisions": 0,
+          "collisions": 0,
+          "minimum_obstacle_clearance_m": 0.34348360655469745,
+          "navigation_obstacle_observations": 1447,
+          "safety_infeasible_robot_steps": 16,
+          "safety_intervention_robot_steps": 666,
+          "elapsed_time_s": 79.60000000000001,
+          "failure_reasons": []
+        }
+      },
+      "planner": {
+        "kind": "classical_static_map_translation",
+        "requested_reference": {
+          "points": [
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "durations": [
+            16.0
+          ]
+        },
+        "planned_reference": {
+          "points": [
+            [
+              -1.0,
+              0.0
+            ],
+            [
+              -0.29999999999999993,
+              -0.7000000000000001
+            ],
+            [
+              0.30000000000000004,
+              -0.7000000000000001
+            ],
+            [
+              1.0,
+              0.0
+            ]
+          ],
+          "durations": [
+            9.280776503073437,
+            5.625,
+            9.280776503073437
+          ]
+        },
+        "clearance_m": 0.35,
+        "maximum_reference_speed_m_s": 0.2,
+        "map_source": "declared_demo_scene",
+        "learned_policy_receives_map": false,
+        "preparation_policy": "selected_controller"
+      },
+      "trajectories": {
+        "teacher": "obstacles-1-seed-8702/teacher.npz",
+        "guarded": "obstacles-1-seed-8702/guarded.npz"
+      }
+    }
+  ],
+  "summary": {
+    "teacher": {
+      "episodes": 8,
+      "successes": 8,
+      "collisions": 0,
+      "max_formation_error_m": 9.930136612989092e-16,
+      "max_destination_error_m": 1.1102230246251565e-16
+    },
+    "guarded": {
+      "episodes": 8,
+      "successes": 8,
+      "collisions": 0,
+      "max_formation_error_m": 0.010387997098228824,
+      "max_destination_error_m": 0.005550343013159038
+    }
+  }
+}
