@@ -148,9 +148,12 @@ Le minimum de sécurité reste 0,40 m entre places. Une marge préférée supér
 | Réglage ou bouton | Utilité |
 |---|---|
 | Disposition initiale · numéro reproductible | Recréer les mêmes positions avec les mêmes réglages. Ce numéro n'est pas une entrée du réseau. |
-| Lancer l'expérience | Calculer une nouvelle simulation. Aucun entraînement n'est lancé. |
+| Lancer l'expérience | Calculer une nouvelle simulation, afficher sa zone et démarrer automatiquement la lecture. Aucun entraînement n'est lancé. |
 | Lire / Pause | Lire ou suspendre l'animation d'une simulation déjà calculée. |
 | Réinitialiser | Revenir au début de sa lecture. Ce bouton ne réentraîne pas le modèle. |
+| Résultat final | Afficher directement le dernier état, sans attendre toute la préparation ou les tours d'attribution. La trajectoire complète et ses métriques sont conservées. |
+| Voir la simulation | Descendre directement vers l'arène, particulièrement utile lorsque les réglages prennent toute la hauteur d'un petit écran. |
+| Modifier les réglages | Revenir au formulaire de l'expérience. |
 | ×1, ×2, ×5, ×10 | Changer la vitesse de lecture ; les équations physiques restent identiques. |
 | Barre du temps | Examiner un instant précis de la trajectoire. |
 | Résultat affiché | Basculer entre les contrôleurs dans une comparaison appariée. |
@@ -160,7 +163,7 @@ Le minimum de sécurité reste 0,40 m entre places. Une marge préférée supér
 | Numéros des robots | Afficher leurs identifiants, utilisés notamment pour trancher les conflits de places. |
 | Exporter les résultats | Télécharger le manifeste, les états physiques, les positions/vitesses et les métriques. |
 
-La simulation est calculée entièrement avant sa lecture. Les valeurs finales restent visibles même quand la barre du temps montre le début de l'expérience.
+La simulation est calculée entièrement avant sa lecture. La page se positionne sur l'arène au lancement et lorsque le résultat est chargé. Les valeurs finales restent visibles même quand la barre du temps montre le début de l'expérience.
 
 ## 7. Lire les métriques
 

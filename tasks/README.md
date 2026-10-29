@@ -35,6 +35,7 @@ Le 29 octobre 2026, l'utilisateur a demandé explicitement de mettre à jour tâ
 | 017 | Expliquer le modèle selon l’effectif et proposer cinq à dix obstacles | Terminé : six comptes publics 5–10, 8/8 par contrôleur sans contact avec le carré à 12 ; audit de 16 trajectoires, préparation classique déclarée, protection des murs et port serveur exclusif ; 621 tests |
 | 018 | Adapter les dimensions et prévenir densité, déconnexion et dépassement | Terminé : aperçu avant lancement, largeur adaptée, options incompatibles désactivées ; 336 combinaisons examinées, deux régressions classiques réussies sans contact, 634 tests |
 | 019 | Clarifier profils et cercle initial, rapprocher les obstacles et documenter chaque commande | Terminé : guide Markdown, messages explicites vérifiés, nouvelle scène proche des cibles ; 8/8 par contrôleur sans contact, audits de 16 trajectoires, 634 tests |
+| 020 | Rendre l’animation visible sur petit écran et permettre l’accès direct au résultat | Terminé : défilement et lecture automatiques, index de lecture sécurisé, résultat final visible à 64 robots ; 17 tests ciblés réussis |
 
 Les métriques sont préparées avant la collecte. Les formations suivantes ne sont entraînées qu'après validation de leur répartition. Les anciens modèles commandant des vitesses ne sont pas réutilisés comme modèles à accélérations.
 

@@ -1,0 +1,19 @@
+{
+  "kind": "demo_playback_regression",
+  "robot_count": 64,
+  "controller": "teacher",
+  "shape": "geometries_square",
+  "seed": 7700,
+  "job": "4a2c2d0ae7d84e57b968688c8d0d6d30",
+  "checks": {
+    "simulation_visible_during_calculation": true,
+    "automatic_playback_started": true,
+    "observed_playback_seconds": 183.1,
+    "final_button_shows_last_frame": true,
+    "final_frame": 4816,
+    "final_time_seconds": 481.6,
+    "targeted_tests_passed": 17,
+    "physics_and_weights_changed": false
+  },
+  "screenshot": "outputs/demo-reference/020-affichage-64.png"
+}
