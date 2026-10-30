@@ -8,16 +8,16 @@ Ce chapitre présente les notions utilisées dans le mémoire. Il part du robot 
 \subsection{Essaim}
 Un essaim est un groupe de robots qui coordonnent leurs actions par des interactions locales. Des règles de séparation, d’alignement et de regroupement peuvent produire un déplacement collectif \cite{reynolds1987}. Former une figure demande en plus de répartir les robots sur des places précises.
 
-Dans notre simulateur, chaque robot possède une position et une vitesse. Le contrôleur demande une accélération, puis le moteur de simulation calcule le déplacement. Ce modèle représente une inertie simple, sans détailler les roues, la batterie ou les capteurs réels.
+Dans notre simulateur, chaque robot possède une position et une vitesse. Le contrôleur demande une accélération, puis le moteur de simulation calcule le déplacement. Ce modèle représente une inertie simple, sans représenter en détail les roues, la batterie ou les capteurs réels.
 
 \subsection{Localité}
-Une décision est locale lorsqu'elle utilise les observations propres du robot et les informations de ses voisins directs. La portée détermine ce voisinage ; elle ne donne pas une vue complète de l'essaim.
+Une décision est locale lorsqu'elle utilise les observations propres du robot et les informations de ses voisins directs. La portée détermine quels robots sont voisins, sans donner accès à tout l’essaim.
 
 \subsection{Décentralisation}
-La décentralisation concerne la répartition des décisions entre robots. Elle ne signifie pas que toute information commune disparaît. Les robots peuvent partager une mission tout en calculant séparément leurs commandes.
+La décentralisation concerne la répartition des décisions entre robots. Les robots peuvent néanmoins disposer d’informations communes. Les robots peuvent partager une mission tout en calculant séparément leurs commandes.
 
 \subsubsection{Environnement et informations disponibles}
-L'environnement de ce mémoire est fermé au sens où il est délimité et défini par le programme. Les dimensions de l'espace, les limites physiques, les cibles et les obstacles sont connus au lancement. Aucun événement extérieur imprévu ne vient modifier la scène pendant les expériences rapportées. Cette description ne signifie pas que chaque robot reçoit toutes les positions. La simulation peut connaître l'état complet tout en limitant l'information fournie au contrôleur.
+Dans ce mémoire, l'environnement est fermé, car le programme en définit les limites et les conditions. Les dimensions de l'espace, les limites physiques, les cibles et les obstacles sont connus au lancement. Aucun événement extérieur imprévu ne vient modifier la scène pendant les expériences rapportées. Cette description ne signifie pas que chaque robot reçoit toutes les positions. Le simulateur connaît l'état complet, mais ne transmet au contrôleur que les informations autorisées.
 
 Le robot observe sa position, sa vitesse, sa cible et les déplacements relatifs de ses voisins directs. La portée de communication utilisée dans les principales campagnes est de trois mètres. Les mesures sont exactes dans le modèle simulé. Il n'y a ni bruit de mesure, ni retard variable, ni perte aléatoire de messages. La carte d'obstacles utilisée pour préparer les détours est une information commune donnée au planificateur classique.
 
@@ -32,7 +32,7 @@ Chaque position contient deux coordonnées. Dans une matrice, une ligne correspo
 
 Prenons deux robots placés aux coordonnées (1, 2) et (3, 4). Le tableau de deux lignes devient la liste (1, 2, 3, 4). Cette opération change le rangement des nombres, pas les positions. Le réseau ne reçoit pas cette liste globale de tout l'essaim ; il utilise l'état propre du robot et ses voisins.
 
-Les cibles sont rangées dans un tableau comparable. La géométrie définit les places disponibles et l'attribution désigne celle qui revient à chacun. Permuter les identifiants des robots sans déplacer leurs positions ne change donc pas la forme visible.
+Les cibles sont rangées dans un tableau comparable. La géométrie fixe les places disponibles. L'attribution détermine ensuite celle de chaque robot. Permuter les identifiants des robots sans déplacer leurs positions ne change donc pas la forme visible.
 
 \subsection{Portée de communication}
 La portée est la distance maximale autorisant un échange direct. Un message peut circuler plus loin par plusieurs échanges, si le protocole le prévoit. Cela ne donne pas au réseau de mouvement un accès immédiat aux états éloignés.
@@ -40,7 +40,7 @@ La portée est la distance maximale autorisant un échange direct. Un message pe
 \subsection{Graphe de proximité}
 Le graphe représente les échanges possibles. Un sommet correspond à un robot ; une arête relie deux robots lorsque leur distance ne dépasse pas la portée.
 
-Le graphe change lorsque les robots se déplacent. Sa connexité signifie qu'il existe un chemin entre chaque paire de robots ; elle ne signifie pas que tous communiquent directement.
+Le graphe évolue avec les déplacements des robots. Sa connexité signifie qu'il existe un chemin entre chaque paire de robots ; elle ne signifie pas que tous communiquent directement.
 
 La Figure~\ref{fig:graphe} présente un graphe extrait du départ enregistré à 24 robots.
 \begin{figure}[htbp]
@@ -52,7 +52,7 @@ La Figure~\ref{fig:graphe} présente un graphe extrait du départ enregistré à
 Les messages d'attribution peuvent se propager sur plusieurs échanges successifs. Le réseau de mouvement étudié, lui, effectue une seule agrégation des voisins directs à chaque décision. Il faut distinguer cette opération de la propagation répétée des réservations.
 
 \section{Réseaux de neurones sur graphes}
-Une couche linéaire calcule une expression $Wx+b$. Des fonctions non linéaires permettent de combiner plusieurs de ces transformations. Le nombre de couches linéaires, leur largeur et le nombre d'échanges sur le graphe sont trois caractéristiques différentes. Une largeur de 64 signifie que certains calculs utilisent 64 composantes ; elle ne signifie pas que le modèle contient 64 robots ou 64 couches.
+Une couche linéaire calcule une expression $Wx+b$. Des fonctions non linéaires complètent ces transformations. Le nombre de couches linéaires, leur largeur et le nombre d'échanges sur le graphe sont trois caractéristiques différentes. Une largeur de 64 signifie que certains calculs utilisent 64 composantes ; elle ne signifie pas que le modèle contient 64 robots ou 64 couches.
 
 Un réseau sur graphe construit une représentation à partir des voisins. Une somme ou une moyenne traite leurs contributions de façon uniforme. L'attention attribue des poids qui dépendent des observations \cite{velickovic2018}. Le réseau calcule un score pour chaque voisin, puis transforme ces scores en poids dont la somme vaut un. Il combine les contributions selon ces poids. Lorsqu'il n'y a aucun voisin, la contribution reçue est nulle. Le partage des paramètres permet de traiter plusieurs tailles de groupe, mais les trajectoires doivent encore être vérifiées pour chacune.
 
@@ -60,7 +60,7 @@ Un réseau sur graphe construit une représentation à partir des voisins. Une s
 \subsection{Place de l'apprentissage dans le système}
 L'intelligence artificielle (IA) regroupe différentes façons de construire une décision à partir de données ou de règles. Ici, nous utilisons un apprentissage supervisé. Le réseau reçoit des exemples d'observations et de commandes, puis ses paramètres sont ajustés. Il ne connaît pas le résultat attendu parce qu'on lui aurait donné le nom de la forme comme une classe à reconnaître.
 
-Il faut distinguer la conception et l'apprentissage. Nous choisissons les informations accessibles, les fonctions d'activation et l'organisation du réseau. L'optimisation ajuste ensuite les poids de cette architecture. La préparation circulaire, les limites physiques et les critères de réussite ne sont pas appris de cette manière ; ils restent définis dans le programme.
+La conception du réseau et son apprentissage sont deux étapes différentes. Nous choisissons les informations accessibles, les fonctions d'activation et l'organisation du réseau. L'optimisation ajuste ensuite les poids de cette architecture. La préparation circulaire, les limites physiques et les critères de réussite ne sont pas appris de cette manière ; ils restent définis dans le programme.
 
 \subsection{Calcul interne et passage de messages}
 Un perceptron multicouche, ou MLP pour \textit{Multi-Layer Perceptron}, transforme un vecteur de taille fixée. Ses couches combinent les valeurs d'entrée, puis les activations introduisent des réponses non linéaires. Dans nos modèles, de petits MLP encodent l'état propre et les informations d'un voisin. Cela décrit leur calcul interne, pas un autre contrôleur entraîné à côté du GAT.
@@ -79,9 +79,9 @@ Le graphe joue deux rôles dans notre système. Pendant la réservation, il sert
 La connexité facilite la circulation des réservations, mais elle ne résout pas les conflits à elle seule. Il faut encore une règle commune pour décider quelle demande garde une place. Inversement, un robot momentanément sans voisin peut continuer à calculer une attraction vers sa cible. Cela ne suffit pas à garantir que le groupe entier terminera la mission.
 
 \subsection{Un même réseau pour plusieurs robots}
-Partager les paramètres signifie que les mêmes matrices sont utilisées pour tous les robots. Le numéro du robot ne désigne pas un réseau particulier. Deux robots qui recevraient exactement les mêmes caractéristiques de mouvement produiraient la même réponse. Leurs commandes réelles diffèrent parce que leurs cibles, leurs vitesses et leurs voisins diffèrent.
+Partager les paramètres signifie que les mêmes matrices sont utilisées pour tous les robots. Le numéro du robot ne désigne pas un réseau particulier. Deux robots qui recevraient exactement les mêmes caractéristiques de mouvement produiraient la même réponse. Leurs commandes diffèrent selon leurs cibles, leurs vitesses et les voisins présents.
 
-Ce partage réduit le nombre de modèles à entraîner. Il permet aussi d'appliquer le calcul à un ensemble de voisins plus grand ou plus petit. Mais le modèle peut rencontrer une densité ou des vitesses relatives peu représentées dans les exemples. Accepter ces entrées est une propriété de l'architecture ; réussir dans ces nouvelles conditions est une question expérimentale.
+Ce partage réduit le nombre de modèles à entraîner. Il permet aussi d'appliquer le calcul à un ensemble de voisins plus grand ou plus petit. Mais le modèle peut rencontrer une densité ou des vitesses relatives peu représentées dans les exemples. L'architecture peut traiter ces entrées. Il faut ensuite des essais pour savoir si le modèle réussit dans ces conditions.
 
 \section{Évaluation de la formation}
 Il faut vérifier que les robots sont près de la forme et qu'ils en couvrent toutes les parties. Si tous se regroupent sur un seul coin du carré, la première réponse peut sembler favorable pour certains points alors que le carré reste vide ailleurs. Une mesure de couverture doit regarder dans les deux sens, des robots vers les places et des places vers les robots.
@@ -111,9 +111,9 @@ La matrice de confusion, la précision et le rappel servent à évaluer des cat�
 \subsection{Organisation des données}
 Le mot « donnée » recouvre plusieurs niveaux. Un épisode est une mission complète. À chaque instant, chacun des robots fournit une observation. Une observation associée à la commande du contrôleur de référence devient un exemple d'apprentissage. Un seul épisode peut donc produire de nombreux exemples qui restent liés les uns aux autres.
 
-Cette dépendance compte pour l'évaluation. Si l'on mélange au hasard les instants d'une même trajectoire entre entraînement et test, le modèle peut être évalué sur des états très proches de ceux qu'il a déjà vus. Séparer les missions ou les consignes avant l'optimisation donne une évaluation plus exigeante. Réutiliser une même position de départ pour plusieurs formes doit aussi être signalé.
+Cette dépendance doit être prise en compte dans l’évaluation. Si l'on mélange au hasard les instants d'une même trajectoire entre entraînement et test, le modèle peut être évalué sur des états très proches de ceux qu'il a déjà vus. Séparer les missions ou les consignes avant l'optimisation donne une évaluation plus exigeante. Réutiliser une même position de départ pour plusieurs formes doit aussi être signalé.
 
-Les données synthétiques ne sont pas des données sans contenu. Elles portent des unités, des positions, des vitesses et des commandes. Leur qualité dépend cependant du simulateur et du contrôleur de référence. Un phénomène absent de la simulation ne peut pas être considéré comme appris simplement parce que le fichier contient beaucoup de lignes.
+Les données synthétiques décrivent des situations précises. Elles portent des unités, des positions, des vitesses et des commandes. Leur qualité dépend cependant du simulateur et du contrôleur de référence. Un phénomène absent de la simulation ne peut pas être considéré comme appris simplement parce que le fichier contient beaucoup de lignes.
 
 \subsection{Rôle de l'ensemble de validation}
 L'entraînement modifie les paramètres à partir des exemples prévus pour cela. La validation aide à choisir une version du modèle, par exemple l'époque qui donne le plus petit coût. Elle participe donc aux décisions de développement. Le test réservé doit rester séparé jusqu'à ce que ces décisions soient prises.
@@ -121,7 +121,7 @@ L'entraînement modifie les paramètres à partir des exemples prévus pour cela
 Cette distinction explique pourquoi un essai utilisé pour corriger un modèle n'est plus un test final de cette correction. Il reste utile comme diagnostic ou comme validation. Pour mesurer la version corrigée, il faut de nouveaux cas réservés. Les campagnes du mémoire suivent cette séparation tout en précisant le faible nombre de départs distincts disponibles.
 
 \subsection{Missions du groupe}
-Le regroupement réduit la dispersion du groupe. La formation cherche une disposition précise. Le déplacement collectif transporte le groupe tout en préservant cette disposition. Ces objectifs peuvent se succéder, mais aucun n'implique automatiquement le suivant.
+Le regroupement réduit la dispersion du groupe. La formation cherche une disposition précise. Le déplacement collectif transporte le groupe tout en préservant cette disposition. Ces objectifs peuvent se succéder, mais réussir une étape ne garantit pas la suivante.
 
 Le cercle de préparation appartient au premier temps de notre protocole. Il organise les positions avant la répartition finale. Le rectangle ou la lettre demandée appartient à la mission de formation. Lorsque le groupe est ensuite transporté, il faut surveiller aussi sa destination et sa déformation. Cette distinction sert à comprendre les différentes expériences proposées dans l'interface.
 

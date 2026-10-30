@@ -2,7 +2,7 @@
 \label{chap:etatart}
 
 \section{Introduction}
-Ce chapitre situe le mémoire parmi les approches de coordination d'un groupe de robots. Le plan distingue les méthodes traditionnelles, les méthodes avancées et trois travaux connexes. Pour chacun de ces travaux, nous présentons le contexte, la méthode, les résultats retenus et une critique. Le positionnement final précise ce que nous reprenons et ce que nos propres expériences doivent encore établir.
+Ce chapitre situe le mémoire parmi les approches de coordination d'un groupe de robots. Le plan distingue les méthodes traditionnelles, les méthodes avancées et trois travaux connexes. Pour chacun de ces travaux, nous présentons le contexte, la méthode, les résultats retenus et une critique. Le positionnement final distingue les idées reprises de ces travaux et les points à vérifier dans nos expériences.
 
 La comparaison porte d'abord sur les tâches et les informations. Former une courbe, aligner les vitesses et déplacer une formation autour d'un obstacle ne demandent pas exactement les mêmes décisions. De même, un contrôleur informé de toutes les positions ne travaille pas dans les mêmes conditions qu'un contrôleur limité à ses voisins. Nous évitons donc de classer ces articles à partir de scores obtenus dans des scènes différentes.
 
@@ -10,25 +10,25 @@ La comparaison porte d'abord sur les tâches et les informations. Former une cou
 \subsection{Règles locales et consensus distribué}
 Une règle locale transforme une observation proche en action. Dans une loi d'attraction, le robot se rapproche d'une cible. Dans une loi de répulsion, il s'éloigne d'un voisin trop proche. Un freinage limite les oscillations à l'arrivée. Ces termes sont simples à expliquer séparément, mais leur combinaison dépend des gains, de la dynamique et de la disposition du groupe.
 
-Reynolds propose un modèle de déplacement collectif associant séparation, alignement et cohésion \cite{reynolds1987}. L'intérêt pour ce mémoire est la relation entre une action locale et une organisation visible du groupe. Notre mission ajoute toutefois une consigne de places. Rejoindre une lettre n'est pas seulement rester proche des autres ou adopter leur vitesse.
+Reynolds propose un modèle de déplacement collectif associant séparation, alignement et cohésion \cite{reynolds1987}. L'intérêt pour ce mémoire est la relation entre une action locale et une organisation visible du groupe. Dans notre travail, les robots doivent aussi rejoindre des places précises. Rejoindre une lettre n'est pas seulement rester proche des autres ou adopter leur vitesse.
 
-Un protocole de consensus cherche à faire converger des informations ou des décisions vers un accord. La réservation de notre système poursuit un accord sur les places, avec une règle de priorité. Elle ne doit pas être assimilée sans justification à un consensus moyen. Les robots ne calculent pas la moyenne de leurs numéros de place. Ils échangent des demandes et résolvent des conflits discrets.
+Un protocole de consensus cherche à faire converger des informations ou des décisions vers un accord. La réservation de notre système poursuit un accord sur les places, avec une règle de priorité. Elle ne doit pas être assimilée sans justification à un consensus moyen. Il ne s'agit donc pas de calculer une moyenne des numéros de place. Ils échangent des demandes et résolvent des conflits discrets.
 
 Cette différence aide à choisir les tests. Pour une loi de mouvement, on vérifie des trajectoires et des distances. Pour une réservation, on vérifie que deux propriétaires ne conservent pas la même place et que les annonces de la mission précédente ne sont pas réutilisées. Les deux mécanismes coopèrent, mais leur correction se vérifie par des observations différentes.
 
 \subsection{Formation de formes par contrôle décentralisé}
-La formation demande une information géométrique. Une cible peut être décrite par une courbe, des distances relatives, une région ou des places distinctes. Le choix de cette description change ce que chaque robot doit connaître. Dans notre approche, le tracé commun est préparé avant le déplacement, puis chaque robot reçoit une place attribuée.
+La formation demande une information géométrique. Une cible peut être décrite par une courbe, des distances relatives, une région ou des places distinctes. Les informations nécessaires à chaque robot dépendent de cette description. Dans notre approche, le tracé commun est préparé avant le déplacement, puis chaque robot reçoit une place attribuée.
 
-Cette représentation facilite la lecture. On peut dessiner les places et calculer leur écart. Elle impose aussi un travail d'organisation. Une forme peut être correctement échantillonnée sans que les demandes de places soient résolues. La définition géométrique et le protocole d'attribution doivent donc être décrits ensemble.
+Cette représentation permet de visualiser les places et de mesurer les écarts. On peut dessiner les places et calculer leur écart. Elle impose aussi un travail d'organisation. Une forme peut être correctement échantillonnée sans que les demandes de places soient résolues. La définition géométrique et le protocole d'attribution doivent donc être décrits ensemble.
 
 Le nombre de robots intervient dès cette étape. Garder la même petite figure tout en ajoutant des unités réduit les distances entre places. À l'inverse, agrandir trop la figure peut séparer le graphe en plusieurs parties. Cette tension entre densité et communication existe avant même que le réseau soit utilisé. Elle explique pourquoi notre application contrôle la géométrie au lancement.
 
 \subsection{Conception explicite de la loi de contrôle}
 Une commande classique indique directement comment corriger un écart de position et une vitesse. Son intérêt est de distinguer l'attraction, le freinage, la répulsion et les contraintes. Elle constitue une base de comparaison utile, surtout lorsque le modèle appris cherche à reproduire ses commandes.
 
-Cela ne signifie pas qu'elle résout tous les passages. Une répulsion peut éviter un contact tout en laissant deux robots bloqués face à face. Une formation trop large peut nécessiter un détour commun que la seule réaction locale ne prépare pas. Le diagnostic doit alors distinguer une erreur de commande, une attribution non résolue et une destination géométriquement impossible.
+Elle peut toutefois rencontrer des difficultés dans certains passages. Une répulsion peut éviter un contact tout en laissant deux robots bloqués face à face. Une formation trop large peut nécessiter un détour commun que la seule réaction locale ne prépare pas. Le diagnostic doit alors distinguer une erreur de commande, une attribution non résolue et une destination géométriquement impossible.
 
-Dans notre système, le contrôleur de référence fournit à la fois un comportement exécutable et les réponses attendues pour l'apprentissage. Sa qualité détermine une partie de la qualité des exemples. Les cas où il ne trouve pas de commande admissible sont donc comptés. Un jeu de données volumineux ne corrige pas automatiquement un contrôleur de référence mal adapté à certaines situations.
+Dans notre système, le contrôleur de référence fournit à la fois un comportement exécutable et les réponses attendues pour l'apprentissage. Sa qualité détermine une partie de la qualité des exemples. Les cas où il ne trouve pas de commande admissible sont donc comptés. Ajouter des données ne suffit pas si le contrôleur de référence gère mal certaines situations.
 
 \section{Méthodes avancées}
 \subsection{Variantes des GNN et justification de l'agrégation}
@@ -36,21 +36,21 @@ Les réseaux sur graphes calculent une représentation à partir de relations en
 
 Pour un robot, l'ordre dans lequel les voisins sont rangés dans le fichier ne devrait pas modifier le mouvement. Une somme, une moyenne ou une attention suivie d'une somme peuvent satisfaire cette exigence. Les travaux sur Deep Sets donnent un cadre pour traiter les ensembles sans dépendre de leur ordre \cite{zaheer2017}. Le choix d'une agrégation reste toutefois lié à ce que le modèle doit représenter. Le degré, les distances ou les situations de proximité ne se réduisent pas toujours à la même information.
 
-L'attention attribue des poids calculés à partir des caractéristiques des voisins \cite{velickovic2018}. Elle ne désigne pas une communication consciente entre machines. C'est une opération numérique qui permet de combiner différemment les contributions. Dans notre modèle, cette opération est locale et effectuée une fois par décision. Elle ne diffuse pas instantanément toutes les informations de l'essaim.
+L'attention attribue des poids calculés à partir des caractéristiques des voisins \cite{velickovic2018}. Les machines ne choisissent pas consciemment les informations à échanger. C'est une opération numérique qui permet de combiner différemment les contributions. Dans notre modèle, cette opération est locale et effectuée une fois par décision. Elle ne diffuse pas instantanément toutes les informations de l'essaim.
 
 Le nombre de couches linéaires ne permet pas non plus de compter les échanges de voisinage. Un encodeur peut contenir plusieurs transformations sans ajouter une nouvelle portée de communication. Nous décrivons donc séparément la largeur du réseau, ses modules linéaires et son nombre d'agrégations sur le graphe.
 
 \subsection{Apprentissage de contrôleurs décentralisés par GNN}
 L'utilisation d'un réseau partagé répond à un besoin pratique. Tous les robots suivent la même règle de calcul, mais à partir d'états différents. On peut alors collecter des exemples pour l'ensemble du groupe et entraîner un seul modèle. L'exécution reste locale si ses entrées sont limitées à l'état propre et au voisinage autorisé.
 
-Le point important est le contenu des entrées. Une cible propre, une direction relative et une carte globale ne sont pas des informations équivalentes. Le qualificatif « local » doit donc être justifié par la liste exacte des données reçues, et non par le seul fait que le programme appelle un réseau sur graphe.
+Tout dépend donc des informations données en entrée. Une cible propre, une direction relative et une carte globale ne sont pas des informations équivalentes. Le qualificatif « local » doit donc être justifié par la liste exacte des données reçues, et non par le seul fait que le programme appelle un réseau sur graphe.
 
 Notre moteur de simulation connaît toutes les positions pour calculer la physique et les métriques. Il construit cependant une observation limitée pour chaque commande. Cette séparation permet de mesurer le résultat global sans fournir automatiquement cet état global au réseau. Le protocole de collecte doit conserver la même séparation.
 
 \subsection{Méthodes d'apprentissage}
 Plusieurs stratégies peuvent servir à apprendre une commande. L'imitation donne des exemples d'actions produites par un contrôleur de référence. L'apprentissage par renforcement utilise une évaluation des conséquences des actions pour améliorer une politique. L'optimisation à travers une simulation différentiable propage une dérivée à travers le déroulement du modèle physique \cite{belbute2018}. Ces approches n'utilisent pas la même information d'apprentissage.
 
-La version actuelle de notre travail suit l'imitation supervisée. Le simulateur produit les exemples, puis le réseau est ajusté sur les commandes enregistrées. La présence d'un simulateur ne signifie donc pas que le gradient traverse les trajectoires physiques. Nous n'utilisons pas non plus une récompense de renforcement pour entraîner les modèles présentés.
+La version actuelle de notre travail suit l'imitation supervisée. Le simulateur produit les exemples, puis le réseau est ajusté sur les commandes enregistrées. Le simulateur sert ici à produire les exemples, sans faire passer le gradient à travers les trajectoires physiques. Nous n'utilisons pas non plus une récompense de renforcement pour entraîner les modèles présentés.
 
 Le passage de l'exemple isolé à une suite de décisions est une difficulté de l'imitation. Les travaux de Ross et de ses coauteurs étudient ce changement de distribution des états et une collecte qui interroge l'expert sur les états visités par la politique \cite{ross2011}. Notre collecte de correction s'inspire de ce principe, tout en gardant son propre protocole et ses limites. Les garanties du travail cité ne sont pas revendiquées pour notre implémentation.
 
@@ -59,7 +59,7 @@ La séparation entre règle écrite et réseau n'est pas toujours complète. Une
 
 Le filtre de sécurité est une autre forme d'association. Il agit après la proposition du réseau et peut la modifier. Il faut donc comparer le système protégé à sa version sans filtre pendant le mouvement. Sans cette comparaison, on risquerait d'attribuer au réseau la qualité d'une correction classique.
 
-Ces associations ne sont pas une faiblesse en elles-mêmes. Un système peut utilement combiner calcul appris et calcul programmé. La question scientifique est de décrire cette combinaison et de ne pas présenter le résultat de l'ensemble comme la preuve d'une capacité isolée du réseau.
+Associer ces approches peut être utile. Un système peut utilement combiner calcul appris et calcul programmé. La question scientifique est de décrire cette combinaison et de ne pas présenter le résultat de l'ensemble comme la preuve d'une capacité isolée du réseau.
 
 \section{Quelques travaux connexes}
 Les trois travaux sont présentés sous forme de tableaux pour faciliter la comparaison. Chaque tableau conserve les quatre rubriques demandées, soit le contexte, la méthode, les résultats et la critique.
@@ -113,7 +113,7 @@ Critique & Notre moteur fournit directement les positions et les vitesses relati
 \subsection{Lecture critique des comparaisons}
 Notre comparaison principale est interne au simulateur. À l'intérieur d'une campagne, nous conservons le départ, la consigne et les critères. Nous pouvons alors examiner le rôle du filtre ou constater un écart de trajectoire entre le contrôleur de référence et le réseau.
 
-Entre deux campagnes de développement, plusieurs éléments changent parfois ensemble. Le passage au modèle structuré modifie la commande nominale, les caractéristiques, les données et la pénalité d'apprentissage. Le progrès est réel dans le domaine testé, mais il ne mesure pas l'effet isolé de l'attention.
+Entre deux campagnes de développement, plusieurs éléments changent parfois ensemble. Le passage au modèle structuré modifie la commande nominale, les caractéristiques, les données et la pénalité d'apprentissage. Les résultats progressent dans le domaine testé, mais ils ne permettent pas d'isoler le rôle de l'attention.
 
 \subsection{Informations disponibles}
 Les robots disposent d'une cible préparée à partir d'une mission commune. Ils n'infèrent pas la lettre demandée à partir d'une image. Le mouvement utilise l'état propre et les voisins directs. La préparation, la réservation et la planification de navigation restent décrites séparément.
@@ -143,7 +143,7 @@ Navigation & Carte connue et détour classique & Contournement non appris par le
 \subsection{Portée de la contribution}
 Le mémoire ne propose pas une nouvelle théorie générale des essaims. Il construit une chaîne de simulation et d'apprentissage où les hypothèses sont visibles. Sa valeur repose sur la possibilité de retrouver les exemples, les poids et les trajectoires derrière chaque résultat.
 
-Le système associe des idées classiques et un modèle appris. Nous cherchons à savoir où cette association fonctionne, où elle échoue et ce qui doit être modifié. Les résultats négatifs font partie de cette réponse. Le modèle brut initial produit des contacts, le premier pilote multi-effectifs ne réussit pas les grands groupes et la première version structurée reste imparfaite en validation.
+Le système associe des idées classiques et un modèle appris. Nous cherchons à savoir où cette association fonctionne, où elle échoue et ce qui doit être modifié. Les échecs contribuent aussi à cette analyse. Le modèle brut initial produit des contacts, le premier pilote multi-effectifs ne réussit pas les grands groupes et la première version structurée reste imparfaite en validation.
 
 \section{Conclusion partielle}
 Les méthodes traditionnelles rendent les règles explicites ; les réseaux sur graphes apprennent à combiner les informations voisines. Les trois études éclairent la géométrie, l'imitation et la perception, sans fournir de scores directement comparables aux nôtres. Le chapitre suivant décrit notre méthode et les rôles du réseau et des composants classiques.

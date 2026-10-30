@@ -1,0 +1,874 @@
+{
+  "total_items": 117,
+  "items_found": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    32,
+    33,
+    34,
+    35,
+    36,
+    37,
+    38,
+    39,
+    40,
+    41,
+    42,
+    43,
+    44,
+    46,
+    47,
+    48,
+    49,
+    50,
+    51,
+    52,
+    53,
+    54,
+    55,
+    56,
+    57,
+    58,
+    59,
+    60,
+    61,
+    62,
+    63,
+    64,
+    65,
+    66,
+    67,
+    68,
+    70,
+    71,
+    72,
+    73,
+    74,
+    75,
+    76,
+    77,
+    78,
+    79,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    87,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    99,
+    100,
+    101,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    112,
+    113,
+    114,
+    115
+  ],
+  "items_with_revised_paragraphs": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    16,
+    19,
+    22,
+    24,
+    25,
+    26,
+    27,
+    28,
+    29,
+    30,
+    31,
+    33,
+    34,
+    37,
+    38,
+    40,
+    41,
+    42,
+    43,
+    44,
+    46,
+    49,
+    50,
+    51,
+    52,
+    55,
+    56,
+    59,
+    61,
+    62,
+    63,
+    64,
+    65,
+    72,
+    74,
+    75,
+    78,
+    79,
+    81,
+    82,
+    83,
+    84,
+    85,
+    86,
+    88,
+    89,
+    90,
+    91,
+    92,
+    93,
+    94,
+    95,
+    96,
+    97,
+    98,
+    102,
+    105,
+    107
+  ],
+  "items_not_found": [
+    45,
+    69,
+    80,
+    108,
+    109,
+    110,
+    111,
+    116,
+    117
+  ],
+  "items_found_already_clear": [
+    15,
+    17,
+    18,
+    20,
+    21,
+    23,
+    32,
+    35,
+    36,
+    39,
+    47,
+    48,
+    53,
+    54,
+    57,
+    58,
+    60,
+    66,
+    67,
+    68,
+    70,
+    71,
+    73,
+    76,
+    77,
+    87,
+    99,
+    100,
+    101,
+    103,
+    104,
+    106,
+    112,
+    113,
+    114,
+    115
+  ],
+  "changed_paragraphs": 79,
+  "changes": [
+    {
+      "file": "latex\\chapters\\concept.tex",
+      "items": [
+        8
+      ],
+      "before": "Dans notre simulateur, chaque robot possède une position et une vitesse. Le contrôleur demande une accélération, puis le moteur de simulation calcule le déplacement. Ce modèle représente une inertie simple, sans détailler les roues, la batterie ou les capteurs réels.",
+      "after": "Dans notre simulateur, chaque robot possède une position et une vitesse. Le contrôleur demande une accélération, puis le moteur de simulation calcule le déplacement. Ce modèle représente une inertie simple, sans représenter en détail les roues, la batterie ou les capteurs réels."
+    },
+    {
+      "file": "latex\\chapters\\concept.tex",
+      "items": [
+        9
+      ],
+      "before": "\\subsection{Localité}\nUne décision est locale lorsqu'elle utilise les observations propres du robot et les informations de ses voisins directs. La portée détermine ce voisinage ; elle ne donne pas une vue complète de l'essaim.",
+      "after": "\\subsection{Localité}\nUne décision est locale lorsqu'elle utilise les observations propres du robot et les informations de ses voisins directs. La portée détermine quels robots sont voisins, sans donner accès à tout l’essaim."
+    },
+    {
+      "file": "latex\\chapters\\concept.tex",
+      "items": [
+        10
+      ],
+      "before": "\\subsection{Décentralisation}\nLa décentralisation concerne la répartition des décisions entre robots. Elle ne signifie pas que toute information commune disparaît. Les robots peuvent partager une mission tout en calculant séparément leurs commandes.",
+      "after": "\\subsection{Décentralisation}\nLa décentralisation concerne la répartition des décisions entre robots. Les robots peuvent néanmoins disposer d’informations communes. Les robots peuvent partager une mission tout en calculant séparément leurs commandes."
+    },
+    {
+      "file": "latex\\chapters\\concept.tex",
+      "items": [
+        11,
+        12
+      ],
+      "before": "\\subsubsection{Environnement et informations disponibles}\nL'environnement de ce mémoire est fermé au sens où il est délimité et défini par le programme. Les dimensions de l'espace, les limites physiques, les cibles et les obstacles sont connus au lancement. Aucun événement extérieur imprévu ne vient modifier la scène pendant les expériences rapportées. Cette description ne signifie pas que chaque robot reçoit toutes les positions. La simulation peut connaître l'état complet tout en limitant l'information fournie au contrôleur.",
+      "after": "\\subsubsection{Environnement et informations disponibles}\nDans ce mémoire, l'environnement est fermé, car le programme en définit les limites et les conditions. Les dimensions de l'espace, les limites physiques, les cibles et les obstacles sont connus au lancement. Aucun événement extérieur imprévu ne vient modifier la scène pendant les expériences rapportées. Cette description ne signifie pas que chaque robot reçoit toutes les positions. Le simulateur connaît l'état complet, mais ne transmet au contrôleur que les informations autorisées."
+    },
+    {
+      "file": "latex\\chapters\\concept.tex",
+      "items": [
+        13
+      ],
+      "before": "Les cibles sont rangées dans un tableau comparable. La géométrie définit les places disponibles et l'attribution désigne celle qui revient à chacun. Permuter les identifiants des robots sans déplacer leurs positions ne change donc pas la forme visible.",
+      "after": "Les cibles sont rangées dans un tableau comparable. La géométrie fixe les places disponibles. L'attribution détermine ensuite celle de chaque robot. Permuter les identifiants des robots sans déplacer leurs positions ne change donc pas la forme visible."
+    },
+    {
+      "file": "latex\\chapters\\concept.tex",
+      "items": [
+        14
+      ],
+      "before": "Le graphe change lorsque les robots se déplacent. Sa connexité signifie qu'il existe un chemin entre chaque paire de robots ; elle ne signifie pas que tous communiquent directement.",
+      "after": "Le graphe évolue avec les déplacements des robots. Sa connexité signifie qu'il existe un chemin entre chaque paire de robots ; elle ne signifie pas que tous communiquent directement."
+    },
+    {
+      "file": "latex\\chapters\\concept.tex",
+      "items": [
+        16
+      ],
+      "before": "\\section{Réseaux de neurones sur graphes}\nUne couche linéaire calcule une expression $Wx+b$. Des fonctions non linéaires permettent de combiner plusieurs de ces transformations. Le nombre de couches linéaires, leur largeur et le nombre d'échanges sur le graphe sont trois caractéristiques différentes. Une largeur de 64 signifie que certains calculs utilisent 64 composantes ; elle ne signifie pas que le modèle contient 64 robots ou 64 couches.",
+      "after": "\\section{Réseaux de neurones sur graphes}\nUne couche linéaire calcule une expression $Wx+b$. Des fonctions non linéaires complètent ces transformations. Le nombre de couches linéaires, leur largeur et le nombre d'échanges sur le graphe sont trois caractéristiques différentes. Une largeur de 64 signifie que certains calculs utilisent 64 composantes ; elle ne signifie pas que le modèle contient 64 robots ou 64 couches."
+    },
+    {
+      "file": "latex\\chapters\\concept.tex",
+      "items": [
+        19
+      ],
+      "before": "Il faut distinguer la conception et l'apprentissage. Nous choisissons les informations accessibles, les fonctions d'activation et l'organisation du réseau. L'optimisation ajuste ensuite les poids de cette architecture. La préparation circulaire, les limites physiques et les critères de réussite ne sont pas appris de cette manière ; ils restent définis dans le programme.",
+      "after": "La conception du réseau et son apprentissage sont deux étapes différentes. Nous choisissons les informations accessibles, les fonctions d'activation et l'organisation du réseau. L'optimisation ajuste ensuite les poids de cette architecture. La préparation circulaire, les limites physiques et les critères de réussite ne sont pas appris de cette manière ; ils restent définis dans le programme."
+    },
+    {
+      "file": "latex\\chapters\\concept.tex",
+      "items": [
+        22
+      ],
+      "before": "\\subsection{Un même réseau pour plusieurs robots}\nPartager les paramètres signifie que les mêmes matrices sont utilisées pour tous les robots. Le numéro du robot ne désigne pas un réseau particulier. Deux robots qui recevraient exactement les mêmes caractéristiques de mouvement produiraient la même réponse. Leurs commandes réelles diffèrent parce que leurs cibles, leurs vitesses et leurs voisins diffèrent.",
+      "after": "\\subsection{Un même réseau pour plusieurs robots}\nPartager les paramètres signifie que les mêmes matrices sont utilisées pour tous les robots. Le numéro du robot ne désigne pas un réseau particulier. Deux robots qui recevraient exactement les mêmes caractéristiques de mouvement produiraient la même réponse. Leurs commandes diffèrent selon leurs cibles, leurs vitesses et les voisins présents."
+    },
+    {
+      "file": "latex\\chapters\\concept.tex",
+      "items": [
+        22
+      ],
+      "before": "Ce partage réduit le nombre de modèles à entraîner. Il permet aussi d'appliquer le calcul à un ensemble de voisins plus grand ou plus petit. Mais le modèle peut rencontrer une densité ou des vitesses relatives peu représentées dans les exemples. Accepter ces entrées est une propriété de l'architecture ; réussir dans ces nouvelles conditions est une question expérimentale.",
+      "after": "Ce partage réduit le nombre de modèles à entraîner. Il permet aussi d'appliquer le calcul à un ensemble de voisins plus grand ou plus petit. Mais le modèle peut rencontrer une densité ou des vitesses relatives peu représentées dans les exemples. L'architecture peut traiter ces entrées. Il faut ensuite des essais pour savoir si le modèle réussit dans ces conditions."
+    },
+    {
+      "file": "latex\\chapters\\concept.tex",
+      "items": [
+        24
+      ],
+      "before": "Cette dépendance compte pour l'évaluation. Si l'on mélange au hasard les instants d'une même trajectoire entre entraînement et test, le modèle peut être évalué sur des états très proches de ceux qu'il a déjà vus. Séparer les missions ou les consignes avant l'optimisation donne une évaluation plus exigeante. Réutiliser une même position de départ pour plusieurs formes doit aussi être signalé.",
+      "after": "Cette dépendance doit être prise en compte dans l’évaluation. Si l'on mélange au hasard les instants d'une même trajectoire entre entraînement et test, le modèle peut être évalué sur des états très proches de ceux qu'il a déjà vus. Séparer les missions ou les consignes avant l'optimisation donne une évaluation plus exigeante. Réutiliser une même position de départ pour plusieurs formes doit aussi être signalé."
+    },
+    {
+      "file": "latex\\chapters\\concept.tex",
+      "items": [
+        24
+      ],
+      "before": "Les données synthétiques ne sont pas des données sans contenu. Elles portent des unités, des positions, des vitesses et des commandes. Leur qualité dépend cependant du simulateur et du contrôleur de référence. Un phénomène absent de la simulation ne peut pas être considéré comme appris simplement parce que le fichier contient beaucoup de lignes.",
+      "after": "Les données synthétiques décrivent des situations précises. Elles portent des unités, des positions, des vitesses et des commandes. Leur qualité dépend cependant du simulateur et du contrôleur de référence. Un phénomène absent de la simulation ne peut pas être considéré comme appris simplement parce que le fichier contient beaucoup de lignes."
+    },
+    {
+      "file": "latex\\chapters\\concept.tex",
+      "items": [
+        25
+      ],
+      "before": "\\subsection{Missions du groupe}\nLe regroupement réduit la dispersion du groupe. La formation cherche une disposition précise. Le déplacement collectif transporte le groupe tout en préservant cette disposition. Ces objectifs peuvent se succéder, mais aucun n'implique automatiquement le suivant.",
+      "after": "\\subsection{Missions du groupe}\nLe regroupement réduit la dispersion du groupe. La formation cherche une disposition précise. Le déplacement collectif transporte le groupe tout en préservant cette disposition. Ces objectifs peuvent se succéder, mais réussir une étape ne garantit pas la suivante."
+    },
+    {
+      "file": "latex\\chapters\\discussion.tex",
+      "items": [
+        88
+      ],
+      "before": "Nous ne cherchons pas à faire disparaître les difficultés derrière le dernier résultat. Le premier modèle brut, la collecte de correction et le pilote multi-effectifs montrent des limites différentes. Ces limites expliquent les choix de conception. Elles aident aussi à préparer une démonstration honnête. Le nom du contrôleur, le départ et les composants actifs doivent accompagner le score.",
+      "after": "Le dernier résultat ne doit pas faire oublier les difficultés rencontrées. Le premier modèle brut, la collecte de correction et le pilote multi-effectifs montrent des limites différentes. Ces limites expliquent les choix de conception. Elles aident aussi à préparer une démonstration honnête. Le nom du contrôleur, le départ et les composants actifs doivent accompagner le score."
+    },
+    {
+      "file": "latex\\chapters\\discussion.tex",
+      "items": [
+        89
+      ],
+      "before": "\\section*{Interprétation des résultats}\n\\phantomsection\n\\addcontentsline{toc}{section}{Interprétation des résultats}\nLe premier résultat concerne l'écart entre une bonne imitation et une mission réussie. Le réseau de référence atteint une faible erreur finale sur les formes réservées, mais sa version brute produit des contacts. Le filtre classique change ce bilan. Les neuf cas réussissent lorsqu'il protège la commande. La performance appartient donc à la combinaison, pas au seul réseau.",
+      "after": "\\section*{Interprétation des résultats}\n\\phantomsection\n\\addcontentsline{toc}{section}{Interprétation des résultats}\nLe premier résultat concerne l'écart entre une bonne imitation et une mission réussie. Le réseau de référence atteint une faible erreur finale sur les formes réservées, mais sa version brute produit des contacts. Le filtre classique change ce bilan. Les neuf cas réussissent lorsqu'il protège la commande. Cette réussite repose donc sur le réseau et le filtre réunis."
+    },
+    {
+      "file": "latex\\chapters\\discussion.tex",
+      "items": [
+        90
+      ],
+      "before": "La collecte de correction fournit un deuxième enseignement. Le contrôleur de référence est interrogé sur des états plus proches de ceux du modèle, et le total des contacts baisse de 102 à 65 dans la comparaison fraîche. Le résultat reste insuffisant. Le modèle brut ne réussit aucun des dix-huit cas. On peut donc constater un effet utile des exemples supplémentaires sans conclure que le problème est résolu.",
+      "after": "La collecte de correction fournit un deuxième enseignement. Le contrôleur de référence est interrogé sur des états plus proches de ceux du modèle, et le total des contacts baisse de 102 à 65 dans la comparaison fraîche. Cette amélioration reste insuffisante. Le modèle brut ne réussit aucun des dix-huit cas. On peut donc constater un effet utile des exemples supplémentaires sans conclure que le problème est résolu."
+    },
+    {
+      "file": "latex\\chapters\\discussion.tex",
+      "items": [
+        90
+      ],
+      "before": "Le pilote multi-effectifs révèle une autre difficulté. Le réseau peut traiter les observations d'un plus grand groupe, mais le protocole complet ne réussit pas nécessairement. À 24 et 64 robots, la protection évite des contacts tout en laissant une préparation non résolue. L'absence de choc ne remplace ni l'accord sur les places ni la stabilisation.",
+      "after": "Le pilote multi-effectifs révèle une autre difficulté. Le réseau peut traiter les observations d'un plus grand groupe, mais le protocole complet ne réussit pas nécessairement. À 24 et 64 robots, la protection évite des contacts tout en laissant une préparation non résolue. Éviter les chocs ne suffit pas. Les robots doivent aussi s'accorder sur les places et se stabiliser."
+    },
+    {
+      "file": "latex\\chapters\\discussion.tex",
+      "items": [
+        91
+      ],
+      "before": "La stabilité de la position finale est également liée à l'architecture. Le facteur d'activité annule les messages lorsque le robot est à sa cible et que le voisinage est immobile. Le réseau n'a donc pas à apprendre uniquement à partir des données qu'il doit cesser de corriger cet état. Cette propriété est prévue par la conception. Elle n'est pas une découverte spontanée du modèle.",
+      "after": "La stabilité de la position finale est également liée à l'architecture. Le facteur d'activité annule les messages lorsque le robot est à sa cible et que le voisinage est immobile. Le réseau n'a donc pas à apprendre uniquement à partir des données qu'il doit cesser de corriger cet état. Ce comportement est prévu dans la conception du réseau, plutôt qu'appris spontanément à partir des exemples."
+    },
+    {
+      "file": "latex\\chapters\\discussion.tex",
+      "items": [
+        92
+      ],
+      "before": "\\section*{Comparaison avec les travaux antérieurs}\n\\phantomsection\n\\addcontentsline{toc}{section}{Comparaison avec les travaux antérieurs}\nLes travaux du chapitre bibliographique servent à situer les choix, pas à construire un classement de scores. La formation de courbes par des règles, le déplacement collectif appris et la commande à partir de perceptions locales utilisent des tâches et des hypothèses différentes. Les écarts observés dans notre simulateur ne mesurent donc pas une supériorité sur ces approches.",
+      "after": "\\section*{Comparaison avec les travaux antérieurs}\n\\phantomsection\n\\addcontentsline{toc}{section}{Comparaison avec les travaux antérieurs}\nLes travaux présentés dans l'état de l'art aident à expliquer nos choix. Leurs scores ne sont pas directement comparables aux nôtres. La formation de courbes par des règles, le déplacement collectif appris et la commande à partir de perceptions locales utilisent des tâches et des hypothèses différentes. Les écarts observés dans notre simulateur ne mesurent donc pas une supériorité sur ces approches."
+    },
+    {
+      "file": "latex\\chapters\\discussion.tex",
+      "items": [
+        93
+      ],
+      "before": "L'apprentissage par imitation est un autre point commun. Dans notre cas, le contrôleur de référence de mouvement est local et ses commandes sont conservées dans les données. Le réseau n'a pas à reconstruire une décision fondée sur des états physiques éloignés qui lui seraient cachés. Cette cohérence aide à interpréter les exemples, sans supprimer le décalage entre les états du contrôleur de référence et ceux du réseau.",
+      "after": "L'apprentissage par imitation est un autre point commun. Dans notre cas, le contrôleur de référence de mouvement est local et ses commandes sont conservées dans les données. Le réseau n'a pas à reconstruire une décision fondée sur des états physiques éloignés qui lui seraient cachés. Cette cohérence facilite la lecture des exemples. Un décalage reste toutefois possible entre les états rencontrés par le contrôleur de référence et ceux visités par le réseau."
+    },
+    {
+      "file": "latex\\chapters\\discussion.tex",
+      "items": [
+        94
+      ],
+      "before": "Cela ne suffit pas à isoler tous les mécanismes. La version structurée modifie à la fois la représentation, la commande nominale, les données et la fonction de coût. Son progrès ne peut pas être attribué uniquement à un terme. Le changement de planificateur et le rapprochement des obstacles produisent aussi des campagnes différentes ; leurs résultats restent séparés.",
+      "after": "Ces précautions ne permettent toutefois pas d'isoler le rôle de chaque composant. La version structurée modifie à la fois la représentation, la commande nominale, les données et la fonction de coût. Son progrès ne peut pas être attribué uniquement à un terme. Le changement de planificateur et le rapprochement des obstacles produisent aussi des campagnes différentes ; leurs résultats restent séparés."
+    },
+    {
+      "file": "latex\\chapters\\discussion.tex",
+      "items": [
+        95
+      ],
+      "before": "Les effectifs 8 et 16, les formes non réservées et les dimensions adaptées dans l'interface restent exploratoires selon le contrôleur. Une scène exécutable n'est pas nécessairement une scène validée. Il faut conserver cette distinction dans une présentation publique du travail.",
+      "after": "Les effectifs 8 et 16, les formes non réservées et les dimensions adaptées dans l'interface restent exploratoires selon le contrôleur. Pouvoir exécuter une scène ne signifie pas que ses résultats ont été validés. Il faut conserver cette distinction dans une présentation publique du travail."
+    },
+    {
+      "file": "latex\\chapters\\discussion.tex",
+      "items": [
+        96
+      ],
+      "before": "\\subsection*{Validité de construit}\n\\phantomsection\n\\addcontentsline{toc}{subsection}{Validité de construit}\nCette validité concerne ce que les indicateurs représentent. L'erreur de couverture mesure des distances entre positions et places. Elle ne mesure pas directement la lisibilité d'une lettre pour un lecteur humain. Nous n'avons pas conduit de questionnaire permettant d'affirmer qu'un symbole serait reconnu par une personne.",
+      "after": "\\subsection*{Validité de construit}\n\\phantomsection\n\\addcontentsline{toc}{subsection}{Validité de construit}\nCette validité concerne ce que les indicateurs représentent. L'erreur de couverture mesure des distances entre positions et places. Elle ne permet pas de savoir directement si un lecteur reconnaît la lettre. Nous n'avons pas conduit de questionnaire permettant d'affirmer qu'un symbole serait reconnu par une personne."
+    },
+    {
+      "file": "latex\\chapters\\discussion.tex",
+      "items": [
+        97
+      ],
+      "before": "\\section*{Implications pour la conception de contrôleurs décentralisés}\n\\phantomsection\n\\addcontentsline{toc}{section}{Implications pour la conception de contrôleurs décentralisés}\nLa première implication est de définir les rôles avant l'entraînement. Le réseau ne doit pas être chargé implicitement de résoudre une attribution qui n'apparaît ni dans ses entrées ni dans ses exemples. Dans notre système, la réservation est construite et vérifiée séparément. Cela rend les causes d'échec plus lisibles.",
+      "after": "\\section*{Implications pour la conception de contrôleurs décentralisés}\n\\phantomsection\n\\addcontentsline{toc}{section}{Implications pour la conception de contrôleurs décentralisés}\nLa première implication est de définir les rôles avant l'entraînement. Le réseau ne doit pas être chargé implicitement de résoudre une attribution qui n'apparaît ni dans ses entrées ni dans ses exemples. Dans notre système, la réservation est construite et vérifiée séparément. Il devient ainsi plus facile de comprendre les causes d'échec."
+    },
+    {
+      "file": "latex\\chapters\\discussion.tex",
+      "items": [
+        98
+      ],
+      "before": "La géométrie mérite la même attention que le réseau. Si les places sont trop proches ou hors de l'espace, un entraînement supplémentaire ne rend pas la consigne admissible. La vérification de compatibilité avant lancement évite de confondre une impossibilité de la scène avec un défaut du modèle.",
+      "after": "La géométrie mérite la même attention que le réseau. Si les places sont trop proches ou hors de l'espace, un entraînement supplémentaire ne rend pas la consigne admissible. Vérifier la scène avant le lancement permet de distinguer une configuration impossible d'une erreur du modèle."
+    },
+    {
+      "file": "latex\\chapters\\discussion.tex",
+      "items": [
+        102
+      ],
+      "before": "Enfin, la perception et les communications peuvent être rendues moins idéales. Une étape raisonnable serait d'ajouter une perturbation à la fois, puis de mesurer la dégradation. Le passage à des robots physiques demanderait un modèle adapté au matériel et une estimation des caractéristiques locales. Ces travaux restent des perspectives, pas des capacités acquises.",
+      "after": "Enfin, la perception et les communications peuvent être rendues moins idéales. Une étape raisonnable serait d'ajouter une perturbation à la fois, puis de mesurer la dégradation. Le passage à des robots physiques demanderait un modèle adapté au matériel et une estimation des caractéristiques locales. Ces pistes devront encore être mises en œuvre et évaluées."
+    },
+    {
+      "file": "latex\\chapters\\discussion.tex",
+      "items": [
+        105
+      ],
+      "before": "La portée reste limitée. Les dix-huit cas utilisent trois formes et six configurations initiales distinctes, proches d'un anneau de préparation. Ils ne valident ni les départs généraux, ni toutes les formes du catalogue, ni des capteurs bruités. Les très petites erreurs finales sont celles d'une simulation idéale. Elles ne décrivent pas la précision de robots réels.",
+      "after": "La portée reste limitée. Les dix-huit cas utilisent trois formes et six configurations initiales distinctes, proches d'un anneau de préparation. La validation reste limitée aux départs et aux formes testés, avec des observations sans bruit. Les très petites erreurs finales sont celles d'une simulation idéale. Elles ne décrivent pas la précision de robots réels."
+    },
+    {
+      "file": "latex\\chapters\\discussion.tex",
+      "items": [
+        107
+      ],
+      "before": "La conclusion est donc mesurée. Une commande locale apprise peut former l'essaim sans contact dans le domaine testé, à condition de préciser la structure du modèle et la préparation commune. Les résultats les plus utiles sont ceux dont on connaît aussi les limites. C'est sur cette base que le système peut être prolongé.\n",
+      "after": "Ces résultats conduisent à une conclusion prudente. Une commande locale apprise peut former l'essaim sans contact dans le domaine testé, à condition de préciser la structure du modèle et la préparation commune. Les résultats les plus utiles sont ceux dont on connaît aussi les limites. C'est sur cette base que le système peut être prolongé.\n"
+    },
+    {
+      "file": "latex\\chapters\\etat-art.tex",
+      "items": [
+        26
+      ],
+      "before": "\\section{Introduction}\nCe chapitre situe le mémoire parmi les approches de coordination d'un groupe de robots. Le plan distingue les méthodes traditionnelles, les méthodes avancées et trois travaux connexes. Pour chacun de ces travaux, nous présentons le contexte, la méthode, les résultats retenus et une critique. Le positionnement final précise ce que nous reprenons et ce que nos propres expériences doivent encore établir.",
+      "after": "\\section{Introduction}\nCe chapitre situe le mémoire parmi les approches de coordination d'un groupe de robots. Le plan distingue les méthodes traditionnelles, les méthodes avancées et trois travaux connexes. Pour chacun de ces travaux, nous présentons le contexte, la méthode, les résultats retenus et une critique. Le positionnement final distingue les idées reprises de ces travaux et les points à vérifier dans nos expériences."
+    },
+    {
+      "file": "latex\\chapters\\etat-art.tex",
+      "items": [
+        27
+      ],
+      "before": "Reynolds propose un modèle de déplacement collectif associant séparation, alignement et cohésion \\cite{reynolds1987}. L'intérêt pour ce mémoire est la relation entre une action locale et une organisation visible du groupe. Notre mission ajoute toutefois une consigne de places. Rejoindre une lettre n'est pas seulement rester proche des autres ou adopter leur vitesse.",
+      "after": "Reynolds propose un modèle de déplacement collectif associant séparation, alignement et cohésion \\cite{reynolds1987}. L'intérêt pour ce mémoire est la relation entre une action locale et une organisation visible du groupe. Dans notre travail, les robots doivent aussi rejoindre des places précises. Rejoindre une lettre n'est pas seulement rester proche des autres ou adopter leur vitesse."
+    },
+    {
+      "file": "latex\\chapters\\etat-art.tex",
+      "items": [
+        27
+      ],
+      "before": "Un protocole de consensus cherche à faire converger des informations ou des décisions vers un accord. La réservation de notre système poursuit un accord sur les places, avec une règle de priorité. Elle ne doit pas être assimilée sans justification à un consensus moyen. Les robots ne calculent pas la moyenne de leurs numéros de place. Ils échangent des demandes et résolvent des conflits discrets.",
+      "after": "Un protocole de consensus cherche à faire converger des informations ou des décisions vers un accord. La réservation de notre système poursuit un accord sur les places, avec une règle de priorité. Elle ne doit pas être assimilée sans justification à un consensus moyen. Il ne s'agit donc pas de calculer une moyenne des numéros de place. Ils échangent des demandes et résolvent des conflits discrets."
+    },
+    {
+      "file": "latex\\chapters\\etat-art.tex",
+      "items": [
+        28
+      ],
+      "before": "\\subsection{Formation de formes par contrôle décentralisé}\nLa formation demande une information géométrique. Une cible peut être décrite par une courbe, des distances relatives, une région ou des places distinctes. Le choix de cette description change ce que chaque robot doit connaître. Dans notre approche, le tracé commun est préparé avant le déplacement, puis chaque robot reçoit une place attribuée.",
+      "after": "\\subsection{Formation de formes par contrôle décentralisé}\nLa formation demande une information géométrique. Une cible peut être décrite par une courbe, des distances relatives, une région ou des places distinctes. Les informations nécessaires à chaque robot dépendent de cette description. Dans notre approche, le tracé commun est préparé avant le déplacement, puis chaque robot reçoit une place attribuée."
+    },
+    {
+      "file": "latex\\chapters\\etat-art.tex",
+      "items": [
+        28
+      ],
+      "before": "Cette représentation facilite la lecture. On peut dessiner les places et calculer leur écart. Elle impose aussi un travail d'organisation. Une forme peut être correctement échantillonnée sans que les demandes de places soient résolues. La définition géométrique et le protocole d'attribution doivent donc être décrits ensemble.",
+      "after": "Cette représentation permet de visualiser les places et de mesurer les écarts. On peut dessiner les places et calculer leur écart. Elle impose aussi un travail d'organisation. Une forme peut être correctement échantillonnée sans que les demandes de places soient résolues. La définition géométrique et le protocole d'attribution doivent donc être décrits ensemble."
+    },
+    {
+      "file": "latex\\chapters\\etat-art.tex",
+      "items": [
+        29
+      ],
+      "before": "Cela ne signifie pas qu'elle résout tous les passages. Une répulsion peut éviter un contact tout en laissant deux robots bloqués face à face. Une formation trop large peut nécessiter un détour commun que la seule réaction locale ne prépare pas. Le diagnostic doit alors distinguer une erreur de commande, une attribution non résolue et une destination géométriquement impossible.",
+      "after": "Elle peut toutefois rencontrer des difficultés dans certains passages. Une répulsion peut éviter un contact tout en laissant deux robots bloqués face à face. Une formation trop large peut nécessiter un détour commun que la seule réaction locale ne prépare pas. Le diagnostic doit alors distinguer une erreur de commande, une attribution non résolue et une destination géométriquement impossible."
+    },
+    {
+      "file": "latex\\chapters\\etat-art.tex",
+      "items": [
+        29
+      ],
+      "before": "Dans notre système, le contrôleur de référence fournit à la fois un comportement exécutable et les réponses attendues pour l'apprentissage. Sa qualité détermine une partie de la qualité des exemples. Les cas où il ne trouve pas de commande admissible sont donc comptés. Un jeu de données volumineux ne corrige pas automatiquement un contrôleur de référence mal adapté à certaines situations.",
+      "after": "Dans notre système, le contrôleur de référence fournit à la fois un comportement exécutable et les réponses attendues pour l'apprentissage. Sa qualité détermine une partie de la qualité des exemples. Les cas où il ne trouve pas de commande admissible sont donc comptés. Ajouter des données ne suffit pas si le contrôleur de référence gère mal certaines situations."
+    },
+    {
+      "file": "latex\\chapters\\etat-art.tex",
+      "items": [
+        30
+      ],
+      "before": "L'attention attribue des poids calculés à partir des caractéristiques des voisins \\cite{velickovic2018}. Elle ne désigne pas une communication consciente entre machines. C'est une opération numérique qui permet de combiner différemment les contributions. Dans notre modèle, cette opération est locale et effectuée une fois par décision. Elle ne diffuse pas instantanément toutes les informations de l'essaim.",
+      "after": "L'attention attribue des poids calculés à partir des caractéristiques des voisins \\cite{velickovic2018}. Les machines ne choisissent pas consciemment les informations à échanger. C'est une opération numérique qui permet de combiner différemment les contributions. Dans notre modèle, cette opération est locale et effectuée une fois par décision. Elle ne diffuse pas instantanément toutes les informations de l'essaim."
+    },
+    {
+      "file": "latex\\chapters\\etat-art.tex",
+      "items": [
+        31
+      ],
+      "before": "Le point important est le contenu des entrées. Une cible propre, une direction relative et une carte globale ne sont pas des informations équivalentes. Le qualificatif « local » doit donc être justifié par la liste exacte des données reçues, et non par le seul fait que le programme appelle un réseau sur graphe.",
+      "after": "Tout dépend donc des informations données en entrée. Une cible propre, une direction relative et une carte globale ne sont pas des informations équivalentes. Le qualificatif « local » doit donc être justifié par la liste exacte des données reçues, et non par le seul fait que le programme appelle un réseau sur graphe."
+    },
+    {
+      "file": "latex\\chapters\\etat-art.tex",
+      "items": [
+        33
+      ],
+      "before": "La version actuelle de notre travail suit l'imitation supervisée. Le simulateur produit les exemples, puis le réseau est ajusté sur les commandes enregistrées. La présence d'un simulateur ne signifie donc pas que le gradient traverse les trajectoires physiques. Nous n'utilisons pas non plus une récompense de renforcement pour entraîner les modèles présentés.",
+      "after": "La version actuelle de notre travail suit l'imitation supervisée. Le simulateur produit les exemples, puis le réseau est ajusté sur les commandes enregistrées. Le simulateur sert ici à produire les exemples, sans faire passer le gradient à travers les trajectoires physiques. Nous n'utilisons pas non plus une récompense de renforcement pour entraîner les modèles présentés."
+    },
+    {
+      "file": "latex\\chapters\\etat-art.tex",
+      "items": [
+        34
+      ],
+      "before": "Ces associations ne sont pas une faiblesse en elles-mêmes. Un système peut utilement combiner calcul appris et calcul programmé. La question scientifique est de décrire cette combinaison et de ne pas présenter le résultat de l'ensemble comme la preuve d'une capacité isolée du réseau.",
+      "after": "Associer ces approches peut être utile. Un système peut utilement combiner calcul appris et calcul programmé. La question scientifique est de décrire cette combinaison et de ne pas présenter le résultat de l'ensemble comme la preuve d'une capacité isolée du réseau."
+    },
+    {
+      "file": "latex\\chapters\\etat-art.tex",
+      "items": [
+        37
+      ],
+      "before": "Entre deux campagnes de développement, plusieurs éléments changent parfois ensemble. Le passage au modèle structuré modifie la commande nominale, les caractéristiques, les données et la pénalité d'apprentissage. Le progrès est réel dans le domaine testé, mais il ne mesure pas l'effet isolé de l'attention.",
+      "after": "Entre deux campagnes de développement, plusieurs éléments changent parfois ensemble. Le passage au modèle structuré modifie la commande nominale, les caractéristiques, les données et la pénalité d'apprentissage. Les résultats progressent dans le domaine testé, mais ils ne permettent pas d'isoler le rôle de l'attention."
+    },
+    {
+      "file": "latex\\chapters\\etat-art.tex",
+      "items": [
+        38
+      ],
+      "before": "Le système associe des idées classiques et un modèle appris. Nous cherchons à savoir où cette association fonctionne, où elle échoue et ce qui doit être modifié. Les résultats négatifs font partie de cette réponse. Le modèle brut initial produit des contacts, le premier pilote multi-effectifs ne réussit pas les grands groupes et la première version structurée reste imparfaite en validation.",
+      "after": "Le système associe des idées classiques et un modèle appris. Nous cherchons à savoir où cette association fonctionne, où elle échoue et ce qui doit être modifié. Les échecs contribuent aussi à cette analyse. Le modèle brut initial produit des contacts, le premier pilote multi-effectifs ne réussit pas les grands groupes et la première version structurée reste imparfaite en validation."
+    },
+    {
+      "file": "latex\\chapters\\experiences.tex",
+      "items": [
+        74
+      ],
+      "before": "Ce menu ne représente donc pas cinq réseaux entraînés. Il faut lire le nom du contrôleur réellement exécuté avant d'interpréter l'animation. Une formation classique à soixante-quatre robots ne démontre pas une performance neuronale. Un effectif accepté à titre exploratoire ne devient pas validé parce que le dessin s'affiche.",
+      "after": "Ce menu ne représente donc pas cinq réseaux entraînés. Il faut lire le nom du contrôleur réellement exécuté avant d'interpréter l'animation. Une formation classique à soixante-quatre robots ne démontre pas une performance neuronale. L'affichage d'une simulation avec un effectif exploratoire ne suffit pas à valider ce réglage."
+    },
+    {
+      "file": "latex\\chapters\\experiences.tex",
+      "items": [
+        75
+      ],
+      "before": "\\subsection{Conditions d'une démonstration reproductible}\nPour reproduire un cas, on conserve ensemble la graine, l'effectif, la forme, ses dimensions, la scène et le modèle. La graine seule ne décrit pas toute l'expérience. Une modification de largeur ou de contrôleur suffit à changer la trajectoire, même si le numéro de départ reste identique.",
+      "after": "\\subsection{Conditions d'une démonstration reproductible}\nPour reproduire un cas, on conserve ensemble la graine, l'effectif, la forme, ses dimensions, la scène et le modèle. La graine doit donc être conservée avec les autres réglages. Une modification de largeur ou de contrôleur suffit à changer la trajectoire, même si le numéro de départ reste identique."
+    },
+    {
+      "file": "latex\\chapters\\experiences.tex",
+      "items": [
+        78
+      ],
+      "before": "Le réseau brut atteint presque la même erreur finale moyenne, mais provoque 54 événements de contact et ne réussit aucun cas. Cet écart est le résultat principal de la campagne. Observer uniquement la dernière image aurait conduit à une conclusion trompeuse. Les robots peuvent finir près des places demandées après s'être touchés pendant le mouvement. Le filtre classique a donc une contribution importante à la réussite du système protégé.",
+      "after": "Le réseau brut atteint presque la même erreur finale moyenne, mais provoque 54 événements de contact et ne réussit aucun cas. Cet écart est le résultat principal de la campagne. La dernière image, prise seule, aurait donné une impression trompeuse du résultat. Les robots peuvent finir près des places demandées après s'être touchés pendant le mouvement. Le filtre classique a donc une contribution importante à la réussite du système protégé."
+    },
+    {
+      "file": "latex\\chapters\\experiences.tex",
+      "items": [
+        79
+      ],
+      "before": "La correction a donc un effet mesurable, mais elle n'atteint pas l'objectif d'un mouvement brut sans contact. Nous ne la présentons pas comme un modèle sûr. Les poids corrigés et les trajectoires ratées sont conservés pour expliquer cette conclusion, tandis que le modèle initial protégé reste disponible pour la démonstration hybride.",
+      "after": "La correction a donc un effet mesurable, mais elle n'atteint pas l'objectif d'un mouvement brut sans contact. Cette version ne peut donc pas être considérée comme fiable. Les poids corrigés et les trajectoires ratées sont conservés pour expliquer cette conclusion, tandis que le modèle initial protégé reste disponible pour la démonstration hybride."
+    },
+    {
+      "file": "latex\\chapters\\experiences.tex",
+      "items": [
+        81
+      ],
+      "before": "Le nombre de contacts et le nombre d'épisodes réussis n'ont pas la même unité. Une trajectoire peut compter plusieurs contacts ; réduire leur somme ne suffit pas si chaque épisode en conserve au moins un ou ne satisfait pas une autre condition. Le résultat reste donc un progrès partiel, pas une réussite du modèle brut.",
+      "after": "Le nombre de contacts et le nombre d'épisodes réussis n'ont pas la même unité. Une trajectoire peut compter plusieurs contacts ; réduire leur somme ne suffit pas si chaque épisode en conserve au moins un ou ne satisfait pas une autre condition. Le modèle brut progresse, mais ne remplit toujours pas les conditions de réussite."
+    },
+    {
+      "file": "latex\\chapters\\experiences.tex",
+      "items": [
+        82
+      ],
+      "before": "À 24 et 64 robots, le système protégé évite les contacts dans ces cas mais ne termine pas correctement le protocole. Le rassemblement ne permet pas d'aboutir à l'attribution attendue. Une absence de collision n'est donc pas suffisante pour déclarer une réussite.",
+      "after": "À 24 et 64 robots, le système protégé évite les contacts dans ces cas mais ne termine pas correctement le protocole. Le rassemblement ne permet pas d'aboutir à l'attribution attendue. L'absence de collision ne suffit donc pas à réussir la mission."
+    },
+    {
+      "file": "latex\\chapters\\experiences.tex",
+      "items": [
+        83
+      ],
+      "before": "Les erreurs finales sont très faibles, de l'ordre de $10^{-7}$ à $10^{-6}$ m. Elles sont obtenues après une longue stabilisation dans une simulation sans bruit. Elles ne doivent pas être lues comme une précision atteignable par des robots physiques. Pour la mission, le critère utile reste le respect du seuil de 0,1 m, du seuil de vitesse, du maintien et de l'absence de contact.",
+      "after": "Les erreurs finales sont très faibles, de l'ordre de $10^{-7}$ à $10^{-6}$ m. Elles sont obtenues après une longue stabilisation dans une simulation sans bruit. Ces valeurs ne décrivent pas la précision que l'on pourrait attendre de robots réels. Pour la mission, le critère utile reste le respect du seuil de 0,1 m, du seuil de vitesse, du maintien et de l'absence de contact."
+    },
+    {
+      "file": "latex\\chapters\\experiences.tex",
+      "items": [
+        84,
+        85
+      ],
+      "before": "Les huit cas réussissent pour chacun des deux contrôleurs. L'audit de seize trajectoires confirme la physique et les métriques. Le GAT protégé reste à environ 1,04 cm de déformation maximale et 0,56 cm d'erreur maximale de destination. Ces résultats portent sur une chaîne hybride qui associe un trajet classique sur carte connue, une préparation classique dans les scènes multiples, une commande locale et un filtre. Ils ne démontrent pas que le réseau a appris à contourner dix obstacles.",
+      "after": "Les huit cas réussissent pour chacun des deux contrôleurs. L'audit de seize trajectoires confirme la physique et les métriques. Le GAT protégé reste à environ 1,04 cm de déformation maximale et 0,56 cm d'erreur maximale de destination. Ces résultats portent sur une chaîne hybride qui associe un trajet classique sur carte connue, une préparation classique dans les scènes multiples, une commande locale et un filtre. Ils ne permettent pas de conclure que le réseau a appris, à lui seul, à contourner dix obstacles."
+    },
+    {
+      "file": "latex\\chapters\\experiences.tex",
+      "items": [
+        86
+      ],
+      "before": "Toutes les combinaisons de l'interface ne sont pas validées. Les effectifs 8 et 16 et les autres formes ou dimensions restent exploratoires selon le modèle. Une exécution classique à 64 robots ne prouve pas une performance du réseau. Le contrôleur et son domaine doivent accompagner chaque démonstration.",
+      "after": "Certaines combinaisons proposées par l'interface restent à évaluer. Les effectifs 8 et 16 et les autres formes ou dimensions restent exploratoires selon le modèle. Une exécution classique à 64 robots ne prouve pas une performance du réseau. Le contrôleur et son domaine doivent accompagner chaque démonstration."
+    },
+    {
+      "file": "latex\\chapters\\introduction.tex",
+      "items": [
+        3
+      ],
+      "before": "\\section{Hypothèses}\nTrois hypothèses orientent les essais.\n\\begin{enumerate}\\setlength{\\itemsep}{0pt}\n\\item Un réseau partagé peut apprendre une commande de formation à partir de sa cible et de ses voisins.\n\\item Une commande qui conserve explicitement l'attraction et le freinage peut faciliter cet apprentissage.\n\\item Un même modèle peut être utilisé avec plusieurs effectifs, mais sa réussite doit être vérifiée pour chacun.\n\\end{enumerate}\nLa simulation utilise un espace borné, des observations exactes, des échanges sans perte et des obstacles connus. Les capteurs bruités, les pannes et les robots physiques ne sont pas validés.",
+      "after": "\\section{Hypothèses}\nTrois hypothèses orientent les essais.\n\\begin{enumerate}\\setlength{\\itemsep}{0pt}\n\\item Un réseau partagé peut apprendre une commande de formation à partir de sa cible et de ses voisins.\n\\item Une commande qui conserve explicitement l'attraction et le freinage peut faciliter cet apprentissage.\n\\item Un même modèle peut être utilisé avec plusieurs effectifs, mais sa réussite doit être vérifiée pour chacun.\n\\end{enumerate}\nLa simulation utilise un espace borné, des observations exactes, des échanges sans perte et des obstacles connus. Les essais ne couvrent pas les capteurs bruités, les pannes ou les robots réels."
+    },
+    {
+      "file": "latex\\chapters\\introduction.tex",
+      "items": [
+        4,
+        5
+      ],
+      "before": "\\section{Objectifs poursuivis}\nL'objectif général est de construire et d'évaluer une commande locale de formation. Le travail poursuit cinq objectifs.\n\\begin{itemize}\\setlength{\\itemsep}{0pt}\n\\item simuler des déplacements à accélérations bornées ;\n\\item construire les places des formes et régler leur attribution ;\n\\item produire les données du contrôleur de référence et entraîner les modèles ;\n\\item comparer les trajectoires selon la formation, la stabilisation et les contacts ;\n\\item examiner séparément le passage à plusieurs effectifs et la navigation.\n\\end{itemize}\nLes lettres et les nombres sont des consignes à former, pas des images à reconnaître. La réussite demande une forme maintenue, des vitesses faibles et aucun contact pendant l'épisode.",
+      "after": "\\section{Objectifs poursuivis}\nL'objectif général est de construire et d'évaluer une commande locale de formation. Cinq objectifs guident ce travail.\n\\begin{itemize}\\setlength{\\itemsep}{0pt}\n\\item simuler des déplacements à accélérations bornées ;\n\\item construire les places des formes et régler leur attribution ;\n\\item produire les données du contrôleur de référence et entraîner les modèles ;\n\\item comparer les trajectoires selon la formation, la stabilisation et les contacts ;\n\\item examiner séparément le passage à plusieurs effectifs et la navigation.\n\\end{itemize}\nLes lettres et les nombres sont des consignes à former, et non des images que le réseau doit reconnaître. La réussite demande une forme maintenue, des vitesses faibles et aucun contact pendant l'épisode."
+    },
+    {
+      "file": "latex\\chapters\\introduction.tex",
+      "items": [
+        6
+      ],
+      "before": "\\section{Méthodes et techniques utilisées}\nL'apprentissage supervisé utilise les observations et les accélérations du contrôleur de référence. Entraînement, validation et test sont séparés ; les poids sont fixés avant le test réservé.",
+      "after": "\\section{Méthodes et techniques utilisées}\nL'apprentissage supervisé utilise les observations et les accélérations du contrôleur de référence. Entraînement, validation et test sont séparés ; les poids ne changent plus lors du test réservé."
+    },
+    {
+      "file": "latex\\chapters\\introduction.tex",
+      "items": [
+        7
+      ],
+      "before": "\\section{Contribution de l'étude}\nLe travail réunit simulation, attribution, apprentissage et démonstration web, avec des résultats vérifiables.",
+      "after": "\\section{Contribution de l'étude}\nLe travail réunit simulation, attribution, apprentissage et démonstration web, dont les résultats peuvent être vérifiés."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        40
+      ],
+      "before": "Le code distingue le moteur physique, les observations locales, les références géométriques, les modèles d'imitation et les expériences. L'interface permet de sélectionner un cas et de lire sa trajectoire. Elle ne constitue pas une preuve supplémentaire de performance. Les résultats discutés dans ce mémoire proviennent des archives d'expériences.",
+      "after": "Le code distingue le moteur physique, les observations locales, les références géométriques, les modèles d'imitation et les expériences. L'interface permet de sélectionner un cas et de lire sa trajectoire. Son affichage n'ajoute pas de preuve de performance. Les résultats discutés dans ce mémoire proviennent des archives d'expériences."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        41
+      ],
+      "before": "Le modèle reste volontairement limité. Il ne représente pas l'orientation d'un véhicule à deux roues ni le lien entre couple moteur et contact au sol. La saturation de norme évite seulement de demander une vitesse ou une accélération au-delà des bornes choisies. Elle ne calcule pas une consommation d'énergie et ne garantit pas l'absence de contact.",
+      "after": "Ce modèle conserve toutefois plusieurs simplifications. Il ne représente pas l'orientation d'un véhicule à deux roues ni le lien entre couple moteur et contact au sol. La saturation de norme évite seulement de demander une vitesse ou une accélération au-delà des bornes choisies. Elle ne calcule pas une consommation d'énergie et ne garantit pas l'absence de contact."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        42
+      ],
+      "before": "Les formes sont construites par des segments et des courbes. Pour un tracé unique, les places sont réparties le long de sa longueur. Pour plusieurs traits, un échantillonnage qui favorise des points éloignés permet de couvrir l'ensemble. Le nombre de places est égal au nombre de robots. Le réseau reçoit une cible issue de cette construction ; il n'a pas à reconnaître une image.",
+      "after": "Les formes sont construites par des segments et des courbes. Pour un tracé unique, les places sont réparties le long de sa longueur. Pour plusieurs traits, un échantillonnage qui favorise des points éloignés permet de couvrir l'ensemble. Le nombre de places est égal au nombre de robots. Le réseau reçoit une cible calculée à partir de ce tracé. Il ne réalise pas de reconnaissance d'image."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        42
+      ],
+      "before": "Avant le lancement, les places doivent être suffisamment espacées, rester connectées à la portée choisie et tenir dans l'espace. L'écart minimal de référence entre places est de 0,4 m. L'interface peut adapter uniformément les dimensions lorsqu'une combinaison est trop dense. Pour examiner la connexité, elle utilise notamment la plus longue arête d'un arbre reliant les cibles avec une longueur totale minimale. Si aucune échelle ne satisfait les contraintes, la combinaison est refusée. Cette adaptation géométrique ne constitue pas un nouvel entraînement du réseau.",
+      "after": "Avant le lancement, les places doivent être suffisamment espacées, rester connectées à la portée choisie et tenir dans l'espace. L'écart minimal de référence entre places est de 0,4 m. L'interface peut adapter uniformément les dimensions lorsqu'une combinaison est trop dense. Pour examiner la connexité, elle utilise notamment la plus longue arête d'un arbre reliant les cibles avec une longueur totale minimale. Si aucune échelle ne satisfait les contraintes, la combinaison est refusée. Ce réglage des dimensions ne réentraîne pas le réseau."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        43
+      ],
+      "before": "Une présence physique temporaire sur une cible ne vaut pas réservation. Un robot peut traverser une place attribuée à un autre sans en devenir propriétaire. La commande locale doit alors limiter le risque de contact pendant le passage.",
+      "after": "Passer temporairement sur une cible ne suffit pas à la réserver. Un robot peut traverser une place attribuée à un autre sans en devenir propriétaire. La commande locale doit alors limiter le risque de contact pendant le passage."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        44
+      ],
+      "before": "Les annonces se propagent d'un voisin à l'autre au cours de tours successifs. L'effectif est noté $N$. Le budget actuel est de $N^2$ tours, à raison de 0,1 s par tour. Il représente 14,4 s à douze robots et 409,6 s à soixante-quatre robots. Ce choix est conservateur et coûteux. Il décrit le protocole implémenté ; il n'est pas présenté comme une complexité minimale nécessaire à toute attribution décentralisée. La résolution est vérifiée avant la libération du mouvement. Lors d'un changement de mission, un nouveau numéro de mission permet d'écarter les anciennes annonces.",
+      "after": "Les annonces se propagent d'un voisin à l'autre au cours de tours successifs. L'effectif est noté $N$. Le budget actuel est de $N^2$ tours, à raison de 0,1 s par tour. Il représente 14,4 s à douze robots et 409,6 s à soixante-quatre robots. Ce choix prévoit une marge importante, mais allonge l'attribution. Il correspond au protocole utilisé ici, sans représenter le nombre minimal de tours nécessaire à toute méthode décentralisée. La résolution est vérifiée avant la libération du mouvement. Lors d'un changement de mission, un nouveau numéro de mission permet d'écarter les anciennes annonces."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        46
+      ],
+      "before": "Ce mécanisme n'exige pas qu'un centre connaisse les distances de tous les robots. Chaque robot calcule son propre classement. Les annonces transportent une réservation, pas toutes les préférences privées. Il faut toutefois du temps pour que les informations se propagent. C'est pourquoi la phase d'attribution est séparée du mouvement vers les cibles.",
+      "after": "Aucun centre n'a besoin de connaître les distances de tous les robots pour appliquer cette règle. Chaque robot calcule son propre classement. Les annonces transportent une réservation, pas toutes les préférences privées. Il faut toutefois du temps pour que les informations se propagent. C'est pourquoi la phase d'attribution est séparée du mouvement vers les cibles."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        46
+      ],
+      "before": "À la fin de la phase, le programme vérifie l'accord et l'absence de doublons. S'il manque une réservation ou si le réseau de communication ne permet pas d'achever les échanges, la mission n'est pas déclarée résolue. Une forme finale approximative ne doit pas masquer cet échec d'organisation.",
+      "after": "À la fin de la phase, le programme vérifie l'accord et l'absence de doublons. S'il manque une réservation ou si le réseau de communication ne permet pas d'achever les échanges, la mission n'est pas déclarée résolue. Même si la forme finale paraît proche de la cible, ce problème d'organisation reste un échec."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        49
+      ],
+      "before": "Les voisins prennent chacun une part de la réaction nécessaire. La distance de sécurité utilisée ici est de 0,4 m et le paramètre de réaction vaut 3. Une petite composante de détour aide à départager un face-à-face. Ces mécanismes s'ajoutent à la commande, sans changer la cible attribuée.",
+      "after": "Les voisins prennent chacun une part de la réaction nécessaire. La distance de sécurité utilisée ici est de 0,4 m et le paramètre de réaction vaut 3. Une petite composante de détour aide à départager un face-à-face. Ces mécanismes ajustent la commande tout en conservant la cible attribuée."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        49
+      ],
+      "before": "Si aucune commande admissible n'est trouvée, le système applique un freinage borné et compte cette situation. Le filtre ne constitue donc pas une garantie générale de sécurité. Les contacts restent mesurés sur toute la trajectoire.",
+      "after": "Si aucune commande admissible n'est trouvée, le système applique un freinage borné et compte cette situation. Le filtre ne garantit donc pas la sécurité dans toutes les situations. Les contacts restent mesurés sur toute la trajectoire."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        50
+      ],
+      "before": "Les lignes masquées ne doivent influencer ni l'attention ni la somme finale. Ce point est vérifié dans le code. Sans lui, l'ajout de lignes vides pour constituer un lot pourrait changer artificiellement une accélération. Un voisinage vide reçoit également un traitement explicite pour éviter une division ou une normalisation indéfinie.",
+      "after": "Les lignes masquées ne doivent influencer ni l'attention ni la somme finale. Le code vérifie ce comportement. Sans lui, l'ajout de lignes vides pour constituer un lot pourrait changer artificiellement une accélération. Un voisinage vide reçoit également un traitement explicite pour éviter une division ou une normalisation indéfinie."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        51
+      ],
+      "before": "Ces nombres doivent être lus avec leur unité. Un exemple est une observation locale, pas une nouvelle mission indépendante. Cinq graines de départ sont réutilisées entre les formes d'entraînement, deux entre celles de validation et une entre celles de test. La collecte contient donc huit configurations initiales distinctes, répétées pour différentes consignes. Cette réutilisation facilite les comparaisons mais limite la diversité des départs.",
+      "after": "Il faut distinguer ce que représentent ces nombres. Un exemple est une observation locale, pas une nouvelle mission indépendante. Cinq graines de départ sont réutilisées entre les formes d'entraînement, deux entre celles de validation et une entre celles de test. La collecte contient donc huit configurations initiales distinctes, répétées pour différentes consignes. Cette réutilisation facilite les comparaisons mais limite la diversité des départs."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        52
+      ],
+      "before": "Les états voisins dans le temps sont aussi liés. Le robot observé à 10,0 s et à 10,1 s peut avoir presque la même position. On conserve ces exemples pour apprendre le mouvement, mais on ne les compte pas comme deux missions indépendantes. La taille du fichier mesure le volume d'exemples, tandis que les graines et les épisodes décrivent mieux la diversité des situations.",
+      "after": "Les états voisins dans le temps sont aussi liés. Le robot observé à 10,0 s et à 10,1 s peut avoir presque la même position. On conserve ces exemples pour apprendre le mouvement, mais on ne les compte pas comme deux missions indépendantes. La taille du fichier indique le nombre d'exemples. Les graines et les épisodes donnent une meilleure idée de la diversité des situations."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        55
+      ],
+      "before": "L'entraînement s'arrête après 23 époques. Les poids retenus correspondent à l'époque 11, avec une MSE de validation de 0,112516. Le test réservé est ensuite exécuté avec ces poids fixes. Les exemples de test ne servent ni à ajuster les paramètres ni à choisir l'époque retenue.",
+      "after": "L'entraînement s'arrête après 23 époques. Les poids retenus correspondent à l'époque 11, avec une MSE de validation de 0,112516. Le test réservé est ensuite exécuté avec ces poids fixes. Les exemples de test sont réservés à l'évaluation finale, après l'ajustement des paramètres et le choix de l'époque."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        56
+      ],
+      "before": "\\subsection{Déroulement d'un entraînement}\nLe programme charge d'abord les observations et les commandes de la partition d'entraînement. Pour chaque lot, le modèle produit ses deux composantes d'accélération. La fonction de coût compare cette réponse à celle du contrôleur de référence, puis l'optimiseur modifie les paramètres pour réduire ce coût. Une époque correspond à un passage sur les exemples sélectionnés.",
+      "after": "\\subsection{Déroulement d'un entraînement}\nLe programme charge d'abord les observations et les commandes de la partition d'entraînement. Pour chaque lot, le modèle produit ses deux composantes d'accélération. La fonction de coût mesure l'écart avec la commande du contrôleur de référence. L'optimiseur ajuste ensuite les paramètres pour réduire cet écart. Une époque correspond à un passage sur les exemples sélectionnés."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        56
+      ],
+      "before": "L'évaluation en trajectoire intervient ensuite. Le simulateur appelle le modèle à chaque décision et les erreurs peuvent modifier les états suivants. Ce test observe un comportement différent du calcul d'une moyenne sur des exemples fixes. Les deux résultats sont conservés. La courbe d'apprentissage explique la sélection, les trajectoires décrivent la mission.",
+      "after": "L'évaluation en trajectoire intervient ensuite. Le simulateur appelle le modèle à chaque décision et les erreurs peuvent modifier les états suivants. Ce test observe un comportement différent du calcul d'une moyenne sur des exemples fixes. Les résultats de ces deux évaluations sont conservés. La courbe d'apprentissage explique la sélection, les trajectoires décrivent la mission."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        59
+      ],
+      "before": "L'objectif combine une erreur d'imitation pondérée et une pénalité lorsque la commande viole les inégalités locales de séparation. Une écriture du principe est :\nL'Équation~\\eqref{eq:methode-10} sépare les deux contributions du coût.\n\\begin{equation}\n\\mathcal{L}=\\mathcal{L}_{\\text{imitation,pondérée}}+\n\\lambda\\,\\mathcal{L}_{\\text{séparation}}.\n\\label{eq:methode-10}\n\\end{equation}\nLe coefficient $\\lambda$ règle le poids de la pénalité de séparation. La seconde partie pénalise les commandes qui ne respectent pas les contraintes locales de séparation. Elle est normalisée par la distance et guide l'apprentissage. Elle ne constitue pas un filtre appliqué aux mouvements du modèle brut.",
+      "after": "L'objectif combine une erreur d'imitation pondérée et une pénalité lorsque la commande viole les inégalités locales de séparation. Une écriture du principe est :\nL'Équation~\\eqref{eq:methode-10} sépare les deux contributions du coût.\n\\begin{equation}\n\\mathcal{L}=\\mathcal{L}_{\\text{imitation,pondérée}}+\n\\lambda\\,\\mathcal{L}_{\\text{séparation}}.\n\\label{eq:methode-10}\n\\end{equation}\nLe coefficient $\\lambda$ règle le poids de la pénalité de séparation. La seconde partie pénalise les commandes qui ne respectent pas les contraintes locales de séparation. Elle est normalisée par la distance et guide l'apprentissage. Elle guide l'apprentissage, sans filtrer les mouvements du modèle brut."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        61
+      ],
+      "before": "Un épisode de formation réussit si l'attribution est résolue, si la stabilisation est atteinte avant la fin et si aucun contact n'a eu lieu pendant toute l'expérience. Une bonne forme finale après un contact reste donc un échec. Lorsque la stabilisation manque, le temps correspondant reste absent ; on ne lui substitue pas une valeur de réussite.",
+      "after": "Un épisode de formation réussit si l'attribution est résolue, si la stabilisation est atteinte avant la fin et si aucun contact n'a eu lieu pendant toute l'expérience. Une bonne forme finale après un contact reste donc un échec. Lorsque la stabilisation n'est pas atteinte, aucun temps de réussite n'est indiqué."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        62
+      ],
+      "before": "\\section{Reproductibilité et lecture des résultats}\nUne graine permet de reproduire un tirage de positions initiales. À configuration identique, changer de contrôleur sans changer cette graine donne une comparaison appariée. Une graine n'est ni une donnée à apprendre ni un indicateur de qualité. Si plusieurs formes utilisent le même départ, elles ne deviennent pas pour autant plusieurs départs indépendants.",
+      "after": "\\section{Reproductibilité et lecture des résultats}\nUne graine permet de reproduire un tirage de positions initiales. À configuration identique, changer de contrôleur sans changer cette graine donne une comparaison appariée. La graine sert à reproduire le départ, et non à apprendre ou à mesurer la qualité du modèle. Si plusieurs formes utilisent le même départ, elles ne deviennent pas pour autant plusieurs départs indépendants."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        63
+      ],
+      "before": "Reproduire une expérience demande davantage que le nom du logiciel. Il faut retrouver les poids, les paramètres physiques, la consigne, l'état de départ et le protocole. Le même numéro de graine avec une autre taille de forme ne décrit pas le même cas. Inversement, une lecture plus rapide de l'animation ne modifie pas la trajectoire déjà calculée.",
+      "after": "Le nom du logiciel ne suffit pas pour reproduire une expérience. Il faut retrouver les poids, les paramètres physiques, la consigne, l'état de départ et le protocole. Le même numéro de graine avec une autre taille de forme ne décrit pas le même cas. Inversement, une lecture plus rapide de l'animation ne modifie pas la trajectoire déjà calculée."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        64
+      ],
+      "before": "Une empreinte SHA-256, issue de la famille \\textit{Secure Hash Algorithm}, identifie le contenu d'un fichier. Elle permet de vérifier que les poids examinés sont bien ceux utilisés pour le résultat. Elle ne dit pas que le modèle est bon et ne remplace pas la mesure d'une trajectoire. Elle ne sert pas non plus à cacher les données.",
+      "after": "Une empreinte SHA-256, issue de la famille \\textit{Secure Hash Algorithm}, identifie le contenu d'un fichier. Elle permet de vérifier que les poids examinés sont bien ceux utilisés pour le résultat. Elle identifie le fichier, mais ne mesure pas la qualité du modèle ou de sa trajectoire. Elle ne sert pas non plus à cacher les données."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        65
+      ],
+      "before": "À l'impression, la couleur est accompagnée de repères de forme. Les courbes ont des traits distincts, les barres sont hachurées et les positions finales sont marquées par des cercles vides. Le lecteur peut ainsi suivre les catégories en niveaux de gris. Cette vérification visuelle complète le contrôle des nombres, mais ne modifie pas le verdict de réussite.",
+      "after": "À l'impression, la couleur est accompagnée de repères de forme. Les courbes ont des traits distincts, les barres sont hachurées et les positions finales sont marquées par des cercles vides. Le lecteur peut ainsi suivre les catégories en niveaux de gris. La vérification visuelle complète celle des valeurs, sans changer les critères de réussite."
+    },
+    {
+      "file": "latex\\chapters\\methode.tex",
+      "items": [
+        72
+      ],
+      "before": "Trois vérifications sont complémentaires. Les tests du logiciel contrôlent des opérations prévues. Les campagnes mesurent le comportement des contrôleurs. Les audits relisent les archives pour vérifier la cohérence physique et les métriques annoncées. Un grand nombre de tests logiciels réussis ne remplace pas des essais de généralisation du modèle.",
+      "after": "Trois vérifications sont complémentaires. Les tests du logiciel contrôlent des opérations prévues. Les campagnes mesurent le comportement des contrôleurs. Les audits relisent les archives pour vérifier la cohérence physique et les métriques annoncées. Même nombreux, les tests du logiciel ne remplacent pas l'évaluation du modèle sur de nouveaux cas."
+    },
+    {
+      "file": "latex\\frontmatter\\sumaires.tex",
+      "items": [
+        1
+      ],
+      "before": "Les résultats montrent l'intérêt d'une architecture structurée dans les conditions étudiées. Ils ne démontrent pas une réussite générale sur tous les départs, toutes les formes ou des robots réels. Le mémoire distingue les erreurs d'imitation, les mesures de trajectoire et les apports des composants classiques afin de rendre cette portée explicite.",
+      "after": "Les résultats montrent l'intérêt d'une architecture structurée dans les conditions étudiées. Ils ne permettent pas de conclure à une réussite sur tous les départs, toutes les formes ou des robots réels. Le mémoire distingue les erreurs d'imitation, les mesures de trajectoire et les apports des composants classiques pour préciser ce que les résultats permettent de conclure."
+    },
+    {
+      "file": "latex\\frontmatter\\sumaires.tex",
+      "items": [
+        2
+      ],
+      "before": "Training examples are generated by a reference controller in simulation. Supervised learning is used to imitate its accelerations. A first graph attention model, trained with twelve robots, succeeds in nine reserved cases when protected by a classical filter. Without that filter during motion, it fails in all nine cases and produces 54 contact events. Additional corrective data reduce contacts in a later campaign but do not make the unfiltered policy reliable.",
+      "after": "Training examples are generated by a reference controller in simulation. Supervised learning is used to imitate its accelerations. A first graph attention model, trained with twelve robots, succeeds in nine reserved cases when protected by a classical filter. Without that filter during motion, it fails in all nine cases and produces 54 contact events. Adding corrective examples reduces contacts in a later campaign, but the unfiltered policy remains unreliable."
+    }
+  ]
+}

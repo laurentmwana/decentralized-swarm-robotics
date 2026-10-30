@@ -52,3 +52,5 @@ Préférence de lecture de l’auteur : introduction courte, plan énuméré, no
 Révision 026 : introduction de deux pages, rubriques numérotées de 1 à 7 et titre « Plan sommaire ». La liste contient vingt abréviations utilisées dans le texte. Le document conserve six blocs d’équations, des figures en couleur lisibles en niveaux de gris et les titres liminaires centrés. Les développements portent sur l’architecture, les observations, la provenance des fichiers et un cas réservé déjà enregistré ; aucun résultat expérimental supplémentaire n’est annoncé.
 
 Révision 027 : trois annexes sont ajoutées après la bibliographie et inscrites au sommaire. Elles donnent le guide de démarrage, la fiche des sept expériences et les fichiers à conserver pour vérifier les résultats. Elles occupent les pages arabes 59 à 61. Le PDF complet compte 74 pages ; les preuves courantes sont les preuves 027.
+
+Révision 030 : reformulation ciblée des extraits fournis par l’auteur et titres des annexes simplifiés. Le relevé avant/après est dans les preuves 030. Les résultats et le volume de 74 pages sont conservés.

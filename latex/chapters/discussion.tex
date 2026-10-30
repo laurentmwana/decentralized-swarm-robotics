@@ -7,33 +7,33 @@
 \addcontentsline{toc}{section}{Introduction}
 La discussion revient sur la question posée au début du mémoire. Dans quelles conditions une commande locale apprise peut-elle former un essaim sans contact, et quel rôle les composants classiques conservent-ils ? Les résultats apportent une réponse partielle. Ils établissent des réussites dans des domaines précis, tout en montrant plusieurs échecs avant la version structurée. Cette lecture demande de distinguer l'imitation, la mission complète et l'étendue de la validation.
 
-Nous ne cherchons pas à faire disparaître les difficultés derrière le dernier résultat. Le premier modèle brut, la collecte de correction et le pilote multi-effectifs montrent des limites différentes. Ces limites expliquent les choix de conception. Elles aident aussi à préparer une démonstration honnête. Le nom du contrôleur, le départ et les composants actifs doivent accompagner le score.
+Le dernier résultat ne doit pas faire oublier les difficultés rencontrées. Le premier modèle brut, la collecte de correction et le pilote multi-effectifs montrent des limites différentes. Ces limites expliquent les choix de conception. Elles aident aussi à préparer une démonstration honnête. Le nom du contrôleur, le départ et les composants actifs doivent accompagner le score.
 
 \section*{Interprétation des résultats}
 \phantomsection
 \addcontentsline{toc}{section}{Interprétation des résultats}
-Le premier résultat concerne l'écart entre une bonne imitation et une mission réussie. Le réseau de référence atteint une faible erreur finale sur les formes réservées, mais sa version brute produit des contacts. Le filtre classique change ce bilan. Les neuf cas réussissent lorsqu'il protège la commande. La performance appartient donc à la combinaison, pas au seul réseau.
+Le premier résultat concerne l'écart entre une bonne imitation et une mission réussie. Le réseau de référence atteint une faible erreur finale sur les formes réservées, mais sa version brute produit des contacts. Le filtre classique change ce bilan. Les neuf cas réussissent lorsqu'il protège la commande. Cette réussite repose donc sur le réseau et le filtre réunis.
 
 Il n'y a pas de contradiction entre une petite erreur finale et un épisode raté. L'erreur de formation décrit une disposition à un instant. Le bilan de contact décrit un événement qui peut avoir eu lieu plus tôt. Notre définition de réussite exige une disposition maintenue et aucun contact pendant tout le déplacement. L'image finale répond à une question plus étroite que la trajectoire.
 
-La collecte de correction fournit un deuxième enseignement. Le contrôleur de référence est interrogé sur des états plus proches de ceux du modèle, et le total des contacts baisse de 102 à 65 dans la comparaison fraîche. Le résultat reste insuffisant. Le modèle brut ne réussit aucun des dix-huit cas. On peut donc constater un effet utile des exemples supplémentaires sans conclure que le problème est résolu.
+La collecte de correction fournit un deuxième enseignement. Le contrôleur de référence est interrogé sur des états plus proches de ceux du modèle, et le total des contacts baisse de 102 à 65 dans la comparaison fraîche. Cette amélioration reste insuffisante. Le modèle brut ne réussit aucun des dix-huit cas. On peut donc constater un effet utile des exemples supplémentaires sans conclure que le problème est résolu.
 
-Le pilote multi-effectifs révèle une autre difficulté. Le réseau peut traiter les observations d'un plus grand groupe, mais le protocole complet ne réussit pas nécessairement. À 24 et 64 robots, la protection évite des contacts tout en laissant une préparation non résolue. L'absence de choc ne remplace ni l'accord sur les places ni la stabilisation.
+Le pilote multi-effectifs révèle une autre difficulté. Le réseau peut traiter les observations d'un plus grand groupe, mais le protocole complet ne réussit pas nécessairement. À 24 et 64 robots, la protection évite des contacts tout en laissant une préparation non résolue. Éviter les chocs ne suffit pas. Les robots doivent aussi s'accorder sur les places et se stabiliser.
 
 La seconde architecture change le partage des responsabilités. Le mouvement nominal d'attraction et de freinage est inscrit dans le calcul. Le réseau apprend surtout des corrections de voisinage. Cela semble mieux adapté aux situations testées. Les dix-huit cas réservés réussissent sans contact et sans filtre pendant le mouvement appris. Ce résultat appuie le choix pratique d'une commande structurée. Il ne démontre pas qu'un réseau libre aurait appris la même organisation avec le même budget.
 
-La stabilité de la position finale est également liée à l'architecture. Le facteur d'activité annule les messages lorsque le robot est à sa cible et que le voisinage est immobile. Le réseau n'a donc pas à apprendre uniquement à partir des données qu'il doit cesser de corriger cet état. Cette propriété est prévue par la conception. Elle n'est pas une découverte spontanée du modèle.
+La stabilité de la position finale est également liée à l'architecture. Le facteur d'activité annule les messages lorsque le robot est à sa cible et que le voisinage est immobile. Le réseau n'a donc pas à apprendre uniquement à partir des données qu'il doit cesser de corriger cet état. Ce comportement est prévu dans la conception du réseau, plutôt qu'appris spontanément à partir des exemples.
 
 Enfin, les résultats de navigation répondent à une autre question. Les scènes finales sont franchies grâce à une carte connue, un détour commun et une commande protégée. Le planificateur tient compte de la largeur du groupe, ce qui corrige un défaut des premières scènes. On ne peut pas transférer ce succès au GAT structuré brut, qui n'a pas été évalué dans ces transports.
 
 \section*{Comparaison avec les travaux antérieurs}
 \phantomsection
 \addcontentsline{toc}{section}{Comparaison avec les travaux antérieurs}
-Les travaux du chapitre bibliographique servent à situer les choix, pas à construire un classement de scores. La formation de courbes par des règles, le déplacement collectif appris et la commande à partir de perceptions locales utilisent des tâches et des hypothèses différentes. Les écarts observés dans notre simulateur ne mesurent donc pas une supériorité sur ces approches.
+Les travaux présentés dans l'état de l'art aident à expliquer nos choix. Leurs scores ne sont pas directement comparables aux nôtres. La formation de courbes par des règles, le déplacement collectif appris et la commande à partir de perceptions locales utilisent des tâches et des hypothèses différentes. Les écarts observés dans notre simulateur ne mesurent donc pas une supériorité sur ces approches.
 
 Le rapprochement le plus utile porte sur la représentation locale. Les échanges permettent à un robot de tenir compte de ses voisins sans recevoir directement tout l'état physique de l'essaim. Notre implémentation rend cette limite visible dans ses entrées. Elle conserve toutefois une mission commune, une attribution préparée et, pour la navigation, une carte connue du planificateur.
 
-L'apprentissage par imitation est un autre point commun. Dans notre cas, le contrôleur de référence de mouvement est local et ses commandes sont conservées dans les données. Le réseau n'a pas à reconstruire une décision fondée sur des états physiques éloignés qui lui seraient cachés. Cette cohérence aide à interpréter les exemples, sans supprimer le décalage entre les états du contrôleur de référence et ceux du réseau.
+L'apprentissage par imitation est un autre point commun. Dans notre cas, le contrôleur de référence de mouvement est local et ses commandes sont conservées dans les données. Le réseau n'a pas à reconstruire une décision fondée sur des états physiques éloignés qui lui seraient cachés. Cette cohérence facilite la lecture des exemples. Un décalage reste toutefois possible entre les états rencontrés par le contrôleur de référence et ceux visités par le réseau.
 
 La différence entre perception simulée et perception réelle reste importante. Les caractéristiques relatives sont fournies exactement par le moteur. Un système utilisant une caméra ou un LiDAR devrait d'abord les estimer, ou apprendre une autre représentation. Une réussite dans notre modèle ne constitue donc pas une validation de cette étape de perception.
 
@@ -47,7 +47,7 @@ L'effet propre de l'attention reste à établir. Une comparaison entre le premie
 \addcontentsline{toc}{subsection}{Validité interne}
 La validité interne concerne le lien entre les modifications et les effets observés. Les départs appariés réduisent le risque de comparer un contrôleur sur une scène facile à un autre sur une scène difficile. Les poids et les paramètres sont enregistrés, ce qui permet de vérifier quelle version a produit une trajectoire.
 
-Cela ne suffit pas à isoler tous les mécanismes. La version structurée modifie à la fois la représentation, la commande nominale, les données et la fonction de coût. Son progrès ne peut pas être attribué uniquement à un terme. Le changement de planificateur et le rapprochement des obstacles produisent aussi des campagnes différentes ; leurs résultats restent séparés.
+Ces précautions ne permettent toutefois pas d'isoler le rôle de chaque composant. La version structurée modifie à la fois la représentation, la commande nominale, les données et la fonction de coût. Son progrès ne peut pas être attribué uniquement à un terme. Le changement de planificateur et le rapprochement des obstacles produisent aussi des campagnes différentes ; leurs résultats restent séparés.
 
 La sélection des poids s'appuie sur la validation. Cette partition n'est donc pas un ensemble totalement indépendant de la démarche de développement. Le test réservé est exécuté après la sélection, avec des graines annoncées. Si ses résultats servaient à modifier encore le modèle, une nouvelle réserve serait nécessaire pour évaluer la version suivante.
 
@@ -60,12 +60,12 @@ La réserve structurée comprend trois formes, deux départs par effectif et tro
 
 La simulation ne comprend ni bruit de mesure, ni perte aléatoire de messages, ni différence de moteur. Les obstacles sont statiques et leur carte est déclarée. Les pannes de robot ne sont pas validées dans la version actuelle. Ce sont des limites du domaine étudié, pas des détails que le nombre d'exemples d'entraînement ferait disparaître.
 
-Les effectifs 8 et 16, les formes non réservées et les dimensions adaptées dans l'interface restent exploratoires selon le contrôleur. Une scène exécutable n'est pas nécessairement une scène validée. Il faut conserver cette distinction dans une présentation publique du travail.
+Les effectifs 8 et 16, les formes non réservées et les dimensions adaptées dans l'interface restent exploratoires selon le contrôleur. Pouvoir exécuter une scène ne signifie pas que ses résultats ont été validés. Il faut conserver cette distinction dans une présentation publique du travail.
 
 \subsection*{Validité de construit}
 \phantomsection
 \addcontentsline{toc}{subsection}{Validité de construit}
-Cette validité concerne ce que les indicateurs représentent. L'erreur de couverture mesure des distances entre positions et places. Elle ne mesure pas directement la lisibilité d'une lettre pour un lecteur humain. Nous n'avons pas conduit de questionnaire permettant d'affirmer qu'un symbole serait reconnu par une personne.
+Cette validité concerne ce que les indicateurs représentent. L'erreur de couverture mesure des distances entre positions et places. Elle ne permet pas de savoir directement si un lecteur reconnaît la lettre. Nous n'avons pas conduit de questionnaire permettant d'affirmer qu'un symbole serait reconnu par une personne.
 
 La MSE porte sur des accélérations et ne fournit pas un taux de classification. Une matrice de confusion n'est donc pas requise pour la tâche d'imitation actuelle. Elle aurait un autre rôle dans une étude distincte de reconnaissance des symboles. Le rappel et la précision ne doivent pas être ajoutés simplement pour donner davantage de chiffres.
 
@@ -74,13 +74,13 @@ Le temps de stabilisation comprend la préparation et l'attribution. À soixante
 \section*{Implications pour la conception de contrôleurs décentralisés}
 \phantomsection
 \addcontentsline{toc}{section}{Implications pour la conception de contrôleurs décentralisés}
-La première implication est de définir les rôles avant l'entraînement. Le réseau ne doit pas être chargé implicitement de résoudre une attribution qui n'apparaît ni dans ses entrées ni dans ses exemples. Dans notre système, la réservation est construite et vérifiée séparément. Cela rend les causes d'échec plus lisibles.
+La première implication est de définir les rôles avant l'entraînement. Le réseau ne doit pas être chargé implicitement de résoudre une attribution qui n'apparaît ni dans ses entrées ni dans ses exemples. Dans notre système, la réservation est construite et vérifiée séparément. Il devient ainsi plus facile de comprendre les causes d'échec.
 
 La deuxième implication est de choisir une structure de commande cohérente avec l'équilibre souhaité. L'attraction, le freinage et l'annulation des corrections à l'arrêt peuvent être prévus explicitement. Cette conception réduit la liberté du modèle, mais elle évite de lui demander de retrouver seul toutes les propriétés utiles à partir d'un échantillon limité.
 
 La troisième est de conserver une comparaison brute et protégée. Une commande protégée peut être utile en pratique. Elle doit simplement être présentée comme une chaîne hybride et son filtre doit être mesuré. L'objectif d'un mouvement brut est une question différente, qui se juge sur les phases où la projection est réellement retirée.
 
-La géométrie mérite la même attention que le réseau. Si les places sont trop proches ou hors de l'espace, un entraînement supplémentaire ne rend pas la consigne admissible. La vérification de compatibilité avant lancement évite de confondre une impossibilité de la scène avec un défaut du modèle.
+La géométrie mérite la même attention que le réseau. Si les places sont trop proches ou hors de l'espace, un entraînement supplémentaire ne rend pas la consigne admissible. Vérifier la scène avant le lancement permet de distinguer une configuration impossible d'une erreur du modèle.
 
 Enfin, les échanges doivent être décrits avec leur durée. La réservation locale fonctionne dans les cas testés, mais son budget fixe devient coûteux à grand effectif. Une condition d'arrêt plus précise pourrait améliorer la mission sans changer les poids du réseau. Elle demanderait cependant une nouvelle validation de l'accord entre robots.
 
@@ -106,7 +106,7 @@ La troisième suite concerne le protocole d'attribution. Le budget en $N^2$ tour
 
 La navigation pourrait ensuite être évaluée sur davantage de formes, d'effectifs et de cartes. Il faudrait séparer les cartes utilisées pour le développement de celles réservées au bilan. Les passages étroits, les destinations refusées et les détours impossibles doivent faire partie du compte rendu, même lorsqu'aucune trajectoire réussie n'est calculée.
 
-Enfin, la perception et les communications peuvent être rendues moins idéales. Une étape raisonnable serait d'ajouter une perturbation à la fois, puis de mesurer la dégradation. Le passage à des robots physiques demanderait un modèle adapté au matériel et une estimation des caractéristiques locales. Ces travaux restent des perspectives, pas des capacités acquises.
+Enfin, la perception et les communications peuvent être rendues moins idéales. Une étape raisonnable serait d'ajouter une perturbation à la fois, puis de mesurer la dégradation. Le passage à des robots physiques demanderait un modèle adapté au matériel et une estimation des caractéristiques locales. Ces pistes devront encore être mises en œuvre et évaluées.
 
 \section*{Conclusion partielle}
 \phantomsection
@@ -131,7 +131,7 @@ Le premier modèle a permis de montrer les limites d'une lecture fondée sur la 
 
 Le passage à une architecture structurée apporte un résultat plus favorable. Le mouvement nominal vers la cible et le freinage sont écrits explicitement ; les interactions voisines sont apprises. La version retenue réussit les dix-huit cas réservés à 12, 24 et 64 robots, sans contact et sans filtre pendant les phases de mouvement apprises. Le contrôleur de référence réussit également ces cas. Cette observation soutient le choix de conception dans les conditions évaluées.
 
-La portée reste limitée. Les dix-huit cas utilisent trois formes et six configurations initiales distinctes, proches d'un anneau de préparation. Ils ne valident ni les départs généraux, ni toutes les formes du catalogue, ni des capteurs bruités. Les très petites erreurs finales sont celles d'une simulation idéale. Elles ne décrivent pas la précision de robots réels.
+La portée reste limitée. Les dix-huit cas utilisent trois formes et six configurations initiales distinctes, proches d'un anneau de préparation. La validation reste limitée aux départs et aux formes testés, avec des observations sans bruit. Les très petites erreurs finales sont celles d'une simulation idéale. Elles ne décrivent pas la précision de robots réels.
 
 La navigation constitue une contribution complémentaire. Un planificateur sur carte connue prépare le trajet en tenant compte de toutes les places de la formation. Les scènes finales proches des cibles réussissent huit cas par contrôleur pour un carré à douze robots. Ce résultat appartient à une chaîne hybride avec préparation et protection classiques. Il n'établit pas un apprentissage autonome du contournement par le modèle brut.
 
@@ -139,4 +139,4 @@ Le travail apporte aussi une méthode de vérification. Les hypothèses, les par
 
 Les prochaines étapes sont d'élargir la réserve de départs, de répéter les entraînements et d'isoler l'effet des messages. Le protocole d'attribution peut aussi être amélioré pour réduire l'attente à grand effectif. La navigation doit être examinée dans davantage de scènes avant d'envisager une perception moins idéale ou des robots physiques.
 
-La conclusion est donc mesurée. Une commande locale apprise peut former l'essaim sans contact dans le domaine testé, à condition de préciser la structure du modèle et la préparation commune. Les résultats les plus utiles sont ceux dont on connaît aussi les limites. C'est sur cette base que le système peut être prolongé.
+Ces résultats conduisent à une conclusion prudente. Une commande locale apprise peut former l'essaim sans contact dans le domaine testé, à condition de préciser la structure du modèle et la préparation commune. Les résultats les plus utiles sont ceux dont on connaît aussi les limites. C'est sur cette base que le système peut être prolongé.

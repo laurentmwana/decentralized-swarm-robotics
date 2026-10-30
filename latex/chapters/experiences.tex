@@ -10,14 +10,14 @@ L'application prépare une mission à partir d'une forme, d'un effectif, d'un co
 
 Le menu propose trois contrôleurs et deux comparaisons. Le contrôleur classique utilise les règles programmées. Le GAT protégé ajoute un filtre à la proposition du premier réseau. Le GAT structuré brut utilise le second modèle pendant les phases apprises, dans le domaine de formation prévu. Les deux autres choix lancent chacun une paire d'expériences pour faciliter la comparaison.
 
-Ce menu ne représente donc pas cinq réseaux entraînés. Il faut lire le nom du contrôleur réellement exécuté avant d'interpréter l'animation. Une formation classique à soixante-quatre robots ne démontre pas une performance neuronale. Un effectif accepté à titre exploratoire ne devient pas validé parce que le dessin s'affiche.
+Ce menu ne représente donc pas cinq réseaux entraînés. Il faut lire le nom du contrôleur réellement exécuté avant d'interpréter l'animation. Une formation classique à soixante-quatre robots ne démontre pas une performance neuronale. L'affichage d'une simulation avec un effectif exploratoire ne suffit pas à valider ce réglage.
 
 Le cercle initial correspond au rendez-vous du protocole. Le numéro reproductible change le tirage de départ, avec des variations limitées autour de l'anneau pour le modèle structuré. Il ne change pas la définition du réseau. La lecture complète conserve le freinage et les échanges de places, même si le bouton de résultat final permet d'aller directement au dernier état.
 
 Le résultat peut être exporté avec les positions, les vitesses, les paramètres et les métriques. Ces fichiers permettent une lecture indépendante de l'interface. Une erreur visible doit pouvoir être reliée à un instant et à une mesure, plutôt qu'à la seule impression donnée par la vitesse de lecture.
 
 \subsection{Conditions d'une démonstration reproductible}
-Pour reproduire un cas, on conserve ensemble la graine, l'effectif, la forme, ses dimensions, la scène et le modèle. La graine seule ne décrit pas toute l'expérience. Une modification de largeur ou de contrôleur suffit à changer la trajectoire, même si le numéro de départ reste identique.
+Pour reproduire un cas, on conserve ensemble la graine, l'effectif, la forme, ses dimensions, la scène et le modèle. La graine doit donc être conservée avec les autres réglages. Une modification de largeur ou de contrôleur suffit à changer la trajectoire, même si le numéro de départ reste identique.
 
 Le serveur local se lance depuis la racine du projet avec la commande suivante. Elle ouvre le service de démonstration ; elle ne lance pas un entraînement :
 \begin{quote}\ttfamily\detokenize{.\demo\start-reference.ps1}\end{quote}
@@ -75,7 +75,7 @@ Le GAT initial est entraîné avec douze robots à partir des commandes du contr
 
 Le contrôleur de référence réussit les neuf cas sans contact. Le réseau protégé réussit également les neuf, avec une erreur finale moyenne d'environ 1,27 cm. Son temps moyen de stabilisation est de 30,43 s, contre 29,83 s pour le contrôleur de référence. Ces temps comprennent la préparation et l'attribution.
 
-Le réseau brut atteint presque la même erreur finale moyenne, mais provoque 54 événements de contact et ne réussit aucun cas. Cet écart est le résultat principal de la campagne. Observer uniquement la dernière image aurait conduit à une conclusion trompeuse. Les robots peuvent finir près des places demandées après s'être touchés pendant le mouvement. Le filtre classique a donc une contribution importante à la réussite du système protégé.
+Le réseau brut atteint presque la même erreur finale moyenne, mais provoque 54 événements de contact et ne réussit aucun cas. Cet écart est le résultat principal de la campagne. La dernière image, prise seule, aurait donné une impression trompeuse du résultat. Les robots peuvent finir près des places demandées après s'être touchés pendant le mouvement. Le filtre classique a donc une contribution importante à la réussite du système protégé.
 
 La MSE de validation, égale à 0,112516 pour les poids retenus, mesure l'imitation de commandes sur des exemples. Elle ne remplace pas cette évaluation du déplacement. Les états rencontrés par le réseau peuvent aussi s'éloigner progressivement de ceux du contrôleur de référence, même si les premières erreurs de commande sont modestes.
 
@@ -105,7 +105,7 @@ Une collecte complémentaire interroge le contrôleur de référence sur des ét
 
 Sur ces mêmes cas, le modèle brut initial provoque 102 contacts. Le modèle corrigé en provoque 65, soit une baisse d'environ 36,3\,\%. Les deux restent à zéro réussite sur dix-huit. La version corrigée avec protection réussit les dix-huit cas sans contact.
 
-La correction a donc un effet mesurable, mais elle n'atteint pas l'objectif d'un mouvement brut sans contact. Nous ne la présentons pas comme un modèle sûr. Les poids corrigés et les trajectoires ratées sont conservés pour expliquer cette conclusion, tandis que le modèle initial protégé reste disponible pour la démonstration hybride.
+La correction a donc un effet mesurable, mais elle n'atteint pas l'objectif d'un mouvement brut sans contact. Cette version ne peut donc pas être considérée comme fiable. Les poids corrigés et les trajectoires ratées sont conservés pour expliquer cette conclusion, tandis que le modèle initial protégé reste disponible pour la démonstration hybride.
 
 
 La Figure~\ref{fig:correction-contacts} rassemble les contacts de cette comparaison. La baisse entre les deux commandes brutes est mesurée sur les mêmes dix-huit cas. Le troisième résultat inclut une protection. Il ne mesure pas seulement l'effet des nouvelles données.
@@ -115,7 +115,7 @@ La Figure~\ref{fig:correction-contacts} rassemble les contacts de cette comparai
 \label{fig:correction-contacts}
 \end{figure}
 
-Le nombre de contacts et le nombre d'épisodes réussis n'ont pas la même unité. Une trajectoire peut compter plusieurs contacts ; réduire leur somme ne suffit pas si chaque épisode en conserve au moins un ou ne satisfait pas une autre condition. Le résultat reste donc un progrès partiel, pas une réussite du modèle brut.
+Le nombre de contacts et le nombre d'épisodes réussis n'ont pas la même unité. Une trajectoire peut compter plusieurs contacts ; réduire leur somme ne suffit pas si chaque épisode en conserve au moins un ou ne satisfait pas une autre condition. Le modèle brut progresse, mais ne remplit toujours pas les conditions de réussite.
 
 \section{Premier essai avec plusieurs effectifs}
 Le pilote multi-effectifs utilise 12, 24 et 64 robots. Les dimensions de l'espace, de la forme et de la préparation sont adaptées à chaque profil. Trois formes sont réservées au test pour chaque effectif. Les résultats sont :
@@ -136,7 +136,7 @@ Robots & Réussites brutes & Contacts bruts & Réussites protégées & Contacts 
 
 \end{table}
 
-À 24 et 64 robots, le système protégé évite les contacts dans ces cas mais ne termine pas correctement le protocole. Le rassemblement ne permet pas d'aboutir à l'attribution attendue. Une absence de collision n'est donc pas suffisante pour déclarer une réussite.
+À 24 et 64 robots, le système protégé évite les contacts dans ces cas mais ne termine pas correctement le protocole. Le rassemblement ne permet pas d'aboutir à l'attribution attendue. L'absence de collision ne suffit donc pas à réussir la mission.
 
 Ce pilote montre aussi qu'un réseau qui accepte un nombre variable de voisins n'est pas automatiquement performant avec un effectif plus grand. Les interactions, les dimensions et la durée des phases changent. La bonne valeur de la perte de validation du pilote ne résout pas ces difficultés en exécution.
 
@@ -158,7 +158,7 @@ Le Tableau~\ref{tab:vector} rassemble les résultats du GAT structuré brut. Dan
 
 \end{table}
 
-Les erreurs finales sont très faibles, de l'ordre de $10^{-7}$ à $10^{-6}$ m. Elles sont obtenues après une longue stabilisation dans une simulation sans bruit. Elles ne doivent pas être lues comme une précision atteignable par des robots physiques. Pour la mission, le critère utile reste le respect du seuil de 0,1 m, du seuil de vitesse, du maintien et de l'absence de contact.
+Les erreurs finales sont très faibles, de l'ordre de $10^{-7}$ à $10^{-6}$ m. Elles sont obtenues après une longue stabilisation dans une simulation sans bruit. Ces valeurs ne décrivent pas la précision que l'on pourrait attendre de robots réels. Pour la mission, le critère utile reste le respect du seuil de 0,1 m, du seuil de vitesse, du maintien et de l'absence de contact.
 
 L'audit des 36 trajectoires, dix-huit pour chaque contrôleur, vérifie les mises à jour physiques, les bornes, les contacts, l'attribution, la fenêtre de stabilisation et l'identité des départs comparés. Il vérifie aussi que les fichiers utilisent les poids retenus. La plus petite distance entre centres observée pendant le déplacement interpolé est d'environ 0,546 m à douze robots, 0,516 m à vingt-quatre et 0,411 m à soixante-quatre. La distance de 0,5 m choisie pendant l'apprentissage n'est donc pas toujours maintenue. L'absence de contact dans ces cas ne constitue pas une garantie générale sur cette marge.
 
@@ -236,7 +236,7 @@ GAT initial protégé & 8/8 & 0 & 0,010388 & 0,005550\\\bottomrule
 
 \end{table}
 
-Les huit cas réussissent pour chacun des deux contrôleurs. L'audit de seize trajectoires confirme la physique et les métriques. Le GAT protégé reste à environ 1,04 cm de déformation maximale et 0,56 cm d'erreur maximale de destination. Ces résultats portent sur une chaîne hybride qui associe un trajet classique sur carte connue, une préparation classique dans les scènes multiples, une commande locale et un filtre. Ils ne démontrent pas que le réseau a appris à contourner dix obstacles.
+Les huit cas réussissent pour chacun des deux contrôleurs. L'audit de seize trajectoires confirme la physique et les métriques. Le GAT protégé reste à environ 1,04 cm de déformation maximale et 0,56 cm d'erreur maximale de destination. Ces résultats portent sur une chaîne hybride qui associe un trajet classique sur carte connue, une préparation classique dans les scènes multiples, une commande locale et un filtre. Ils ne permettent pas de conclure que le réseau a appris, à lui seul, à contourner dix obstacles.
 
 La Figure~\ref{fig:navigation} montre les trajectoires de transport et les obstacles de la scène finale.
 \begin{figure}[htbp]
@@ -258,7 +258,7 @@ Trois constats se dégagent. La MSE ne suffit pas à prévoir la réussite, le m
 
 Les expériences ne suffisent pas à isoler l'effet de l'attention. Plusieurs éléments ont changé entre le premier réseau et le modèle structuré, notamment la représentation, la commande nominale, les données et la fonction de coût. Une comparaison qui retire uniquement les messages, répétée avec plusieurs entraînements et de nouveaux départs, reste nécessaire pour mesurer cet apport séparément.
 
-Toutes les combinaisons de l'interface ne sont pas validées. Les effectifs 8 et 16 et les autres formes ou dimensions restent exploratoires selon le modèle. Une exécution classique à 64 robots ne prouve pas une performance du réseau. Le contrôleur et son domaine doivent accompagner chaque démonstration.
+Certaines combinaisons proposées par l'interface restent à évaluer. Les effectifs 8 et 16 et les autres formes ou dimensions restent exploratoires selon le modèle. Une exécution classique à 64 robots ne prouve pas une performance du réseau. Le contrôleur et son domaine doivent accompagner chaque démonstration.
 
 \section{Conclusion partielle}
 Les essais établissent une réussite du modèle structuré dans son domaine contrôlé et une réussite de la navigation hybride dans les scènes finales. Ils montrent aussi les limites du premier modèle brut et du pilote multi-effectifs. La discussion suivante examine la portée de ces constats.

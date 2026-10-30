@@ -7,7 +7,7 @@ Ce chapitre décrit la physique, les observations, les formes, l'attribution, le
 \section{Organisation du système}
 Le système consiste à construire les places de la forme, préparer le groupe, attribuer les places puis commander le déplacement. Le simulateur enregistre les états et calcule les indicateurs. Les mêmes fonctions de mesure servent aux contrôleurs classiques et appris. Cette organisation permet de changer le contrôleur sans changer la définition d'une réussite.
 
-Le code distingue le moteur physique, les observations locales, les références géométriques, les modèles d'imitation et les expériences. L'interface permet de sélectionner un cas et de lire sa trajectoire. Elle ne constitue pas une preuve supplémentaire de performance. Les résultats discutés dans ce mémoire proviennent des archives d'expériences.
+Le code distingue le moteur physique, les observations locales, les références géométriques, les modèles d'imitation et les expériences. L'interface permet de sélectionner un cas et de lire sa trajectoire. Son affichage n'ajoute pas de preuve de performance. Les résultats discutés dans ce mémoire proviennent des archives d'expériences.
 
 \section{Modèle physique}
 Chaque robot est représenté par un disque de rayon $r_b=0{,}1$ m. Sa position $p_i$ et sa vitesse $v_i$ sont des vecteurs à deux composantes. La commande demandée est une accélération. La fonction $\operatorname{sat}_b$ limite la norme d'un vecteur à la valeur $b$ tout en conservant sa direction. Un vecteur déjà sous la limite reste inchangé.
@@ -45,16 +45,16 @@ Maintien demandé & 1 s & Écarter un passage fugitif\\\bottomrule
 \subsection{Pourquoi commander une accélération ?}
 Une consigne de vitesse remplacerait directement le mouvement courant si le modèle ne représentait pas son évolution. Avec une accélération, la commande agit d'abord sur la vitesse. Un robot qui se rapproche rapidement de sa cible doit donc freiner à temps. Cette relation rend les trajectoires plus proches d'un problème de commande avec inertie, tout en gardant un modèle simple.
 
-Le modèle reste volontairement limité. Il ne représente pas l'orientation d'un véhicule à deux roues ni le lien entre couple moteur et contact au sol. La saturation de norme évite seulement de demander une vitesse ou une accélération au-delà des bornes choisies. Elle ne calcule pas une consommation d'énergie et ne garantit pas l'absence de contact.
+Ce modèle conserve toutefois plusieurs simplifications. Il ne représente pas l'orientation d'un véhicule à deux roues ni le lien entre couple moteur et contact au sol. La saturation de norme évite seulement de demander une vitesse ou une accélération au-delà des bornes choisies. Elle ne calcule pas une consommation d'énergie et ne garantit pas l'absence de contact.
 
 Deux distances doivent être distinguées. Le contact physique entre deux disques de rayon 0,1 m correspond à 0,2 m entre centres. La distance de sécurité de la commande est plus grande. Elle vise à réagir avant le contact. Pendant l'entraînement structuré v2, une marge encore différente est utilisée pour guider l'apprentissage. Ces valeurs n'ont donc pas toutes le même rôle.
 
 \section{Représentation des formes}
 Le catalogue contient les 26 lettres de A à Z, les dix nombres de 1 à 10 et vingt géométries. Ces dernières comprennent le cercle, l’ellipse, le carré, le rectangle, le triangle, le pentagone, l’hexagone, l’heptagone, l’octogone, le décagone, le losange, le trapèze, le parallélogramme, l’étoile, la croix, la flèche, le demi-cercle, le cœur, la ligne et le V. Les noms O et cercle partagent un tracé ; les noms V et géométrie en V en partagent un autre. Le décompte est donc de 56 noms pour 54 géométries différentes.
 
-Les formes sont construites par des segments et des courbes. Pour un tracé unique, les places sont réparties le long de sa longueur. Pour plusieurs traits, un échantillonnage qui favorise des points éloignés permet de couvrir l'ensemble. Le nombre de places est égal au nombre de robots. Le réseau reçoit une cible issue de cette construction ; il n'a pas à reconnaître une image.
+Les formes sont construites par des segments et des courbes. Pour un tracé unique, les places sont réparties le long de sa longueur. Pour plusieurs traits, un échantillonnage qui favorise des points éloignés permet de couvrir l'ensemble. Le nombre de places est égal au nombre de robots. Le réseau reçoit une cible calculée à partir de ce tracé. Il ne réalise pas de reconnaissance d'image.
 
-Avant le lancement, les places doivent être suffisamment espacées, rester connectées à la portée choisie et tenir dans l'espace. L'écart minimal de référence entre places est de 0,4 m. L'interface peut adapter uniformément les dimensions lorsqu'une combinaison est trop dense. Pour examiner la connexité, elle utilise notamment la plus longue arête d'un arbre reliant les cibles avec une longueur totale minimale. Si aucune échelle ne satisfait les contraintes, la combinaison est refusée. Cette adaptation géométrique ne constitue pas un nouvel entraînement du réseau.
+Avant le lancement, les places doivent être suffisamment espacées, rester connectées à la portée choisie et tenir dans l'espace. L'écart minimal de référence entre places est de 0,4 m. L'interface peut adapter uniformément les dimensions lorsqu'une combinaison est trop dense. Pour examiner la connexité, elle utilise notamment la plus longue arête d'un arbre reliant les cibles avec une longueur totale minimale. Si aucune échelle ne satisfait les contraintes, la combinaison est refusée. Ce réglage des dimensions ne réentraîne pas le réseau.
 
 
 La Figure~\ref{fig:catalogue-actuel} donne douze exemples de tracés issus du catalogue du programme. Elle décrit les consignes disponibles et ne constitue pas un bilan de réussite du réseau sur ces formes.
@@ -77,28 +77,28 @@ Pour les expériences du modèle structuré, les départs sont déjà proches de
 \subsection{Réservation locale et conflits}
 Un robot classe les places par distance à sa position. Il annonce celle qu'il souhaite réserver et transmet les annonces connues à ses voisins. Une annonce contient un propriétaire, une version et une place. Si deux robots demandent la même place, le plus petit identifiant est prioritaire. L'autre choisit sa prochaine place disponible d'après les annonces reçues. L'identifiant sert à départager ; le réseau de neurones ne prend pas cette décision.
 
-Une présence physique temporaire sur une cible ne vaut pas réservation. Un robot peut traverser une place attribuée à un autre sans en devenir propriétaire. La commande locale doit alors limiter le risque de contact pendant le passage.
+Passer temporairement sur une cible ne suffit pas à la réserver. Un robot peut traverser une place attribuée à un autre sans en devenir propriétaire. La commande locale doit alors limiter le risque de contact pendant le passage.
 
-Les annonces se propagent d'un voisin à l'autre au cours de tours successifs. L'effectif est noté $N$. Le budget actuel est de $N^2$ tours, à raison de 0,1 s par tour. Il représente 14,4 s à douze robots et 409,6 s à soixante-quatre robots. Ce choix est conservateur et coûteux. Il décrit le protocole implémenté ; il n'est pas présenté comme une complexité minimale nécessaire à toute attribution décentralisée. La résolution est vérifiée avant la libération du mouvement. Lors d'un changement de mission, un nouveau numéro de mission permet d'écarter les anciennes annonces.
+Les annonces se propagent d'un voisin à l'autre au cours de tours successifs. L'effectif est noté $N$. Le budget actuel est de $N^2$ tours, à raison de 0,1 s par tour. Il représente 14,4 s à douze robots et 409,6 s à soixante-quatre robots. Ce choix prévoit une marge importante, mais allonge l'attribution. Il correspond au protocole utilisé ici, sans représenter le nombre minimal de tours nécessaire à toute méthode décentralisée. La résolution est vérifiée avant la libération du mouvement. Lors d'un changement de mission, un nouveau numéro de mission permet d'écarter les anciennes annonces.
 
 
 \subsection{Exemple de résolution d'un conflit}
 Supposons que les robots 2 et 5 classent la place 3 en premier. Au départ, chacun peut annoncer sa demande sans encore connaître celle de l'autre. Lorsque les annonces se rencontrent, la priorité donne la place 3 au robot 2. Le robot 5 choisit sa prochaine place compatible avec les demandes prioritaires connues et diffuse une nouvelle version de son annonce.
 
-Ce mécanisme n'exige pas qu'un centre connaisse les distances de tous les robots. Chaque robot calcule son propre classement. Les annonces transportent une réservation, pas toutes les préférences privées. Il faut toutefois du temps pour que les informations se propagent. C'est pourquoi la phase d'attribution est séparée du mouvement vers les cibles.
+Aucun centre n'a besoin de connaître les distances de tous les robots pour appliquer cette règle. Chaque robot calcule son propre classement. Les annonces transportent une réservation, pas toutes les préférences privées. Il faut toutefois du temps pour que les informations se propagent. C'est pourquoi la phase d'attribution est séparée du mouvement vers les cibles.
 
 Le protocole ne se réduit pas à « premier arrivé, premier servi ». L'arrivée physique n'est pas la règle de priorité. Le robot peut passer près d'une place qui ne lui appartient pas et continuer vers la sienne. Une attribution obtenue avant le déplacement évite des changements permanents de cible dus aux seuls croisements de trajectoires.
 
-À la fin de la phase, le programme vérifie l'accord et l'absence de doublons. S'il manque une réservation ou si le réseau de communication ne permet pas d'achever les échanges, la mission n'est pas déclarée résolue. Une forme finale approximative ne doit pas masquer cet échec d'organisation.
+À la fin de la phase, le programme vérifie l'accord et l'absence de doublons. S'il manque une réservation ou si le réseau de communication ne permet pas d'achever les échanges, la mission n'est pas déclarée résolue. Même si la forme finale paraît proche de la cible, ce problème d'organisation reste un échec.
 
 \section{Contrôleur de référence et protection classique}
 Le contrôleur de référence est une règle programmée qui produit les commandes utilisées comme exemples d'apprentissage. Il associe trois actions. L'attraction rapproche le robot de sa cible ; le freinage réduit sa vitesse ; la répulsion l'éloigne des voisins trop proches. Les gains utilisés sont respectivement 6, 4 et 60.
 
 La protection examine ensuite la commande proposée. Elle cherche une accélération aussi proche que possible de cette proposition, tout en respectant les limites de mouvement et les contraintes locales de séparation. Le calcul est une optimisation quadratique, abrégée QP. Il s'effectue sur les deux composantes de l'accélération.
 
-Les voisins prennent chacun une part de la réaction nécessaire. La distance de sécurité utilisée ici est de 0,4 m et le paramètre de réaction vaut 3. Une petite composante de détour aide à départager un face-à-face. Ces mécanismes s'ajoutent à la commande, sans changer la cible attribuée.
+Les voisins prennent chacun une part de la réaction nécessaire. La distance de sécurité utilisée ici est de 0,4 m et le paramètre de réaction vaut 3. Une petite composante de détour aide à départager un face-à-face. Ces mécanismes ajustent la commande tout en conservant la cible attribuée.
 
-Si aucune commande admissible n'est trouvée, le système applique un freinage borné et compte cette situation. Le filtre ne constitue donc pas une garantie générale de sécurité. Les contacts restent mesurés sur toute la trajectoire.
+Si aucune commande admissible n'est trouvée, le système applique un freinage borné et compte cette situation. Le filtre ne garantit donc pas la sécurité dans toutes les situations. Les contacts restent mesurés sur toute la trajectoire.
 
 En navigation, la protection tient aussi compte des obstacles et des murs. L'obstacle étant immobile, la correction revient entièrement au robot mobile. Le trajet commun et la protection locale ont ainsi des rôles complémentaires.
 
@@ -114,7 +114,7 @@ Le modèle contient ainsi huit modules linéaires et une seule agrégation de vo
 \subsection{Du fichier d'observation au calcul local}
 L'observation propre est rangée dans un vecteur de huit valeurs. Les voisins forment une petite matrice dont chaque ligne contient quatre valeurs relatives. Comme le nombre de voisins varie, le calcul par lots utilise un masque. Celui-ci indique quelles lignes correspondent à de vrais voisins et quelles lignes servent seulement à compléter la taille du tableau.
 
-Les lignes masquées ne doivent influencer ni l'attention ni la somme finale. Ce point est vérifié dans le code. Sans lui, l'ajout de lignes vides pour constituer un lot pourrait changer artificiellement une accélération. Un voisinage vide reçoit également un traitement explicite pour éviter une division ou une normalisation indéfinie.
+Les lignes masquées ne doivent influencer ni l'attention ni la somme finale. Le code vérifie ce comportement. Sans lui, l'ajout de lignes vides pour constituer un lot pourrait changer artificiellement une accélération. Un voisinage vide reçoit également un traitement explicite pour éviter une division ou une normalisation indéfinie.
 
 Le lot d'apprentissage regroupe des observations de robots, pas une décision centrale pour l'essaim entier. Le réseau applique le même calcul à chacune de ces observations. Le moteur réunit ensuite les commandes pour mettre à jour l'état physique commun. L'entraînement et l'exécution utilisent ainsi la même définition des caractéristiques locales.
 
@@ -153,7 +153,7 @@ Le jeu de données est produit par le contrôleur de référence. Une trajectoir
 
 La collecte élargie contient 214 épisodes du contrôleur de référence, répartis en 185 fichiers d'entraînement, 20 de validation et 9 de test. Après regroupement des tracés identiques, cela représente 180 trajectoires d'entraînement, 18 de validation et 9 de test distinctes. Les géométries uniques sont réparties en 36 pour l'entraînement, 9 pour la validation et 9 pour le test. Les observations retenues comprennent 531\,360 exemples d'entraînement distincts et 53\,136 de validation.
 
-Ces nombres doivent être lus avec leur unité. Un exemple est une observation locale, pas une nouvelle mission indépendante. Cinq graines de départ sont réutilisées entre les formes d'entraînement, deux entre celles de validation et une entre celles de test. La collecte contient donc huit configurations initiales distinctes, répétées pour différentes consignes. Cette réutilisation facilite les comparaisons mais limite la diversité des départs.
+Il faut distinguer ce que représentent ces nombres. Un exemple est une observation locale, pas une nouvelle mission indépendante. Cinq graines de départ sont réutilisées entre les formes d'entraînement, deux entre celles de validation et une entre celles de test. La collecte contient donc huit configurations initiales distinctes, répétées pour différentes consignes. Cette réutilisation facilite les comparaisons mais limite la diversité des départs.
 
 
 Le Tableau~\ref{tab:partitions} précise les différentes unités de la collecte. Les fichiers portant des noms de formes équivalentes restent rattachés à leur partition, mais leur répétition n'ajoute pas une nouvelle géométrie ni une nouvelle trajectoire distincte.
@@ -174,7 +174,7 @@ Test & 9 & 9 & 9 & 9\\\bottomrule
 
 Le contrôle des doublons a un but précis. Si le cercle était rangé en entraînement et la lettre O en test alors que leurs tracés sont identiques, la réserve ne mesurerait pas une nouvelle géométrie. Le regroupement des formes équivalentes empêche cette confusion. Il ne crée pas pour autant une grande diversité des positions de départ.
 
-Les états voisins dans le temps sont aussi liés. Le robot observé à 10,0 s et à 10,1 s peut avoir presque la même position. On conserve ces exemples pour apprendre le mouvement, mais on ne les compte pas comme deux missions indépendantes. La taille du fichier mesure le volume d'exemples, tandis que les graines et les épisodes décrivent mieux la diversité des situations.
+Les états voisins dans le temps sont aussi liés. Le robot observé à 10,0 s et à 10,1 s peut avoir presque la même position. On conserve ces exemples pour apprendre le mouvement, mais on ne les compte pas comme deux missions indépendantes. La taille du fichier indique le nombre d'exemples. Les graines et les épisodes donnent une meilleure idée de la diversité des situations.
 
 
 \subsection{Contenu d'une observation enregistrée}
@@ -205,15 +205,15 @@ Les unités restent celles du simulateur. Le prétraitement ramène certaines gr
 \subsection{Optimisation et sélection}
 L'optimiseur Adam utilise un taux d'apprentissage de $5\times10^{-4}$ et des lots de 1\,024 exemples. La graine d'initialisation vaut 42. Le budget maximal est de 80 époques, avec arrêt après douze époques sans amélioration en validation. La MSE est définie par l'Équation~\eqref{eq:mse}. Son unité est le m$^2$/s$^4$, puisqu'elle porte sur des écarts d'accélération au carré.
 
-L'entraînement s'arrête après 23 époques. Les poids retenus correspondent à l'époque 11, avec une MSE de validation de 0,112516. Le test réservé est ensuite exécuté avec ces poids fixes. Les exemples de test ne servent ni à ajuster les paramètres ni à choisir l'époque retenue.
+L'entraînement s'arrête après 23 époques. Les poids retenus correspondent à l'époque 11, avec une MSE de validation de 0,112516. Le test réservé est ensuite exécuté avec ces poids fixes. Les exemples de test sont réservés à l'évaluation finale, après l'ajustement des paramètres et le choix de l'époque.
 
 
 \subsection{Déroulement d'un entraînement}
-Le programme charge d'abord les observations et les commandes de la partition d'entraînement. Pour chaque lot, le modèle produit ses deux composantes d'accélération. La fonction de coût compare cette réponse à celle du contrôleur de référence, puis l'optimiseur modifie les paramètres pour réduire ce coût. Une époque correspond à un passage sur les exemples sélectionnés.
+Le programme charge d'abord les observations et les commandes de la partition d'entraînement. Pour chaque lot, le modèle produit ses deux composantes d'accélération. La fonction de coût mesure l'écart avec la commande du contrôleur de référence. L'optimiseur ajuste ensuite les paramètres pour réduire cet écart. Une époque correspond à un passage sur les exemples sélectionnés.
 
 Après l'époque, la validation est calculée sans mettre à jour les paramètres. Si son coût s'améliore, une copie des poids est conservée. L'arrêt anticipé évite de poursuivre indéfiniment lorsque les nouvelles époques n'améliorent plus la sélection. Les poids de la dernière époque ne sont donc pas nécessairement ceux du modèle retenu.
 
-L'évaluation en trajectoire intervient ensuite. Le simulateur appelle le modèle à chaque décision et les erreurs peuvent modifier les états suivants. Ce test observe un comportement différent du calcul d'une moyenne sur des exemples fixes. Les deux résultats sont conservés. La courbe d'apprentissage explique la sélection, les trajectoires décrivent la mission.
+L'évaluation en trajectoire intervient ensuite. Le simulateur appelle le modèle à chaque décision et les erreurs peuvent modifier les états suivants. Ce test observe un comportement différent du calcul d'une moyenne sur des exemples fixes. Les résultats de ces deux évaluations sont conservés. La courbe d'apprentissage explique la sélection, les trajectoires décrivent la mission.
 
 Reprendre un entraînement change les poids. Rejouer une expérience avec des poids déjà sauvegardés ne les change pas. L'interface utilise cette seconde opération lorsqu'elle affiche un résultat ; choisir une nouvelle forme ou une nouvelle graine n'entraîne pas le réseau à nouveau.
 
@@ -254,7 +254,7 @@ L'Équation~\eqref{eq:methode-10} sépare les deux contributions du coût.
 \lambda\,\mathcal{L}_{\text{séparation}}.
 \label{eq:methode-10}
 \end{equation}
-Le coefficient $\lambda$ règle le poids de la pénalité de séparation. La seconde partie pénalise les commandes qui ne respectent pas les contraintes locales de séparation. Elle est normalisée par la distance et guide l'apprentissage. Elle ne constitue pas un filtre appliqué aux mouvements du modèle brut.
+Le coefficient $\lambda$ règle le poids de la pénalité de séparation. La seconde partie pénalise les commandes qui ne respectent pas les contraintes locales de séparation. Elle est normalisée par la distance et guide l'apprentissage. Elle guide l'apprentissage, sans filtrer les mouvements du modèle brut.
 
 Une première version réussit six des neuf cas de validation. La seconde repart de ses poids, augmente le poids de séparation à 200 et utilise une distance d'apprentissage de 0,5 m. Le taux d'apprentissage est de $3\times10^{-4}$, la taille des lots de 512 et le budget maximal de 60 époques, avec une patience de douze. L'entraînement s'arrête à l'époque 53 ; l'époque 41 est retenue. La valeur de validation est de 0,239340 pour cet objectif composite. Elle ne peut pas être comparée directement à la MSE du premier modèle, ni à une valeur calculée avec une autre pénalité.
 
@@ -290,12 +290,12 @@ La stabilisation demande simultanément $E(P,Q)\leq0{,}1$ m et une vitesse maxim
 \subsection{Contacts et réussite}
 Les contacts entre disques sont recherchés aussi entre deux états successifs, en examinant le déplacement interpolé des centres. Un contact prolongé n'est pas recompté comme un nouvel événement à chaque image. Les contacts initiaux et les nouvelles entrées en contact sont conservés. Pour la navigation, les obstacles et les murs font également partie du bilan.
 
-Un épisode de formation réussit si l'attribution est résolue, si la stabilisation est atteinte avant la fin et si aucun contact n'a eu lieu pendant toute l'expérience. Une bonne forme finale après un contact reste donc un échec. Lorsque la stabilisation manque, le temps correspondant reste absent ; on ne lui substitue pas une valeur de réussite.
+Un épisode de formation réussit si l'attribution est résolue, si la stabilisation est atteinte avant la fin et si aucun contact n'a eu lieu pendant toute l'expérience. Une bonne forme finale après un contact reste donc un échec. Lorsque la stabilisation n'est pas atteinte, aucun temps de réussite n'est indiqué.
 
 La navigation demande aussi une erreur de destination inférieure à 0,1 m et une déformation maximale pendant le transport inférieure à 0,2 m. La mesure de forme est recentrée sur la formation, tandis que l'erreur de destination mesure le placement du groupe. Cela distingue un groupe bien formé au mauvais endroit d'un groupe arrivé mais déformé.
 
 \section{Reproductibilité et lecture des résultats}
-Une graine permet de reproduire un tirage de positions initiales. À configuration identique, changer de contrôleur sans changer cette graine donne une comparaison appariée. Une graine n'est ni une donnée à apprendre ni un indicateur de qualité. Si plusieurs formes utilisent le même départ, elles ne deviennent pas pour autant plusieurs départs indépendants.
+Une graine permet de reproduire un tirage de positions initiales. À configuration identique, changer de contrôleur sans changer cette graine donne une comparaison appariée. La graine sert à reproduire le départ, et non à apprendre ou à mesurer la qualité du modèle. Si plusieurs formes utilisent le même départ, elles ne deviennent pas pour autant plusieurs départs indépendants.
 
 Les archives conservent les positions, les vitesses, les commandes, les instants et les paramètres. Les rapports donnent les métriques et les empreintes des poids utilisés. Les tableaux et les figures du chapitre suivant sont reconstruits à partir de ces fichiers. Les tests logiciels vérifient les fonctions du programme ; les campagnes de trajectoires évaluent les comportements. Cette distinction reste valable même lorsque tous les tests logiciels réussissent.
 
@@ -306,18 +306,18 @@ Le journal du GAT initial indique une exécution sur le processeur central, ou C
 
 Un processeur graphique, ou GPU pour \textit{Graphics Processing Unit}, peut servir à effectuer certains calculs d'apprentissage en parallèle. Nos résultats ne sont toutefois pas présentés comme une comparaison CPU/GPU. Les temps du chapitre d'expériences sont des temps simulés de mission, et non des durées de calcul matériel.
 
-Reproduire une expérience demande davantage que le nom du logiciel. Il faut retrouver les poids, les paramètres physiques, la consigne, l'état de départ et le protocole. Le même numéro de graine avec une autre taille de forme ne décrit pas le même cas. Inversement, une lecture plus rapide de l'animation ne modifie pas la trajectoire déjà calculée.
+Le nom du logiciel ne suffit pas pour reproduire une expérience. Il faut retrouver les poids, les paramètres physiques, la consigne, l'état de départ et le protocole. Le même numéro de graine avec une autre taille de forme ne décrit pas le même cas. Inversement, une lecture plus rapide de l'animation ne modifie pas la trajectoire déjà calculée.
 
 \subsection{Formats des fichiers et provenance}
 Le format JSON, pour \textit{JavaScript Object Notation}, conserve des informations structurées comme les paramètres et les résumés de métriques. Le format CSV, pour \textit{Comma-Separated Values}, permet de lire les trajectoires comme un tableau. L'export de démonstration indique notamment l'instant, le robot, ses coordonnées et ses deux composantes de vitesse.
 
 Les tableaux numériques complets sont aussi conservés dans des archives NumPy portant l'extension \texttt{.npz}. Cette extension est un format de fichier, pas une nouvelle métrique. Le paquet d'export rassemble les données nécessaires à la lecture du cas ; ses fichiers doivent être conservés ensemble pour garder leur contexte.
 
-Une empreinte SHA-256, issue de la famille \textit{Secure Hash Algorithm}, identifie le contenu d'un fichier. Elle permet de vérifier que les poids examinés sont bien ceux utilisés pour le résultat. Elle ne dit pas que le modèle est bon et ne remplace pas la mesure d'une trajectoire. Elle ne sert pas non plus à cacher les données.
+Une empreinte SHA-256, issue de la famille \textit{Secure Hash Algorithm}, identifie le contenu d'un fichier. Elle permet de vérifier que les poids examinés sont bien ceux utilisés pour le résultat. Elle identifie le fichier, mais ne mesure pas la qualité du modèle ou de sa trajectoire. Elle ne sert pas non plus à cacher les données.
 
 Pour les figures du mémoire, le PDF, ou \textit{Portable Document Format}, conserve les tracés vectoriels. Les images PNG, pour \textit{Portable Network Graphics}, sont exportées à 300 points par pouce, notés DPI pour \textit{Dots Per Inch}. Le catalogue possède aussi une sortie SVG, pour \textit{Scalable Vector Graphics}. Ces formats concernent la présentation et l'archivage, sans ajouter de résultats d'apprentissage.
 
-À l'impression, la couleur est accompagnée de repères de forme. Les courbes ont des traits distincts, les barres sont hachurées et les positions finales sont marquées par des cercles vides. Le lecteur peut ainsi suivre les catégories en niveaux de gris. Cette vérification visuelle complète le contrôle des nombres, mais ne modifie pas le verdict de réussite.
+À l'impression, la couleur est accompagnée de repères de forme. Les courbes ont des traits distincts, les barres sont hachurées et les positions finales sont marquées par des cercles vides. Le lecteur peut ainsi suivre les catégories en niveaux de gris. La vérification visuelle complète celle des valeurs, sans changer les critères de réussite.
 
 \section{Configurations actuelles et progression de l'apprentissage}
 Le passage à plusieurs effectifs modifie aussi la taille de la scène. Le Tableau~\ref{tab:profils} donne les profils utilisés pour le test structuré. Il évite d'attribuer au seul nombre de robots des écarts produits par des configurations plus larges et des préparations plus longues.
@@ -359,7 +359,7 @@ Partie & Fonction & Données produites ou utilisées\\\midrule
 \end{tabularx}
 \end{table}
 
-Trois vérifications sont complémentaires. Les tests du logiciel contrôlent des opérations prévues. Les campagnes mesurent le comportement des contrôleurs. Les audits relisent les archives pour vérifier la cohérence physique et les métriques annoncées. Un grand nombre de tests logiciels réussis ne remplace pas des essais de généralisation du modèle.
+Trois vérifications sont complémentaires. Les tests du logiciel contrôlent des opérations prévues. Les campagnes mesurent le comportement des contrôleurs. Les audits relisent les archives pour vérifier la cohérence physique et les métriques annoncées. Même nombreux, les tests du logiciel ne remplacent pas l'évaluation du modèle sur de nouveaux cas.
 
 \section{Conclusion partielle}
 La méthode sépare la forme, l'attribution des places et le mouvement. Les deux modèles apprennent à partir de commandes synthétiques, puis sont évalués sur des trajectoires complètes. Le chapitre suivant présente l'implémentation et les résultats des campagnes.

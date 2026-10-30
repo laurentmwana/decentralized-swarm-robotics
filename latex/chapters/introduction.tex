@@ -20,10 +20,10 @@ Trois hypothèses orientent les essais.
 \item Une commande qui conserve explicitement l'attraction et le freinage peut faciliter cet apprentissage.
 \item Un même modèle peut être utilisé avec plusieurs effectifs, mais sa réussite doit être vérifiée pour chacun.
 \end{enumerate}
-La simulation utilise un espace borné, des observations exactes, des échanges sans perte et des obstacles connus. Les capteurs bruités, les pannes et les robots physiques ne sont pas validés.
+La simulation utilise un espace borné, des observations exactes, des échanges sans perte et des obstacles connus. Les essais ne couvrent pas les capteurs bruités, les pannes ou les robots réels.
 
 \section{Objectifs poursuivis}
-L'objectif général est de construire et d'évaluer une commande locale de formation. Le travail poursuit cinq objectifs.
+L'objectif général est de construire et d'évaluer une commande locale de formation. Cinq objectifs guident ce travail.
 \begin{itemize}\setlength{\itemsep}{0pt}
 \item simuler des déplacements à accélérations bornées ;
 \item construire les places des formes et régler leur attribution ;
@@ -31,15 +31,15 @@ L'objectif général est de construire et d'évaluer une commande locale de form
 \item comparer les trajectoires selon la formation, la stabilisation et les contacts ;
 \item examiner séparément le passage à plusieurs effectifs et la navigation.
 \end{itemize}
-Les lettres et les nombres sont des consignes à former, pas des images à reconnaître. La réussite demande une forme maintenue, des vitesses faibles et aucun contact pendant l'épisode.
+Les lettres et les nombres sont des consignes à former, et non des images que le réseau doit reconnaître. La réussite demande une forme maintenue, des vitesses faibles et aucun contact pendant l'épisode.
 
 \section{Méthodes et techniques utilisées}
-L'apprentissage supervisé utilise les observations et les accélérations du contrôleur de référence. Entraînement, validation et test sont séparés ; les poids sont fixés avant le test réservé.
+L'apprentissage supervisé utilise les observations et les accélérations du contrôleur de référence. Entraînement, validation et test sont séparés ; les poids ne changent plus lors du test réservé.
 
 Les comparaisons utilisent les mêmes départs. Les trajectoires sont archivées pour vérifier les commandes et recalculer les métriques.
 
 \section{Contribution de l'étude}
-Le travail réunit simulation, attribution, apprentissage et démonstration web, avec des résultats vérifiables.
+Le travail réunit simulation, attribution, apprentissage et démonstration web, dont les résultats peuvent être vérifiés.
 
 Le modèle structuré réussit dix-huit cas réservés à trois effectifs, avec des départs contrôlés. La navigation hybride réussit huit cas par contrôleur. La méthode et les résultats précisent les limites de ces campagnes.
 

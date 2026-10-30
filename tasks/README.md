@@ -45,6 +45,7 @@ Le 29 octobre 2026, l'utilisateur a demandé explicitement de mettre à jour tâ
 | 027 | Ajouter les annexes du mémoire | Terminée : trois annexes pratiques après la bibliographie, sommaire mis à jour, PDF de 74 pages compilé et pages ajoutées vérifiées |
 | 028 | Préparer les supports de soutenance PowerPoint et LaTeX | Terminée : 18 diapositives principales et deux compléments, notes, figures du mémoire, PDF Beamer et sources ; vérifications structurelles et visuelles effectuées |
 | 029 | Enregistrer et publier toutes les modifications locales restantes | Autorisation globale explicite reçue : modifications et suppressions enregistrées, fichiers temporaires exclus |
+| 030 | Rendre naturels les passages fournis et les annexes | Terminée : reformulations ciblées, relevé avant/après, nombres et renvois conservés ; PDF de 74 pages vérifié |
 
 Les métriques sont préparées avant la collecte. Les formations suivantes ne sont entraînées qu'après validation de leur répartition. Les anciens modèles commandant des vitesses ne sont pas réutilisés comme modèles à accélérations.
 
