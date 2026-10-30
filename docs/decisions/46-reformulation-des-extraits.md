@@ -7,3 +7,5 @@ L’auteur fournit une liste de passages et demande une rédaction plus naturell
 Les reformulations réduisent les tournures lourdes et précisent certains enchaînements. Les chiffres, les références, les équations et les limites scientifiques sont conservés. Le détail avant/après permet de relire chaque correction. Les annexes reçoivent aussi des titres courts et naturels selon la demande précédente.
 
 La livraison reste à 74 pages et respecte le plan existant. Les preuves courantes portent le numéro 030.
+
+À la demande suivante de l’auteur, les préfixes « Annexe A — », « Annexe B — » et « Annexe C — » sont supprimés. Les trois titres simples sont regroupés sous Annexes dans le sommaire. Compilation et pagination de 74 pages vérifiées.

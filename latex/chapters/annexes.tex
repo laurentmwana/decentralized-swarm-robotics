@@ -1,6 +1,9 @@
 % Compléments pratiques après la bibliographie, sans modifier les quatre chapitres.
-\chapter*{Annexe A — Mode d'emploi}
-\addcontentsline{toc}{chapter}{Annexe A — Mode d'emploi}
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{Annexes}
+\chapter*{Mode d'emploi}
+\addcontentsline{toc}{section}{Mode d'emploi}
 \label{ann:demarrage}
 Pour utiliser l'application, il faut ouvrir un terminal dans le dossier du projet, puis démarrer le serveur. Les commandes suivantes permettent de lancer la démonstration avec les modèles déjà entraînés.
 
@@ -23,8 +26,8 @@ La trajectoire est calculée avant le début de l'animation. Les robots passent 
 
 Les commandes de lecture permettent de mettre l'animation en pause, de l'accélérer ou de revoir un instant précis. L'affichage des liens entre voisins, des trajectoires et des places aide à comprendre les mouvements. Les métriques présentées sous l'animation portent sur l'essai complet.
 
-\chapter*{Annexe B — Les expériences}
-\addcontentsline{toc}{chapter}{Annexe B — Les expériences}
+\chapter*{Les expériences}
+\addcontentsline{toc}{section}{Les expériences}
 \label{ann:experiences}
 L'application propose sept expériences. Les choix disponibles dépendent du nombre de robots et du contrôleur utilisé. Les résultats présentés dans le mémoire concernent les configurations effectivement évaluées.
 
@@ -44,8 +47,8 @@ L'application propose sept expériences. Les choix disponibles dépendent du nom
 
 \textbf{Vérifier une destination obstruée.} Si une place finale est physiquement bloquée, la demande est signalée comme impossible. Ce signalement évite de lancer une mission dont la destination est inaccessible. Il reste distinct d'une formation réussie.
 
-\chapter*{Annexe C — Résultats des simulations}
-\addcontentsline{toc}{chapter}{Annexe C — Résultats des simulations}
+\chapter*{Résultats des simulations}
+\addcontentsline{toc}{section}{Résultats des simulations}
 \label{ann:resultats}
 Les fichiers enregistrés permettent de retrouver les résultats présentés dans le mémoire et d'examiner les trajectoires. Les tests du programme et l'évaluation du modèle sont deux vérifications différentes.
 

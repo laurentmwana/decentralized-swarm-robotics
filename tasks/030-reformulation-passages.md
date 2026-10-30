@@ -9,3 +9,5 @@ Les titres des annexes sont simplifiés conformément à la demande précédente
 Les nombres et les renvois des paragraphes reformulés sont vérifiés avant/après. Les six blocs d’équations, les neuf figures, les dix-sept tableaux et les onze références citées sont conservés. Contrôles du plan et des données réussis. Le PDF recompilé compte 74 pages, avec deux pages d’introduction ; les pages sont rendues et la mise en page examinée.
 
 Preuves `evidence/030-reformulations.json`, `030-plan.json`, `030-manuscript-audit.json`, `030-pdf-review.json`. Aucun entraînement ni changement de résultat expérimental.
+
+À la demande suivante de l’auteur, les préfixes « Annexe A — », « Annexe B — » et « Annexe C — » sont supprimés. Les trois titres simples sont regroupés sous Annexes dans le sommaire. Compilation et pagination de 74 pages vérifiées.
