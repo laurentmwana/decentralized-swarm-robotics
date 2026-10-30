@@ -118,6 +118,32 @@ Les lignes masquées ne doivent influencer ni l'attention ni la somme finale. Ce
 
 Le lot d'apprentissage regroupe des observations de robots, pas une décision centrale pour l'essaim entier. Le réseau applique le même calcul à chacune de ces observations. Le moteur réunit ensuite les commandes pour mettre à jour l'état physique commun. L'entraînement et l'exécution utilisent ainsi la même définition des caractéristiques locales.
 
+
+\subsection{Lecture des dimensions de l'architecture}
+Le Tableau~\ref{tab:architecture-comparee} donne les dimensions des principaux calculs. Le GAT initial et le GAT structuré contiennent chacun huit modules linéaires, mais leurs entrées et leurs sorties intermédiaires diffèrent. Le tableau ne représente pas huit tours de communication.
+\begin{table}[htbp]
+\caption{Dimensions des blocs des deux modèles.}
+\label{tab:architecture-comparee}
+\centering\small
+\begin{tabularx}{\textwidth}{p{3.5cm}XX}
+\toprule
+Bloc & GAT initial & GAT structuré\\\midrule
+État propre prétraité & 6 valeurs & 4 valeurs\\
+Encodage propre & 6 vers 64, puis 64 vers 64 & 4 vers 48, puis 48 vers 48\\
+Caractéristiques voisines & 5 valeurs par voisin & 8 valeurs par voisin\\
+Encodage voisin & 5 vers 64, puis 64 vers 64 & 8 vers 48, puis 48 vers 48\\
+Requête et clé & Deux projections de 64 vers 64 & Deux projections de 48 vers 48\\
+Sortie apprise & 133 vers 64, puis 64 vers 2 & 96 vers 48, puis 48 vers 3 coefficients\\
+Commande finale & Deux composantes bornées & Base et corrections vectorielles bornées\\\bottomrule
+\end{tabularx}
+\end{table}
+
+Dans le premier modèle, les deux nombres de sortie sont directement les composantes de la proposition d'accélération. Dans le second, les trois coefficients calculés pour une arête pondèrent des directions déjà définies. Ils ne correspondent ni à trois classes de formes ni à trois moteurs physiques.
+
+Le contrôle de base du modèle structuré suit une forme proportionnelle et dérivée, dite PD pour \textit{Proportional-Derivative}. Lorsque la cible est fixe, le terme proportionnel réagit à l'écart de position et le terme dérivé freine la vitesse. Les gains sont appris sur des exemples isolés, puis conservés pendant l'apprentissage des corrections. Cette partie explicite explique pourquoi nous parlons d'un modèle structuré.
+
+Le tableau permet de séparer trois questions. La largeur décrit la taille d'une représentation. Le nombre de modules décrit les transformations apprises. Le nombre d'agrégations décrit l'utilisation du voisinage. Présenter ces trois valeurs évite de résumer l'architecture par un seul nombre de « couches » qui serait ambigu.
+
 \subsection{Modes brut et protégé}
 Le mode protégé applique le filtre classique à l'accélération du réseau. Le mode brut retire cette projection pendant le rassemblement et le mouvement vers la forme, c'est-à-dire les phases apprises. Les bornes physiques restent appliquées par le simulateur. Le freinage et l'attribution restent des étapes classiques communes. Le mot « brut » porte donc sur la commande des phases de mouvement ; il ne signifie pas que toute la mission serait réalisée par le réseau.
 
@@ -149,6 +175,32 @@ Test & 9 & 9 & 9 & 9\\\bottomrule
 Le contrôle des doublons a un but précis. Si le cercle était rangé en entraînement et la lettre O en test alors que leurs tracés sont identiques, la réserve ne mesurerait pas une nouvelle géométrie. Le regroupement des formes équivalentes empêche cette confusion. Il ne crée pas pour autant une grande diversité des positions de départ.
 
 Les états voisins dans le temps sont aussi liés. Le robot observé à 10,0 s et à 10,1 s peut avoir presque la même position. On conserve ces exemples pour apprendre le mouvement, mais on ne les compte pas comme deux missions indépendantes. La taille du fichier mesure le volume d'exemples, tandis que les graines et les épisodes décrivent mieux la diversité des situations.
+
+
+\subsection{Contenu d'une observation enregistrée}
+Le Tableau~\ref{tab:observation-fichier} précise le contenu brut utilisé pour construire un exemple. Les huit valeurs propres ne sont pas toutes transmises telles quelles à l'encodeur : chaque modèle applique le prétraitement décrit plus haut. Le tableau distingue donc le fichier d'observation de la représentation interne.
+\begin{table}[htbp]
+\caption{Contenu d'un exemple local avant prétraitement.}
+\label{tab:observation-fichier}
+\centering
+\begin{tabularx}{\textwidth}{p{3.5cm}p{2cm}X}
+\toprule
+Information & Taille & Sens\\\midrule
+Position propre & 2 nombres & Coordonnées du centre, en mètres\\
+Vitesse propre & 2 nombres & Mouvement sur les deux axes, en m/s\\
+Cible attribuée & 2 nombres & Place destinée au robot, en mètres\\
+Phase et effectif & 2 nombres & Étape courante et taille du groupe\\
+Un voisin & 4 nombres & Position et vitesse relatives\\
+Masque des voisins & Variable & Lignes présentes dans le calcul\\
+Commande attendue & 2 nombres & Accélération de référence, en m/s$^2$\\\bottomrule
+\end{tabularx}
+\end{table}
+
+La commande attendue est disponible pendant l'apprentissage, mais elle ne fait pas partie de l'entrée du réseau à l'exécution. Il serait sinon possible de recopier la réponse. De même, les objectifs privés des voisins ne sont pas ajoutés à leurs caractéristiques relatives.
+
+Le masque répond à un besoin de rangement des lots. Si deux observations possèdent des nombres de voisins différents, certaines lignes peuvent être complétées pour former un tableau commun. Ces lignes sont ignorées. Leur présence ne doit pas changer le poids d'un vrai voisin ou produire une correction fictive.
+
+Les unités restent celles du simulateur. Le prétraitement ramène certaines grandeurs à des échelles fixes pour le calcul neuronal. Il ne transforme pas les mètres de l'expérience en une nouvelle unité physique. Les commandes et les métriques exportées restent interprétables dans les unités annoncées.
 
 \subsection{Optimisation et sélection}
 L'optimiseur Adam utilise un taux d'apprentissage de $5\times10^{-4}$ et des lots de 1\,024 exemples. La graine d'initialisation vaut 42. Le budget maximal est de 80 époques, avec arrêt après douze époques sans amélioration en validation. La MSE est définie par l'Équation~\eqref{eq:mse}. Son unité est le m$^2$/s$^4$, puisqu'elle porte sur des écarts d'accélération au carré.
@@ -247,6 +299,25 @@ Une graine permet de reproduire un tirage de positions initiales. À configurati
 
 Les archives conservent les positions, les vitesses, les commandes, les instants et les paramètres. Les rapports donnent les métriques et les empreintes des poids utilisés. Les tableaux et les figures du chapitre suivant sont reconstruits à partir de ces fichiers. Les tests logiciels vérifient les fonctions du programme ; les campagnes de trajectoires évaluent les comportements. Cette distinction reste valable même lorsque tous les tests logiciels réussissent.
 
+
+
+\subsection{Calcul et environnement enregistré}
+Le journal du GAT initial indique une exécution sur le processeur central, ou CPU pour \textit{Central Processing Unit}. Il enregistre PyTorch 2.15.0+cpu et NumPy 2.5.4. Ces informations concernent ce journal précis. Elles ne constituent pas une mesure de vitesse du réseau sur toutes les machines.
+
+Un processeur graphique, ou GPU pour \textit{Graphics Processing Unit}, peut servir à effectuer certains calculs d'apprentissage en parallèle. Nos résultats ne sont toutefois pas présentés comme une comparaison CPU/GPU. Les temps du chapitre d'expériences sont des temps simulés de mission, et non des durées de calcul matériel.
+
+Reproduire une expérience demande davantage que le nom du logiciel. Il faut retrouver les poids, les paramètres physiques, la consigne, l'état de départ et le protocole. Le même numéro de graine avec une autre taille de forme ne décrit pas le même cas. Inversement, une lecture plus rapide de l'animation ne modifie pas la trajectoire déjà calculée.
+
+\subsection{Formats des fichiers et provenance}
+Le format JSON, pour \textit{JavaScript Object Notation}, conserve des informations structurées comme les paramètres et les résumés de métriques. Le format CSV, pour \textit{Comma-Separated Values}, permet de lire les trajectoires comme un tableau. L'export de démonstration indique notamment l'instant, le robot, ses coordonnées et ses deux composantes de vitesse.
+
+Les tableaux numériques complets sont aussi conservés dans des archives NumPy portant l'extension \texttt{.npz}. Cette extension est un format de fichier, pas une nouvelle métrique. Le paquet d'export rassemble les données nécessaires à la lecture du cas ; ses fichiers doivent être conservés ensemble pour garder leur contexte.
+
+Une empreinte SHA-256, issue de la famille \textit{Secure Hash Algorithm}, identifie le contenu d'un fichier. Elle permet de vérifier que les poids examinés sont bien ceux utilisés pour le résultat. Elle ne dit pas que le modèle est bon et ne remplace pas la mesure d'une trajectoire. Elle ne sert pas non plus à cacher les données.
+
+Pour les figures du mémoire, le PDF, ou \textit{Portable Document Format}, conserve les tracés vectoriels. Les images PNG, pour \textit{Portable Network Graphics}, sont exportées à 300 points par pouce, notés DPI pour \textit{Dots Per Inch}. Le catalogue possède aussi une sortie SVG, pour \textit{Scalable Vector Graphics}. Ces formats concernent la présentation et l'archivage, sans ajouter de résultats d'apprentissage.
+
+À l'impression, la couleur est accompagnée de repères de forme. Les courbes ont des traits distincts, les barres sont hachurées et les positions finales sont marquées par des cercles vides. Le lecteur peut ainsi suivre les catégories en niveaux de gris. Cette vérification visuelle complète le contrôle des nombres, mais ne modifie pas le verdict de réussite.
 
 \section{Configurations actuelles et progression de l'apprentissage}
 Le passage à plusieurs effectifs modifie aussi la taille de la scène. Le Tableau~\ref{tab:profils} donne les profils utilisés pour le test structuré. Il évite d'attribuer au seul nombre de robots des écarts produits par des configurations plus larges et des préparations plus longues.

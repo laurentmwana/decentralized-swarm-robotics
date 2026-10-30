@@ -188,6 +188,41 @@ for r in vector['reports']:
     '\n'+r'Robots & Forme & Graine & Temps GAT (s) & Temps réf. (s) & Contacts GAT\\\midrule'+'\n'+
     '\n'.join(rows)+'\n'+r'\bottomrule\end{tabular}'+'\n',encoding='utf-8')
 
+ellipse=next(r for r in reference['reports'] if r['shape']=='geometries_ellipse' and r['seed']==7300)
+rows=[]
+fig,axes=plt.subplots(2,1,figsize=(8,7.3),sharex=True)
+for mode,label,color,style in [('teacher','Référence','#333333','-'),
+                              ('raw','GAT initial brut','#D55E00','-.'),
+                              ('guarded','GAT initial protégé','#0072B2','--')]:
+    metrics=ellipse['metrics'][mode]
+    delay='--' if not metrics['success'] else f"{metrics['stabilization_time_s']:.1f}"
+    rows.append(f"{label} & {metrics['formation_error_m']:.5f} & {metrics['collisions']} & {delay} " + chr(92)*2)
+    with np.load(source(f'outputs/imitation/test-multiform-expanded-v1/{mode}-geometries_ellipse-7300.npz'),allow_pickle=False) as a:
+        positions=a['positions'];times=a['times']
+    with np.load(source(f'outputs/imitation/test-multiform-expanded-v1/{mode}-geometries_ellipse-7300-control.npz'),allow_pickle=False) as a:
+        targets=a['local_targets'][-1]
+    distance=np.linalg.norm(positions[:,:,None,:]-targets[None,None,:,:],axis=-1)
+    error=np.maximum(distance.min(axis=2).max(axis=1),distance.min(axis=1).max(axis=1))
+    assert np.isclose(error[-1],metrics['formation_error_m'],atol=1e-10)
+    first,second=np.triu_indices(positions.shape[1],1)
+    relative=positions[:,first]-positions[:,second]
+    initial=relative[:-1];delta=np.diff(relative,axis=0);denom=np.sum(delta*delta,axis=-1)
+    fraction=np.clip(np.divide(-np.sum(initial*delta,axis=-1),denom,
+                              out=np.zeros_like(denom),where=denom>1e-30),0,1)
+    swept=np.linalg.norm(initial+fraction[...,None]*delta,axis=-1).min(axis=1)
+    separation=np.r_[np.linalg.norm(relative[0],axis=-1).min(),swept]
+    axes[0].semilogy(times,np.maximum(error,1e-12),ls=style,color=color,lw=1.7,label=label)
+    axes[1].plot(times,separation,ls=style,color=color,lw=1.7,label=label)
+axes[0].axhline(.1,color='0.6',ls=':',label='Seuil de formation')
+axes[1].axhline(.2,color='0.3',ls=':',label='Contact physique')
+axes[0].set_ylabel('Erreur de formation (m)')
+axes[1].set(ylabel='Séparation minimale (m)',xlabel='Temps simulé (s)')
+for ax in axes:ax.legend(fontsize=9);ax.grid(alpha=.15)
+fig.tight_layout();save(fig,'ellipse_case')
+(GENERATED/'ellipse_case.tex').write_text(r'\begin{tabular}{lrrr}'+'\n'+r'\toprule'+
+    '\n'+r'Contrôleur & Erreur finale (m) & Contacts & Temps de réussite (s)\\\midrule'+'\n'+
+    '\n'.join(rows)+'\n'+r'\bottomrule\end{tabular}'+'\n',encoding='utf-8')
+
 (GENERATED/'sources.json').write_text(json.dumps({'description':'Sources des figures et tableaux du mémoire',
     'sha256':SOURCES},indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
 print(f'{len(SOURCES)} sources enregistrées ; figures et tableaux produits dans latex/.')

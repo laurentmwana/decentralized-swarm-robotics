@@ -79,6 +79,27 @@ Le réseau brut atteint presque la même erreur finale moyenne, mais provoque 54
 
 La MSE de validation, égale à 0,112516 pour les poids retenus, mesure l'imitation de commandes sur des exemples. Elle ne remplace pas cette évaluation du déplacement. Les états rencontrés par le réseau peuvent aussi s'éloigner progressivement de ceux du contrôleur de référence, même si les premières erreurs de commande sont modestes.
 
+
+\subsection{Un cas qui explique le rôle du filtre}
+L'ellipse à douze robots, avec la graine 7300, appartient aux neuf cas réservés. Elle montre pourquoi nous examinons le déplacement avant de conclure à partir de la dernière image. Le Tableau~\ref{tab:ellipse-reservee} donne les mesures de ce cas précis ; il ne s'agit pas d'une nouvelle campagne.
+\begin{table}[htbp]
+\caption{Cas de l'ellipse, douze robots, graine 7300.}
+\label{tab:ellipse-reservee}
+\centering
+\input{generated/ellipse_case}
+\end{table}
+
+Le GAT brut et le GAT protégé finissent tous les deux à environ 9,28 mm de la forme. Le premier compte pourtant cinq événements de contact, contre aucun pour le second. Le critère de réussite porte sur l'épisode complet. Le temps de réussite du brut reste donc absent, même si sa dernière disposition est proche des places demandées.
+
+La Figure~\ref{fig:ellipse-trajectoire} suit l'erreur et la séparation minimale pendant ce même épisode. La distance entre centres est calculée sur les déplacements interpolés, afin de ne pas regarder seulement les images échantillonnées. Le seuil physique de contact vaut 0,2 m pour les disques utilisés.
+\begin{figure}[htbp]
+\centering\includegraphics[width=\linewidth]{images/current_ellipse_case.pdf}
+\caption[Lecture d'un cas réservé de l'ellipse]{Ellipse à douze robots, graine 7300. En haut, l'erreur de couverture. En bas, la séparation minimale des centres sur les intervalles interpolés. Les traits distinguent les trois commandes en niveaux de gris. Pour le tracé logarithmique, les erreurs inférieures à $10^{-12}$~m sont affichées à ce seuil. Données issues de la réserve 008d.}
+\label{fig:ellipse-trajectoire}
+\end{figure}
+
+Le filtre ne change pas la cible de cet essaim. Il modifie certaines propositions d'accélération pendant le mouvement. Ce cas illustre donc son rôle dans la chaîne protégée. Il ne suffit pas, à lui seul, à établir un taux de réussite général et ne doit pas être ajouté une seconde fois aux neuf cas de la campagne.
+
 \section{Résultats de la collecte de correction}
 Une collecte complémentaire interroge le contrôleur de référence sur des états rencontrés par le modèle. Le nouvel entraînement donne davantage de poids aux situations proches d'un voisin. L'évaluation suivante utilise neuf formes et deux graines fraîches, soit 18 cas.
 

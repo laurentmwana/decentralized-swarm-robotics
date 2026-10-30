@@ -14,6 +14,12 @@
     "outputs/imitation/vector-fresh-test-v2/raw-24-geometries_rectangle-8500-control.npz": "cfc18d6d40f3aec80f2bc596420f97ac0c725175890c70ce7b8275f79f48d5c5",
     "outputs/imitation/vector-fresh-test-v2/raw-64-geometries_rectangle-8500.npz": "fcfac4036bf057b895592494856003e3577d398f4d93d03d730e9a2c8fb385ee",
     "outputs/imitation/vector-fresh-test-v2/raw-64-geometries_rectangle-8500-control.npz": "5b0096697c011e0f0906bab8251ab0180a4954c760036364be6cef0e394e9f9a",
-    "tasks/evidence/011-fresh-evaluation.json": "88995234f0ef18295feed7cd5ad0d3635f9048a5d9e8e7646c214b26a86d4453"
+    "tasks/evidence/011-fresh-evaluation.json": "88995234f0ef18295feed7cd5ad0d3635f9048a5d9e8e7646c214b26a86d4453",
+    "outputs/imitation/test-multiform-expanded-v1/teacher-geometries_ellipse-7300.npz": "589bb336f287a1a56d0fae6c7b8ce64776a7e74a3e8663cc83119f7fbe639842",
+    "outputs/imitation/test-multiform-expanded-v1/teacher-geometries_ellipse-7300-control.npz": "a2de41fca8dc1fb8c41047fde79f89a038ce64e9a6068c9b3185d396a8765208",
+    "outputs/imitation/test-multiform-expanded-v1/raw-geometries_ellipse-7300.npz": "c877af5e715fb9f7e06230d83dabe1b81c0359abdb6fe6dcf1465d45b0411818",
+    "outputs/imitation/test-multiform-expanded-v1/raw-geometries_ellipse-7300-control.npz": "9b790f65aa3969bdf2b20faf531b068ca67f9818b5cd18b3a4633a62a7a45583",
+    "outputs/imitation/test-multiform-expanded-v1/guarded-geometries_ellipse-7300.npz": "7897a2d9b019df97ca840470cb95058a54d720b888e04042abadaa4a465b751b",
+    "outputs/imitation/test-multiform-expanded-v1/guarded-geometries_ellipse-7300-control.npz": "d34a52dd68777a8d109fddddbeaa3da57055103509b003cdc7dee96f1ea00ea0"
   }
 }

@@ -1,4 +1,4 @@
-# Rédaction du mémoire — lecture allégée, 65 pages
+# Rédaction du mémoire — version Master, 71 pages
 
 Le fichier principal est `main.tex`. Les pages personnelles et les réglages de présentation existants sont conservés. Les chapitres sont rédigés en français simple ; les termes techniques nécessaires sont expliqués lors de leur introduction.
 
@@ -16,7 +16,7 @@ Les échecs intermédiaires et les limites sont conservés. Le nombre d'observat
 
 ## Figures issues du programme
 
-Aucune image générée par un modèle d'images n'est ajoutée. Les huit figures `images/current_*` sont des tracés Matplotlib en noir et blanc : graphe de voisinage, catalogue, courbes d'entraînement, contacts après correction, séquence de formation, décomposition des durées, convergence et trajectoires près des obstacles. Les fichiers PDF vectoriels sont intégrés au mémoire ; les PNG permettent une vérification rapide.
+Aucune image générée par un modèle d'images n'est ajoutée. Les neuf figures `images/current_*` sont des tracés Matplotlib en couleur avec traits, marqueurs et hachures lisibles en niveaux de gris : graphe de voisinage, catalogue, courbes d'entraînement, contacts après correction, séquence de formation, décomposition des durées, convergence, cas réservé de l’ellipse et trajectoires près des obstacles. Les fichiers PDF vectoriels sont intégrés au mémoire ; les PNG permettent une vérification rapide.
 
 Les tableaux de résultats sont reconstruits depuis les rapports JSON. Les données lues et leurs empreintes SHA-256 figurent dans `generated/sources.json`.
 
@@ -52,12 +52,12 @@ Une copie des sources avant cette reprise se trouve dans `outputs/thesis-redacti
 
 La correction 022 rétablit les rubriques de `RULES.md`. Les dossiers `chapters/` et `frontmatter/` et les quatre chapitres numérotés sont conservés. Les trois travaux connexes conservent les quatre rubriques sous forme de tableaux, à la demande de l’auteur. Discussion et Conclusion générale et perspectives sont séparées.
 
-La version courante compile en **66 pages au total**, avec huit figures scientifiques, quatorze tableaux et onze références citées. La table des matières et les légendes sont rétablies selon le plan. La répartition est donnée dans `PAGINATION.md`.
+La version courante compile en **71 pages au total**, avec neuf figures scientifiques, dix-sept tableaux et onze références citées. La table des matières et les légendes sont rétablies selon le plan. La répartition est donnée dans `PAGINATION.md`.
 
 Le PDF à relire est `output/pdf/memoire-swarm-gnn-redaction.pdf` depuis la racine du dépôt ; `latex/main.pdf` contient le même document. Une sauvegarde locale de la version intermédiaire de 45 pages se trouve dans `outputs/thesis-redaction/version-45-pages/`. Les preuves 021 restent celles de cette version intermédiaire ; les preuves 022 décrivent la version historique de 70 pages.
 
-La révision 023 réduit l’introduction à deux pages et présente le plan par une phrase suivie d’une énumération. Les preuves 023 décrivent la révision de lecture allégée ; les preuves 022 restent celles de la version précédente de 70 pages.
+La révision 026 répond à la cible de 70 à 78 pages. L’introduction reste à deux pages, dans la fourchette de deux à quatre pages. Vingt abréviations sont développées et employées dans les chapitres. Six blocs mathématiques sont conservés.
 
-La révision 024 privilégie les phrases directes sans deux-points explicatifs au milieu des phrases. Les titres des pages liminaires sont centrés ; les paragraphes restent justifiés et le style des chapitres reprend dès l’introduction générale. Le PDF conserve 65 pages. Les preuves 024 décrivent cette version courante.
+Les dimensions des réseaux et des observations sont expliquées dans deux tableaux. Les formats de fichiers et le matériel enregistré sont décrits sans annoncer de comparaison de performances CPU/GPU. Le cas d’ellipse, graine 7300, provient du test 008d déjà compté parmi les neuf essais. Il illustre la différence entre précision finale et absence de contacts ; il n’ajoute aucun essai à la campagne. Les erreurs inférieures à 10⁻¹² m sont plafonnées uniquement pour leur affichage logarithmique.
 
-Révision 025 : introduction numérotée de 1 à 7 et titre « Plan sommaire », six blocs d’équations, retrait des notations de la liste des abréviations. Le générateur d’exemples est appelé contrôleur de référence, et le premier réseau GAT initial. Les figures sont en couleur avec repères lisibles en niveaux de gris. Les preuves 025 décrivent cette étape de 66 pages. La nouvelle cible de 70 à 78 pages est suivie dans la révision 026.
+Les preuves 021 à 025 décrivent les versions historiques. Les contrôles courants sont les preuves 026. Les données, les poids et les conclusions expérimentales restent identiques.

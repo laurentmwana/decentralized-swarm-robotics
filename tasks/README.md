@@ -41,6 +41,7 @@ Le 29 octobre 2026, l'utilisateur a demandé explicitement de mettre à jour tâ
 | 023 | Alléger l’introduction, décomposer les titres et présenter les travaux connexes en tableaux | Terminée : introduction de deux pages, trois tableaux de lecture, PDF de 65 pages vérifié ; architecture et résultats conservés |
 | 024 | Reformuler la prose et centrer les titres précédant l’introduction | Terminée : titres liminaires centrés, phrases et en-têtes relus, 65 pages compilées et vérifiées ; plan et résultats conservés |
 | 025 | Numéroter l’introduction, réduire les équations et préparer les figures pour l’impression | Terminée : rubriques 1–7, Plan sommaire, six blocs mathématiques, figures couleur et aperçu gris vérifiés ; 66 pages et terminologie corrigée |
+| 026 | Adapter le mémoire à la cible Master de 70 à 78 pages et compléter les abréviations | Terminée : 71 pages, introduction de deux pages, 20 abréviations utilisées, architecture et observations détaillées, cas d’ellipse issu des archives ; contrôles documentaires et aperçu d’impression vérifiés |
 
 Les métriques sont préparées avant la collecte. Les formations suivantes ne sont entraînées qu'après validation de leur répartition. Les anciens modèles commandant des vitesses ne sont pas réutilisés comme modèles à accélérations.
 

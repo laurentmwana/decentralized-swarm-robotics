@@ -62,9 +62,13 @@ for name in ['introduction','concept','etat-art','methode','experiences','discus
             if environment=='figure':assert block.index(r'\caption')>block.index(r'\includegraphics')
             counts[key]+=1
 abbreviations=(ROOT/'latex/frontmatter/abbreviations.tex').read_text(encoding='utf-8')
-assert re.findall(r'^(GAT|GNN|MSE|QP|ReLU|SiLU) &',abbreviations,re.M)==['GAT','GNN','MSE','QP','ReLU','SiLU']
+entries=re.findall(r'^([A-Za-z0-9-]+) &',abbreviations,re.M)
+assert entries==sorted(entries,key=str.casefold), 'Abréviations par ordre alphabétique'
+assert set(['GAT','GNN','MSE','QP','ReLU','SiLU'])<=set(entries)
+body='\n'.join(read(n) for n in ['introduction','concept','etat-art','methode','experiences','discussion'])
+assert all(re.search(r'(?<![A-Za-z])'+re.escape(key)+r'(?![A-Za-z])',body) for key in entries), 'Sigles utilisés dans le texte'
 result={'status':'passed','numbered_chapters':4,'intro_required_sections':7,'related_studies':3,
-        'required_table_rubrics_per_study':4,'related_studies_format':'three_tables_requested_by_author','discussion_and_conclusion_separate':True,
+        'abbreviations':len(entries),'required_table_rubrics_per_study':4,'related_studies_format':'three_tables_requested_by_author','discussion_and_conclusion_separate':True,
         'existing_directories_preserved':['latex/chapters','latex/frontmatter'],
         'layout':'12 pt, interligne 1,5, marges de 2,5 cm conservés',**counts}
 parser=argparse.ArgumentParser(description=__doc__)

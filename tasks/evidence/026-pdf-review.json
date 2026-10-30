@@ -1,0 +1,25 @@
+{
+  "status": "passed",
+  "total_physical_pages": 71,
+  "requested_range": [
+    70,
+    78
+  ],
+  "front_pages": 13,
+  "arabic_pages": 58,
+  "introduction_pages": 2,
+  "introduction_requested_range": [
+    2,
+    4
+  ],
+  "abbreviations": 20,
+  "all_abbreviations_used": true,
+  "figures": 9,
+  "tables": 17,
+  "equation_groups": 6,
+  "cited_references": 11,
+  "pdf_sha256": "30c72e1a00a08afc011f1c4e01072cf65a1bf174bdea69dee46f41b754a4b93c",
+  "visual_review": "71 pages rendered; contact sheets examined; ellipse inspected in grayscale and final caption rendered again",
+  "physical_print_test": false,
+  "source_results_unchanged": true
+}

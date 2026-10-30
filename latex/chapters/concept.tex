@@ -56,6 +56,21 @@ Une couche linéaire calcule une expression $Wx+b$. Des fonctions non linéaires
 
 Un réseau sur graphe construit une représentation à partir des voisins. Une somme ou une moyenne traite leurs contributions de façon uniforme. L'attention attribue des poids qui dépendent des observations \cite{velickovic2018}. Le réseau calcule un score pour chaque voisin, puis transforme ces scores en poids dont la somme vaut un. Il combine les contributions selon ces poids. Lorsqu'il n'y a aucun voisin, la contribution reçue est nulle. Le partage des paramètres permet de traiter plusieurs tailles de groupe, mais les trajectoires doivent encore être vérifiées pour chacune.
 
+
+\subsection{Place de l'apprentissage dans le système}
+L'intelligence artificielle (IA) regroupe différentes façons de construire une décision à partir de données ou de règles. Ici, nous utilisons un apprentissage supervisé. Le réseau reçoit des exemples d'observations et de commandes, puis ses paramètres sont ajustés. Il ne connaît pas le résultat attendu parce qu'on lui aurait donné le nom de la forme comme une classe à reconnaître.
+
+Il faut distinguer la conception et l'apprentissage. Nous choisissons les informations accessibles, les fonctions d'activation et l'organisation du réseau. L'optimisation ajuste ensuite les poids de cette architecture. La préparation circulaire, les limites physiques et les critères de réussite ne sont pas appris de cette manière ; ils restent définis dans le programme.
+
+\subsection{Calcul interne et passage de messages}
+Un perceptron multicouche, ou MLP pour \textit{Multi-Layer Perceptron}, transforme un vecteur de taille fixée. Ses couches combinent les valeurs d'entrée, puis les activations introduisent des réponses non linéaires. Dans nos modèles, de petits MLP encodent l'état propre et les informations d'un voisin. Cela décrit leur calcul interne, pas un autre contrôleur entraîné à côté du GAT.
+
+Un réseau à passage de messages, ou MPNN pour \textit{Message Passing Neural Network}, organise en plus les interactions entre éléments \cite{gilmer2017}. Les messages sont calculés puis regroupés pour produire une représentation locale. Le GAT ajoute une pondération par attention. Les mêmes fonctions sont réutilisées pour les voisins présents, dont le nombre peut varier.
+
+Cette distinction répond à une question fréquente. Huit transformations linéaires ne signifient pas huit échanges de voisinage. Une partie de ces transformations prépare les caractéristiques ; une autre calcule les scores ou la sortie. Dans notre commande, l'agrégation de voisins est réalisée une fois à chaque décision. Les échanges répétés des réservations appartiennent au protocole d'attribution.
+
+La largeur interne ne donne pas non plus la taille de l'essaim. Un encodage de 64 composantes représente une observation avec 64 nombres. Il n'exige pas 64 robots. À l'inverse, un modèle de largeur 48 peut être exécuté sur un groupe de 64 robots si la structure des entrées le permet. La réussite du mouvement reste à mesurer dans cette configuration.
+
 \subsection{Différence entre communication et décision}
 Recevoir une information n'oblige pas à suivre le voisin. Un robot peut savoir qu'un autre s'approche et décider de freiner, de dévier ou de conserver sa direction. Le message décrit une situation ; le contrôleur transforme cette situation en action. Une même information peut donc conduire à des commandes différentes selon la cible et la vitesse propres du robot.
 

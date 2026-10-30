@@ -16,9 +16,9 @@ Les dossiers `chapters/` et `frontmatter/` sont conservés. Le plan suit [RULES.
 
 Il y a quatre chapitres numérotés. Chaque chapitre s’ouvre par Introduction et se ferme par une Conclusion partielle qui annonce la suite. La discussion et la conclusion générale sont contenues successivement dans `chapters/discussion.tex`, comme dans l’architecture initiale.
 
-La version courante compte **66 pages au total**, dont 13 avant l’introduction et 53 numérotées en chiffres arabes. La cible demandée est de 65 à 70 pages physiques. La répartition est donnée dans [PAGINATION.md](PAGINATION.md). Police 12 points, interligne 1,5 et marges de 2,5 cm conservés.
+La version courante compte **71 pages au total**, dont 13 avant l’introduction et 58 numérotées en chiffres arabes. La cible demandée est de 70 à 78 pages physiques. La répartition est donnée dans [PAGINATION.md](PAGINATION.md). Police 12 points, interligne 1,5 et marges de 2,5 cm conservés.
 
-Les développements restent fondés sur les résultats de la version à accélérations. La rédaction privilégie des phrases simples. Les huit figures scientifiques sont calculées à partir du programme ou des données enregistrées ; aucune image générée par IA n’est utilisée.
+Les développements restent fondés sur les résultats de la version à accélérations. La rédaction privilégie des phrases simples. Les neuf figures scientifiques sont calculées à partir du programme ou des données enregistrées ; aucune image générée par IA n’est utilisée.
 
 Voir [REDACTION.md](REDACTION.md) pour la provenance des chiffres. Les anciens résultats à commande de vitesse ne sont pas réintroduits.
 
@@ -33,7 +33,7 @@ pdflatex -interaction=nonstopmode -halt-on-error main.tex
 pdflatex -interaction=nonstopmode -halt-on-error main.tex
 ```
 
-Le dossier peut également être ouvert dans l’éditeur LaTeX de Codex pour consulter les sources et l’aperçu. La réussite de la compilation et les contrôles visuels de cette reprise sont consignés dans la tâche 023.
+Le dossier peut également être ouvert dans l’éditeur LaTeX de Codex pour consulter les sources et l’aperçu. La réussite de la compilation et les contrôles visuels de cette reprise sont consignés dans la tâche 026.
 
 ## Vérification des données
 
@@ -45,10 +45,8 @@ python latex/tools/check_manuscript.py
 python latex/tools/check_professor_plan.py
 ```
 
-La première commande nécessite NumPy et Matplotlib. Les deux commandes utilisent les archives existantes sans entraîner de modèle. Elles ne remplacent pas la lecture du document ni les recommandations du directeur.
+La première commande nécessite NumPy et Matplotlib. Les trois commandes utilisent les archives existantes sans entraîner de modèle. Elles ne remplacent pas la lecture du document ni les recommandations du directeur.
 
 Préférence de lecture de l’auteur : introduction courte, plan énuméré, notions distinguées sous les titres composés. Les quatre rubriques de chaque travail connexe sont conservées comme lignes de tableau, selon la demande de l’auteur.
 
-La révision 024 privilégie les phrases directes sans deux-points explicatifs au milieu des phrases. Les titres des pages liminaires sont centrés ; les paragraphes restent justifiés et le style des chapitres reprend dès l’introduction générale. Le PDF conserve 65 pages. Les preuves 024 décrivent cette version courante.
-
-Révision 025 : introduction numérotée de 1 à 7 et titre « Plan sommaire », six blocs d’équations, retrait des notations de la liste des abréviations. Le générateur d’exemples est appelé contrôleur de référence, et le premier réseau GAT initial. Les figures sont en couleur avec repères lisibles en niveaux de gris. Les preuves 025 décrivent cette étape de 66 pages. La nouvelle cible de 70 à 78 pages est suivie dans la révision 026.
+Révision 026 : introduction de deux pages, rubriques numérotées de 1 à 7 et titre « Plan sommaire ». La liste contient vingt abréviations utilisées dans le texte. Le document conserve six blocs d’équations, des figures en couleur lisibles en niveaux de gris et les titres liminaires centrés. Les développements portent sur l’architecture, les observations, la provenance des fichiers et un cas réservé déjà enregistré ; aucun résultat expérimental supplémentaire n’est annoncé.
