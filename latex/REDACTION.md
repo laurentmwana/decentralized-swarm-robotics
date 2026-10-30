@@ -52,10 +52,12 @@ Une copie des sources avant cette reprise se trouve dans `outputs/thesis-redacti
 
 La correction 022 rétablit les rubriques de `RULES.md`. Les dossiers `chapters/` et `frontmatter/` et les quatre chapitres numérotés sont conservés. Les trois travaux connexes conservent les quatre rubriques sous forme de tableaux, à la demande de l’auteur. Discussion et Conclusion générale et perspectives sont séparées.
 
-La version courante compile en **65 pages au total**, avec huit figures scientifiques, quatorze tableaux et onze références citées. La table des matières et les légendes sont rétablies selon le plan. La répartition est donnée dans `PAGINATION.md`.
+La version courante compile en **66 pages au total**, avec huit figures scientifiques, quatorze tableaux et onze références citées. La table des matières et les légendes sont rétablies selon le plan. La répartition est donnée dans `PAGINATION.md`.
 
 Le PDF à relire est `output/pdf/memoire-swarm-gnn-redaction.pdf` depuis la racine du dépôt ; `latex/main.pdf` contient le même document. Une sauvegarde locale de la version intermédiaire de 45 pages se trouve dans `outputs/thesis-redaction/version-45-pages/`. Les preuves 021 restent celles de cette version intermédiaire ; les preuves 022 décrivent la version historique de 70 pages.
 
 La révision 023 réduit l’introduction à deux pages et présente le plan par une phrase suivie d’une énumération. Les preuves 023 décrivent la révision de lecture allégée ; les preuves 022 restent celles de la version précédente de 70 pages.
 
 La révision 024 privilégie les phrases directes sans deux-points explicatifs au milieu des phrases. Les titres des pages liminaires sont centrés ; les paragraphes restent justifiés et le style des chapitres reprend dès l’introduction générale. Le PDF conserve 65 pages. Les preuves 024 décrivent cette version courante.
+
+Révision 025 : introduction numérotée de 1 à 7 et titre « Plan sommaire », six blocs d’équations, retrait des notations de la liste des abréviations. Le générateur d’exemples est appelé contrôleur de référence, et le premier réseau GAT initial. Les figures sont en couleur avec repères lisibles en niveaux de gris. Les preuves 025 décrivent cette étape de 66 pages. La nouvelle cible de 70 à 78 pages est suivie dans la révision 026.

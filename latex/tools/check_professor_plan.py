@@ -17,8 +17,9 @@ def headings(text,level='section',star=False):
     return re.findall(r'\\'+level+token+r'\{([^}]+)\}',text)
 
 intro=['Contexte de l\'étude','Problématique','Hypothèses','Objectifs poursuivis',
-       'Méthodes et techniques utilisées','Contribution de l\'étude','Plan sommaire et subdivision du travail']
-assert headings(read('introduction'),star=True)==intro
+       'Méthodes et techniques utilisées','Contribution de l\'étude','Plan sommaire']
+assert headings(read('introduction'))==intro
+assert not headings(read('introduction'),star=True)
 assert headings(read('etat-art'))==['Introduction','Méthodes traditionnelles','Méthodes avancées',
                                     'Quelques travaux connexes','Positionnement','Conclusion partielle']
 studies=read('etat-art').split(r'\section{Quelques travaux connexes}')[1].split(r'\section{Positionnement}')[0]

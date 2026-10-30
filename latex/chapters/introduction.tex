@@ -3,23 +3,17 @@
 \addcontentsline{toc}{chapter}{Introduction générale}
 \label{chap:introduction}
 
-\section*{Contexte de l'étude}
-\phantomsection
-\addcontentsline{toc}{section}{Contexte de l'étude}
+\section{Contexte de l'étude}
 La robotique en essaim étudie la coordination de robots par des décisions locales \cite{brambilla2013}. Nous l'appliquons à la formation de lettres, de nombres et de figures, puis au déplacement de certaines formations autour d'obstacles connus.
 
-Le réseau apprend une accélération à partir des exemples d'un contrôleur programmé, appelé professeur. L'attribution des places et la préparation du trajet restent classiques.
+Le réseau apprend une accélération à partir des exemples d'un contrôleur de référence programmé. L'attribution des places et la préparation du trajet restent classiques.
 
-\section*{Problématique}
-\phantomsection
-\addcontentsline{toc}{section}{Problématique}
+\section{Problématique}
 Une bonne forme finale peut cacher des contacts pendant le trajet. Une faible erreur d'entraînement ne garantit donc pas une mission réussie. Le filtre classique peut aussi corriger les commandes du réseau.
 
 Nous cherchons à savoir dans quelles conditions une commande locale apprise par imitation permet de former un essaim sans contact. Il faut aussi déterminer le rôle des composants classiques.
 
-\section*{Hypothèses}
-\phantomsection
-\addcontentsline{toc}{section}{Hypothèses}
+\section{Hypothèses}
 Trois hypothèses orientent les essais.
 \begin{enumerate}\setlength{\itemsep}{0pt}
 \item Un réseau partagé peut apprendre une commande de formation à partir de sa cible et de ses voisins.
@@ -28,36 +22,28 @@ Trois hypothèses orientent les essais.
 \end{enumerate}
 La simulation utilise un espace borné, des observations exactes, des échanges sans perte et des obstacles connus. Les capteurs bruités, les pannes et les robots physiques ne sont pas validés.
 
-\section*{Objectifs poursuivis}
-\phantomsection
-\addcontentsline{toc}{section}{Objectifs poursuivis}
+\section{Objectifs poursuivis}
 L'objectif général est de construire et d'évaluer une commande locale de formation. Le travail poursuit cinq objectifs.
 \begin{itemize}\setlength{\itemsep}{0pt}
 \item simuler des déplacements à accélérations bornées ;
 \item construire les places des formes et régler leur attribution ;
-\item produire les données du professeur et entraîner les modèles ;
+\item produire les données du contrôleur de référence et entraîner les modèles ;
 \item comparer les trajectoires selon la formation, la stabilisation et les contacts ;
 \item examiner séparément le passage à plusieurs effectifs et la navigation.
 \end{itemize}
 Les lettres et les nombres sont des consignes à former, pas des images à reconnaître. La réussite demande une forme maintenue, des vitesses faibles et aucun contact pendant l'épisode.
 
-\section*{Méthodes et techniques utilisées}
-\phantomsection
-\addcontentsline{toc}{section}{Méthodes et techniques utilisées}
-L'apprentissage supervisé utilise les observations et les accélérations du professeur. Entraînement, validation et test sont séparés ; les poids sont fixés avant le test réservé.
+\section{Méthodes et techniques utilisées}
+L'apprentissage supervisé utilise les observations et les accélérations du contrôleur de référence. Entraînement, validation et test sont séparés ; les poids sont fixés avant le test réservé.
 
 Les comparaisons utilisent les mêmes départs. Les trajectoires sont archivées pour vérifier les commandes et recalculer les métriques.
 
-\section*{Contribution de l'étude}
-\phantomsection
-\addcontentsline{toc}{section}{Contribution de l'étude}
+\section{Contribution de l'étude}
 Le travail réunit simulation, attribution, apprentissage et démonstration web, avec des résultats vérifiables.
 
 Le modèle structuré réussit dix-huit cas réservés à trois effectifs, avec des départs contrôlés. La navigation hybride réussit huit cas par contrôleur. La méthode et les résultats précisent les limites de ces campagnes.
 
-\section*{Plan sommaire et subdivision du travail}
-\phantomsection
-\addcontentsline{toc}{section}{Plan sommaire et subdivision du travail}
+\section{Plan sommaire}
 Hormis l'introduction générale, la discussion et la conclusion générale, ce mémoire comprend quatre chapitres.
 \begin{enumerate}\setlength{\itemsep}{0pt}
 \item \textbf{Concepts de base}. Ce chapitre présente les robots, les graphes et l'apprentissage.

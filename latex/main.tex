@@ -52,7 +52,13 @@
 \pagenumbering{arabic}
 \renewcommand{\thefigure}{I.\arabic{figure}}
 \renewcommand{\theHfigure}{introduction.\arabic{figure}}
+% Rubriques 1 à 7 pour l'introduction non numérotée comme chapitre.
+\setcounter{section}{0}
+\renewcommand{\thesection}{\arabic{section}}
+\renewcommand{\theHsection}{introduction.\arabic{section}}
 \include{chapters/introduction}
+\renewcommand{\thesection}{\thechapter.\arabic{section}}
+\renewcommand{\theHsection}{\theHchapter.\arabic{section}}
 \renewcommand{\thefigure}{\thechapter.\arabic{figure}}
 \renewcommand{\theHfigure}{\thechapter.\arabic{figure}}
 \include{chapters/concept}

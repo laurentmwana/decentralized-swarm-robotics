@@ -16,7 +16,7 @@ Les dossiers `chapters/` et `frontmatter/` sont conservés. Le plan suit [RULES.
 
 Il y a quatre chapitres numérotés. Chaque chapitre s’ouvre par Introduction et se ferme par une Conclusion partielle qui annonce la suite. La discussion et la conclusion générale sont contenues successivement dans `chapters/discussion.tex`, comme dans l’architecture initiale.
 
-La version courante compte **65 pages au total**, dont 13 avant l’introduction et 52 numérotées en chiffres arabes. La cible demandée est de 65 à 70 pages physiques. La répartition est donnée dans [PAGINATION.md](PAGINATION.md). Police 12 points, interligne 1,5 et marges de 2,5 cm conservés.
+La version courante compte **66 pages au total**, dont 13 avant l’introduction et 53 numérotées en chiffres arabes. La cible demandée est de 65 à 70 pages physiques. La répartition est donnée dans [PAGINATION.md](PAGINATION.md). Police 12 points, interligne 1,5 et marges de 2,5 cm conservés.
 
 Les développements restent fondés sur les résultats de la version à accélérations. La rédaction privilégie des phrases simples. Les huit figures scientifiques sont calculées à partir du programme ou des données enregistrées ; aucune image générée par IA n’est utilisée.
 
@@ -50,3 +50,5 @@ La première commande nécessite NumPy et Matplotlib. Les deux commandes utilise
 Préférence de lecture de l’auteur : introduction courte, plan énuméré, notions distinguées sous les titres composés. Les quatre rubriques de chaque travail connexe sont conservées comme lignes de tableau, selon la demande de l’auteur.
 
 La révision 024 privilégie les phrases directes sans deux-points explicatifs au milieu des phrases. Les titres des pages liminaires sont centrés ; les paragraphes restent justifiés et le style des chapitres reprend dès l’introduction générale. Le PDF conserve 65 pages. Les preuves 024 décrivent cette version courante.
+
+Révision 025 : introduction numérotée de 1 à 7 et titre « Plan sommaire », six blocs d’équations, retrait des notations de la liste des abréviations. Le générateur d’exemples est appelé contrôleur de référence, et le premier réseau GAT initial. Les figures sont en couleur avec repères lisibles en niveaux de gris. Les preuves 025 décrivent cette étape de 66 pages. La nouvelle cible de 70 à 78 pages est suivie dans la révision 026.

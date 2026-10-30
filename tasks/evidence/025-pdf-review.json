@@ -1,0 +1,67 @@
+{
+  "status": "passed",
+  "pages": 66,
+  "range": [
+    65,
+    70
+  ],
+  "front_pages": 13,
+  "arabic_pages": 53,
+  "introduction_sections": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7
+  ],
+  "plan_title": "Plan sommaire",
+  "equation_blocks_before": 16,
+  "equation_blocks_after": 6,
+  "notations_removed_from_abbreviations": true,
+  "terminology": "contrôleur de référence / GAT initial",
+  "colored_figures_checked": {
+    "training": {
+      "size": [
+        2208,
+        2001
+      ],
+      "dpi": 300
+    },
+    "timing": {
+      "size": [
+        2059,
+        1523
+      ],
+      "dpi": 300
+    },
+    "convergence": {
+      "size": [
+        2361,
+        2122
+      ],
+      "dpi": 300
+    },
+    "sequence": {
+      "size": [
+        1895,
+        1911
+      ],
+      "dpi": 300
+    },
+    "navigation": {
+      "size": [
+        2060,
+        1982
+      ],
+      "dpi": 300
+    }
+  },
+  "print_review": "66 pages couleur examinées ; entraînement et durées examinés en niveaux de gris",
+  "vector_figures": true,
+  "overfull_boxes": 0,
+  "undefined_references": 0,
+  "pdf": "output/pdf/memoire-swarm-gnn-redaction.pdf",
+  "sha256": "d8309592eeaf16eb72b7ec0c96399ca712fe98ab6e87cd7b24496cc59f5d1923"
+}

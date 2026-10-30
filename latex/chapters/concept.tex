@@ -28,33 +28,19 @@ Le caractère décentralisé doit donc être précisé. La décision locale de m
 Les voisins sont les robots dont les états relatifs sont accessibles à une décision. Cette liste peut changer au cours du mouvement.
 
 \subsubsection{Représentation des positions}
-Pour un robot $i$, la position est le vecteur $p_i=(x_i,y_i)^\top$. Les positions de $N$ robots peuvent être rangées dans une matrice :
-La matrice des positions est définie dans l'Équation~\eqref{eq:concept-1}.
-\begin{equation}
-P=\begin{pmatrix}x_1&y_1\\x_2&y_2\\\vdots&\vdots\\x_N&y_N\end{pmatrix}\in\mathbb{R}^{N\times2}.
-\label{eq:concept-1}
-\end{equation}
-Une ligne correspond à un robot ; les deux colonnes correspondent aux deux axes du plan. Pour stocker ces données dans un seul vecteur, on peut lire les lignes dans l'ordre :
-L'Équation~\eqref{eq:concept-2} précise l'ordre de lecture choisi pour le vecteur.
-\begin{equation}
-\operatorname{vec}_{\mathrm{lignes}}(P)=(x_1,y_1,x_2,y_2,\ldots,x_N,y_N)^\top.
-\label{eq:concept-2}
-\end{equation}
-Cette transformation change la présentation des nombres, pas les positions des robots. Par exemple, la matrice $\left(\begin{smallmatrix}1&2\\3&4\end{smallmatrix}\right)$ devient le vecteur $(1,2,3,4)^\top$. Dans l'implémentation, le réseau ne reçoit pas ce vecteur global contenant tout l'essaim. Il traite l'observation propre d'un robot et les informations de ses voisins.
+Chaque position contient deux coordonnées. Dans une matrice, une ligne correspond à un robot et les deux colonnes indiquent ses coordonnées dans le plan. Pour conserver ces nombres dans un seul vecteur, on peut lire les lignes dans l'ordre.
 
-Les cibles forment une autre matrice $Q\in\mathbb{R}^{N\times2}$. L'attribution indique quelle ligne de $Q$ est destinée à chaque robot. La géométrie répond à la question « où sont les places ? » ; l'attribution répond à la question « quelle place revient à chacun ? ».
+Prenons deux robots placés aux coordonnées (1, 2) et (3, 4). Le tableau de deux lignes devient la liste (1, 2, 3, 4). Cette opération change le rangement des nombres, pas les positions. Le réseau ne reçoit pas cette liste globale de tout l'essaim ; il utilise l'état propre du robot et ses voisins.
+
+Les cibles sont rangées dans un tableau comparable. La géométrie définit les places disponibles et l'attribution désigne celle qui revient à chacun. Permuter les identifiants des robots sans déplacer leurs positions ne change donc pas la forme visible.
 
 \subsection{Portée de communication}
 La portée est la distance maximale autorisant un échange direct. Un message peut circuler plus loin par plusieurs échanges, si le protocole le prévoit. Cela ne donne pas au réseau de mouvement un accès immédiat aux états éloignés.
 
 \subsection{Graphe de proximité}
-On note $\mathcal{G}_t=(\mathcal{V},\mathcal{E}_t)$ le graphe à l'instant $t$. Les sommets représentent les robots. Une arête existe lorsque la distance entre deux centres ne dépasse pas la portée $r_c$ :
-La règle de voisinage apparaît dans l'Équation~\eqref{eq:concept-3}.
-\begin{equation}
-A_{ij}(t)=\mathbf{1}_{i\ne j}\,\mathbf{1}_{\|p_i(t)-p_j(t)\|\leq r_c}.
-\label{eq:concept-3}
-\end{equation}
-La matrice $A$ indique donc qui peut échanger avec qui. Le graphe change lorsque les robots se déplacent. Sa connexité signifie qu'il existe un chemin entre chaque paire de robots ; elle ne signifie pas que tous communiquent directement.
+Le graphe représente les échanges possibles. Un sommet correspond à un robot ; une arête relie deux robots lorsque leur distance ne dépasse pas la portée.
+
+Le graphe change lorsque les robots se déplacent. Sa connexité signifie qu'il existe un chemin entre chaque paire de robots ; elle ne signifie pas que tous communiquent directement.
 
 La Figure~\ref{fig:graphe} présente un graphe extrait du départ enregistré à 24 robots.
 \begin{figure}[htbp]
@@ -68,15 +54,7 @@ Les messages d'attribution peuvent se propager sur plusieurs échanges successif
 \section{Réseaux de neurones sur graphes}
 Une couche linéaire calcule une expression $Wx+b$. Des fonctions non linéaires permettent de combiner plusieurs de ces transformations. Le nombre de couches linéaires, leur largeur et le nombre d'échanges sur le graphe sont trois caractéristiques différentes. Une largeur de 64 signifie que certains calculs utilisent 64 composantes ; elle ne signifie pas que le modèle contient 64 robots ou 64 couches.
 
-Un réseau sur graphe construit une représentation à partir des voisins. Une somme ou une moyenne traite leurs contributions de façon uniforme. L'attention attribue des poids qui dépendent des observations \cite{velickovic2018}. Pour le robot $i$, une écriture simplifiée est :
-L'Équation~\eqref{eq:concept-4} donne une écriture de la somme pondérée.
-\begin{equation}
-m_i=\sum_{j\in\mathcal{N}_i}\alpha_{ij}m_{ij},\qquad
-\alpha_{ij}=\frac{\exp(s_{ij})}{\sum_{k\in\mathcal{N}_i}\exp(s_{ik})}.
-\label{eq:concept-4}
-\end{equation}
-Les scores $s_{ij}$ sont calculés par le réseau. Les poids totalisent un lorsque le robot a des voisins. Si le voisinage est vide, la contribution reçue est définie comme nulle. Le partage des mêmes paramètres entre robots permet de traiter des groupes de tailles différentes, sans garantir que le comportement restera bon pour toute taille.
-
+Un réseau sur graphe construit une représentation à partir des voisins. Une somme ou une moyenne traite leurs contributions de façon uniforme. L'attention attribue des poids qui dépendent des observations \cite{velickovic2018}. Le réseau calcule un score pour chaque voisin, puis transforme ces scores en poids dont la somme vaut un. Il combine les contributions selon ces poids. Lorsqu'il n'y a aucun voisin, la contribution reçue est nulle. Le partage des paramètres permet de traiter plusieurs tailles de groupe, mais les trajectoires doivent encore être vérifiées pour chacune.
 
 \subsection{Différence entre communication et décision}
 Recevoir une information n'oblige pas à suivre le voisin. Un robot peut savoir qu'un autre s'approche et décider de freiner, de dévier ou de conserver sa direction. Le message décrit une situation ; le contrôleur transforme cette situation en action. Une même information peut donc conduire à des commandes différentes selon la cible et la vitesse propres du robot.
@@ -102,10 +80,10 @@ Enfin, une image finale ne dit pas si un contact a eu lieu plus tôt. La réussi
 \section{Règle écrite et politique apprise}
 L'apprentissage supervisé associe une entrée à une réponse attendue. La classification prédit une catégorie, par exemple un type d'objet. La régression prédit des nombres. Ici, la sortie contient deux composantes d'accélération. Il s'agit donc d'une régression.
 
-Le professeur est un contrôleur programmé. Pour chaque état collecté, il fournit l'accélération attendue. Le réseau apprend à rapprocher sa réponse de celle du professeur. Les données sont dites synthétiques parce qu'elles sont produites dans le simulateur. Elles comprennent les observations, les voisinages, les commandes et leur provenance. Elles ne sont pas des photographies de lettres à reconnaître. La lettre est une consigne de placement donnée au système.
+Les exemples proviennent d'une règle de commande programmée, appelée contrôleur de référence. À chaque état collecté, elle fournit l'accélération attendue que le réseau apprend à reproduire. Les données sont dites synthétiques parce qu'elles sont produites dans le simulateur. Elles comprennent les observations, les voisinages, les commandes et leur provenance. Elles ne sont pas des photographies de lettres à reconnaître. La lettre est une consigne de placement donnée au système.
 
-L'erreur quadratique moyenne, ou MSE, mesure l'écart entre les deux composantes prédites et celles du professeur :
-Le calcul de la MSE est donné par l'Équation~\eqref{eq:mse}.
+L'erreur quadratique moyenne, ou MSE, mesure l'écart entre les deux composantes prédites et celles du contrôleur de référence.
+Pour un ensemble de $K$ exemples, $a_k^\star$ désigne la commande attendue et $\widehat a_k$ la commande prédite. Le calcul de la MSE est donné par l'Équation~\eqref{eq:mse}.
 \begin{equation}
 \mathcal{L}_{\mathrm{MSE}}=\frac{1}{2K}\sum_{k=1}^{K}\|\widehat a_k-a_k^\star\|^2.
 \label{eq:mse}
@@ -116,11 +94,11 @@ La matrice de confusion, la précision et le rappel servent à évaluer des cat�
 
 
 \subsection{Organisation des données}
-Le mot « donnée » recouvre plusieurs niveaux. Un épisode est une mission complète. À chaque instant, chacun des robots fournit une observation. Une observation associée à la commande du professeur devient un exemple d'apprentissage. Un seul épisode peut donc produire de nombreux exemples qui restent liés les uns aux autres.
+Le mot « donnée » recouvre plusieurs niveaux. Un épisode est une mission complète. À chaque instant, chacun des robots fournit une observation. Une observation associée à la commande du contrôleur de référence devient un exemple d'apprentissage. Un seul épisode peut donc produire de nombreux exemples qui restent liés les uns aux autres.
 
 Cette dépendance compte pour l'évaluation. Si l'on mélange au hasard les instants d'une même trajectoire entre entraînement et test, le modèle peut être évalué sur des états très proches de ceux qu'il a déjà vus. Séparer les missions ou les consignes avant l'optimisation donne une évaluation plus exigeante. Réutiliser une même position de départ pour plusieurs formes doit aussi être signalé.
 
-Les données synthétiques ne sont pas des données sans contenu. Elles portent des unités, des positions, des vitesses et des commandes. Leur qualité dépend cependant du simulateur et du professeur. Un phénomène absent de la simulation ne peut pas être considéré comme appris simplement parce que le fichier contient beaucoup de lignes.
+Les données synthétiques ne sont pas des données sans contenu. Elles portent des unités, des positions, des vitesses et des commandes. Leur qualité dépend cependant du simulateur et du contrôleur de référence. Un phénomène absent de la simulation ne peut pas être considéré comme appris simplement parce que le fichier contient beaucoup de lignes.
 
 \subsection{Pourquoi garder un ensemble de validation ?}
 L'entraînement modifie les paramètres à partir des exemples prévus pour cela. La validation aide à choisir une version du modèle, par exemple l'époque qui donne le plus petit coût. Elle participe donc aux décisions de développement. Le test réservé doit rester séparé jusqu'à ce que ces décisions soient prises.

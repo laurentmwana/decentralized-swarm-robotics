@@ -28,7 +28,7 @@ Une commande classique indique directement comment corriger un écart de positio
 
 Cela ne signifie pas qu'elle résout tous les passages. Une répulsion peut éviter un contact tout en laissant deux robots bloqués face à face. Une formation trop large peut nécessiter un détour commun que la seule réaction locale ne prépare pas. Le diagnostic doit alors distinguer une erreur de commande, une attribution non résolue et une destination géométriquement impossible.
 
-Dans notre système, le professeur fournit à la fois un comportement exécutable et les réponses attendues pour l'apprentissage. Sa qualité détermine une partie de la qualité des exemples. Les cas où il ne trouve pas de commande admissible sont donc comptés. Un jeu de données volumineux ne corrige pas automatiquement un professeur mal adapté à certaines situations.
+Dans notre système, le contrôleur de référence fournit à la fois un comportement exécutable et les réponses attendues pour l'apprentissage. Sa qualité détermine une partie de la qualité des exemples. Les cas où il ne trouve pas de commande admissible sont donc comptés. Un jeu de données volumineux ne corrige pas automatiquement un contrôleur de référence mal adapté à certaines situations.
 
 \section{Méthodes avancées}
 \subsection{Variantes des GNN et justification de l'agrégation}
@@ -48,7 +48,7 @@ Le point important est le contenu des entrées. Une cible propre, une direction 
 Notre moteur de simulation connaît toutes les positions pour calculer la physique et les métriques. Il construit cependant une observation limitée pour chaque commande. Cette séparation permet de mesurer le résultat global sans fournir automatiquement cet état global au réseau. Le protocole de collecte doit conserver la même séparation.
 
 \subsection{Méthodes d'apprentissage}
-Plusieurs stratégies peuvent servir à apprendre une commande. L'imitation donne des exemples d'actions produites par un professeur. L'apprentissage par renforcement utilise une évaluation des conséquences des actions pour améliorer une politique. L'optimisation à travers une simulation différentiable propage une dérivée à travers le déroulement du modèle physique \cite{belbute2018}. Ces approches n'utilisent pas la même information d'apprentissage.
+Plusieurs stratégies peuvent servir à apprendre une commande. L'imitation donne des exemples d'actions produites par un contrôleur de référence. L'apprentissage par renforcement utilise une évaluation des conséquences des actions pour améliorer une politique. L'optimisation à travers une simulation différentiable propage une dérivée à travers le déroulement du modèle physique \cite{belbute2018}. Ces approches n'utilisent pas la même information d'apprentissage.
 
 La version actuelle de notre travail suit l'imitation supervisée. Le simulateur produit les exemples, puis le réseau est ajusté sur les commandes enregistrées. La présence d'un simulateur ne signifie donc pas que le gradient traverse les trajectoires physiques. Nous n'utilisons pas non plus une récompense de renforcement pour entraîner les modèles présentés.
 
@@ -111,7 +111,7 @@ Critique & Notre moteur fournit directement les positions et les vitesses relati
 
 \section{Positionnement}
 \subsection{Lecture critique des comparaisons}
-Notre comparaison principale est interne au simulateur. À l'intérieur d'une campagne, nous conservons le départ, la consigne et les critères. Nous pouvons alors examiner le rôle du filtre ou constater un écart de trajectoire entre le professeur et le réseau.
+Notre comparaison principale est interne au simulateur. À l'intérieur d'une campagne, nous conservons le départ, la consigne et les critères. Nous pouvons alors examiner le rôle du filtre ou constater un écart de trajectoire entre le contrôleur de référence et le réseau.
 
 Entre deux campagnes de développement, plusieurs éléments changent parfois ensemble. Le passage au modèle structuré modifie la commande nominale, les caractéristiques, les données et la pénalité d'apprentissage. Le progrès est réel dans le domaine testé, mais il ne mesure pas l'effet isolé de l'attention.
 
@@ -132,7 +132,7 @@ Le Tableau~\ref{tab:positionnement} résume les choix et les limites corresponda
 Élément & Choix retenu & Limite à garder en vue\\\midrule
 Perception & État propre et voisins à portée & Mesures exactes, sans capteur physique\\
 Attribution & Demandes locales et priorité par identifiant & Préparation classique et durée croissante\\
-Apprentissage & Imitation d'accélérations & Dépendance aux états et au professeur\\
+Apprentissage & Imitation d'accélérations & Dépendance aux états et au contrôleur de référence\\
 Formation & Réseau partagé, puis version structurée & Départs contrôlés dans le test final\\
 Navigation & Carte connue et détour classique & Contournement non appris par le réseau\\
 Évaluation & Départs appariés et trajectoires conservées & Peu de départs distincts réservés\\

@@ -10,14 +10,8 @@ Le système consiste à construire les places de la forme, préparer le groupe, 
 Le code distingue le moteur physique, les observations locales, les références géométriques, les modèles d'imitation et les expériences. L'interface permet de sélectionner un cas et de lire sa trajectoire. Elle ne constitue pas une preuve supplémentaire de performance. Les résultats discutés dans ce mémoire proviennent des archives d'expériences.
 
 \section{Modèle physique}
-Chaque robot est représenté par un disque de rayon $r_b=0{,}1$ m. Sa position $p_i$ et sa vitesse $v_i$ sont des vecteurs à deux composantes. La commande demandée est une accélération. Pour limiter un vecteur à une norme $b$, on définit :
-L'Équation~\eqref{eq:methode-1} définit la limitation de norme.
-\begin{equation}
-\operatorname{sat}_{b}(z)=\frac{z}{\max(1,\|z\|/b)}.
-\label{eq:methode-1}
-\end{equation}
-Avec un pas de temps $\Delta t=0{,}1$ s, le moteur applique :
-Les mises à jour sont regroupées dans l'Équation~\eqref{eq:methode-2}.
+Chaque robot est représenté par un disque de rayon $r_b=0{,}1$ m. Sa position $p_i$ et sa vitesse $v_i$ sont des vecteurs à deux composantes. La commande demandée est une accélération. La fonction $\operatorname{sat}_b$ limite la norme d'un vecteur à la valeur $b$ tout en conservant sa direction. Un vecteur déjà sous la limite reste inchangé.
+Le moteur utilise un pas de temps $\Delta t=0{,}1$ s. Ses mises à jour sont regroupées dans l'Équation~\eqref{eq:methode-2}.
 \begin{equation}\begin{aligned}
 a_i^t&=\operatorname{sat}_{2}(a_{i,\text{demandée}}^t),\\
 v_i^{t+1}&=\operatorname{sat}_{1}(v_i^t+\Delta t\,a_i^t),\\
@@ -74,12 +68,8 @@ Une augmentation de largeur peut rendre les places moins denses, mais elle chang
 
 \section{Préparation et attribution des places}
 \subsection{Pourquoi une étape circulaire ?}
-Le cercle visible au début est une consigne de préparation prévue par le programme. Il sert à organiser les échanges avant l'attribution finale. Pour un espacement de 0,6 m entre voisins sur l'anneau, le rayon est :
-Le rayon de préparation est donné dans l'Équation~\eqref{eq:methode-3}.
-\begin{equation}
-R_N=\frac{0{,}6}{2\sin(\pi/N)}.
-\label{eq:methode-3}
-\end{equation}
+Le cercle visible au début est une consigne de préparation prévue par le programme. Il sert à organiser les échanges avant l'attribution finale. L'anneau est dimensionné pour laisser 0,6 m entre deux places voisines. Son rayon augmente donc avec l'effectif.
+
 Chaque identifiant correspond à une place sur cet anneau. Une phase de freinage suit le rassemblement. Les robots échangent ensuite leurs demandes en restant immobiles, puis commencent le mouvement vers la forme demandée.
 
 Pour les expériences du modèle structuré, les départs sont déjà proches de ces positions circulaires, avec une petite perturbation de position et une rotation commune limitée. Le résultat ne doit donc pas être interprété comme une organisation réussie à partir de positions quelconques. Les profils utilisent respectivement 8, 15 et 30 s de rassemblement à 12, 24 et 64 robots, suivies de 2 s de freinage.
@@ -89,7 +79,7 @@ Un robot classe les places par distance à sa position. Il annonce celle qu'il s
 
 Une présence physique temporaire sur une cible ne vaut pas réservation. Un robot peut traverser une place attribuée à un autre sans en devenir propriétaire. La commande locale doit alors limiter le risque de contact pendant le passage.
 
-Les annonces se propagent d'un voisin à l'autre au cours de tours successifs. Le budget actuel est de $N^2$ tours, à raison de 0,1 s par tour. Il représente 14,4 s à douze robots et 409,6 s à soixante-quatre robots. Ce choix est conservateur et coûteux. Il décrit le protocole implémenté ; il n'est pas présenté comme une complexité minimale nécessaire à toute attribution décentralisée. La résolution est vérifiée avant la libération du mouvement. Lors d'un changement de mission, un nouveau numéro de mission permet d'écarter les anciennes annonces.
+Les annonces se propagent d'un voisin à l'autre au cours de tours successifs. L'effectif est noté $N$. Le budget actuel est de $N^2$ tours, à raison de 0,1 s par tour. Il représente 14,4 s à douze robots et 409,6 s à soixante-quatre robots. Ce choix est conservateur et coûteux. Il décrit le protocole implémenté ; il n'est pas présenté comme une complexité minimale nécessaire à toute attribution décentralisée. La résolution est vérifiée avant la libération du mouvement. Lors d'un changement de mission, un nouveau numéro de mission permet d'écarter les anciennes annonces.
 
 
 \subsection{Exemple de résolution d'un conflit}
@@ -101,37 +91,20 @@ Le protocole ne se réduit pas à « premier arrivé, premier servi ». L'arriv�
 
 À la fin de la phase, le programme vérifie l'accord et l'absence de doublons. S'il manque une réservation ou si le réseau de communication ne permet pas d'achever les échanges, la mission n'est pas déclarée résolue. Une forme finale approximative ne doit pas masquer cet échec d'organisation.
 
-\section{Le professeur et la protection classique}
-Le professeur associe attraction, freinage et répulsion de proximité. Avant protection, sa commande s'écrit :
-L'Équation~\eqref{eq:methode-4} regroupe les trois termes de la commande nominale.
-\begin{equation}
-a_i^{\mathrm{nom}}=6(g_i-p_i)-4v_i
--60\sum_{j\in\mathcal{N}_i}\max(0,0{,}4-d_{ij})\frac{p_j-p_i}{d_{ij}},
-\label{eq:methode-4}
-\end{equation}
-où $g_i$ est la cible attribuée et $d_{ij}$ la distance entre les centres. Le premier terme rapproche le robot de sa cible, le deuxième freine son mouvement et le troisième l'éloigne des voisins trop proches.
+\section{Contrôleur de référence et protection classique}
+Le contrôleur de référence est une règle programmée qui produit les commandes utilisées comme exemples d'apprentissage. Il associe trois actions. L'attraction rapproche le robot de sa cible ; le freinage réduit sa vitesse ; la répulsion l'éloigne des voisins trop proches. Les gains utilisés sont respectivement 6, 4 et 60.
 
-La protection cherche ensuite une accélération proche de cette proposition, tout en respectant des inégalités locales et la borne physique. Avec $r=p_i-p_j$, $w=v_i-v_j$, une distance de sécurité $d_s=0{,}4$ m et $\alpha=3$, la contrainte réciproque utilisée entre deux robots est :
-La condition locale est écrite dans l'Équation~\eqref{eq:contrainte}.
-\begin{equation}
-r^\top a_i\geq-\tfrac12\|w\|^2-\alpha r^\top w
--\tfrac14\alpha^2(\|r\|^2-d_s^2).
-\label{eq:contrainte}
-\end{equation}
-Chaque robot reçoit une moitié de la contrainte symétrique. Une petite composante de détour peut aussi être ajoutée pour départager un face-à-face. Le programme résout en deux dimensions une projection sous contraintes :
-L'Équation~\eqref{eq:methode-6} décrit la correction recherchée.
-\begin{equation}
-\min_a\|a-a_i^{\text{proposé}}\|^2
-\quad\text{sous}\quad n_k^\top a\geq b_k,\qquad\|a\|\leq2.
-\label{eq:methode-6}
-\end{equation}
-Lorsqu'aucune accélération admissible n'est trouvée, une commande bornée de freinage est appliquée et ce cas est compté. La présence du filtre ne justifie donc pas une garantie générale de sécurité. Les contacts sont toujours mesurés sur la trajectoire produite.
+La protection examine ensuite la commande proposée. Elle cherche une accélération aussi proche que possible de cette proposition, tout en respectant les limites de mouvement et les contraintes locales de séparation. Le calcul est une optimisation quadratique, abrégée QP. Il s'effectue sur les deux composantes de l'accélération.
 
-Dans la navigation, des contraintes supplémentaires tiennent compte des obstacles et des murs. Pour un obstacle immobile, toute la responsabilité de la correction revient au robot mobile. La carte sert à préparer le trajet ; les contraintes de proximité protègent l'exécution locale.
+Les voisins prennent chacun une part de la réaction nécessaire. La distance de sécurité utilisée ici est de 0,4 m et le paramètre de réaction vaut 3. Une petite composante de détour aide à départager un face-à-face. Ces mécanismes s'ajoutent à la commande, sans changer la cible attribuée.
+
+Si aucune commande admissible n'est trouvée, le système applique un freinage borné et compte cette situation. Le filtre ne constitue donc pas une garantie générale de sécurité. Les contacts restent mesurés sur toute la trajectoire.
+
+En navigation, la protection tient aussi compte des obstacles et des murs. L'obstacle étant immobile, la correction revient entièrement au robot mobile. Le trajet commun et la protection locale ont ainsi des rôles complémentaires.
 
 \section{Premier modèle à attention sur graphe}
 \subsection{Entrées et calcul de la commande}
-Le premier modèle, nommé GAT de référence dans la suite, reçoit huit valeurs propres qui décrivent la position, la vitesse, la cible, la phase et l'effectif. Le prétraitement combine l'écart à la cible divisé par 6 m, la vitesse, la phase divisée par trois et l'effectif divisé par douze. Il fournit ainsi six valeurs. Chaque voisin apporte sa position et sa vitesse relatives. Leur distance complète ces quatre composantes pour former cinq caractéristiques d'arête.
+Le premier modèle, nommé GAT initial dans la suite, reçoit huit valeurs propres qui décrivent la position, la vitesse, la cible, la phase et l'effectif. Le prétraitement combine l'écart à la cible divisé par 6 m, la vitesse, la phase divisée par trois et l'effectif divisé par douze. Il fournit ainsi six valeurs. Chaque voisin apporte sa position et sa vitesse relatives. Leur distance complète ces quatre composantes pour former cinq caractéristiques d'arête.
 
 Deux couches linéaires avec activation ReLU encodent l'état propre ; deux autres encodent les arêtes. Les représentations ont une largeur de 64. Des projections de requête et de clé donnent les scores d'attention. La somme pondérée des représentations voisines est combinée avec l'état propre, l'écart à la cible, la vitesse et le degré du robot. Deux couches de sortie donnent l'accélération, ramenée à la norme maximale si nécessaire.
 
@@ -148,18 +121,18 @@ Le lot d'apprentissage regroupe des observations de robots, pas une décision ce
 \subsection{Modes brut et protégé}
 Le mode protégé applique le filtre classique à l'accélération du réseau. Le mode brut retire cette projection pendant le rassemblement et le mouvement vers la forme, c'est-à-dire les phases apprises. Les bornes physiques restent appliquées par le simulateur. Le freinage et l'attribution restent des étapes classiques communes. Le mot « brut » porte donc sur la commande des phases de mouvement ; il ne signifie pas que toute la mission serait réalisée par le réseau.
 
-\section{Données et entraînement du modèle de référence}
+\section{Données et entraînement du modèle initial}
 \subsection{Origine et séparation des données}
-Le jeu de données est produit par le professeur. Une trajectoire fournit plusieurs observations robot par robot et instant par instant. Seuls les exemples des phases de mouvement apprises sont retenus pour l'imitation. La séparation est faite avant l'optimisation et tient compte des formes équivalentes. Deux noms du même tracé restent dans la même partition.
+Le jeu de données est produit par le contrôleur de référence. Une trajectoire fournit plusieurs observations robot par robot et instant par instant. Seuls les exemples des phases de mouvement apprises sont retenus pour l'imitation. La séparation est faite avant l'optimisation et tient compte des formes équivalentes. Deux noms du même tracé restent dans la même partition.
 
-La collecte élargie contient 214 épisodes du professeur, répartis en 185 fichiers d'entraînement, 20 de validation et 9 de test. Après regroupement des tracés identiques, cela représente 180 trajectoires d'entraînement, 18 de validation et 9 de test distinctes. Les géométries uniques sont réparties en 36 pour l'entraînement, 9 pour la validation et 9 pour le test. Les observations retenues comprennent 531\,360 exemples d'entraînement distincts et 53\,136 de validation.
+La collecte élargie contient 214 épisodes du contrôleur de référence, répartis en 185 fichiers d'entraînement, 20 de validation et 9 de test. Après regroupement des tracés identiques, cela représente 180 trajectoires d'entraînement, 18 de validation et 9 de test distinctes. Les géométries uniques sont réparties en 36 pour l'entraînement, 9 pour la validation et 9 pour le test. Les observations retenues comprennent 531\,360 exemples d'entraînement distincts et 53\,136 de validation.
 
 Ces nombres doivent être lus avec leur unité. Un exemple est une observation locale, pas une nouvelle mission indépendante. Cinq graines de départ sont réutilisées entre les formes d'entraînement, deux entre celles de validation et une entre celles de test. La collecte contient donc huit configurations initiales distinctes, répétées pour différentes consignes. Cette réutilisation facilite les comparaisons mais limite la diversité des départs.
 
 
 Le Tableau~\ref{tab:partitions} précise les différentes unités de la collecte. Les fichiers portant des noms de formes équivalentes restent rattachés à leur partition, mais leur répétition n'ajoute pas une nouvelle géométrie ni une nouvelle trajectoire distincte.
 \begin{table}[htbp]
-\caption{Partitions de la collecte élargie du modèle de référence.}
+\caption{Partitions de la collecte élargie du modèle initial.}
 \label{tab:partitions}
 
 
@@ -184,7 +157,7 @@ L'entraînement s'arrête après 23 époques. Les poids retenus correspondent à
 
 
 \subsection{Déroulement d'un entraînement}
-Le programme charge d'abord les observations et les commandes de la partition d'entraînement. Pour chaque lot, le modèle produit ses deux composantes d'accélération. La fonction de coût compare cette réponse à celle du professeur, puis l'optimiseur modifie les paramètres pour réduire ce coût. Une époque correspond à un passage sur les exemples sélectionnés.
+Le programme charge d'abord les observations et les commandes de la partition d'entraînement. Pour chaque lot, le modèle produit ses deux composantes d'accélération. La fonction de coût compare cette réponse à celle du contrôleur de référence, puis l'optimiseur modifie les paramètres pour réduire ce coût. Une époque correspond à un passage sur les exemples sélectionnés.
 
 Après l'époque, la validation est calculée sans mettre à jour les paramètres. Si son coût s'améliore, une copie des poids est conservée. L'arrêt anticipé évite de poursuivre indéfiniment lorsque les nouvelles époques n'améliorent plus la sélection. Les poids de la dernière époque ne sont donc pas nécessairement ceux du modèle retenu.
 
@@ -194,12 +167,12 @@ Reprendre un entraînement change les poids. Rejouer une expérience avec des po
 
 \section{Corrections et modèle structuré}
 \subsection{Collecter sur les états rencontrés par le réseau}
-Les contacts du premier modèle brut ont motivé une collecte de correction. Le professeur est interrogé sur des états visités par le modèle, uniquement pour construire les données d'apprentissage prévues. Les situations proches d'un voisin reçoivent un poids plus élevé. Les trajectoires ratées restent conservées ; les demandes pour lesquelles le professeur ne trouve pas de correction admissible sont comptées et exclues des étiquettes utilisables.
+Les contacts du premier modèle brut ont motivé une collecte de correction. Le contrôleur de référence est interrogé sur des états visités par le modèle, uniquement pour construire les données d'apprentissage prévues. Les situations proches d'un voisin reçoivent un poids plus élevé. Les trajectoires ratées restent conservées ; les demandes pour lesquelles le contrôleur de référence ne trouve pas de correction admissible sont comptées et exclues des étiquettes utilisables.
 
 Cette opération réduit une partie du décalage entre les exemples initiaux et les états rencontrés pendant l'exécution. Elle n'a cependant pas suffi à rendre le premier réseau brut fiable. Un pilote entraîné avec plusieurs effectifs a également montré que la capacité à recevoir un nombre variable de voisins ne garantissait pas la réussite à 24 ou 64 robots. Ces observations ont conduit à revoir la structure de la commande.
 
 \subsection{Mouvement nominal et corrections vectorielles}
-Le second modèle, appelé GAT structuré, contient une commande explicite vers la cible :
+Le GAT structuré contient une commande de base qui rapproche le robot de sa cible tout en le freinant. La cible du robot $i$ est notée $g_i$.
 La commande de base est définie par l'Équation~\eqref{eq:methode-7}.
 \begin{equation}
 a_i^{\mathrm{base}}=\operatorname{sat}_{2}\big(k_p(g_i-p_i)-k_dv_i\big),
@@ -208,27 +181,19 @@ a_i^{\mathrm{base}}=\operatorname{sat}_{2}\big(k_p(g_i-p_i)-k_dv_i\big),
 \end{equation}
 Les deux gains positifs sont appris sur 8\,192 exemples synthétiques sans voisin, puis fixés pour la suite. Ils retrouvent les valeurs 6 et 4. Le réseau apprend alors des corrections liées au voisinage au lieu de devoir réapprendre seul le mouvement nominal.
 
-Pour une arête, on note $r_{ij}=p_j-p_i$, $w_{ij}=v_j-v_i$, $u_{ij}=r_{ij}/\|r_{ij}\|$ et $\tau_{ij}$ le vecteur obtenu par une rotation de $-u_{ij}$ d'un quart de tour. Le message vectoriel prend la forme :
-L'Équation~\eqref{eq:methode-8} combine les trois directions du message.
+Le réseau calcule ensuite une correction à partir des voisins. Elle combine un éloignement, un déplacement de côté et une réaction à leur vitesse relative. L'attention règle le poids de chaque contribution. Un facteur lié à l'activité annule la correction lorsque le robot est à sa cible et que le voisinage est immobile.
+
+L'Équation~\eqref{eq:commande-finale} résume l'ajout de cette correction, notée $c_i$, à la commande de base.
 \begin{equation}
-m_{ij}=\rho_{ij}\left(c_{ij}^{(1)}(-u_{ij})+
-c_{ij}^{(2)}\tau_{ij}+c_{ij}^{(3)}w_{ij}\right).
-\label{eq:methode-8}
+\widehat a_i=\operatorname{sat}_2\big(a_i^{\mathrm{base}}+c_i\big).
+\label{eq:commande-finale}
 \end{equation}
-Les trois coefficients sont calculés par le réseau. Le facteur d'activité
-$\rho_{ij}=\tanh(\|g_i-p_i\|+\|v_i\|+\|w_{ij}\|)$ annule cette correction lorsque le robot est à sa cible et que le voisinage est immobile. La commande finale est :
-La somme finale est donnée dans l'Équation~\eqref{eq:methode-9}.
-\begin{equation}
-\widehat a_i=\operatorname{sat}_{2}\left(a_i^{\mathrm{base}}+
-\sqrt{|\mathcal{N}_i|}\sum_{j\in\mathcal{N}_i}\alpha_{ij}m_{ij}\right).
-\label{eq:methode-9}
-\end{equation}
-Si le robot n'a pas de voisin, la somme est nulle.
+Cette écriture regroupe le calcul des messages dans un seul terme. Elle ne remplace pas le calcul du programme. Sans voisin, la correction est nulle.
 
 Le réseau calcule ses coefficients à partir de distances, de normes et de projections sur les directions radiale et tangente. Son encodage propre comporte quatre valeurs et son encodage d'arête huit valeurs. Il utilise une largeur de 48, l'activation SiLU, huit modules linéaires et deux gains positifs appris. Cette construction suit les translations et les rotations du plan. Si la scène tourne, les vecteurs de commande tournent avec elle. Le choix d'un sens de détour empêche d'étendre cette affirmation sans précaution aux réflexions.
 
 \subsection{Préparation des exemples et coût d'apprentissage}
-Les données locales issues du pilote multi-effectifs sont complétées par des voisinages synthétiques. Les effectifs représentés sont 12, 24 et 64, avec différents nombres de voisins et des situations de proximité. Après sélection, le jeu utilisé contient 30\,000 exemples d'entraînement et 21\,000 de validation, dont respectivement 12\,000 et 3\,000 voisinages ajoutés. Les candidats dont la commande du professeur n'est pas admissible sont comptés avant exclusion, soit 100 en entraînement et 28 en validation pour cette augmentation.
+Les données locales issues du pilote multi-effectifs sont complétées par des voisinages synthétiques. Les effectifs représentés sont 12, 24 et 64, avec différents nombres de voisins et des situations de proximité. Après sélection, le jeu utilisé contient 30\,000 exemples d'entraînement et 21\,000 de validation, dont respectivement 12\,000 et 3\,000 voisinages ajoutés. Les candidats dont la commande du contrôleur de référence n'est pas admissible sont comptés avant exclusion, soit 100 en entraînement et 28 en validation pour cette augmentation.
 
 L'objectif combine une erreur d'imitation pondérée et une pénalité lorsque la commande viole les inégalités locales de séparation. Une écriture du principe est :
 L'Équation~\eqref{eq:methode-10} sépare les deux contributions du coût.
@@ -237,14 +202,14 @@ L'Équation~\eqref{eq:methode-10} sépare les deux contributions du coût.
 \lambda\,\mathcal{L}_{\text{séparation}}.
 \label{eq:methode-10}
 \end{equation}
-La seconde partie pénalise les valeurs positives de $b_{ij}-r_{ij}^{\top}\widehat a_i$, avec une normalisation par la distance. Elle guide l'apprentissage ; elle n'est pas un filtre appliqué aux mouvements du modèle brut.
+Le coefficient $\lambda$ règle le poids de la pénalité de séparation. La seconde partie pénalise les commandes qui ne respectent pas les contraintes locales de séparation. Elle est normalisée par la distance et guide l'apprentissage. Elle ne constitue pas un filtre appliqué aux mouvements du modèle brut.
 
 Une première version réussit six des neuf cas de validation. La seconde repart de ses poids, augmente le poids de séparation à 200 et utilise une distance d'apprentissage de 0,5 m. Le taux d'apprentissage est de $3\times10^{-4}$, la taille des lots de 512 et le budget maximal de 60 époques, avec une patience de douze. L'entraînement s'arrête à l'époque 53 ; l'époque 41 est retenue. La valeur de validation est de 0,239340 pour cet objectif composite. Elle ne peut pas être comparée directement à la MSE du premier modèle, ni à une valeur calculée avec une autre pénalité.
 
 La Figure~\ref{fig:entrainement} présente les courbes issues des deux journaux d'entraînement.
 \begin{figure}[htbp]
 \centering\includegraphics[width=\textwidth]{images/current_training.pdf}
-\caption{Courbes extraites des journaux d'entraînement. À gauche, l'imitation du modèle de référence est mesurée par une MSE. À droite, le modèle structuré v2 utilise un coût composite. Les deux ordonnées n'ont pas la même signification.}
+\caption{Courbes extraites des journaux d'entraînement. En haut, l'imitation du modèle initial est mesurée par une MSE. En bas, le modèle structuré v2 utilise un coût composite. Les deux ordonnées n'ont pas la même signification.}
 \label{fig:entrainement}
 \end{figure}
 
@@ -253,9 +218,9 @@ Le déplacement d'une formation entière utilise un centre de référence mobile
 
 Le trajet est calculé par une recherche classique sur une grille de 0,1 m, puis simplifié en segments libres. Le planificateur tient compte de toutes les places de la formation. Un passage libre pour le seul centre peut rester trop étroit pour les robots situés sur les côtés. Pour chaque obstacle, il examine donc les positions interdites du centre de translation en fonction des décalages des cibles. Une marge de planification de 0,35 m s'ajoute aux rayons physiques.
 
-Chaque segment est parcouru avec une progression polynomiale $f(s)=10s^3-15s^4+6s^5$, où $s$ va de zéro à un. La durée est réglée pour limiter la vitesse de référence à 0,2 m/s et ne descend pas sous quatre secondes. Une période de stabilisation complète le transport. La forme n'est pas tournée ou déformée par cette recherche. Une cible finale occupée par un obstacle est refusée avant le calcul, plutôt que déplacée silencieusement.
+Chaque segment est parcouru avec une progression lisse qui démarre et se termine à vitesse nulle. La durée est réglée pour limiter la vitesse de référence à 0,2 m/s et ne descend pas sous quatre secondes. Une période de stabilisation complète le transport. La forme n'est pas tournée ou déformée par cette recherche. Une cible finale occupée par un obstacle est refusée avant le calcul, plutôt que déplacée silencieusement.
 
-Dans les scènes finales à plusieurs obstacles, la préparation est classique pour les deux contrôleurs comparés. Le transport utilise ensuite soit le professeur, soit le GAT de référence protégé. Le GAT structuré brut n'est pas évalué dans ces scènes. Le réseau ne reçoit pas la carte complète et n'apprend pas le planificateur.
+Dans les scènes finales à plusieurs obstacles, la préparation est classique pour les deux contrôleurs comparés. Le transport utilise ensuite soit le contrôleur de référence, soit le GAT initial protégé. Le GAT structuré brut n'est pas évalué dans ces scènes. Le réseau ne reçoit pas la carte complète et n'apprend pas le planificateur.
 
 \section{Critères d'évaluation}
 \subsection{Erreur de formation et maintien}
@@ -300,7 +265,7 @@ Robots & Arène (m) & Largeur (m) & Rassemblement (s) & Freinage (s) & Allocatio
 \end{tabular}
 \end{table}
 
-La progression suivie n'est pas un apprentissage cumulatif de toutes les lettres une à une. Le développement passe par le modèle de référence, la collecte de correction, le pilote multi-effectifs, puis le modèle structuré. Chaque changement possède ses données et ses poids. Les résultats de l'un ne sont pas ajoutés au taux de réussite d'un autre pour annoncer un score global.
+La progression suivie n'est pas un apprentissage cumulatif de toutes les lettres une à une. Le développement passe par le modèle initial, la collecte de correction, le pilote multi-effectifs, puis le modèle structuré. Chaque changement possède ses données et ses poids. Les résultats de l'un ne sont pas ajoutés au taux de réussite d'un autre pour annoncer un score global.
 
 Le deuxième modèle structuré repart des poids de sa première version, mais modifie la pénalité et la marge utilisées pendant l'apprentissage. La valeur du coût n'est donc pas directement comparable entre ces deux réglages. La réussite en validation est examinée avant de figer la version soumise au test réservé.
 
@@ -316,7 +281,7 @@ Le Tableau~\ref{tab:modules} présente les principales parties du programme. Les
 \toprule
 Partie & Fonction & Données produites ou utilisées\\\midrule
 \path{src/simulator/} & Physique et observations & États, commandes, voisinages\\
-\path{src/reference/} & Formes, attribution, professeur, navigation & Cibles, annonces, trajets\\
+\path{src/reference/} & Formes, attribution, contrôleur de référence, navigation & Cibles, annonces, trajets\\
 \path{src/imitation/} & Collecte, modèles et entraînement & Exemples, poids, journaux\\
 \path{demo/} & Expériences et affichage web & Réglages, animation, exports\\
 \path{tasks/evidence/} & Rapports conservés & Résumés, audits, empreintes\\\bottomrule

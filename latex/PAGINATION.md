@@ -1,28 +1,21 @@
 # Pagination et architecture du mémoire
 
-La cible reste de **65 à 70 pages physiques**, tout compris. Après la révision de lisibilité demandée par l’auteur, le PDF compte **65 pages**, dont 13 avant l’introduction et 52 en numérotation arabe. La mise en page reste en 12 points, interligne 1,5 et marges de 2,5 cm.
+La révision 025 compte **66 pages physiques**, dont 13 pages avant l’introduction et 53 pages numérotées en chiffres arabes. Les paramètres restent de 12 points, un interligne de 1,5 et des marges de 2,5 cm.
 
-| Partie | Numérotation imprimée | Pages physiques | Nombre |
+| Partie | Numérotation arabe | Pages physiques | Nombre |
 |---|---|---|---:|
-| Garde, pages liminaires et sommaire | Sans numéro puis i à xii | 1 à 13 | 13 |
+| Garde, pages liminaires et sommaire | — | 1 à 13 | 13 |
 | Introduction générale | 1 à 2 | 14 à 15 | 2 |
-| 1. Concepts de base | 3 à 9 | 16 à 22 | 7 |
-| 2. État de l’art | 10 à 16 | 23 à 29 | 7 |
-| 3. Méthodologie et solution proposée | 17 à 30 | 30 à 43 | 14 |
-| 4. Implémentation, expérimentations et résultats | 31 à 43 | 44 à 56 | 13 |
-| Discussion | 44 à 49 | 57 à 62 | 6 |
-| Conclusion générale et perspectives | 50 à 51 | 63 à 64 | 2 |
-| Bibliographie | 52 | 65 | 1 |
-| **Total** | | **1 à 65** | **65** |
+| Concepts de base | 3 à 9 | 16 à 22 | 7 |
+| État de l’art | 10 à 16 | 23 à 29 | 7 |
+| Méthodologie et solution proposée | 17 à 30 | 30 à 43 | 14 |
+| Implémentation, expérimentations et résultats | 31 à 44 | 44 à 57 | 14 |
+| Discussion | 45 à 50 | 58 à 63 | 6 |
+| Conclusion générale et perspectives | 51 à 52 | 64 à 65 | 2 |
+| Bibliographie | 53 | 66 | 1 |
 
-Les dossiers `chapters/` et `frontmatter/` et les inclusions de `main.tex` sont conservés. Les sept rubriques de l’introduction, les quatre chapitres et la séparation de Discussion et Conclusion générale restent en place.
+Les dossiers `chapters/` et `frontmatter/` sont conservés. L’introduction possède sept rubriques numérotées de 1 à 7. Son dernier titre est uniquement « Plan sommaire ». La discussion et la conclusion restent distinctes.
 
-L’introduction est concise et le plan est énuméré. Chaque notion du titre « Essaim, localité, décentralisation » possède son sous-titre. Les autres titres sont décomposés ou recentrés sur une idée.
+Le texte conserve six blocs d’équations utiles, huit figures et quatorze tableaux. Les figures en couleur utilisent aussi des traits et des marqueurs distincts ; les barres sont hachurées. Les aperçus en niveaux de gris ont été examinés. Les exports sont des PDF vectoriels et des PNG à 300 dpi.
 
-À la demande de l’auteur, les trois travaux connexes sont présentés dans trois tableaux. Chacun garde contexte, méthode, résultats et critique. Cette présentation remplace les sous-sous-sections de la version précédente tout en conservant le fond du plan du professeur.
-
-Le document comporte huit figures scientifiques, quatorze tableaux et onze références citées. Les tableaux ont leur légende au-dessus ; les figures en dessous. Les illustrations et les résultats expérimentaux sont inchangés par cette révision de lecture.
-
-La compilation pdfLaTeX/Biber et la relecture des pages sont terminées. Les contrôles et le décompte sont enregistrés dans `../tasks/evidence/023-lecture-plan.json`, `023-manuscript-audit.json` et `023-pdf-review.json`. Les preuves antérieures décrivent leurs versions historiques. Toute modification ultérieure doit être recompilée et contrôlée avant livraison.
-
-La révision de style 024 ne change pas ce décompte. Elle centre les titres liminaires et reformule les phrases ; les contrôles de rendu sont conservés dans `../tasks/evidence/024-pdf-review.json`.
+Les preuves de cette étape sont dans `../tasks/evidence/025-plan.json`, `025-manuscript-audit.json` et `025-pdf-review.json`. Les preuves antérieures décrivent leurs versions historiques. La demande suivante de l’auteur fixe une nouvelle cible de 70 à 78 pages, à traiter dans la révision 026.
