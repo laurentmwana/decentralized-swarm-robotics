@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "total_physical_pages": 74,
+  "requested_range": [
+    70,
+    78
+  ],
+  "introduction_pages": 2,
+  "front_pages": 13,
+  "arabic_pages": 61,
+  "appendices": [
+    "A — Guide de démarrage",
+    "B — Fiche des expériences",
+    "C — Fichiers et vérification"
+  ],
+  "appendix_physical_pages": [
+    72,
+    73,
+    74
+  ],
+  "appendix_arabic_pages": [
+    59,
+    60,
+    61
+  ],
+  "toc_entries_verified": true,
+  "visual_review": "Three final appendix pages rendered with Poppler and examined",
+  "pdf_sha256": "757baf9146656a728d87558f682d833ec8c356691be364f21ac8d9e15b127561"
+}

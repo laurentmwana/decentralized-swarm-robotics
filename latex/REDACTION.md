@@ -1,4 +1,4 @@
-# Rédaction du mémoire — version Master, 71 pages
+# Rédaction du mémoire — version Master, 74 pages
 
 Le fichier principal est `main.tex`. Les pages personnelles et les réglages de présentation existants sont conservés. Les chapitres sont rédigés en français simple ; les termes techniques nécessaires sont expliqués lors de leur introduction.
 
@@ -52,7 +52,7 @@ Une copie des sources avant cette reprise se trouve dans `outputs/thesis-redacti
 
 La correction 022 rétablit les rubriques de `RULES.md`. Les dossiers `chapters/` et `frontmatter/` et les quatre chapitres numérotés sont conservés. Les trois travaux connexes conservent les quatre rubriques sous forme de tableaux, à la demande de l’auteur. Discussion et Conclusion générale et perspectives sont séparées.
 
-La version courante compile en **71 pages au total**, avec neuf figures scientifiques, dix-sept tableaux et onze références citées. La table des matières et les légendes sont rétablies selon le plan. La répartition est donnée dans `PAGINATION.md`.
+La version courante compile en **74 pages au total**, avec neuf figures scientifiques, dix-sept tableaux et onze références citées. La table des matières et les légendes sont rétablies selon le plan. La répartition est donnée dans `PAGINATION.md`.
 
 Le PDF à relire est `output/pdf/memoire-swarm-gnn-redaction.pdf` depuis la racine du dépôt ; `latex/main.pdf` contient le même document. Une sauvegarde locale de la version intermédiaire de 45 pages se trouve dans `outputs/thesis-redaction/version-45-pages/`. Les preuves 021 restent celles de cette version intermédiaire ; les preuves 022 décrivent la version historique de 70 pages.
 
@@ -61,3 +61,5 @@ La révision 026 répond à la cible de 70 à 78 pages. L’introduction reste �
 Les dimensions des réseaux et des observations sont expliquées dans deux tableaux. Les formats de fichiers et le matériel enregistré sont décrits sans annoncer de comparaison de performances CPU/GPU. Le cas d’ellipse, graine 7300, provient du test 008d déjà compté parmi les neuf essais. Il illustre la différence entre précision finale et absence de contacts ; il n’ajoute aucun essai à la campagne. Les erreurs inférieures à 10⁻¹² m sont plafonnées uniquement pour leur affichage logarithmique.
 
 Les preuves 021 à 025 décrivent les versions historiques. Les contrôles courants sont les preuves 026. Les données, les poids et les conclusions expérimentales restent identiques.
+
+Révision 027 : trois annexes sont ajoutées après la bibliographie et inscrites au sommaire. Elles donnent le guide de démarrage, la fiche des sept expériences et les fichiers à conserver pour vérifier les résultats. Elles occupent les pages arabes 59 à 61. Le PDF complet compte 74 pages ; les preuves courantes sont les preuves 027.

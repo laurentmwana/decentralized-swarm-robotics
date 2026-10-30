@@ -1,0 +1,70 @@
+% Compléments pratiques après la bibliographie, sans modifier les quatre chapitres.
+\chapter*{Annexe A — Guide de démarrage}
+\addcontentsline{toc}{chapter}{Annexe A — Guide de démarrage}
+\label{ann:demarrage}
+Cette annexe rassemble les étapes nécessaires pour consulter l'application locale. Les commandes sont exécutées dans un terminal ouvert à la racine du projet. Elles utilisent le code et les modèles conservés dans le dépôt.
+
+\section*{Démarrage et arrêt}
+Sur l'ordinateur du projet, le lanceur PowerShell prépare le démarrage du serveur. Il cherche un environnement Python disponible et compatible avec l'application.
+\begin{verbatim}
+.\demo\start-reference.ps1
+\end{verbatim}
+Avec un environnement Python personnel, les dépendances sont installées avant de démarrer le serveur.
+\begin{verbatim}
+python -m pip install -r requirements.txt
+python -m demo.reference_server
+\end{verbatim}
+Le navigateur accède ensuite à \url{http://127.0.0.1:8765/}. Le terminal reste ouvert pendant l'utilisation. La combinaison Ctrl+C arrête le serveur. Une seule instance peut utiliser ce port. Ces commandes lancent l'application ; elles ne réentraînent pas les réseaux.
+
+\section*{Déroulement d'un essai}
+L'utilisateur choisit l'expérience, la forme, le nombre de robots, le contrôleur et le numéro reproductible du départ. Ce numéro permet de retrouver une configuration à réglages identiques. Il ne désigne ni un robot ni une classe à apprendre.
+
+Le lancement calcule la trajectoire avant de la lire dans l'arène. Le cercle de rendez-vous appartient à la préparation programmée. Il précède la répartition des places et la forme demandée. Le bouton Résultat final permet de consulter directement le dernier état ; il ne supprime aucune phase du calcul.
+
+La pause, la vitesse de lecture et la barre du temps modifient seulement la consultation. Les liens de communication, les trajectoires et les places cibles peuvent être affichés pour comprendre les mouvements. Les métriques finales décrivent l'essai complet, même lorsque l'animation montre encore le début.
+
+\chapter*{Annexe B — Fiche des expériences}
+\addcontentsline{toc}{chapter}{Annexe B — Fiche des expériences}
+\label{ann:experiences}
+Les expériences ci-dessous correspondent aux choix de la démonstration. Leur disponibilité dépend du contrôleur et de l'effectif. Une option accessible ne constitue pas, à elle seule, une validation expérimentale pour tous les réglages.
+
+\section*{Formation et changement de forme}
+\textbf{Former l'essaim.} Les robots construisent une lettre, un nombre ou une figure du catalogue après la préparation et l'attribution des places. L'erreur finale, les vitesses et les contacts permettent de juger le résultat. Pour le GAT structuré, la réserve finale porte sur le rectangle, la lettre C et le nombre 3, à 12, 24 et 64 robots.
+
+\textbf{Changer de formation.} Les états de la première étape deviennent le départ de la suivante. Les places sont réattribuées pour la nouvelle forme. Il faut lire les résultats de chaque étape et les contacts sur la séquence. Cette expérience n'est pas proposée au modèle structuré ni à 64 robots dans la version étudiée.
+
+\section*{Déplacement collectif}
+\textbf{Déplacer en ligne droite.} Une référence mobile transporte les places sans obstacle. La forme doit être maintenue et le groupe doit atteindre la destination.
+
+\textbf{Contourner un obstacle.} Un parcours avec déviation est proposé. Le planificateur vérifie le passage de l'ensemble des places et adapte le détour si nécessaire.
+
+\textbf{Obstacle sur la route.} Le trajet demandé est direct, mais un obstacle gêne certaines places. Le planificateur classique cherche un détour commun compatible avec la largeur de la formation.
+
+\textbf{Naviguer avec plusieurs obstacles.} La scène comporte de cinq à dix obstacles proches des cibles. La campagne décrite dans le mémoire compare le contrôleur classique et le GAT initial protégé pour un carré de douze robots. Elle n'évalue pas le GAT structuré brut en navigation.
+
+\textbf{Vérifier une destination obstruée.} Si une place finale est physiquement bloquée, la demande est signalée comme impossible. La détection de cette situation est un résultat de vérification de la scène ; elle ne doit pas être comptée comme une formation réussie.
+
+\chapter*{Annexe C — Fichiers et vérification}
+\addcontentsline{toc}{chapter}{Annexe C — Fichiers et vérification}
+\label{ann:resultats}
+Cette annexe indique comment relire les résultats et retrouver leurs sources. Les commandes de contrôle ne remplacent pas l'évaluation des trajectoires. Une réussite des tests du logiciel ne signifie pas que tous les essais du modèle réussissent.
+
+\section*{Contrôles et consultation des archives}
+Les tests du logiciel s'exécutent depuis la racine du projet.
+\begin{verbatim}
+python -m pytest tests -q -p no:cacheprovider
+\end{verbatim}
+La commande suivante relit les preuves sans relancer les simulations. Choisir un nouveau dossier de sortie.
+\begin{verbatim}
+python -m demo.comparison_report --output outputs/lecture
+\end{verbatim}
+
+\section*{Fichiers à conserver}
+Le rapport \texttt{008d-local-target-expanded-test.json} documente les neuf essais du GAT initial. Le rapport \texttt{014-vector-fresh-test.json} décrit les dix-huit essais réservés du modèle structuré. Le rapport \texttt{019-near-targets-evaluation.json} présente la campagne finale près des obstacles. Ces fichiers se trouvent dans \texttt{tasks/evidence/}. Les audits associés vérifient les trajectoires enregistrées.
+
+Les journaux \texttt{run.json} des deux entraînements se trouvent dans leurs dossiers respectifs sous \texttt{outputs/imitation/}. Les poids conservés sont les fichiers \texttt{best.pt}. Le manifeste \texttt{latex/generated/sources.json} rassemble les empreintes des données utilisées pour les figures et les tableaux du mémoire.
+
+\section*{Lecture d'un résultat exporté}
+Une comparaison conserve la forme, le départ, l'effectif, les dimensions et les seuils. L'export contient les positions, les vitesses et les métriques. Une faible erreur finale ne suffit pas si un contact est survenu.
+
+La stabilisation exige une erreur de formation au plus égale à 0,10~m et des vitesses au plus égales à 0,05~m/s pendant une seconde. La réussite exige aussi l'absence de contact sur l'essai. En navigation s'ajoutent l'arrivée à moins de 0,10~m et une déformation en route au plus égale à 0,20~m. Le temps indiqué est un temps simulé.

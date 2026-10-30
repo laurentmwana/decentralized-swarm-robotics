@@ -16,7 +16,7 @@ Les dossiers `chapters/` et `frontmatter/` sont conservés. Le plan suit [RULES.
 
 Il y a quatre chapitres numérotés. Chaque chapitre s’ouvre par Introduction et se ferme par une Conclusion partielle qui annonce la suite. La discussion et la conclusion générale sont contenues successivement dans `chapters/discussion.tex`, comme dans l’architecture initiale.
 
-La version courante compte **71 pages au total**, dont 13 avant l’introduction et 58 numérotées en chiffres arabes. La cible demandée est de 70 à 78 pages physiques. La répartition est donnée dans [PAGINATION.md](PAGINATION.md). Police 12 points, interligne 1,5 et marges de 2,5 cm conservés.
+La version courante compte **74 pages au total**, dont 13 avant l’introduction et 61 numérotées en chiffres arabes. La cible demandée est de 70 à 78 pages physiques. La répartition est donnée dans [PAGINATION.md](PAGINATION.md). Police 12 points, interligne 1,5 et marges de 2,5 cm conservés.
 
 Les développements restent fondés sur les résultats de la version à accélérations. La rédaction privilégie des phrases simples. Les neuf figures scientifiques sont calculées à partir du programme ou des données enregistrées ; aucune image générée par IA n’est utilisée.
 
@@ -50,3 +50,5 @@ La première commande nécessite NumPy et Matplotlib. Les trois commandes utilis
 Préférence de lecture de l’auteur : introduction courte, plan énuméré, notions distinguées sous les titres composés. Les quatre rubriques de chaque travail connexe sont conservées comme lignes de tableau, selon la demande de l’auteur.
 
 Révision 026 : introduction de deux pages, rubriques numérotées de 1 à 7 et titre « Plan sommaire ». La liste contient vingt abréviations utilisées dans le texte. Le document conserve six blocs d’équations, des figures en couleur lisibles en niveaux de gris et les titres liminaires centrés. Les développements portent sur l’architecture, les observations, la provenance des fichiers et un cas réservé déjà enregistré ; aucun résultat expérimental supplémentaire n’est annoncé.
+
+Révision 027 : trois annexes sont ajoutées après la bibliographie et inscrites au sommaire. Elles donnent le guide de démarrage, la fiche des sept expériences et les fichiers à conserver pour vérifier les résultats. Elles occupent les pages arabes 59 à 61. Le PDF complet compte 74 pages ; les preuves courantes sont les preuves 027.
