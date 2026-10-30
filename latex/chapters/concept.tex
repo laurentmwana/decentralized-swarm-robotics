@@ -115,7 +115,7 @@ Cette dépendance compte pour l'évaluation. Si l'on mélange au hasard les inst
 
 Les données synthétiques ne sont pas des données sans contenu. Elles portent des unités, des positions, des vitesses et des commandes. Leur qualité dépend cependant du simulateur et du contrôleur de référence. Un phénomène absent de la simulation ne peut pas être considéré comme appris simplement parce que le fichier contient beaucoup de lignes.
 
-\subsection{Pourquoi garder un ensemble de validation ?}
+\subsection{Rôle de l'ensemble de validation}
 L'entraînement modifie les paramètres à partir des exemples prévus pour cela. La validation aide à choisir une version du modèle, par exemple l'époque qui donne le plus petit coût. Elle participe donc aux décisions de développement. Le test réservé doit rester séparé jusqu'à ce que ces décisions soient prises.
 
 Cette distinction explique pourquoi un essai utilisé pour corriger un modèle n'est plus un test final de cette correction. Il reste utile comme diagnostic ou comme validation. Pour mesurer la version corrigée, il faut de nouveaux cas réservés. Les campagnes du mémoire suivent cette séparation tout en précisant le faible nombre de départs distincts disponibles.

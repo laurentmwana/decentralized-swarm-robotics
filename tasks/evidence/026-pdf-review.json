@@ -18,8 +18,9 @@
   "tables": 17,
   "equation_groups": 6,
   "cited_references": 11,
-  "pdf_sha256": "30c72e1a00a08afc011f1c4e01072cf65a1bf174bdea69dee46f41b754a4b93c",
+  "pdf_sha256": "ab368baaa1492abc1b5d7baada683cb3e80e13962c964fce67b21597f92dc685",
   "visual_review": "71 pages rendered; contact sheets examined; ellipse inspected in grayscale and final caption rendered again",
   "physical_print_test": false,
-  "source_results_unchanged": true
+  "source_results_unchanged": true,
+  "title_followup": "1.6.2 Rôle de l’ensemble de validation ; sommaire et page 22 physique vérifiés"
 }

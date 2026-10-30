@@ -15,3 +15,5 @@ Les développements expliquent les couches du réseau, les dimensions des entré
 Compilation réussie, sans débordement ni référence indéfinie. Contrôles du plan, des chiffres et des empreintes réussis. Les 71 pages ont été rendues et examinées ; la nouvelle figure a aussi été examinée en niveaux de gris. Il s’agit d’un aperçu d’impression, sans essai sur imprimante physique.
 
 Preuves `evidence/026-plan.json`, `026-manuscript-audit.json`, `026-pdf-review.json`. Livraison `output/pdf/memoire-swarm-gnn-redaction.pdf`. Aucun entraînement ni nouveau résultat du simulateur.
+
+Correction de titre demandée ensuite : la rubrique 1.6.2 devient « Rôle de l’ensemble de validation ». Le sommaire et le PDF sont recompilés ; 71 pages conservées et page concernée examinée.

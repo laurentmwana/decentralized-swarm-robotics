@@ -9,3 +9,5 @@ L’augmentation porte sur les explications des réseaux, des observations et de
 Le cas d’ellipse ne constitue pas une nouvelle expérience. Les erreurs très petites sont bornées à 10⁻¹² m seulement pour le tracé logarithmique. Les mesures et le comptage des campagnes restent ceux des archives. Les limites de validation sont conservées.
 
 Validation consignée dans les preuves 026. Les versions et preuves antérieures restent historiques.
+
+Correction de titre demandée ensuite : la rubrique 1.6.2 devient « Rôle de l’ensemble de validation ». Le sommaire et le PDF sont recompilés ; 71 pages conservées et page concernée examinée.
