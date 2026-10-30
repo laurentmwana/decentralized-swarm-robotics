@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "pages": 65,
+  "range": [
+    65,
+    70
+  ],
+  "introduction_pages": 2,
+  "front_titles_centered": true,
+  "title_center_error_pt": {
+    "Résumé": 0.001,
+    "Abstract": 0.001
+  },
+  "body_style_restored_before_introduction": true,
+  "prose_mid_sentence_colons": 0,
+  "formula_announcements_and_metadata_punctuation_preserved": true,
+  "rendered_and_reviewed_pages": 65,
+  "overfull_boxes": 0,
+  "undefined_references": 0,
+  "pdf": "output/pdf/memoire-swarm-gnn-redaction.pdf",
+  "sha256": "49cf94fbfc67de338844f2e8994e2a85da72c8e9e91b332a494ba8e6a59bc482"
+}

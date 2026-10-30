@@ -56,4 +56,6 @@ La version courante compile en **65 pages au total**, avec huit figures scientif
 
 Le PDF à relire est `output/pdf/memoire-swarm-gnn-redaction.pdf` depuis la racine du dépôt ; `latex/main.pdf` contient le même document. Une sauvegarde locale de la version intermédiaire de 45 pages se trouve dans `outputs/thesis-redaction/version-45-pages/`. Les preuves 021 restent celles de cette version intermédiaire ; les preuves 022 décrivent la version historique de 70 pages.
 
-La révision 023 réduit l’introduction à deux pages et présente le plan par une phrase suivie d’une énumération. Les preuves 023 décrivent la version courante ; les preuves 022 restent celles de la version précédente de 70 pages.
+La révision 023 réduit l’introduction à deux pages et présente le plan par une phrase suivie d’une énumération. Les preuves 023 décrivent la révision de lecture allégée ; les preuves 022 restent celles de la version précédente de 70 pages.
+
+La révision 024 privilégie les phrases directes sans deux-points explicatifs au milieu des phrases. Les titres des pages liminaires sont centrés ; les paragraphes restent justifiés et le style des chapitres reprend dès l’introduction générale. Le PDF conserve 65 pages. Les preuves 024 décrivent cette version courante.

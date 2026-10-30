@@ -31,6 +31,9 @@
 \date{}
 
 \begin{document}
+% Titres centrés pour les seules pages précédant l'introduction.
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\filcenter}{\chaptertitlename\ \thechapter}{8pt}{\Huge}
 \hypersetup{pageanchor=false}
 \include{frontmatter/garde}
 \pagenumbering{roman}
@@ -43,6 +46,9 @@
 % Intégration unique des listes, de la table des matières et des résumés
 \include{frontmatter/sumaires}
 
+% Reprise du style des chapitres à partir de l'introduction générale.
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{8pt}{\Huge}
 \pagenumbering{arabic}
 \renewcommand{\thefigure}{I.\arabic{figure}}
 \renewcommand{\theHfigure}{introduction.\arabic{figure}}

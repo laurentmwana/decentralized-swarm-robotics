@@ -14,12 +14,12 @@ Dans notre simulateur, chaque robot possède une position et une vitesse. Le con
 Une décision est locale lorsqu'elle utilise les observations propres du robot et les informations de ses voisins directs. La portée détermine ce voisinage ; elle ne donne pas une vue complète de l'essaim.
 
 \subsection{Décentralisation}
-La décentralisation concerne la répartition des décisions entre robots. Elle ne signifie pas que toute information commune disparaît : les robots peuvent partager une mission tout en calculant séparément leurs commandes.
+La décentralisation concerne la répartition des décisions entre robots. Elle ne signifie pas que toute information commune disparaît. Les robots peuvent partager une mission tout en calculant séparément leurs commandes.
 
 \subsubsection{Environnement et informations disponibles}
-L'environnement de ce mémoire est fermé au sens où il est délimité et défini par le programme. Les dimensions de l'espace, les limites physiques, les cibles et les obstacles sont connus au lancement. Aucun événement extérieur imprévu ne vient modifier la scène pendant les expériences rapportées. Cette description ne signifie pas que chaque robot reçoit toutes les positions : la simulation peut connaître l'état complet tout en limitant l'information fournie au contrôleur.
+L'environnement de ce mémoire est fermé au sens où il est délimité et défini par le programme. Les dimensions de l'espace, les limites physiques, les cibles et les obstacles sont connus au lancement. Aucun événement extérieur imprévu ne vient modifier la scène pendant les expériences rapportées. Cette description ne signifie pas que chaque robot reçoit toutes les positions. La simulation peut connaître l'état complet tout en limitant l'information fournie au contrôleur.
 
-Le robot observe sa position, sa vitesse, sa cible et les déplacements relatifs de ses voisins directs. La portée de communication utilisée dans les principales campagnes est de trois mètres. Les mesures sont exactes dans le modèle simulé : il n'y a ni bruit de mesure, ni retard variable, ni perte aléatoire de messages. La carte d'obstacles utilisée pour préparer les détours est une information commune donnée au planificateur classique.
+Le robot observe sa position, sa vitesse, sa cible et les déplacements relatifs de ses voisins directs. La portée de communication utilisée dans les principales campagnes est de trois mètres. Les mesures sont exactes dans le modèle simulé. Il n'y a ni bruit de mesure, ni retard variable, ni perte aléatoire de messages. La carte d'obstacles utilisée pour préparer les détours est une information commune donnée au planificateur classique.
 
 Le caractère décentralisé doit donc être précisé. La décision locale de mouvement n'utilise pas l'état physique de robots éloignés. L'attribution des places s'appuie sur des échanges entre voisins. En revanche, la définition de la mission et la planification d'un trajet sur une carte connue restent communes au groupe. Dire que toute la chaîne serait entièrement décentralisée masquerait cette différence.
 
@@ -40,7 +40,7 @@ L'Équation~\eqref{eq:concept-2} précise l'ordre de lecture choisi pour le vect
 \operatorname{vec}_{\mathrm{lignes}}(P)=(x_1,y_1,x_2,y_2,\ldots,x_N,y_N)^\top.
 \label{eq:concept-2}
 \end{equation}
-Cette transformation change la présentation des nombres, pas les positions des robots. Par exemple, la matrice $\left(\begin{smallmatrix}1&2\\3&4\end{smallmatrix}\right)$ devient le vecteur $(1,2,3,4)^\top$. Dans l'implémentation, le réseau ne reçoit pas ce vecteur global contenant tout l'essaim : il traite l'observation propre d'un robot et les informations de ses voisins.
+Cette transformation change la présentation des nombres, pas les positions des robots. Par exemple, la matrice $\left(\begin{smallmatrix}1&2\\3&4\end{smallmatrix}\right)$ devient le vecteur $(1,2,3,4)^\top$. Dans l'implémentation, le réseau ne reçoit pas ce vecteur global contenant tout l'essaim. Il traite l'observation propre d'un robot et les informations de ses voisins.
 
 Les cibles forment une autre matrice $Q\in\mathbb{R}^{N\times2}$. L'attribution indique quelle ligne de $Q$ est destinée à chaque robot. La géométrie répond à la question « où sont les places ? » ; l'attribution répond à la question « quelle place revient à chacun ? ».
 
@@ -59,7 +59,7 @@ La matrice $A$ indique donc qui peut échanger avec qui. Le graphe change lorsqu
 La Figure~\ref{fig:graphe} présente un graphe extrait du départ enregistré à 24 robots.
 \begin{figure}[htbp]
 \centering\includegraphics[width=.62\textwidth]{images/current_graph.pdf}
-\caption{Graphe extrait d'un départ enregistré à 24 robots. Les traits relient les voisins directs. La portée est de 3 m. Source : trajectoire du rectangle, graine 8500, campagne du modèle structuré.}
+\caption{Graphe extrait d'un départ enregistré à 24 robots. Les traits relient les voisins directs. La portée est de 3 m. Données issues de la trajectoire du rectangle, graine 8500, campagne du modèle structuré.}
 \label{fig:graphe}
 \end{figure}
 
@@ -78,7 +78,7 @@ m_i=\sum_{j\in\mathcal{N}_i}\alpha_{ij}m_{ij},\qquad
 Les scores $s_{ij}$ sont calculés par le réseau. Les poids totalisent un lorsque le robot a des voisins. Si le voisinage est vide, la contribution reçue est définie comme nulle. Le partage des mêmes paramètres entre robots permet de traiter des groupes de tailles différentes, sans garantir que le comportement restera bon pour toute taille.
 
 
-\subsection{Communication et décision : deux opérations distinctes}
+\subsection{Différence entre communication et décision}
 Recevoir une information n'oblige pas à suivre le voisin. Un robot peut savoir qu'un autre s'approche et décider de freiner, de dévier ou de conserver sa direction. Le message décrit une situation ; le contrôleur transforme cette situation en action. Une même information peut donc conduire à des commandes différentes selon la cible et la vitesse propres du robot.
 
 Le graphe joue deux rôles dans notre système. Pendant la réservation, il sert à transmettre des annonces de places. Pendant le mouvement, il détermine quels états relatifs peuvent influencer la commande locale. Les contenus échangés ne sont pas les mêmes. Une annonce propagée par plusieurs robots ne donne pas au réseau un accès direct à toutes leurs vitesses.
@@ -91,7 +91,7 @@ Partager les paramètres signifie que les mêmes matrices sont utilisées pour t
 Ce partage réduit le nombre de modèles à entraîner. Il permet aussi d'appliquer le calcul à un ensemble de voisins plus grand ou plus petit. Mais le modèle peut rencontrer une densité ou des vitesses relatives peu représentées dans les exemples. Accepter ces entrées est une propriété de l'architecture ; réussir dans ces nouvelles conditions est une question expérimentale.
 
 \section{Évaluation de la formation}
-Deux questions doivent être posées ensemble : les robots sont-ils près de la forme, et toute la forme est-elle couverte ? Si tous se regroupent sur un seul coin du carré, la première réponse peut sembler favorable pour certains points alors que le carré reste vide ailleurs. Une mesure de couverture doit regarder dans les deux sens, des robots vers les places et des places vers les robots.
+Il faut vérifier que les robots sont près de la forme et qu'ils en couvrent toutes les parties. Si tous se regroupent sur un seul coin du carré, la première réponse peut sembler favorable pour certains points alors que le carré reste vide ailleurs. Une mesure de couverture doit regarder dans les deux sens, des robots vers les places et des places vers les robots.
 
 La forme et son attribution ne sont pas identiques. Permuter deux identifiants tout en gardant les positions ne change pas la figure visible. Pendant le trajet, en revanche, savoir à qui appartient chaque place reste utile pour éviter des demandes concurrentes. Nous utilisons donc une mesure géométrique pour la couverture et un état d'attribution pour vérifier l'organisation.
 
@@ -100,9 +100,9 @@ Une troisième question concerne le temps. Traverser brièvement la bonne config
 Enfin, une image finale ne dit pas si un contact a eu lieu plus tôt. La réussite est une propriété de l'épisode complet. C'est pourquoi l'enregistrement conserve les positions successives et le bilan des contacts, même lorsque la dernière image paraît satisfaisante.
 
 \section{Règle écrite et politique apprise}
-L'apprentissage supervisé associe une entrée à une réponse attendue. La classification prédit une catégorie, par exemple un type d'objet. La régression prédit des nombres. Ici, la sortie contient deux composantes d'accélération : il s'agit donc d'une régression.
+L'apprentissage supervisé associe une entrée à une réponse attendue. La classification prédit une catégorie, par exemple un type d'objet. La régression prédit des nombres. Ici, la sortie contient deux composantes d'accélération. Il s'agit donc d'une régression.
 
-Le professeur est un contrôleur programmé. Pour chaque état collecté, il fournit l'accélération attendue. Le réseau apprend à rapprocher sa réponse de celle du professeur. Les données sont dites synthétiques parce qu'elles sont produites dans le simulateur. Elles comprennent les observations, les voisinages, les commandes et leur provenance. Elles ne sont pas des photographies de lettres à reconnaître : la lettre est une consigne de placement donnée au système.
+Le professeur est un contrôleur programmé. Pour chaque état collecté, il fournit l'accélération attendue. Le réseau apprend à rapprocher sa réponse de celle du professeur. Les données sont dites synthétiques parce qu'elles sont produites dans le simulateur. Elles comprennent les observations, les voisinages, les commandes et leur provenance. Elles ne sont pas des photographies de lettres à reconnaître. La lettre est une consigne de placement donnée au système.
 
 L'erreur quadratique moyenne, ou MSE, mesure l'écart entre les deux composantes prédites et celles du professeur :
 Le calcul de la MSE est donné par l'Équation~\eqref{eq:mse}.
@@ -112,7 +112,7 @@ Le calcul de la MSE est donné par l'Équation~\eqref{eq:mse}.
 \end{equation}
 Les grandes erreurs pèsent davantage parce que les écarts sont élevés au carré. La MSE sert à ajuster les paramètres. Elle ne compte pas les collisions qui peuvent apparaître plus tard dans une trajectoire.
 
-La matrice de confusion, la précision et le rappel servent à évaluer des catégories. Ici, nous utilisons la MSE pour l'imitation et quatre mesures de trajectoire : erreur de formation, temps de stabilisation, contacts et réussite. Ces mesures complètent l'évaluation de la commande apprise.
+La matrice de confusion, la précision et le rappel servent à évaluer des catégories. Ici, nous utilisons la MSE pour l'imitation et quatre mesures de trajectoire, à savoir l'erreur de formation, le temps de stabilisation, les contacts et la réussite. Ces mesures complètent l'évaluation de la commande apprise.
 
 
 \subsection{Organisation des données}

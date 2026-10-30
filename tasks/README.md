@@ -39,6 +39,7 @@ Le 29 octobre 2026, l'utilisateur a demandé explicitement de mettre à jour tâ
 | 021 | Reprendre le mémoire sur les résultats actuels, en français simple et avec des figures issues du programme | Terminée : rédaction alignée, cinq figures de données, contrôle documentaire et relecture du PDF de 45 pages ; français simple et résultats limités au domaine testé |
 | 022 | Rétablir le plan du professeur et livrer de 65 à 70 pages | Terminée : architecture conservée, rubriques rétablies, 70 pages compilées et relues, 8 figures et 11 tableaux ; contrôles du plan et des données réussis |
 | 023 | Alléger l’introduction, décomposer les titres et présenter les travaux connexes en tableaux | Terminée : introduction de deux pages, trois tableaux de lecture, PDF de 65 pages vérifié ; architecture et résultats conservés |
+| 024 | Reformuler la prose et centrer les titres précédant l’introduction | Terminée : titres liminaires centrés, phrases et en-têtes relus, 65 pages compilées et vérifiées ; plan et résultats conservés |
 
 Les métriques sont préparées avant la collecte. Les formations suivantes ne sont entraînées qu'après validation de leur répartition. Les anciens modèles commandant des vitesses ne sont pas réutilisés comme modèles à accélérations.
 

@@ -24,3 +24,5 @@ L’introduction est concise et le plan est énuméré. Chaque notion du titre �
 Le document comporte huit figures scientifiques, quatorze tableaux et onze références citées. Les tableaux ont leur légende au-dessus ; les figures en dessous. Les illustrations et les résultats expérimentaux sont inchangés par cette révision de lecture.
 
 La compilation pdfLaTeX/Biber et la relecture des pages sont terminées. Les contrôles et le décompte sont enregistrés dans `../tasks/evidence/023-lecture-plan.json`, `023-manuscript-audit.json` et `023-pdf-review.json`. Les preuves antérieures décrivent leurs versions historiques. Toute modification ultérieure doit être recompilée et contrôlée avant livraison.
+
+La révision de style 024 ne change pas ce décompte. Elle centre les titres liminaires et reformule les phrases ; les contrôles de rendu sont conservés dans `../tasks/evidence/024-pdf-review.json`.

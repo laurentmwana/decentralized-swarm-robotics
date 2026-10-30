@@ -2,12 +2,12 @@
 \label{chap:methode}
 
 \section{Introduction}
-Ce chapitre décrit ce qui est réellement exécuté par le programme : physique, observations, formes, attribution, modèles et entraînement. Il précise aussi les critères utilisés pour déclarer une réussite.
+Ce chapitre décrit la physique, les observations, les formes, l'attribution, les modèles et leur entraînement tels qu'ils sont implémentés. Il précise aussi les critères utilisés pour déclarer une réussite.
 
 \section{Organisation du système}
-Le système suit quatre opérations principales : construire les places de la forme, préparer le groupe, attribuer les places puis commander le déplacement. Le simulateur enregistre les états et calcule les indicateurs. Les mêmes fonctions de mesure servent aux contrôleurs classiques et appris. Cette organisation permet de changer le contrôleur sans changer la définition d'une réussite.
+Le système consiste à construire les places de la forme, préparer le groupe, attribuer les places puis commander le déplacement. Le simulateur enregistre les états et calcule les indicateurs. Les mêmes fonctions de mesure servent aux contrôleurs classiques et appris. Cette organisation permet de changer le contrôleur sans changer la définition d'une réussite.
 
-Le code distingue le moteur physique, les observations locales, les références géométriques, les modèles d'imitation et les expériences. L'interface permet de sélectionner un cas et de lire sa trajectoire. Elle ne constitue pas une preuve supplémentaire de performance : les résultats discutés dans ce mémoire proviennent des archives d'expériences.
+Le code distingue le moteur physique, les observations locales, les références géométriques, les modèles d'imitation et les expériences. L'interface permet de sélectionner un cas et de lire sa trajectoire. Elle ne constitue pas une preuve supplémentaire de performance. Les résultats discutés dans ce mémoire proviennent des archives d'expériences.
 
 \section{Modèle physique}
 Chaque robot est représenté par un disque de rayon $r_b=0{,}1$ m. Sa position $p_i$ et sa vitesse $v_i$ sont des vecteurs à deux composantes. La commande demandée est une accélération. Pour limiter un vecteur à une norme $b$, on définit :
@@ -26,7 +26,7 @@ v_i^{t+1}&=\operatorname{sat}_{1}(v_i^t+\Delta t\,a_i^t),\\
 \end{equation}
 Les accélérations sont exprimées en m/s$^2$ et les vitesses en m/s. La vitesse maximale est de 1 m/s ; l'accélération maximale est de 2 m/s$^2$. Cette mise à jour utilise la nouvelle vitesse pour calculer la position suivante.
 
-L'espace est un carré délimité. Si le disque atteint un mur, sa position est ramenée à la limite admissible et sa vitesse dirigée vers l'extérieur est annulée. Ce traitement empêche de sortir de l'espace simulé. Il n'efface pas le contact du bilan : un épisode avec contact n'est pas déclaré réussi.
+L'espace est un carré délimité. Si le disque atteint un mur, sa position est ramenée à la limite admissible et sa vitesse dirigée vers l'extérieur est annulée. Ce traitement empêche de sortir de l'espace simulé. Le contact reste inscrit au bilan. Un épisode avec contact n'est pas déclaré réussi.
 
 Le Tableau~\ref{tab:methode-1} rassemble les éléments de cette étape.
 \begin{table}[htbp]
@@ -56,11 +56,11 @@ Le modèle reste volontairement limité. Il ne représente pas l'orientation d'u
 Deux distances doivent être distinguées. Le contact physique entre deux disques de rayon 0,1 m correspond à 0,2 m entre centres. La distance de sécurité de la commande est plus grande. Elle vise à réagir avant le contact. Pendant l'entraînement structuré v2, une marge encore différente est utilisée pour guider l'apprentissage. Ces valeurs n'ont donc pas toutes le même rôle.
 
 \section{Représentation des formes}
-Le catalogue contient les 26 lettres de A à Z, les dix nombres de 1 à 10 et vingt géométries : cercle, ellipse, carré, rectangle, triangle, pentagone, hexagone, heptagone, octogone, décagone, losange, trapèze, parallélogramme, étoile, croix, flèche, demi-cercle, cœur, ligne et V. Les noms O et cercle partagent un tracé ; les noms V et géométrie en V en partagent un autre. Le décompte est donc de 56 noms pour 54 géométries différentes.
+Le catalogue contient les 26 lettres de A à Z, les dix nombres de 1 à 10 et vingt géométries. Ces dernières comprennent le cercle, l’ellipse, le carré, le rectangle, le triangle, le pentagone, l’hexagone, l’heptagone, l’octogone, le décagone, le losange, le trapèze, le parallélogramme, l’étoile, la croix, la flèche, le demi-cercle, le cœur, la ligne et le V. Les noms O et cercle partagent un tracé ; les noms V et géométrie en V en partagent un autre. Le décompte est donc de 56 noms pour 54 géométries différentes.
 
-Les formes sont construites par des segments et des courbes. Pour un tracé unique, les places sont réparties le long de sa longueur. Pour plusieurs traits, un échantillonnage qui favorise des points éloignés permet de couvrir l'ensemble. Le nombre de places est égal au nombre de robots. Le système ne demande pas au réseau de reconnaître une image : il lui fournit une cible issue de cette construction.
+Les formes sont construites par des segments et des courbes. Pour un tracé unique, les places sont réparties le long de sa longueur. Pour plusieurs traits, un échantillonnage qui favorise des points éloignés permet de couvrir l'ensemble. Le nombre de places est égal au nombre de robots. Le réseau reçoit une cible issue de cette construction ; il n'a pas à reconnaître une image.
 
-Avant le lancement, la géométrie doit respecter trois conditions : des places suffisamment espacées, un graphe de cibles connecté à la portée choisie et une forme qui tient dans l'espace. L'écart minimal de référence entre places est de 0,4 m. L'interface peut adapter uniformément les dimensions lorsqu'une combinaison est trop dense. Pour examiner la connexité, elle utilise notamment la plus longue arête d'un arbre reliant les cibles avec une longueur totale minimale. Si aucune échelle ne satisfait les contraintes, la combinaison est refusée. Cette adaptation géométrique ne constitue pas un nouvel entraînement du réseau.
+Avant le lancement, les places doivent être suffisamment espacées, rester connectées à la portée choisie et tenir dans l'espace. L'écart minimal de référence entre places est de 0,4 m. L'interface peut adapter uniformément les dimensions lorsqu'une combinaison est trop dense. Pour examiner la connexité, elle utilise notamment la plus longue arête d'un arbre reliant les cibles avec une longueur totale minimale. Si aucune échelle ne satisfait les contraintes, la combinaison est refusée. Cette adaptation géométrique ne constitue pas un nouvel entraînement du réseau.
 
 
 La Figure~\ref{fig:catalogue-actuel} donne douze exemples de tracés issus du catalogue du programme. Elle décrit les consignes disponibles et ne constitue pas un bilan de réussite du réseau sur ces formes.
@@ -131,7 +131,7 @@ Dans la navigation, des contraintes supplémentaires tiennent compte des obstacl
 
 \section{Premier modèle à attention sur graphe}
 \subsection{Entrées et calcul de la commande}
-Le premier modèle, nommé GAT de référence dans la suite, reçoit huit valeurs propres : la position, la vitesse, la cible, la phase et l'effectif. Le prétraitement utilise six valeurs : l'écart à la cible ramené à une largeur de 6 m, la vitesse, la phase divisée par trois et l'effectif divisé par douze. Chaque voisin apporte sa position et sa vitesse relatives. Leur distance complète ces quatre composantes pour former cinq caractéristiques d'arête.
+Le premier modèle, nommé GAT de référence dans la suite, reçoit huit valeurs propres qui décrivent la position, la vitesse, la cible, la phase et l'effectif. Le prétraitement combine l'écart à la cible divisé par 6 m, la vitesse, la phase divisée par trois et l'effectif divisé par douze. Il fournit ainsi six valeurs. Chaque voisin apporte sa position et sa vitesse relatives. Leur distance complète ces quatre composantes pour former cinq caractéristiques d'arête.
 
 Deux couches linéaires avec activation ReLU encodent l'état propre ; deux autres encodent les arêtes. Les représentations ont une largeur de 64. Des projections de requête et de clé donnent les scores d'attention. La somme pondérée des représentations voisines est combinée avec l'état propre, l'écart à la cible, la vitesse et le degré du robot. Deux couches de sortie donnent l'accélération, ramenée à la norme maximale si nécessaire.
 
@@ -139,7 +139,7 @@ Le modèle contient ainsi huit modules linéaires et une seule agrégation de vo
 
 
 \subsection{Du fichier d'observation au calcul local}
-L'observation propre est rangée dans un vecteur de huit valeurs. Les voisins forment une petite matrice dont chaque ligne contient quatre valeurs relatives. Comme le nombre de voisins varie, le calcul par lots utilise un masque : il indique quelles lignes correspondent à de vrais voisins et quelles lignes servent seulement à compléter la taille du tableau.
+L'observation propre est rangée dans un vecteur de huit valeurs. Les voisins forment une petite matrice dont chaque ligne contient quatre valeurs relatives. Comme le nombre de voisins varie, le calcul par lots utilise un masque. Celui-ci indique quelles lignes correspondent à de vrais voisins et quelles lignes servent seulement à compléter la taille du tableau.
 
 Les lignes masquées ne doivent influencer ni l'attention ni la somme finale. Ce point est vérifié dans le code. Sans lui, l'ajout de lignes vides pour constituer un lot pourrait changer artificiellement une accélération. Un voisinage vide reçoit également un traitement explicite pour éviter une division ou une normalisation indéfinie.
 
@@ -150,11 +150,11 @@ Le mode protégé applique le filtre classique à l'accélération du réseau. L
 
 \section{Données et entraînement du modèle de référence}
 \subsection{Origine et séparation des données}
-Le jeu de données est produit par le professeur. Une trajectoire fournit plusieurs observations robot par robot et instant par instant. Seuls les exemples des phases de mouvement apprises sont retenus pour l'imitation. La séparation est faite avant l'optimisation et tient compte des formes équivalentes : deux noms du même tracé restent dans la même partition.
+Le jeu de données est produit par le professeur. Une trajectoire fournit plusieurs observations robot par robot et instant par instant. Seuls les exemples des phases de mouvement apprises sont retenus pour l'imitation. La séparation est faite avant l'optimisation et tient compte des formes équivalentes. Deux noms du même tracé restent dans la même partition.
 
-La collecte élargie contient 214 épisodes du professeur : 185 fichiers d'entraînement, 20 de validation et 9 de test. Après regroupement des tracés identiques, cela représente 180 trajectoires d'entraînement, 18 de validation et 9 de test distinctes. Les géométries uniques sont réparties en 36 pour l'entraînement, 9 pour la validation et 9 pour le test. Les observations retenues comprennent 531\,360 exemples d'entraînement distincts et 53\,136 de validation.
+La collecte élargie contient 214 épisodes du professeur, répartis en 185 fichiers d'entraînement, 20 de validation et 9 de test. Après regroupement des tracés identiques, cela représente 180 trajectoires d'entraînement, 18 de validation et 9 de test distinctes. Les géométries uniques sont réparties en 36 pour l'entraînement, 9 pour la validation et 9 pour le test. Les observations retenues comprennent 531\,360 exemples d'entraînement distincts et 53\,136 de validation.
 
-Ces nombres doivent être lus avec leur unité. Un exemple est une observation locale, pas une nouvelle mission indépendante. Cinq graines de départ sont réutilisées entre les formes d'entraînement, deux entre celles de validation et une entre celles de test : la collecte contient donc huit configurations initiales distinctes, répétées pour différentes consignes. Cette réutilisation facilite les comparaisons mais limite la diversité des départs.
+Ces nombres doivent être lus avec leur unité. Un exemple est une observation locale, pas une nouvelle mission indépendante. Cinq graines de départ sont réutilisées entre les formes d'entraînement, deux entre celles de validation et une entre celles de test. La collecte contient donc huit configurations initiales distinctes, répétées pour différentes consignes. Cette réutilisation facilite les comparaisons mais limite la diversité des départs.
 
 
 Le Tableau~\ref{tab:partitions} précise les différentes unités de la collecte. Les fichiers portant des noms de formes équivalentes restent rattachés à leur partition, mais leur répétition n'ajoute pas une nouvelle géométrie ni une nouvelle trajectoire distincte.
@@ -188,7 +188,7 @@ Le programme charge d'abord les observations et les commandes de la partition d'
 
 Après l'époque, la validation est calculée sans mettre à jour les paramètres. Si son coût s'améliore, une copie des poids est conservée. L'arrêt anticipé évite de poursuivre indéfiniment lorsque les nouvelles époques n'améliorent plus la sélection. Les poids de la dernière époque ne sont donc pas nécessairement ceux du modèle retenu.
 
-L'évaluation en trajectoire intervient ensuite. Le simulateur appelle le modèle à chaque décision et les erreurs peuvent modifier les états suivants. Ce test observe un comportement différent du calcul d'une moyenne sur des exemples fixes. Les deux résultats sont conservés : la courbe d'apprentissage explique la sélection, les trajectoires décrivent la mission.
+L'évaluation en trajectoire intervient ensuite. Le simulateur appelle le modèle à chaque décision et les erreurs peuvent modifier les états suivants. Ce test observe un comportement différent du calcul d'une moyenne sur des exemples fixes. Les deux résultats sont conservés. La courbe d'apprentissage explique la sélection, les trajectoires décrivent la mission.
 
 Reprendre un entraînement change les poids. Rejouer une expérience avec des poids déjà sauvegardés ne les change pas. L'interface utilise cette seconde opération lorsqu'elle affiche un résultat ; choisir une nouvelle forme ou une nouvelle graine n'entraîne pas le réseau à nouveau.
 
@@ -225,10 +225,10 @@ La somme finale est donnée dans l'Équation~\eqref{eq:methode-9}.
 \end{equation}
 Si le robot n'a pas de voisin, la somme est nulle.
 
-Le réseau calcule ses coefficients à partir de distances, de normes et de projections sur les directions radiale et tangente. Son encodage propre comporte quatre valeurs et son encodage d'arête huit valeurs. Il utilise une largeur de 48, l'activation SiLU, huit modules linéaires et deux gains positifs appris. Cette construction suit les translations et les rotations du plan : si la scène tourne, les vecteurs de commande tournent avec elle. Le choix d'un sens de détour empêche d'étendre cette affirmation sans précaution aux réflexions.
+Le réseau calcule ses coefficients à partir de distances, de normes et de projections sur les directions radiale et tangente. Son encodage propre comporte quatre valeurs et son encodage d'arête huit valeurs. Il utilise une largeur de 48, l'activation SiLU, huit modules linéaires et deux gains positifs appris. Cette construction suit les translations et les rotations du plan. Si la scène tourne, les vecteurs de commande tournent avec elle. Le choix d'un sens de détour empêche d'étendre cette affirmation sans précaution aux réflexions.
 
 \subsection{Préparation des exemples et coût d'apprentissage}
-Les données locales issues du pilote multi-effectifs sont complétées par des voisinages synthétiques. Les effectifs représentés sont 12, 24 et 64, avec différents nombres de voisins et des situations de proximité. Après sélection, le jeu utilisé contient 30\,000 exemples d'entraînement et 21\,000 de validation, dont respectivement 12\,000 et 3\,000 voisinages ajoutés. Les candidats dont la commande du professeur n'est pas admissible sont comptés avant exclusion : 100 en entraînement et 28 en validation pour cette augmentation.
+Les données locales issues du pilote multi-effectifs sont complétées par des voisinages synthétiques. Les effectifs représentés sont 12, 24 et 64, avec différents nombres de voisins et des situations de proximité. Après sélection, le jeu utilisé contient 30\,000 exemples d'entraînement et 21\,000 de validation, dont respectivement 12\,000 et 3\,000 voisinages ajoutés. Les candidats dont la commande du professeur n'est pas admissible sont comptés avant exclusion, soit 100 en entraînement et 28 en validation pour cette augmentation.
 
 L'objectif combine une erreur d'imitation pondérée et une pénalité lorsque la commande viole les inégalités locales de séparation. Une écriture du principe est :
 L'Équation~\eqref{eq:methode-10} sépare les deux contributions du coût.
@@ -249,9 +249,9 @@ La Figure~\ref{fig:entrainement} présente les courbes issues des deux journaux 
 \end{figure}
 
 \section{Navigation avec une carte connue}
-Le déplacement d'une formation entière utilise un centre de référence mobile. Le contrôleur reçoit l'état dans le repère de ce centre : position et vitesse de référence sont soustraites à l'état propre. L'accélération de référence est ensuite ajoutée à la commande locale. Les positions relatives entre voisins restent celles de la scène physique.
+Le déplacement d'une formation entière utilise un centre de référence mobile. Le contrôleur reçoit l'état dans le repère de ce centre. La position et la vitesse de référence sont soustraites à l'état propre. L'accélération de référence est ensuite ajoutée à la commande locale. Les positions relatives entre voisins restent celles de la scène physique.
 
-Le trajet est calculé par une recherche classique sur une grille de 0,1 m, puis simplifié en segments libres. Le planificateur tient compte de toutes les places de la formation : un passage libre pour le seul centre peut rester trop étroit pour les robots situés sur les côtés. Pour chaque obstacle, il examine donc les positions interdites du centre de translation en fonction des décalages des cibles. Une marge de planification de 0,35 m s'ajoute aux rayons physiques.
+Le trajet est calculé par une recherche classique sur une grille de 0,1 m, puis simplifié en segments libres. Le planificateur tient compte de toutes les places de la formation. Un passage libre pour le seul centre peut rester trop étroit pour les robots situés sur les côtés. Pour chaque obstacle, il examine donc les positions interdites du centre de translation en fonction des décalages des cibles. Une marge de planification de 0,35 m s'ajoute aux rayons physiques.
 
 Chaque segment est parcouru avec une progression polynomiale $f(s)=10s^3-15s^4+6s^5$, où $s$ va de zéro à un. La durée est réglée pour limiter la vitesse de référence à 0,2 m/s et ne descend pas sous quatre secondes. Une période de stabilisation complète le transport. La forme n'est pas tournée ou déformée par cette recherche. Une cible finale occupée par un obstacle est refusée avant le calcul, plutôt que déplacée silencieusement.
 
@@ -268,7 +268,7 @@ E(P,Q)=\max\left(\max_i\min_j\|p_i-q_j\|,
 \end{equation}
 Elle mesure la plus grande distance non couverte entre les deux ensembles. Contrairement à une moyenne, elle ne masque pas un robot très éloigné parce que les autres seraient bien placés. Elle ne dépend pas de l'ordre des robots dans les tableaux.
 
-La stabilisation demande simultanément $E(P,Q)\leq0{,}1$ m et une vitesse maximale de 0,05 m/s pendant une seconde. Avec le pas retenu, cette fenêtre inclut onze états échantillonnés. Le temps de stabilisation correspond à la première fenêtre admissible selon le protocole. L'erreur finale est mesurée au dernier état : ces deux indicateurs ne décrivent donc pas exactement le même moment.
+La stabilisation demande simultanément $E(P,Q)\leq0{,}1$ m et une vitesse maximale de 0,05 m/s pendant une seconde. Avec le pas retenu, cette fenêtre inclut onze états échantillonnés. Le temps de stabilisation correspond à la première fenêtre admissible selon le protocole. L'erreur finale est mesurée au dernier état. Ces deux indicateurs ne décrivent donc pas exactement le même moment.
 
 \subsection{Contacts et réussite}
 Les contacts entre disques sont recherchés aussi entre deux états successifs, en examinant le déplacement interpolé des centres. Un contact prolongé n'est pas recompté comme un nouvel événement à chaque image. Les contacts initiaux et les nouvelles entrées en contact sont conservés. Pour la navigation, les obstacles et les murs font également partie du bilan.
@@ -300,7 +300,7 @@ Robots & Arène (m) & Largeur (m) & Rassemblement (s) & Freinage (s) & Allocatio
 \end{tabular}
 \end{table}
 
-La progression suivie n'est pas un apprentissage cumulatif de toutes les lettres une à une. Elle correspond à des versions de développement : modèle de référence, collecte de correction, pilote multi-effectifs, puis modèle structuré. Chaque changement possède ses données et ses poids. Les résultats de l'un ne sont pas ajoutés au taux de réussite d'un autre pour annoncer un score global.
+La progression suivie n'est pas un apprentissage cumulatif de toutes les lettres une à une. Le développement passe par le modèle de référence, la collecte de correction, le pilote multi-effectifs, puis le modèle structuré. Chaque changement possède ses données et ses poids. Les résultats de l'un ne sont pas ajoutés au taux de réussite d'un autre pour annoncer un score global.
 
 Le deuxième modèle structuré repart des poids de sa première version, mais modifie la pénalité et la marge utilisées pendant l'apprentissage. La valeur du coût n'est donc pas directement comparable entre ces deux réglages. La réussite en validation est examinée avant de figer la version soumise au test réservé.
 

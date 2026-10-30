@@ -5,22 +5,22 @@
 \section*{Introduction}
 \phantomsection
 \addcontentsline{toc}{section}{Introduction}
-La discussion revient sur la question posée au début du mémoire : dans quelles conditions une commande locale apprise peut-elle former un essaim sans contact, et quel rôle les composants classiques conservent-ils ? Les résultats apportent une réponse partielle. Ils établissent des réussites dans des domaines précis, tout en montrant plusieurs échecs avant la version structurée. Cette lecture demande de distinguer l'imitation, la mission complète et l'étendue de la validation.
+La discussion revient sur la question posée au début du mémoire. Dans quelles conditions une commande locale apprise peut-elle former un essaim sans contact, et quel rôle les composants classiques conservent-ils ? Les résultats apportent une réponse partielle. Ils établissent des réussites dans des domaines précis, tout en montrant plusieurs échecs avant la version structurée. Cette lecture demande de distinguer l'imitation, la mission complète et l'étendue de la validation.
 
-Nous ne cherchons pas à faire disparaître les difficultés derrière le dernier résultat. Le premier modèle brut, la collecte de correction et le pilote multi-effectifs montrent des limites différentes. Ces limites expliquent les choix de conception. Elles aident aussi à préparer une démonstration honnête : le nom du contrôleur, le départ et les composants actifs doivent accompagner le score.
+Nous ne cherchons pas à faire disparaître les difficultés derrière le dernier résultat. Le premier modèle brut, la collecte de correction et le pilote multi-effectifs montrent des limites différentes. Ces limites expliquent les choix de conception. Elles aident aussi à préparer une démonstration honnête. Le nom du contrôleur, le départ et les composants actifs doivent accompagner le score.
 
 \section*{Interprétation des résultats}
 \phantomsection
 \addcontentsline{toc}{section}{Interprétation des résultats}
-Le premier résultat concerne l'écart entre une bonne imitation et une mission réussie. Le réseau de référence atteint une faible erreur finale sur les formes réservées, mais sa version brute produit des contacts. Le filtre classique change ce bilan : les neuf cas réussissent lorsqu'il protège la commande. La performance appartient donc à la combinaison, pas au seul réseau.
+Le premier résultat concerne l'écart entre une bonne imitation et une mission réussie. Le réseau de référence atteint une faible erreur finale sur les formes réservées, mais sa version brute produit des contacts. Le filtre classique change ce bilan. Les neuf cas réussissent lorsqu'il protège la commande. La performance appartient donc à la combinaison, pas au seul réseau.
 
-Il n'y a pas de contradiction entre une petite erreur finale et un épisode raté. L'erreur de formation décrit une disposition à un instant. Le bilan de contact décrit un événement qui peut avoir eu lieu plus tôt. Notre définition de réussite exige les deux : une disposition maintenue et aucun contact pendant tout le déplacement. L'image finale répond à une question plus étroite que la trajectoire.
+Il n'y a pas de contradiction entre une petite erreur finale et un épisode raté. L'erreur de formation décrit une disposition à un instant. Le bilan de contact décrit un événement qui peut avoir eu lieu plus tôt. Notre définition de réussite exige une disposition maintenue et aucun contact pendant tout le déplacement. L'image finale répond à une question plus étroite que la trajectoire.
 
-La collecte de correction fournit un deuxième enseignement. Le professeur est interrogé sur des états plus proches de ceux du modèle, et le total des contacts baisse de 102 à 65 dans la comparaison fraîche. Le résultat reste insuffisant : le modèle brut ne réussit aucun des dix-huit cas. On peut donc constater un effet utile des exemples supplémentaires sans conclure que le problème est résolu.
+La collecte de correction fournit un deuxième enseignement. Le professeur est interrogé sur des états plus proches de ceux du modèle, et le total des contacts baisse de 102 à 65 dans la comparaison fraîche. Le résultat reste insuffisant. Le modèle brut ne réussit aucun des dix-huit cas. On peut donc constater un effet utile des exemples supplémentaires sans conclure que le problème est résolu.
 
 Le pilote multi-effectifs révèle une autre difficulté. Le réseau peut traiter les observations d'un plus grand groupe, mais le protocole complet ne réussit pas nécessairement. À 24 et 64 robots, la protection évite des contacts tout en laissant une préparation non résolue. L'absence de choc ne remplace ni l'accord sur les places ni la stabilisation.
 
-La seconde architecture change le partage des responsabilités. Le mouvement nominal d'attraction et de freinage est inscrit dans le calcul. Le réseau apprend surtout des corrections de voisinage. Cela semble mieux adapté aux situations testées : les dix-huit cas réservés réussissent sans contact et sans filtre pendant le mouvement appris. Ce résultat appuie le choix pratique d'une commande structurée. Il ne démontre pas qu'un réseau libre aurait appris la même organisation avec le même budget.
+La seconde architecture change le partage des responsabilités. Le mouvement nominal d'attraction et de freinage est inscrit dans le calcul. Le réseau apprend surtout des corrections de voisinage. Cela semble mieux adapté aux situations testées. Les dix-huit cas réservés réussissent sans contact et sans filtre pendant le mouvement appris. Ce résultat appuie le choix pratique d'une commande structurée. Il ne démontre pas qu'un réseau libre aurait appris la même organisation avec le même budget.
 
 La stabilité de la position finale est également liée à l'architecture. Le facteur d'activité annule les messages lorsque le robot est à sa cible et que le voisinage est immobile. Le réseau n'a donc pas à apprendre uniquement à partir des données qu'il doit cesser de corriger cet état. Cette propriété est prévue par la conception. Elle n'est pas une découverte spontanée du modèle.
 
@@ -123,9 +123,9 @@ Les résultats montrent une réussite de formation dans le domaine contrôlé du
 \phantomsection
 \addcontentsline{toc}{chapter}{Conclusion générale et perspectives}
 
-Ce mémoire est parti d'une question de coordination : comment demander à plusieurs robots de former une figure lorsqu'ils prennent leurs décisions à partir d'informations locales ? La réponse a demandé plus qu'un réseau de neurones. Il a fallu définir une dynamique, construire les places, régler leur attribution, produire des exemples et mesurer les trajectoires complètes.
+Ce mémoire étudie la formation d'une figure par des robots qui prennent leurs décisions à partir d'informations locales. La réponse a demandé plus qu'un réseau de neurones. Il a fallu définir une dynamique, construire les places, régler leur attribution, produire des exemples et mesurer les trajectoires complètes.
 
-Le système actuel commande des accélérations dans un espace plan borné. Les données sont synthétiques : un professeur programmé fournit les observations et les commandes attendues. L'entraînement est une régression supervisée par imitation. Le catalogue propose 56 noms pour 54 géométries différentes, et le réseau reçoit sa propre cible ainsi que ses voisins directs. La géométrie et la réservation restent distinctes de la commande apprise.
+Le système actuel commande des accélérations dans un espace plan borné. Les données sont synthétiques. Un professeur programmé fournit les observations et les commandes attendues. L'entraînement est une régression supervisée par imitation. Le catalogue propose 56 noms pour 54 géométries différentes, et le réseau reçoit sa propre cible ainsi que ses voisins directs. La géométrie et la réservation restent distinctes de la commande apprise.
 
 Le premier modèle a permis de montrer les limites d'une lecture fondée sur la seule perte. Avec douze robots, les neuf cas réservés réussissent lorsqu'un filtre classique protège ses commandes. Sans ce filtre pendant le mouvement, les mêmes cas échouent et comptent 54 contacts malgré une bonne disposition finale. Une collecte complémentaire réduit ensuite les contacts sur une nouvelle campagne, sans obtenir un modèle brut fiable.
 
@@ -135,7 +135,7 @@ La portée reste limitée. Les dix-huit cas utilisent trois formes et six config
 
 La navigation constitue une contribution complémentaire. Un planificateur sur carte connue prépare le trajet en tenant compte de toutes les places de la formation. Les scènes finales proches des cibles réussissent huit cas par contrôleur pour un carré à douze robots. Ce résultat appartient à une chaîne hybride avec préparation et protection classiques. Il n'établit pas un apprentissage autonome du contournement par le modèle brut.
 
-L'apport du travail est aussi méthodologique : les hypothèses, les partitions, les poids et les métriques sont reliés aux fichiers conservés. Les comparaisons appariées et les audits rendent les résultats vérifiables. La conservation des échecs permet de comprendre les changements apportés, sans transformer la dernière démonstration en garantie générale.
+Le travail apporte aussi une méthode de vérification. Les hypothèses, les partitions, les poids et les métriques sont reliés aux fichiers conservés. Les comparaisons appariées et les audits rendent les résultats vérifiables. La conservation des échecs permet de comprendre les changements apportés, sans transformer la dernière démonstration en garantie générale.
 
 Les prochaines étapes sont d'élargir la réserve de départs, de répéter les entraînements et d'isoler l'effet des messages. Le protocole d'attribution peut aussi être amélioré pour réduire l'attente à grand effectif. La navigation doit être examinée dans davantage de scènes avant d'envisager une perception moins idéale ou des robots physiques.
 

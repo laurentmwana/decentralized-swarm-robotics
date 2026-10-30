@@ -15,23 +15,23 @@ Le réseau apprend une accélération à partir des exemples d'un contrôleur pr
 \addcontentsline{toc}{section}{Problématique}
 Une bonne forme finale peut cacher des contacts pendant le trajet. Une faible erreur d'entraînement ne garantit donc pas une mission réussie. Le filtre classique peut aussi corriger les commandes du réseau.
 
-La question étudiée est donc : \textit{dans quelles conditions une commande locale apprise par imitation permet-elle de former un essaim sans contact, et quel rôle les composants classiques conservent-ils ?} Nous examinons cette question avec plusieurs formes et effectifs, en distinguant commande brute et commande protégée.
+Nous cherchons à savoir dans quelles conditions une commande locale apprise par imitation permet de former un essaim sans contact. Il faut aussi déterminer le rôle des composants classiques.
 
 \section*{Hypothèses}
 \phantomsection
 \addcontentsline{toc}{section}{Hypothèses}
-Trois hypothèses orientent les essais :
+Trois hypothèses orientent les essais.
 \begin{enumerate}\setlength{\itemsep}{0pt}
 \item Un réseau partagé peut apprendre une commande de formation à partir de sa cible et de ses voisins.
 \item Une commande qui conserve explicitement l'attraction et le freinage peut faciliter cet apprentissage.
 \item Un même modèle peut être utilisé avec plusieurs effectifs, mais sa réussite doit être vérifiée pour chacun.
 \end{enumerate}
-Le cadre est simulé : espace borné, observations exactes, échanges sans perte et obstacles connus. Les capteurs bruités, les pannes et les robots physiques ne sont pas validés.
+La simulation utilise un espace borné, des observations exactes, des échanges sans perte et des obstacles connus. Les capteurs bruités, les pannes et les robots physiques ne sont pas validés.
 
 \section*{Objectifs poursuivis}
 \phantomsection
 \addcontentsline{toc}{section}{Objectifs poursuivis}
-L'objectif général est de construire et d'évaluer une commande locale de formation. Les objectifs spécifiques sont de :
+L'objectif général est de construire et d'évaluer une commande locale de formation. Le travail poursuit cinq objectifs.
 \begin{itemize}\setlength{\itemsep}{0pt}
 \item simuler des déplacements à accélérations bornées ;
 \item construire les places des formes et régler leur attribution ;
@@ -58,10 +58,10 @@ Le modèle structuré réussit dix-huit cas réservés à trois effectifs, avec 
 \section*{Plan sommaire et subdivision du travail}
 \phantomsection
 \addcontentsline{toc}{section}{Plan sommaire et subdivision du travail}
-Hormis l'introduction générale, la discussion et la conclusion générale, ce mémoire comprend quatre chapitres :
+Hormis l'introduction générale, la discussion et la conclusion générale, ce mémoire comprend quatre chapitres.
 \begin{enumerate}\setlength{\itemsep}{0pt}
-\item \textbf{Concepts de base} : les robots, la décision locale, les graphes et l'apprentissage.
-\item \textbf{État de l'art} : les méthodes existantes, les travaux connexes et le positionnement de l'étude.
-\item \textbf{Méthodologie et solution proposée} : les modèles, les données et les critères d'évaluation.
-\item \textbf{Implémentation, expérimentations et résultats} : le programme, les campagnes et leur analyse.
+\item \textbf{Concepts de base}. Ce chapitre présente les robots, les graphes et l'apprentissage.
+\item \textbf{État de l'art}. Il compare les méthodes existantes et situe l'étude.
+\item \textbf{Méthodologie et solution proposée}. Il décrit les modèles, les données et les critères d'évaluation.
+\item \textbf{Implémentation, expérimentations et résultats}. Il présente le programme et les essais.
 \end{enumerate}
