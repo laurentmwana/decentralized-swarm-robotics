@@ -1,42 +1,654 @@
 <!doctype html>
 <html lang="fr">
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="color-scheme" content="light">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Essaim · Laboratoire de formations</title>
 <style>
-[hidden]{display:none!important}
-:root{font-family:Inter,Segoe UI,system-ui,sans-serif;color:#dce8f2;background:#0a121c;color-scheme:dark;--line:#253646;--muted:#9aafbf;--mint:#6be2c1;--blue:#70afff}
-*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button,a,select,input{outline-offset:4px}button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--mint)}
-header{padding:27px 4vw 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:20px}.eyebrow{font-size:11px;letter-spacing:.17em;text-transform:uppercase;color:var(--mint);font-weight:700}h1{font-weight:550;font-size:26px;letter-spacing:-.04em;margin:7px 0}p{line-height:1.6}.subtitle{color:var(--muted);font-size:13px;margin:0}.badge{border:1px solid #315449;border-radius:30px;padding:9px 13px;color:var(--mint);font-size:12px;white-space:nowrap}
-main{max-width:1600px;margin:auto;padding:25px 4vw;display:grid;grid-template-columns:285px minmax(0,1fr);gap:25px}aside,.panel{background:#101d29;border:1px solid var(--line);border-radius:14px}aside{padding:22px;align-self:start}h2{font-size:14px;font-weight:600;margin:0 0 20px}label.field{display:block;margin:17px 0 6px;font-size:12px;color:#bfced9}select,input[type=number]{width:100%;padding:10px 11px;background:#0a1521;border:1px solid #34485a;border-radius:7px;color:#e4edf6;font-size:13px}button{cursor:pointer;border-radius:7px;padding:11px 15px;border:1px solid #395064;background:#182b3b;color:#e3edf5}button:disabled{opacity:.45;cursor:wait}button.primary{width:100%;background:var(--mint);color:#08251d;border:0;font-weight:700;margin-top:23px}.hint{font-size:11px;color:var(--muted);line-height:1.6;margin:10px 0}.notice{padding:11px;border-left:2px solid #b99b62;background:#26271f;color:#dfcfad;font-size:11px;line-height:1.6;margin-top:18px}.content{min-width:0}.topline{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;gap:12px}.status{font-size:13px;color:var(--muted)}.status[data-state=complete]{color:var(--mint)}.status[data-state=failed]{color:#ffb2a7}.export{color:var(--mint);font-size:12px;text-decoration:none;padding:8px 12px;border:1px solid #315449;border-radius:6px}.export[hidden]{display:none}.arena{position:relative;padding:14px 20px 8px}.arenahead{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--muted);gap:10px}.arenahead select{width:auto;max-width:220px;padding:6px}.viewport{display:flex;justify-content:center}canvas{display:block;max-width:100%;width:min(100%,640px);aspect-ratio:1;height:auto}.legend{display:flex;justify-content:center;gap:22px;font-size:10px;color:var(--muted);padding:0 0 12px;flex-wrap:wrap}.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:6px}.controls{border-top:1px solid var(--line);padding:14px 18px}.transport{display:flex;gap:10px;align-items:center}.transport button{padding:8px 14px;font-size:12px}.transport select{width:80px;padding:7px}input[type=range]{width:100%;accent-color:var(--mint);margin:14px 0 4px}output{margin-left:auto;font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}.toggles{display:flex;gap:18px;font-size:11px;color:var(--muted);margin-top:10px;flex-wrap:wrap}.toggles label{cursor:pointer}input[type=checkbox]{accent-color:var(--mint);vertical-align:middle}.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}.metric{padding:18px 15px;background:#101d29;border:1px solid var(--line);border-radius:11px}.metric span{font-size:10px;letter-spacing:.03em;color:var(--muted)}.metric strong{display:block;font-weight:500;font-size:24px;margin:10px 0 4px;letter-spacing:-.04em}.metric small{font-size:10px;color:var(--muted)}.results{margin-top:16px;padding:19px;overflow:auto}.results h2{margin:0 0 13px}table{border-collapse:collapse;width:100%;font-size:12px;text-align:left}th{font-size:10px;color:var(--muted);font-weight:500}td,th{padding:11px 9px;border-bottom:1px solid var(--line);white-space:nowrap}td:first-child,th:first-child{padding-left:0}.good{color:var(--mint)}.bad{color:#ffb2a7}#explanation{color:var(--muted);font-size:12px;margin:14px 0 0}#error{color:#ffb2a7;font-size:13px;line-height:1.6}footer{padding:0 4vw 25px;max-width:1600px;margin:auto;font-size:11px;color:#7e94a7}progress{width:100%;height:4px;accent-color:var(--mint);margin:12px 0}#experimental{color:#e0bd80}
-@media(max-width:1000px){main{grid-template-columns:240px minmax(0,1fr);gap:16px}.metrics{grid-template-columns:repeat(2,1fr)}header{padding-top:20px}}@media(max-width:720px){main{display:block;padding:18px}aside{margin-bottom:20px}header{padding:18px;align-items:start}.badge{display:none}h1{font-size:22px}.metrics{gap:9px}.arena{padding:12px 9px}.transport{flex-wrap:wrap}.legend{gap:12px}footer{padding:0 18px 25px}.topline{align-items:start}}
+    [hidden] {
+        display: none !important
+    }
+
+    :root {
+        font-family: Inter, Segoe UI, system-ui, sans-serif;
+        color: #1b2a38;
+        background: #f4f7fa;
+        color-scheme: light;
+        --line: #d3dde6;
+        --muted: #5a6f80;
+        --mint: #0b7a5e;
+        --blue: #2b6fd6
+    }
+
+    * {
+        box-sizing: border-box
+    }
+
+    body {
+        margin: 0
+    }
+
+    button,
+    input,
+    select {
+        font: inherit
+    }
+
+    button,
+    a,
+    select,
+    input {
+        outline-offset: 4px
+    }
+
+    button:focus-visible,
+    a:focus-visible,
+    select:focus-visible,
+    input:focus-visible {
+        outline: 2px solid var(--mint)
+    }
+
+    header {
+        padding: 27px 4vw 22px;
+        border-bottom: 1px solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px
+    }
+
+    .eyebrow {
+        font-size: 11px;
+        letter-spacing: .17em;
+        text-transform: uppercase;
+        color: var(--mint);
+        font-weight: 700
+    }
+
+    h1 {
+        font-weight: 550;
+        font-size: 26px;
+        letter-spacing: -.04em;
+        margin: 7px 0
+    }
+
+    p {
+        line-height: 1.6
+    }
+
+    .subtitle {
+        color: var(--muted);
+        font-size: 13px;
+        margin: 0
+    }
+
+    .badge {
+        border: 1px solid #9fd3c1;
+        border-radius: 30px;
+        padding: 9px 13px;
+        color: var(--mint);
+        font-size: 12px;
+        white-space: nowrap
+    }
+
+    main {
+        max-width: 1600px;
+        margin: auto;
+        padding: 25px 4vw;
+        display: grid;
+        grid-template-columns: 285px minmax(0, 1fr);
+        gap: 25px
+    }
+
+    aside,
+    .panel {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 14px
+    }
+
+    aside {
+        padding: 22px;
+        align-self: start
+    }
+
+    h2 {
+        font-size: 14px;
+        font-weight: 600;
+        margin: 0 0 20px
+    }
+
+    label.field {
+        display: block;
+        margin: 17px 0 6px;
+        font-size: 12px;
+        color: #3c5062
+    }
+
+    select,
+    input[type=number] {
+        width: 100%;
+        padding: 10px 11px;
+        background: #fff;
+        border: 1px solid #b9c7d3;
+        border-radius: 7px;
+        color: #1b2a38;
+        font-size: 13px
+    }
+
+    button {
+        cursor: pointer;
+        border-radius: 7px;
+        padding: 11px 15px;
+        border: 1px solid #b9c7d3;
+        background: #eef3f7;
+        color: #1b2a38
+    }
+
+    button:disabled {
+        opacity: .45;
+        cursor: wait
+    }
+
+    button.primary {
+        width: 100%;
+        background: var(--mint);
+        color: #fff;
+        border: 0;
+        font-weight: 700;
+        margin-top: 23px
+    }
+
+    .hint {
+        font-size: 11px;
+        color: var(--muted);
+        line-height: 1.6;
+        margin: 10px 0
+    }
+
+    .notice {
+        padding: 11px;
+        border-left: 2px solid #c9a24f;
+        background: #fbf3df;
+        color: #6b5320;
+        font-size: 11px;
+        line-height: 1.6;
+        margin-top: 18px
+    }
+
+    .content {
+        min-width: 0
+    }
+
+    .topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 13px;
+        gap: 12px
+    }
+
+    .status {
+        font-size: 13px;
+        color: var(--muted)
+    }
+
+    .status[data-state=complete] {
+        color: var(--mint)
+    }
+
+    .status[data-state=failed] {
+        color: #c0392b
+    }
+
+    .export {
+        color: var(--mint);
+        font-size: 12px;
+        text-decoration: none;
+        padding: 8px 12px;
+        border: 1px solid #9fd3c1;
+        border-radius: 6px
+    }
+
+    .export[hidden] {
+        display: none
+    }
+
+    .arena {
+        position: relative;
+        padding: 14px 20px 8px
+    }
+
+    .arenahead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 11px;
+        color: var(--muted);
+        gap: 10px
+    }
+
+    .arenahead select {
+        width: auto;
+        max-width: 220px;
+        padding: 6px
+    }
+
+    .viewport {
+        display: flex;
+        justify-content: center
+    }
+
+    canvas {
+        display: block;
+        max-width: 100%;
+        width: min(100%, 640px);
+        aspect-ratio: 1;
+        height: auto
+    }
+
+    .legend {
+        display: flex;
+        justify-content: center;
+        gap: 22px;
+        font-size: 10px;
+        color: var(--muted);
+        padding: 0 0 12px;
+        flex-wrap: wrap
+    }
+
+    .dot {
+        display: inline-block;
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        margin-right: 6px
+    }
+
+    .controls {
+        border-top: 1px solid var(--line);
+        padding: 14px 18px
+    }
+
+    .transport {
+        display: flex;
+        gap: 10px;
+        align-items: center
+    }
+
+    .transport button {
+        padding: 8px 14px;
+        font-size: 12px
+    }
+
+    .transport select {
+        width: 80px;
+        padding: 7px
+    }
+
+    input[type=range] {
+        width: 100%;
+        accent-color: var(--mint);
+        margin: 14px 0 4px
+    }
+
+    output {
+        margin-left: auto;
+        font-size: 12px;
+        color: var(--muted);
+        font-variant-numeric: tabular-nums
+    }
+
+    .toggles {
+        display: flex;
+        gap: 18px;
+        font-size: 11px;
+        color: var(--muted);
+        margin-top: 10px;
+        flex-wrap: wrap
+    }
+
+    .toggles label {
+        cursor: pointer
+    }
+
+    input[type=checkbox] {
+        accent-color: var(--mint);
+        vertical-align: middle
+    }
+
+    .metrics {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-top: 16px
+    }
+
+    .metric {
+        padding: 18px 15px;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 11px
+    }
+
+    .metric span {
+        font-size: 10px;
+        letter-spacing: .03em;
+        color: var(--muted)
+    }
+
+    .metric strong {
+        display: block;
+        font-weight: 500;
+        font-size: 24px;
+        margin: 10px 0 4px;
+        letter-spacing: -.04em
+    }
+
+    .metric small {
+        font-size: 10px;
+        color: var(--muted)
+    }
+
+    .results {
+        margin-top: 16px;
+        padding: 19px;
+        overflow: auto
+    }
+
+    .results h2 {
+        margin: 0 0 13px
+    }
+
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 12px;
+        text-align: left
+    }
+
+    th {
+        font-size: 10px;
+        color: var(--muted);
+        font-weight: 500
+    }
+
+    td,
+    th {
+        padding: 11px 9px;
+        border-bottom: 1px solid var(--line);
+        white-space: nowrap
+    }
+
+    td:first-child,
+    th:first-child {
+        padding-left: 0
+    }
+
+    .good {
+        color: var(--mint)
+    }
+
+    .bad {
+        color: #c0392b
+    }
+
+    #explanation {
+        color: var(--muted);
+        font-size: 12px;
+        margin: 14px 0 0
+    }
+
+    #error {
+        color: #c0392b;
+        font-size: 13px;
+        line-height: 1.6
+    }
+
+    footer {
+        padding: 0 4vw 25px;
+        max-width: 1600px;
+        margin: auto;
+        font-size: 11px;
+        color: #5f7384
+    }
+
+    progress {
+        width: 100%;
+        height: 4px;
+        accent-color: var(--mint);
+        margin: 12px 0
+    }
+
+    #experimental {
+        color: #8a6212
+    }
+
+    @media(max-width:1000px) {
+        main {
+            grid-template-columns: 240px minmax(0, 1fr);
+            gap: 16px
+        }
+
+        .metrics {
+            grid-template-columns: repeat(2, 1fr)
+        }
+
+        header {
+            padding-top: 20px
+        }
+    }
+
+    @media(max-width:720px) {
+        main {
+            display: block;
+            padding: 18px
+        }
+
+        aside {
+            margin-bottom: 20px
+        }
+
+        header {
+            padding: 18px;
+            align-items: start
+        }
+
+        .badge {
+            display: none
+        }
+
+        h1 {
+            font-size: 22px
+        }
+
+        .metrics {
+            gap: 9px
+        }
+
+        .arena {
+            padding: 12px 9px
+        }
+
+        .transport {
+            flex-wrap: wrap
+        }
+
+        .legend {
+            gap: 12px
+        }
+
+        footer {
+            padding: 0 18px 25px
+        }
+
+        .topline {
+            align-items: start
+        }
+    }
 </style>
-<header><div><div class="eyebrow">SWARM / GNN · Démonstration</div><h1>Laboratoire de formations</h1><p class="subtitle">Former, déplacer et comparer un essaim de robots.</p></div><div class="badge">Simulation locale · unités SI</div></header><nav aria-label="Navigation de la démonstration" style="padding:14px 4vw;display:flex;gap:12px;flex-wrap:wrap"><a class="export" href="#simulation">Voir la simulation</a><a class="export" href="#settings">Modifier les réglages</a></nav>
-<main><aside><h2>Configurer l’expérience</h2><form id="settings">
-<label class="field" for="scenario">Expérience</label><select id="scenario"><option value="formation">Former l’essaim</option><option value="transition">Changer de formation</option><option value="straight">Déplacer en ligne droite</option><option value="bypass">Contourner un obstacle</option><option value="direct">Obstacle sur la route · détour calculé</option><option value="multiple">Naviguer avec plusieurs obstacles</option><option value="blocked">Vérifier une destination obstruée</option></select>
-<div id="obstacleField" hidden><label class="field" for="obstacleCount">Nombre d’obstacles</label><select id="obstacleCount"><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option></select><p class="hint">Scène fixe reproductible : obstacles sur le trajet et à proximité des places finales du carré à 12 robots. Préparation classique puis déplacement par le contrôleur choisi, avec planification et protection des murs.</p></div><label class="field" for="shape">Formation</label><select id="shape" required></select>
-<div id="nextField" hidden><label class="field" for="nextShape">Formation suivante</label><select id="nextShape"></select></div>
-<label class="field" for="robots">Nombre de robots</label><select id="robots"><option>8</option><option selected>12</option><option>16</option><option>24</option><option value="64">64 · pilote</option></select>
-<p class="hint" id="modelChange" role="status" hidden></p><p class="hint" id="experimental" hidden>Effectif exploratoire : le modèle a été entraîné avec 12 robots. Certaines formes peuvent être irréalisables à cet effectif.</p>
-<label class="field" for="controller">Commande ou comparaison</label><select id="controller"><optgroup label="Exécuter un contrôleur"><option value="guarded">GAT protégé par le filtre classique</option><option value="teacher">Contrôleur classique</option><option value="multisize" disabled>GAT structuré brut · 12/24/64</option></optgroup><optgroup label="Comparer sur le même départ"><option value="comparison">Classique / GAT protégé</option><option value="comparison_multisize" disabled>Classique / GAT structuré</option></optgroup></select>
-<label class="field" for="seed">Disposition initiale · numéro reproductible</label><input type="number" id="seed" min="0" max="2147483647" value="7700" required>
-<p class="hint">Même numéro et mêmes réglages : mêmes positions de départ. Ce numéro n’est pas une entrée du modèle.</p>
-<p class="hint" id="sceneHint">Les robots se regroupent, se répartissent les places puis construisent la forme.</p>
-<p class="hint" id="protocolHint">Le cercle du début est un rendez-vous provisoire pour connecter les robots et répartir les places. La forme choisie est construite ensuite ; ce cercle n’est pas une erreur de cible.</p><p class="hint"><a href="/guide.md" target="_blank">Guide des expériences et commandes</a></p><p class="hint" id="geometryHint" role="status" aria-live="polite">Vérification des dimensions…</p><button class="primary" id="launch" type="submit" disabled>Lancer l’expérience</button><progress id="progress" hidden aria-label="Calcul en cours"></progress><p id="error" role="alert"></p>
-</form><div class="notice" id="controllerNotice">Le GAT utilise un filtre classique de sécurité. Aucun entraînement n’est lancé ici. En navigation, un planificateur classique utilise la carte des obstacles de la scène ; les commandes du GAT restent locales.</div><p class="hint">La simulation est calculée avant sa lecture. Pause et vitesse agissent sur la lecture du résultat.</p></aside>
-<section class="content" id="simulation"><div class="topline"><span id="status" class="status" role="status" aria-live="polite">Prêt pour une expérience</span><a id="export" class="export" hidden download="essaim-resultats.zip">Exporter les résultats ↓</a></div>
-<div class="panel"><div class="arena"><div class="arenahead"><span id="phase">Arène</span><span id="arenaSize">10 × 10 m</span><select id="view" aria-label="Résultat affiché" hidden></select></div><div class="viewport"><canvas id="canvas" width="800" height="800" role="img" aria-label="Vue de l’essaim, de ses places cibles et des obstacles"></canvas></div><div class="legend"><span><i class="dot" style="background:#70afff"></i>Robots</span><span><i class="dot" style="background:#6be2c1"></i>Places cibles</span><span><i class="dot" style="background:#ba9064"></i>Obstacles</span></div></div>
-<div class="controls"><div class="transport"><button id="play" disabled>Lire</button><button id="reset" disabled>Réinitialiser</button><button id="final" disabled>Résultat final</button><select id="speed" aria-label="Vitesse de lecture"><option value="1">×1</option><option value="2" selected>×2</option><option value="5">×5</option><option value="10">×10</option></select><output id="clock">0,0 s</output></div><input id="timeline" aria-label="Temps de simulation" type="range" min="0" max="0" value="0" disabled><div class="toggles"><label><input type="checkbox" id="links"> Communications</label><label><input type="checkbox" id="trails" checked> Trajectoires</label><label><input type="checkbox" id="goals" checked> Places cibles</label><label><input type="checkbox" id="ids"> Numéros des robots</label></div></div></div>
-<div class="metrics"><div class="metric"><span>ERREUR FINALE DE FORMATION</span><strong id="mError">—</strong><small>Mètres · seuil 0,10 m</small></div><div class="metric"><span id="timeLabel">STABILISATION</span><strong id="mTime">—</strong><small>Secondes · temps de simulation</small></div><div class="metric"><span>CONTACTS PHYSIQUES</span><strong id="mContacts">—</strong><small>Sur toute l’expérience</small></div><div class="metric"><span>RÉUSSITE DE L’ESSAI</span><strong id="mSuccess">—</strong><small>Maintien requis pendant 1 s</small></div></div>
-<div id="navigationMetrics" class="metrics" hidden><div class="metric"><span>DISTANCE À DESTINATION</span><strong id="mDestination">—</strong><small>Mètres · seuil 0,10 m</small></div><div class="metric"><span>DÉFORMATION MAXIMALE EN ROUTE</span><strong id="mDeformation">—</strong><small>Mètres · limite 0,20 m</small></div></div><div class="panel results"><h2>Résultats de l’expérience complète</h2><div id="table"><p class="hint">Les mesures finales apparaîtront après le calcul. Elles restent visibles pendant la lecture.</p></div><p id="explanation">Un essai individuel donne un résultat réussi ou échoué. Un taux général demande plusieurs départs indépendants.</p></div><details class="panel results" open><summary style="cursor:pointer;font-size:13px">Navigation corrigée · campagne vérifiée</summary><div id="plannedResults" style="margin-top:15px">Chargement…</div><p class="hint">12 robots : carré, rectangle et triangle sur deux départs pour l’obstacle sur la route, plus deux parcours du carré. Planification classique sur carte connue, GAT protégé inchangé. Une destination impossible est refusée avant calcul.</p></details><details class="panel results"><summary style="cursor:pointer;font-size:13px">Archives avant correction de navigation · taux et limites</summary><div id="benchmarks" style="margin-top:15px">Chargement des résultats…</div><p class="hint">Ces campagnes historiques ne sont pas recalculées avec le nouveau planificateur. Navigation : les lignes « ensemble », « parcours prévus » et « cas difficiles » se recouvrent. Les temps moyens portent uniquement sur les réussites. Les stages partagent deux séquences ; ces observations ne sont pas toutes indépendantes.</p></details><details class="panel results"><summary style="cursor:pointer;font-size:13px">GAT structuré · validation contrôlée</summary><div id="multisizeResults" style="margin-top:15px">Évaluation en cours.</div><p class="hint">Deux départs réservés par effectif, trois formes chacun. Ces essais ne valident pas les départs dispersés ni toutes les formes. Les mouvements du GAT structuré sont exécutés sans filtre ; freinage et affectation restent classiques.</p></details></section></main>
-<footer>Accélération ≤ 2 m/s² · vitesse ≤ 1 m/s · rayon physique 0,10 m · dimensions adaptées au profil choisi. Les résultats de démonstration ne remplacent pas les campagnes de validation.</footer>
+<header>
+    <div>
+        <div class="eyebrow">SWARM / GNN · Démonstration</div>
+        <h1>Laboratoire de formations</h1>
+        <p class="subtitle">Former, déplacer et comparer un essaim de robots.</p>
+    </div>
+    <div class="badge">Simulation locale · unités SI</div>
+</header><nav aria-label="Navigation de la démonstration" style="padding:14px 4vw;display:flex;gap:12px;flex-wrap:wrap"><a class="export" href="#simulation">Voir la simulation</a><a class="export" href="#settings">Modifier les réglages</a></nav>
+<main>
+    <aside>
+        <h2>Configurer l’expérience</h2>
+        <form id="settings">
+            <label class="field" for="scenario">Expérience</label><select id="scenario">
+                <option value="formation">Former l’essaim</option>
+                <option value="transition">Changer de formation</option>
+                <option value="straight">Déplacer en ligne droite</option>
+                <option value="bypass">Contourner un obstacle</option>
+                <option value="direct">Obstacle sur la route · détour calculé</option>
+                <option value="multiple">Naviguer avec plusieurs obstacles</option>
+                <option value="blocked">Vérifier une destination obstruée</option>
+            </select>
+            <div id="obstacleField" hidden><label class="field" for="obstacleCount">Nombre d’obstacles</label><select
+                    id="obstacleCount">
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                </select>
+                <p class="hint">Scène fixe reproductible : obstacles sur le trajet et à proximité des places finales du carré à 12 robots.
+                    Préparation classique puis déplacement par le contrôleur choisi, avec planification et protection
+                    des murs.</p>
+            </div><label class="field" for="shape">Formation</label><select id="shape" required></select>
+            <div id="nextField" hidden><label class="field" for="nextShape">Formation suivante</label><select
+                    id="nextShape"></select></div>
+            <label class="field" for="robots">Nombre de robots</label><select id="robots">
+                <option>8</option>
+                <option selected>12</option>
+                <option>16</option>
+                <option>24</option>
+                <option value="64">64 · pilote</option>
+            </select>
+            <p class="hint" id="modelChange" role="status" hidden></p><p class="hint" id="experimental" hidden>Effectif exploratoire : le modèle a été entraîné avec 12 robots.
+                Certaines formes peuvent être irréalisables à cet effectif.</p>
+            <label class="field" for="controller">Commande ou comparaison</label><select id="controller">
+                <optgroup label="Exécuter un contrôleur">
+                    <option value="guarded">GAT protégé par le filtre classique</option>
+                    <option value="teacher">Contrôleur classique</option>
+                    <option value="multisize" disabled>GAT structuré brut · 12/24/64</option>
+                </optgroup>
+                <optgroup label="Comparer sur le même départ">
+                    <option value="comparison">Classique / GAT protégé</option>
+                    <option value="comparison_multisize" disabled>Classique / GAT structuré</option>
+                </optgroup>
+            </select>
+            <label class="field" for="seed">Disposition initiale · numéro reproductible</label><input type="number"
+                id="seed" min="0" max="2147483647" value="7700" required>
+            <p class="hint">Même numéro et mêmes réglages : mêmes positions de départ. Ce numéro n’est pas une entrée du
+                modèle.</p>
+            <p class="hint" id="sceneHint">Les robots se regroupent, se répartissent les places puis construisent la
+                forme.</p>
+            <p class="hint" id="protocolHint">Le cercle du début est un rendez-vous provisoire pour connecter les robots et répartir les places. La forme choisie est construite ensuite ; ce cercle n’est pas une erreur de cible.</p><p class="hint"><a href="/guide.md" target="_blank">Guide des expériences et commandes</a></p><p class="hint" id="geometryHint" role="status" aria-live="polite">Vérification des dimensions…</p><button
+                class="primary" id="launch" type="submit" disabled>Lancer l’expérience</button><progress id="progress"
+                hidden aria-label="Calcul en cours"></progress>
+            <p id="error" role="alert"></p>
+        </form>
+        <div class="notice" id="controllerNotice">Le GAT utilise un filtre classique de sécurité. Aucun entraînement
+            n’est lancé ici. En navigation, un planificateur classique utilise la carte des obstacles de la scène ; les
+            commandes du GAT restent locales.</div>
+        <p class="hint">La simulation est calculée avant sa lecture. Pause et vitesse agissent sur la lecture du
+            résultat.</p>
+    </aside>
+    <section class="content" id="simulation">
+        <div class="topline"><span id="status" class="status" role="status" aria-live="polite">Prêt pour une
+                expérience</span><a id="export" class="export" hidden download="essaim-resultats.zip">Exporter les
+                résultats ↓</a></div>
+        <div class="panel">
+            <div class="arena">
+                <div class="arenahead"><span id="phase">Arène</span><span id="arenaSize">10 × 10 m</span><select
+                        id="view" aria-label="Résultat affiché" hidden></select></div>
+                <div class="viewport"><canvas id="canvas" width="800" height="800" role="img"
+                        aria-label="Vue de l’essaim, de ses places cibles et des obstacles"></canvas></div>
+                <div class="legend"><span><i class="dot" style="background:#2b6fd6"></i>Robots</span><span><i
+                            class="dot" style="background:#0b8f70"></i>Places cibles</span><span><i class="dot"
+                            style="background:#a9742f"></i>Obstacles</span></div>
+            </div>
+            <div class="controls">
+                <div class="transport"><button id="play" disabled>Lire</button><button id="reset"
+                        disabled>Réinitialiser</button><button id="final" disabled>Résultat final</button><select id="speed" aria-label="Vitesse de lecture">
+                        <option value="1">×1</option>
+                        <option value="2" selected>×2</option>
+                        <option value="5">×5</option>
+                        <option value="10">×10</option>
+                    </select><output id="clock">0,0 s</output></div><input id="timeline"
+                    aria-label="Temps de simulation" type="range" min="0" max="0" value="0" disabled>
+                <div class="toggles"><label><input type="checkbox" id="links"> Communications</label><label><input
+                            type="checkbox" id="trails" checked> Trajectoires</label><label><input type="checkbox"
+                            id="goals" checked> Places cibles</label><label><input type="checkbox" id="ids"> Numéros des
+                        robots</label></div>
+            </div>
+        </div>
+        <div class="metrics">
+            <div class="metric"><span>ERREUR FINALE DE FORMATION</span><strong id="mError">—</strong><small>Mètres ·
+                    seuil 0,10 m</small></div>
+            <div class="metric"><span id="timeLabel">STABILISATION</span><strong id="mTime">—</strong><small>Secondes ·
+                    temps de simulation</small></div>
+            <div class="metric"><span>CONTACTS PHYSIQUES</span><strong id="mContacts">—</strong><small>Sur toute
+                    l’expérience</small></div>
+            <div class="metric"><span>RÉUSSITE DE L’ESSAI</span><strong id="mSuccess">—</strong><small>Maintien requis
+                    pendant 1 s</small></div>
+        </div>
+        <div id="navigationMetrics" class="metrics" hidden>
+            <div class="metric"><span>DISTANCE À DESTINATION</span><strong id="mDestination">—</strong><small>Mètres ·
+                    seuil 0,10 m</small></div>
+            <div class="metric"><span>DÉFORMATION MAXIMALE EN ROUTE</span><strong
+                    id="mDeformation">—</strong><small>Mètres · limite 0,20 m</small></div>
+        </div>
+        <div class="panel results">
+            <h2>Résultats de l’expérience complète</h2>
+            <div id="table">
+                <p class="hint">Les mesures finales apparaîtront après le calcul. Elles restent visibles pendant la
+                    lecture.</p>
+            </div>
+            <p id="explanation">Un essai individuel donne un résultat réussi ou échoué. Un taux général demande
+                plusieurs départs indépendants.</p>
+        </div>
+        <details class="panel results" open>
+            <summary style="cursor:pointer;font-size:13px">Navigation corrigée · campagne vérifiée</summary>
+            <div id="plannedResults" style="margin-top:15px">Chargement…</div>
+            <p class="hint">12 robots : carré, rectangle et triangle sur deux départs pour l’obstacle sur la route, plus
+                deux parcours du carré. Planification classique sur carte connue, GAT protégé inchangé. Une destination
+                impossible est refusée avant calcul.</p>
+        </details>
+        <details class="panel results">
+            <summary style="cursor:pointer;font-size:13px">Archives avant correction de navigation · taux et limites
+            </summary>
+            <div id="benchmarks" style="margin-top:15px">Chargement des résultats…</div>
+            <p class="hint">Ces campagnes historiques ne sont pas recalculées avec le nouveau planificateur. Navigation
+                : les lignes « ensemble », « parcours prévus » et « cas difficiles » se recouvrent. Les temps moyens
+                portent uniquement sur les réussites. Les stages partagent deux séquences ; ces observations ne sont pas
+                toutes indépendantes.</p>
+        </details>
+        <details class="panel results">
+            <summary style="cursor:pointer;font-size:13px">GAT structuré · validation contrôlée</summary>
+            <div id="multisizeResults" style="margin-top:15px">Évaluation en cours.</div>
+            <p class="hint">Deux départs réservés par effectif, trois formes chacun. Ces essais ne valident pas les
+                départs dispersés ni toutes les formes. Les mouvements du GAT structuré sont exécutés sans filtre ;
+                freinage et affectation restent classiques.</p>
+        </details>
+    </section>
+</main>
+<footer>Accélération ≤ 2 m/s² · vitesse ≤ 1 m/s · rayon physique 0,10 m · dimensions adaptées au profil choisi. Les
+    résultats de démonstration ne remplacent pas les campagnes de validation.</footer>
 <script>
-'use strict';
-const $=id=>document.getElementById(id),ctx=$('canvas').getContext('2d');
-let data=null,job=null,frame=0,playing=false,lastTick=0,elapsed=0,busy=false,summary=null,geometryReady=false,geometryRevision=0;
-const modeNames={teacher:'Classique',guarded:'GAT protégé',raw:'GAT brut'};
-const hints={multiple:'De 5 à 10 obstacles statiques proches des places cibles. Le planificateur classique recherche un détour commun ; les métriques mesurent le déplacement réel.',formation:'Regroupement, répartition locale des places puis construction de la forme.',transition:'Deux formations se succèdent, en conservant les positions et les vitesses.',straight:'Transport de la formation de −1 m à +1 m sur une route commune.',bypass:'Le planificateur vérifie les passages pour toutes les places de la formation, puis calcule un détour commun.',direct:'Un détour est calculé pour toute la formation. La destination et les seuils de réussite restent identiques.',blocked:'La destination est vérifiée avant le calcul. Si une place finale est bloquée, le parcours est déclaré impossible et doit être changé.'};
-function configureMulti(catalog){const planned=$('plannedResults'),result=catalog.planned_navigation_summary;if(!result){planned.textContent='Aucune campagne vérifiée disponible.'}else{const table=document.createElement('table'),head=table.createTHead().insertRow();for(const title of ['Contrôleur','Essais réussis','Contacts','Déformation maximale','Distance finale maximale']){const th=document.createElement('th');th.textContent=title;head.append(th)}for(const [mode,row]of Object.entries(result)){const tr=table.insertRow();for(const value of [modeNames[mode],row.successes+' / '+row.episodes,row.collisions,fmt(row.max_formation_error_m)+' m',fmt(row.max_destination_error_m)+' m'])tr.insertCell().textContent=value}planned.replaceChildren(table)}for(const option of $('robots').options)option.disabled=!catalog.robot_counts.includes(Number(option.value));for(const option of $('controller').options)if(option.value.includes('multisize'))option.disabled=!catalog.multisize_model_available;const box=$('multisizeResults');if(!catalog.multisize_summary){box.textContent='Le pilote n’a pas encore terminé son évaluation.';updateFields();return}const table=document.createElement('table'),head=table.createTHead().insertRow();for(const title of ['Robots','Contrôleur','Essais','Réussite','Contacts','Erreur moyenne']){const th=document.createElement('th');th.textContent=title;head.append(th)}const body=table.createTBody();for(const [count,modes]of Object.entries(catalog.multisize_summary))for(const [mode,row]of Object.entries(modes)){const tr=body.insertRow();for(const value of [count,modeNames[mode]||'GAT brut',row.episodes,fmt(row.success_rate_percent,0)+' %',row.collisions_total,fmt(row.formation_error_mean_m)+' m'])tr.insertCell().textContent=value}box.replaceChildren(table);updateFields()}
-function updateFields(event){
+    'use strict';
+    const $ = id => document.getElementById(id), ctx = $('canvas').getContext('2d');
+    let data = null, job = null, frame = 0, playing = false, lastTick = 0, elapsed = 0, busy = false, summary = null, geometryReady = false, geometryRevision = 0;
+    const modeNames = { teacher: 'Classique', guarded: 'GAT protégé', raw: 'GAT brut' };
+    const hints = { multiple: 'De 5 à 10 obstacles statiques proches des places cibles. Le planificateur classique recherche un détour commun ; les métriques mesurent le déplacement réel.', formation: 'Regroupement, répartition locale des places puis construction de la forme.', transition: 'Deux formations se succèdent, en conservant les positions et les vitesses.', straight: 'Transport de la formation de −1 m à +1 m sur une route commune.', bypass: 'Le planificateur vérifie les passages pour toutes les places de la formation, puis calcule un détour commun.', direct: 'Un détour est calculé pour toute la formation. La destination et les seuils de réussite restent identiques.', blocked: 'La destination est vérifiée avant le calcul. Si une place finale est bloquée, le parcours est déclaré impossible et doit être changé.' };
+    function configureMulti(catalog) { const planned = $('plannedResults'), result = catalog.planned_navigation_summary; if (!result) { planned.textContent = 'Aucune campagne vérifiée disponible.' } else { const table = document.createElement('table'), head = table.createTHead().insertRow(); for (const title of ['Contrôleur', 'Essais réussis', 'Contacts', 'Déformation maximale', 'Distance finale maximale']) { const th = document.createElement('th'); th.textContent = title; head.append(th) } for (const [mode, row] of Object.entries(result)) { const tr = table.insertRow(); for (const value of [modeNames[mode], row.successes + ' / ' + row.episodes, row.collisions, fmt(row.max_formation_error_m) + ' m', fmt(row.max_destination_error_m) + ' m']) tr.insertCell().textContent = value } planned.replaceChildren(table) } for (const option of $('robots').options) option.disabled = !catalog.robot_counts.includes(Number(option.value)); for (const option of $('controller').options) if (option.value.includes('multisize')) option.disabled = !catalog.multisize_model_available; const box = $('multisizeResults'); if (!catalog.multisize_summary) { box.textContent = 'Le pilote n’a pas encore terminé son évaluation.'; return } const table = document.createElement('table'), head = table.createTHead().insertRow(); for (const title of ['Robots', 'Contrôleur', 'Essais', 'Réussite', 'Contacts', 'Erreur moyenne']) { const th = document.createElement('th'); th.textContent = title; head.append(th) } const body = table.createTBody(); for (const [count, modes] of Object.entries(catalog.multisize_summary)) for (const [mode, row] of Object.entries(modes)) { const tr = body.insertRow(); for (const value of [count, modeNames[mode] || 'GAT brut', row.episodes, fmt(row.success_rate_percent, 0) + ' %', row.collisions_total, fmt(row.formation_error_mean_m) + ' m']) tr.insertCell().textContent = value } box.replaceChildren(table); updateFields() }
+    function updateFields(event){
  const count=Number($('robots').value);let value=$('controller').value,change='';
  const available=name=>Array.from($('controller').options).some(option=>option.value===name&&!option.disabled);
  if(count===64&&!['teacher','multisize','comparison_multisize'].includes(value)){
@@ -63,62 +675,66 @@ function updateFields(event){
  $('sceneHint').textContent=hints[$('scenario').value]+(restricted?' Le départ est proche du rendez-vous ; les dimensions dépendent du profil.':'');
  refreshGeometry();
 }
-    ['scenario','robots','controller','shape','nextShape','obstacleCount'].forEach(id=>$(id).addEventListener('change',updateFields));
+    ['scenario', 'robots', 'controller', 'shape', 'nextShape', 'obstacleCount'].forEach(id => $(id).addEventListener('change', updateFields));
 
-function currentRequest(){return {shape:$('shape').value,next_shape:$('nextShape').value,robots:Number($('robots').value),seed:Number($('seed').value),controller:$('controller').value,scenario:$('scenario').value,obstacle_count:$('scenario').value==='multiple'?Number($('obstacleCount').value):1}}
-async function refreshGeometry(){
- if(!$('shape').value||!$('nextShape').value)return;
- const revision=++geometryRevision;geometryReady=false;$('launch').disabled=true;$('geometryHint').textContent='Vérification des dimensions et des places…';
- try{
-  const report=await response('/api/geometry',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(currentRequest())});
-  if(revision!==geometryRevision)return;
-  for(const id of ['shape','nextShape'])for(const option of $(id).options){
-   const fit=report.options[option.value];option.dataset.baseLabel??=option.textContent;
-   option.disabled=!fit.compatible;option.textContent=option.dataset.baseLabel+(fit.compatible?'':' · incompatible');
-  }
-  const selected=report.options[$('shape').value],next=$('scenario').value==='transition'?report.options[$('nextShape').value]:null;
-  geometryReady=selected.compatible&&(!next||next.compatible);
-  $('geometryHint').textContent=!selected.compatible?selected.message:next&&!next.compatible?'Formation suivante : '+next.message:selected.message+' Arène : '+fmt(report.arena_size_m,0)+' × '+fmt(report.arena_size_m,0)+' m.'+(next?' Formation suivante : '+next.message:'')+(selected.adjusted&&$('controller').value.includes('multisize')?' Dimensions adaptées : cette variante reste expérimentale.':'');
- }catch(error){if(revision!==geometryRevision)return;geometryReady=false;$('geometryHint').textContent=error.message}
- if(revision===geometryRevision)$('launch').disabled=busy||!geometryReady;
-}
+    function currentRequest() { return { shape: $('shape').value, next_shape: $('nextShape').value, robots: Number($('robots').value), seed: Number($('seed').value), controller: $('controller').value, scenario: $('scenario').value, obstacle_count: $('scenario').value === 'multiple' ? Number($('obstacleCount').value) : 1 } }
+    async function refreshGeometry() {
+        if (!$('shape').value || !$('nextShape').value) return;
+        const revision = ++geometryRevision; geometryReady = false; $('launch').disabled = true; $('geometryHint').textContent = 'Vérification des dimensions et des places…';
+        try {
+            const report = await response('/api/geometry', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(currentRequest()) });
+            if (revision !== geometryRevision) return;
+            for (const id of ['shape', 'nextShape']) for (const option of $(id).options) {
+                const fit = report.options[option.value]; option.dataset.baseLabel ??= option.textContent;
+                option.disabled = !fit.compatible; option.textContent = option.dataset.baseLabel + (fit.compatible ? '' : ' · incompatible');
+            }
+            const selected = report.options[$('shape').value], next = $('scenario').value === 'transition' ? report.options[$('nextShape').value] : null;
+            geometryReady = selected.compatible && (!next || next.compatible);
+            $('geometryHint').textContent = !selected.compatible ? selected.message : next && !next.compatible ? 'Formation suivante : ' + next.message : selected.message + ' Arène : ' + fmt(report.arena_size_m, 0) + ' × ' + fmt(report.arena_size_m, 0) + ' m.' + (next ? ' Formation suivante : ' + next.message : '') + (selected.adjusted && $('controller').value.includes('multisize') ? ' Dimensions adaptées : cette variante reste expérimentale.' : '');
+        } catch (error) { if (revision !== geometryRevision) return; geometryReady = false; $('geometryHint').textContent = error.message }
+        if (revision === geometryRevision) $('launch').disabled = busy || !geometryReady;
+    }
 
-function showSimulation(){ $('simulation').scrollIntoView({behavior:'smooth',block:'start'}); }
-function status(text,state=''){$('status').textContent=text;$('status').dataset.state=state}
-function pause(){playing=false;$('play').textContent='Lire'}
-function metric(m){const stages=m.stages,nav='arrival_time_s'in m;return {error:stages?stages.at(-1).formation_error_m:m.formation_error_m,time:nav?m.arrival_time_s:stages?(m.success?stages.at(-1).stabilization_absolute_time_s:null):m.stabilization_time_s,contacts:m.collisions_total??m.collisions,success:m.success,nav}}
-function fmt(v,d=3){return v==null?'—':Number(v).toLocaleString('fr-FR',{minimumFractionDigits:d,maximumFractionDigits:d})}
-function showMetrics(){const m=metric(data.metrics);$('navigationMetrics').hidden=!m.nav;$('mDestination').textContent=fmt(data.metrics.destination_error_m)+' m';$('mDeformation').textContent=fmt(data.metrics.max_navigation_formation_error_m)+' m';$('mError').textContent=fmt(m.error)+' m';$('mTime').textContent=m.time==null?'Non atteinte':fmt(m.time,1)+' s';$('mContacts').textContent=m.contacts;$('mSuccess').textContent=m.success?'Réussi':'Échoué';$('mSuccess').className=m.success?'good':'bad';$('timeLabel').textContent=m.nav?'ARRIVÉE ET STABILISATION':'STABILISATION';
-const box=$('table');box.replaceChildren();const table=document.createElement('table'),head=table.createTHead().insertRow();['Contrôleur','Erreur finale','Temps réussi','Contacts','Résultat'].forEach(t=>{let th=document.createElement('th');th.textContent=t;head.append(th)});const body=table.createTBody();for(const [mode,report]of Object.entries(summary)){const r=metric(report),row=body.insertRow();[modeNames[mode],fmt(r.error)+' m',r.time==null?'—':fmt(r.time,1)+' s',r.contacts,r.success?'Réussi':'Échoué'].forEach((text,i)=>{const td=row.insertCell();td.textContent=text;if(i===4)td.className=r.success?'good':'bad'})}box.append(table);
-let explanation=m.nav?`Distance finale à destination : ${fmt(data.metrics.destination_error_m)} m. Déformation maximale pendant le transport : ${fmt(data.metrics.max_navigation_formation_error_m)} m (limite 0,20 m). `:'';
-explanation+=m.success?'Les critères de l’essai sont satisfaits. ':'Échec conservé : le temps réussi reste absent. ';
-if(data.metrics.failure_reasons?.length){const reasons={preparation_failed:'préparation inachevée',collision:'contact physique',in_transit_formation_error:'formation trop déformée pendant le transport',arrival_or_stabilization_deadline:'arrivée ou stabilisation hors délai'};explanation+=data.metrics.failure_reasons.map(r=>reasons[r]||r).join(' ; ')+'. '}
-explanation+='Les mesures concernent l’expérience complète, quel que soit l’instant affiché.';$('explanation').textContent=explanation}
-function point(p){const size=data?.physics.arena_size||10;return [70+(p[0]+size/2)*660/size,730-(p[1]+size/2)*660/size]}
-function path(points,color,width=1,dash=[]){if(!points.length)return;ctx.beginPath();ctx.setLineDash(dash);points.forEach((p,i)=>{const [x,y]=point(p);i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke();ctx.setLineDash([])}
-function draw(){
-if(data)frame=Number.isFinite(frame)?Math.max(0,Math.min(frame,data.times.length-1)):0;ctx.clearRect(0,0,800,800);ctx.fillStyle='#0c1824';ctx.fillRect(70,70,660,660);ctx.font='12px Segoe UI';ctx.textAlign='center';const half=(data?.physics.arena_size||10)/2;$('arenaSize').textContent=fmt(half*2,0)+' × '+fmt(half*2,0)+' m';for(let i=-5;i<=5;i++){const value=i*half/5;path([[value,-half],[value,half]],'#1b2b3b');path([[-half,value],[half,value]],'#1b2b3b');ctx.fillStyle='#698298';ctx.fillText(fmt(value,1),point([value,-half])[0],754);ctx.fillText(fmt(value,1),46,point([-half,value])[1]+4)}path([[-half,-half],[half,-half],[half,half],[-half,half],[-half,-half]],'#38536a',1.5);if(!data){ctx.fillStyle='#97aebe';ctx.font='18px Segoe UI';ctx.fillText(busy?'Calcul de l’expérience en cours…':'Lancez une expérience pour observer l’essaim.',400,388);ctx.font='13px Segoe UI';ctx.fillText('A–Z  ·  1–10  ·  20 géométries',400,418);return}
-for(const obstacle of data.obstacles){const [x,y]=point(obstacle.center);ctx.beginPath();ctx.arc(x,y,obstacle.radius*660/data.physics.arena_size,0,Math.PI*2);ctx.fillStyle='#755738';ctx.fill();ctx.strokeStyle='#c69b67';ctx.stroke()}
-if(data.route.length)path(data.route,'#687665',1.5,[5,7]);const phase=data.phases?.[Math.min(frame,data.phases.length-1)];const stage=data.stage_ids?.length?' · étape '+(data.stage_ids[Math.min(frame,data.stage_ids.length-1)]+1):'';$('phase').textContent=(['Préparation : cercle provisoire','Freinage','Répartition des places','Construction de la forme','Transport de la formation'][phase]||'ARÈNE · 10 × 10 m')+stage;const p=data.positions[frame],adj=data.adjacency?.length?data.adjacency[frame]:data.graph_bank[data.graph_ids[frame]],targets=data.targets[Math.min(frame,data.targets.length-1)];
-if($('trails').checked)for(let i=0;i<p.length;i++)path(data.positions.slice(Math.max(0,frame-100),frame+1).map(v=>v[i]),'#304f6b',1.4);
-if($('links').checked)for(let i=0;i<p.length;i++)for(let j=0;j<i;j++)if(adj[i][j])path([p[i],p[j]],'#41617f',1,[3,4]);
-if($('goals').checked)for(const goal of targets){const[x,y]=point(goal);ctx.strokeStyle='#6be2c1';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(x,y,5,0,2*Math.PI);ctx.stroke()}
-for(let i=0;i<p.length;i++){const[x,y]=point(p[i]);ctx.beginPath();ctx.arc(x,y,data.physics.robot_radius*660/data.physics.arena_size,0,2*Math.PI);ctx.fillStyle='#70afff';ctx.fill();if($('ids').checked){ctx.fillStyle='#dce8f2';ctx.font='12px Segoe UI';ctx.fillText(i,x,y-12)}}
-$('timeline').value=frame;$('clock').textContent=fmt(data.times[frame],1)+' / '+fmt(data.times.at(-1),1)+' s'}
-async function response(url,options){const r=await fetch(url,options);const body=await r.json();if(!r.ok)throw Error(body.error||'La requête a échoué.');return body}
+    function showSimulation(){ $('simulation').scrollIntoView({behavior:'smooth',block:'start'}); }
+function status(text, state = '') { $('status').textContent = text; $('status').dataset.state = state }
+    function pause() { playing = false; $('play').textContent = 'Lire' }
+    function metric(m) { const stages = m.stages, nav = 'arrival_time_s' in m; return { error: stages ? stages.at(-1).formation_error_m : m.formation_error_m, time: nav ? m.arrival_time_s : stages ? (m.success ? stages.at(-1).stabilization_absolute_time_s : null) : m.stabilization_time_s, contacts: m.collisions_total ?? m.collisions, success: m.success, nav } }
+    function fmt(v, d = 3) { return v == null ? '—' : Number(v).toLocaleString('fr-FR', { minimumFractionDigits: d, maximumFractionDigits: d }) }
+    function showMetrics() {
+        const m = metric(data.metrics); $('navigationMetrics').hidden = !m.nav; $('mDestination').textContent = fmt(data.metrics.destination_error_m) + ' m'; $('mDeformation').textContent = fmt(data.metrics.max_navigation_formation_error_m) + ' m'; $('mError').textContent = fmt(m.error) + ' m'; $('mTime').textContent = m.time == null ? 'Non atteinte' : fmt(m.time, 1) + ' s'; $('mContacts').textContent = m.contacts; $('mSuccess').textContent = m.success ? 'Réussi' : 'Échoué'; $('mSuccess').className = m.success ? 'good' : 'bad'; $('timeLabel').textContent = m.nav ? 'ARRIVÉE ET STABILISATION' : 'STABILISATION';
+        const box = $('table'); box.replaceChildren(); const table = document.createElement('table'), head = table.createTHead().insertRow();['Contrôleur', 'Erreur finale', 'Temps réussi', 'Contacts', 'Résultat'].forEach(t => { let th = document.createElement('th'); th.textContent = t; head.append(th) }); const body = table.createTBody(); for (const [mode, report] of Object.entries(summary)) { const r = metric(report), row = body.insertRow();[modeNames[mode], fmt(r.error) + ' m', r.time == null ? '—' : fmt(r.time, 1) + ' s', r.contacts, r.success ? 'Réussi' : 'Échoué'].forEach((text, i) => { const td = row.insertCell(); td.textContent = text; if (i === 4) td.className = r.success ? 'good' : 'bad' }) } box.append(table);
+        let explanation = m.nav ? `Distance finale à destination : ${fmt(data.metrics.destination_error_m)} m. Déformation maximale pendant le transport : ${fmt(data.metrics.max_navigation_formation_error_m)} m (limite 0,20 m). ` : '';
+        explanation += m.success ? 'Les critères de l’essai sont satisfaits. ' : 'Échec conservé : le temps réussi reste absent. ';
+        if (data.metrics.failure_reasons?.length) { const reasons = { preparation_failed: 'préparation inachevée', collision: 'contact physique', in_transit_formation_error: 'formation trop déformée pendant le transport', arrival_or_stabilization_deadline: 'arrivée ou stabilisation hors délai' }; explanation += data.metrics.failure_reasons.map(r => reasons[r] || r).join(' ; ') + '. ' }
+        explanation += 'Les mesures concernent l’expérience complète, quel que soit l’instant affiché.'; $('explanation').textContent = explanation
+    }
+    function point(p) { const size = data?.physics.arena_size || 10; return [70 + (p[0] + size / 2) * 660 / size, 730 - (p[1] + size / 2) * 660 / size] }
+    function path(points, color, width = 1, dash = []) { if (!points.length) return; ctx.beginPath(); ctx.setLineDash(dash); points.forEach((p, i) => { const [x, y] = point(p); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y) }); ctx.strokeStyle = color; ctx.lineWidth = width; ctx.stroke(); ctx.setLineDash([]) }
+    function draw() {
+        if(data)frame=Number.isFinite(frame)?Math.max(0,Math.min(frame,data.times.length-1)):0;
+        ctx.clearRect(0, 0, 800, 800); ctx.fillStyle = '#eef3f8'; ctx.fillRect(70, 70, 660, 660); ctx.font = '12px Segoe UI'; ctx.textAlign = 'center'; const half = (data?.physics.arena_size || 10) / 2; $('arenaSize').textContent = fmt(half * 2, 0) + ' × ' + fmt(half * 2, 0) + ' m'; for (let i = -5; i <= 5; i++) { const value = i * half / 5; path([[value, -half], [value, half]], '#d6e0e9'); path([[-half, value], [half, value]], '#d6e0e9'); ctx.fillStyle = '#5f7788'; ctx.fillText(fmt(value, 1), point([value, -half])[0], 754); ctx.fillText(fmt(value, 1), 46, point([-half, value])[1] + 4) } path([[-half, -half], [half, -half], [half, half], [-half, half], [-half, -half]], '#8aa2b6', 1.5); if (!data) { ctx.fillStyle = '#4d6578'; ctx.font = '18px Segoe UI'; ctx.fillText(busy?'Calcul de l’expérience en cours…':'Lancez une expérience pour observer l’essaim.', 400, 388); ctx.font = '13px Segoe UI'; ctx.fillText('A–Z  ·  1–10  ·  20 géométries', 400, 418); return }
+        for (const obstacle of data.obstacles) { const [x, y] = point(obstacle.center); ctx.beginPath(); ctx.arc(x, y, obstacle.radius * 660 / data.physics.arena_size, 0, Math.PI * 2); ctx.fillStyle = '#d9b98c'; ctx.fill(); ctx.strokeStyle = '#a9742f'; ctx.stroke() }
+        if (data.route.length) path(data.route, '#7a8a70', 1.5, [5, 7]); const phase = data.phases?.[Math.min(frame, data.phases.length - 1)]; const stage = data.stage_ids?.length ? ' · étape ' + (data.stage_ids[Math.min(frame, data.stage_ids.length - 1)] + 1) : ''; $('phase').textContent = (['Préparation : cercle provisoire', 'Freinage', 'Répartition des places', 'Construction de la forme', 'Transport de la formation'][phase] || 'ARÈNE · 10 × 10 m') + stage; const p = data.positions[frame], adj = data.adjacency?.length ? data.adjacency[frame] : data.graph_bank[data.graph_ids[frame]], targets = data.targets[Math.min(frame, data.targets.length - 1)];
+        if ($('trails').checked) for (let i = 0; i < p.length; i++)path(data.positions.slice(Math.max(0, frame - 100), frame + 1).map(v => v[i]), '#9bb6d0', 1.4);
+        if ($('links').checked) for (let i = 0; i < p.length; i++)for (let j = 0; j < i; j++)if (adj[i][j]) path([p[i], p[j]], '#7f9bb6', 1, [3, 4]);
+        if ($('goals').checked) for (const goal of targets) { const [x, y] = point(goal); ctx.strokeStyle = '#0b8f70'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(x, y, 5, 0, 2 * Math.PI); ctx.stroke() }
+        for (let i = 0; i < p.length; i++) { const [x, y] = point(p[i]); ctx.beginPath(); ctx.arc(x, y, data.physics.robot_radius * 660 / data.physics.arena_size, 0, 2 * Math.PI); ctx.fillStyle = '#2b6fd6'; ctx.fill(); if ($('ids').checked) { ctx.fillStyle = '#1b2a38'; ctx.font = '12px Segoe UI'; ctx.fillText(i, x, y - 12) } }
+        $('timeline').value = frame; $('clock').textContent = fmt(data.times[frame], 1) + ' / ' + fmt(data.times.at(-1), 1) + ' s'
+    }
+    async function response(url, options) { const r = await fetch(url, options); const body = await r.json(); if (!r.ok) throw Error(body.error || 'La requête a échoué.'); return body }
 async function loadView(autoplay=false){
  pause();const mode=$('view').value;data=await response(`/api/jobs/${job}/${mode}.json`);
  frame=0;elapsed=0;$('timeline').max=data.times.length-1;$('timeline').disabled=false;$('play').disabled=false;$('reset').disabled=false;$('final').disabled=false;
  showMetrics();draw();
  if(autoplay){playing=true;lastTick=performance.now();$('play').textContent='Pause';showSimulation()}
 }
-function setBusy(value){busy=value;for(const element of $('settings').elements)element.disabled=value;$('progress').hidden=!value;$('reset').disabled=value||!data;$('final').disabled=value||!data;$('launch').disabled=value||!geometryReady;draw()}
-async function poll(identifier){while(job===identifier){const state=await response('/api/jobs/'+identifier);if(state.status==='failed')throw Error(state.error);if(state.status==='complete'){summary=state.summary;const view=$('view');view.replaceChildren();for(const mode of Object.keys(summary)){const option=document.createElement('option');option.value=mode;option.textContent=modeNames[mode];view.append(option)}view.hidden=Object.keys(summary).length<2;view.value=summary.guarded?'guarded':summary.raw?'raw':'teacher';await loadView(true);$('export').href=`/api/jobs/${job}/export.zip`;$('export').hidden=false;status('Calcul terminé · lecture automatique','complete');return}status(state.status==='queued'?'Calcul en attente…':'Calcul de la simulation en cours…');await new Promise(resolve=>setTimeout(resolve,1000))}}
-$('settings').addEventListener('submit',async event=>{event.preventDefault();pause();data=null;summary=null;frame=0;$('view').hidden=true;$('timeline').disabled=true;$('timeline').max=0;$('timeline').value=0;$('play').disabled=true;$('clock').textContent='0,0 s';for(const id of ['mError','mTime','mContacts','mSuccess'])$(id).textContent='—';$('mSuccess').className='';$('table').replaceChildren();$('explanation').textContent='Résultats en cours de calcul.';$('navigationMetrics').hidden=true;$('phase').textContent='ARÈNE · 10 × 10 m';draw();$('error').textContent='';$('export').hidden=true;setBusy(true);showSimulation();try{const request=currentRequest();const state=await response('/api/jobs',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(request)});job=state.id;await poll(job)}catch(error){$('error').textContent=error.message;$('table').textContent='Aucun résultat disponible.';$('explanation').textContent='Expérience non calculée : '+error.message;status('Expérience non calculée','failed')}finally{setBusy(false)}});
-$('view').addEventListener('change',()=>loadView().catch(error=>{$('error').textContent=error.message}));
-$('play').onclick=()=>{if(!data)return;if(frame===data.times.length-1){frame=0;elapsed=0}playing=!playing;$('play').textContent=playing?'Pause':'Lire';lastTick=performance.now()};
-$('final').onclick=()=>{if(!data)return;pause();frame=data.times.length-1;elapsed=data.times[frame];draw();showSimulation();status('Résultat final · trajectoire complète disponible','complete')};
-$('reset').onclick=()=>{pause();frame=0;elapsed=0;draw()};$('timeline').oninput=()=>{pause();frame=Number($('timeline').value);elapsed=data.times[frame];draw()};['links','trails','goals','ids'].forEach(id=>$(id).onchange=draw);
+    function setBusy(value) { busy = value; for (const element of $('settings').elements) element.disabled = value; $('progress').hidden = !value; $('reset').disabled = value || !data;$('final').disabled=value||!data; $('launch').disabled = value || !geometryReady;draw()}
+    async function poll(identifier) { while (job === identifier) { const state = await response('/api/jobs/' + identifier); if (state.status === 'failed') throw Error(state.error); if (state.status === 'complete') { summary = state.summary; const view = $('view'); view.replaceChildren(); for (const mode of Object.keys(summary)) { const option = document.createElement('option'); option.value = mode; option.textContent = modeNames[mode]; view.append(option) } view.hidden = Object.keys(summary).length < 2; view.value = summary.guarded ? 'guarded' : summary.raw ? 'raw' : 'teacher'; await loadView(true); $('export').href = `/api/jobs/${job}/export.zip`; $('export').hidden = false; status('Calcul terminé · lecture automatique', 'complete'); return } status(state.status === 'queued' ? 'Calcul en attente…' : 'Calcul de la simulation en cours…'); await new Promise(resolve => setTimeout(resolve, 1000)) } }
+    $('settings').addEventListener('submit', async event => { event.preventDefault(); pause(); data = null; summary = null; frame = 0; $('view').hidden = true; $('timeline').disabled = true; $('timeline').max = 0; $('timeline').value = 0; $('play').disabled = true; $('clock').textContent = '0,0 s'; for (const id of ['mError', 'mTime', 'mContacts', 'mSuccess']) $(id).textContent = '—'; $('mSuccess').className = ''; $('table').replaceChildren(); $('explanation').textContent = 'Résultats en cours de calcul.'; $('navigationMetrics').hidden = true; $('phase').textContent = 'ARÈNE · 10 × 10 m'; draw(); $('error').textContent = ''; $('export').hidden = true; setBusy(true);showSimulation();try { const request = currentRequest(); const state = await response('/api/jobs', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(request) }); job = state.id; await poll(job) } catch (error) { $('error').textContent = error.message; $('table').textContent = 'Aucun résultat disponible.'; $('explanation').textContent = 'Expérience non calculée : ' + error.message; status('Expérience non calculée', 'failed') } finally { setBusy(false) } });
+    $('view').addEventListener('change', () => loadView().catch(error => { $('error').textContent = error.message }));
+    $('play').onclick = () => { if (!data) return; if (frame === data.times.length - 1) { frame = 0; elapsed = 0 } playing = !playing; $('play').textContent = playing ? 'Pause' : 'Lire'; lastTick = performance.now() };
+    $('final').onclick=()=>{if(!data)return;pause();frame=data.times.length-1;elapsed=data.times[frame];draw();showSimulation();status('Résultat final · trajectoire complète disponible','complete')};
+$('reset').onclick = () => { pause(); frame = 0; elapsed = 0; draw() }; $('timeline').oninput = () => { pause(); frame = Number($('timeline').value); elapsed = data.times[frame]; draw() };['links', 'trails', 'goals', 'ids'].forEach(id => $(id).onchange = draw);
 function tick(){
  requestAnimationFrame(tick);
  if(!playing||!data)return;
@@ -132,6 +748,7 @@ function tick(){
  if(frame===data.times.length-1)pause();
  try{draw()}catch(error){pause();$('error').textContent='La lecture a été interrompue. Utilisez Résultat final ou relancez l’expérience.';status('Lecture interrompue','failed');console.error(error)}
 }
-response('/api/catalog').then(catalog=>{for(const id of ['shape','nextShape']){for(const [category,label]of [['letters','Lettres · A–Z'],['numbers','Nombres · 1–10'],['geometries','Géométries']]){const group=document.createElement('optgroup');group.label=label;for(const entry of catalog.shapes.filter(s=>s.category===category)){const option=document.createElement('option');option.value=entry.identifier;option.textContent=entry.label;group.append(option)}$(id).append(group)}}$('shape').value='geometries_square';$('nextShape').value='letters_A';configureMulti(catalog);if(!catalog.model_available){$('controller').value='teacher';for(const option of $('controller').options)if(option.value!=='teacher'&&!option.value.includes('multisize'))option.disabled=true;$('error').textContent='Modèle absent : le contrôleur classique reste disponible.';updateFields()}}).catch(error=>{$('error').textContent=error.message;$('launch').disabled=true});updateFields();draw();requestAnimationFrame(tick);response('/api/benchmarks').then(report=>{const table=document.createElement('table'),head=table.createTHead().insertRow();for(const text of ['Campagne','Contrôleur','Essais','Réussite','Erreur moyenne','Temps moyen réussi','Contacts']){const th=document.createElement('th');th.textContent=text;head.append(th)}const body=table.createTBody();for(const row of report.rows){const tr=body.insertRow();for(const text of [row.campaign,modeNames[row.mode]||'GAT brut',row.trials+' '+row.scope,fmt(row.success_rate_percent,0)+' %',fmt(row.formation_error_mean_m)+' m',row.successful_time_mean_s==null?'—':fmt(row.successful_time_mean_s,1)+' s · '+row.time_definition,row.collisions])tr.insertCell().textContent=text}$('benchmarks').replaceChildren(table)}).catch(error=>{$('benchmarks').textContent=error.message});
+    response('/api/catalog').then(catalog => { for (const id of ['shape', 'nextShape']) { for (const [category, label] of [['letters', 'Lettres · A–Z'], ['numbers', 'Nombres · 1–10'], ['geometries', 'Géométries']]) { const group = document.createElement('optgroup'); group.label = label; for (const entry of catalog.shapes.filter(s => s.category === category)) { const option = document.createElement('option'); option.value = entry.identifier; option.textContent = entry.label; group.append(option) } $(id).append(group) } } $('shape').value = 'geometries_square'; $('nextShape').value = 'letters_A'; configureMulti(catalog); if (!catalog.model_available) { $('controller').value = 'teacher'; for (const option of $('controller').options) if (option.value !== 'teacher' && !option.value.includes('multisize')) option.disabled = true; $('error').textContent = 'Modèle absent : le contrôleur classique reste disponible.' } }).catch(error => { $('error').textContent = error.message; $('launch').disabled = true }); updateFields(); draw(); requestAnimationFrame(tick); response('/api/benchmarks').then(report => { const table = document.createElement('table'), head = table.createTHead().insertRow(); for (const text of ['Campagne', 'Contrôleur', 'Essais', 'Réussite', 'Erreur moyenne', 'Temps moyen réussi', 'Contacts']) { const th = document.createElement('th'); th.textContent = text; head.append(th) } const body = table.createTBody(); for (const row of report.rows) { const tr = body.insertRow(); for (const text of [row.campaign, modeNames[row.mode] || 'GAT brut', row.trials + ' ' + row.scope, fmt(row.success_rate_percent, 0) + ' %', fmt(row.formation_error_mean_m) + ' m', row.successful_time_mean_s == null ? '—' : fmt(row.successful_time_mean_s, 1) + ' s · ' + row.time_definition, row.collisions]) tr.insertCell().textContent = text } $('benchmarks').replaceChildren(table) }).catch(error => { $('benchmarks').textContent = error.message });
 </script>
+
 </html>

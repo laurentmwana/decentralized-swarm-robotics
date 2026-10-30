@@ -65,3 +65,8 @@ latex/*.txt
 Thumbs.db
 
 .freebuff
+
+# Fichiers de travail et copie de compilation Beamer
+/tmp/
+/tmp-beamer.txt
+/latex/soutenance/main.pdf
