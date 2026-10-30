@@ -16,7 +16,7 @@ Les dossiers `chapters/` et `frontmatter/` sont conservés. Le plan suit [RULES.
 
 Il y a quatre chapitres numérotés. Chaque chapitre s’ouvre par Introduction et se ferme par une Conclusion partielle qui annonce la suite. La discussion et la conclusion générale sont contenues successivement dans `chapters/discussion.tex`, comme dans l’architecture initiale.
 
-La version courante compte **74 pages au total**, dont 13 avant l’introduction et 61 numérotées en chiffres arabes. La cible demandée est de 70 à 78 pages physiques. La répartition est donnée dans [PAGINATION.md](PAGINATION.md). Police 12 points, interligne 1,5 et marges de 2,5 cm conservés.
+La version courante compte **71 pages au total**, dont 13 avant l’introduction et 58 numérotées en chiffres arabes. La cible demandée est de 70 à 78 pages physiques. La répartition est donnée dans [PAGINATION.md](PAGINATION.md). Police 12 points, interligne 1,5 et marges de 2,5 cm conservés.
 
 Les développements restent fondés sur les résultats de la version à accélérations. La rédaction privilégie des phrases simples. Les neuf figures scientifiques sont calculées à partir du programme ou des données enregistrées ; aucune image générée par IA n’est utilisée.
 
@@ -54,3 +54,5 @@ Révision 026 : introduction de deux pages, rubriques numérotées de 1 à 7 et 
 Révision 027 : trois annexes sont ajoutées après la bibliographie et inscrites au sommaire. Elles donnent le guide de démarrage, la fiche des sept expériences et les fichiers à conserver pour vérifier les résultats. Elles occupent les pages arabes 59 à 61. Le PDF complet compte 74 pages ; les preuves courantes sont les preuves 027.
 
 Révision 030 : reformulation ciblée des extraits fournis par l’auteur et titres des annexes simplifiés. Le relevé avant/après est dans les preuves 030. Les résultats et le volume de 74 pages sont conservés.
+
+Révision 031 : les annexes sont supprimées à la demande de l’auteur, ainsi que leurs entrées au sommaire et leur fichier source. Le PDF courant compte 71 pages, dont deux pages d’introduction. Les mentions des annexes dans les révisions précédentes décrivent uniquement l’historique.

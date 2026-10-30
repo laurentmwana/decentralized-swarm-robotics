@@ -1,4 +1,4 @@
-# Rédaction du mémoire — version Master, 74 pages
+# Rédaction du mémoire — version Master, 71 pages
 
 Le fichier principal est `main.tex`. Les pages personnelles et les réglages de présentation existants sont conservés. Les chapitres sont rédigés en français simple ; les termes techniques nécessaires sont expliqués lors de leur introduction.
 
@@ -52,7 +52,7 @@ Une copie des sources avant cette reprise se trouve dans `outputs/thesis-redacti
 
 La correction 022 rétablit les rubriques de `RULES.md`. Les dossiers `chapters/` et `frontmatter/` et les quatre chapitres numérotés sont conservés. Les trois travaux connexes conservent les quatre rubriques sous forme de tableaux, à la demande de l’auteur. Discussion et Conclusion générale et perspectives sont séparées.
 
-La version courante compile en **74 pages au total**, avec neuf figures scientifiques, dix-sept tableaux et onze références citées. La table des matières et les légendes sont rétablies selon le plan. La répartition est donnée dans `PAGINATION.md`.
+La version courante compile en **71 pages au total**, avec neuf figures scientifiques, dix-sept tableaux et onze références citées. La table des matières et les légendes sont rétablies selon le plan. La répartition est donnée dans `PAGINATION.md`.
 
 Le PDF à relire est `output/pdf/memoire-swarm-gnn-redaction.pdf` depuis la racine du dépôt ; `latex/main.pdf` contient le même document. Une sauvegarde locale de la version intermédiaire de 45 pages se trouve dans `outputs/thesis-redaction/version-45-pages/`. Les preuves 021 restent celles de cette version intermédiaire ; les preuves 022 décrivent la version historique de 70 pages.
 
@@ -65,3 +65,5 @@ Les preuves 021 à 025 décrivent les versions historiques. Les contrôles coura
 Révision 027 : trois annexes sont ajoutées après la bibliographie et inscrites au sommaire. Elles donnent le guide de démarrage, la fiche des sept expériences et les fichiers à conserver pour vérifier les résultats. Elles occupent les pages arabes 59 à 61. Le PDF complet compte 74 pages ; les preuves courantes sont les preuves 027.
 
 Révision 030 : reformulation ciblée des extraits fournis par l’auteur et titres des annexes simplifiés. Le relevé avant/après est dans les preuves 030. Les résultats et le volume de 74 pages sont conservés.
+
+Révision 031 : les annexes sont supprimées à la demande de l’auteur, ainsi que leurs entrées au sommaire et leur fichier source. Le PDF courant compte 71 pages, dont deux pages d’introduction. Les mentions des annexes dans les révisions précédentes décrivent uniquement l’historique.

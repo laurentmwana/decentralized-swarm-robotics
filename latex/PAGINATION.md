@@ -1,6 +1,6 @@
 # Pagination et architecture du mémoire
 
-La révision 027 compte **74 pages physiques**, dont 13 pages avant l’introduction et 61 pages numérotées en chiffres arabes. Les paramètres restent de 12 points, un interligne de 1,5 et des marges de 2,5 cm.
+La révision 031 compte **71 pages physiques**, dont 13 pages avant l’introduction et 58 pages numérotées en chiffres arabes. Les paramètres restent de 12 points, un interligne de 1,5 et des marges de 2,5 cm.
 
 | Partie | Numérotation arabe | Pages physiques | Nombre |
 |---|---|---|---:|
@@ -13,7 +13,6 @@ La révision 027 compte **74 pages physiques**, dont 13 pages avant l’introduc
 | Discussion | 50 à 55 | 63 à 68 | 6 |
 | Conclusion générale et perspectives | 56 à 57 | 69 à 70 | 2 |
 | Bibliographie | 58 | 71 | 1 |
-| Annexes A, B et C | 59 à 61 | 72 à 74 | 3 |
 
 Les dossiers `chapters/` et `frontmatter/` sont conservés. L’introduction possède sept rubriques numérotées de 1 à 7. Son dernier titre est uniquement « Plan sommaire ». La discussion et la conclusion restent distinctes.
 
@@ -21,4 +20,4 @@ Le texte conserve six blocs d’équations utiles, neuf figures et dix-sept tabl
 
 La cible actuelle est de **70 à 78 pages physiques**, introduction comprise. L’introduction de deux pages respecte la demande de deux à quatre pages. La liste contient vingt abréviations utilisées dans le texte.
 
-Les preuves sont `../tasks/evidence/027-plan.json`, `027-manuscript-audit.json` et `027-pdf-review.json`. Les preuves antérieures décrivent leurs versions historiques.
+Les preuves sont `../tasks/evidence/031-plan.json`, `031-manuscript-audit.json` et `031-pdf-review.json`. Les preuves antérieures décrivent leurs versions historiques.

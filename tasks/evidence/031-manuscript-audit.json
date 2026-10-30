@@ -1,0 +1,12 @@
+{
+  "status": "passed",
+  "files_checked": 13,
+  "citations": 11,
+  "labels": 37,
+  "figure_references": 10,
+  "source_hashes_checked": 20,
+  "checkpoint_hashes_checked": 2,
+  "reserved_formation_cases": 18,
+  "navigation_cases_per_controller": 8,
+  "note": "Contrôle documentaire ; ne remplace ni compilation ni relecture du PDF."
+}
