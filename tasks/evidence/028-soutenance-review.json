@@ -1,0 +1,22 @@
+{
+  "status": "passed",
+  "slides": 20,
+  "main_slides": 18,
+  "question_slides": 2,
+  "estimated_minutes": [
+    15,
+    20
+  ],
+  "editable_native_tables": 3,
+  "notes_slides": 20,
+  "beamer_pages": 20,
+  "pptx_native_application_test": false,
+  "visual_review": "20 PowerPoint previews inspected; Beamer overview and dense pages inspected",
+  "new_training": false,
+  "sha256": {
+    "soutenance-swarm-gnn.pptx": "5257dd9058ef01492e008e50658e51172b83249d713f111db2e247d9f20e9cf9",
+    "soutenance-beamer.pdf": "093ca03f465a31131e892437f8a463f69d49b995c79ad8f14940e7018a8ecd06",
+    "soutenance-latex.zip": "9317f55d680db14ea4541a3bb384150c8b8573e630228d47befdfc1213c92036",
+    "notes-soutenance.md": "9c9ced0ceb97643157cd62f86dd4d8e87466e48ebd104df38be6d304bd5a7410"
+  }
+}
